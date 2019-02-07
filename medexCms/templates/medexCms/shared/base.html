@@ -1,0 +1,16 @@
+{% load sass_tags %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Medical Examiners Portal</title>
+    <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" >
+  </head>
+
+  <body>
+    {% include 'medexCms/shared/_header.html' %}
+
+    {% block page %}
+    {% endblock %}
+  </body>
+</html>
