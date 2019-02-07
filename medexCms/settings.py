@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home.apps.HomeConfig',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,22 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'medexCms.urls'
+
+WSGI_APPLICATION = 'medexCms.wsgi.application'
+
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "medexCms/staticfiles/css/")
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+SASS_OUTPUT_STYLE = 'compact'
+
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, "medexCms/staticfiles/scss/"),
+]
 
 TEMPLATES = [
     {
@@ -66,9 +84,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'medexCms.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -116,5 +131,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "medexCms/staticfiles"),
+]
 
 STATIC_URL = '/static/'
