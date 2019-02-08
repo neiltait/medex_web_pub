@@ -1,6 +1,7 @@
 body {
   margin: 0px;
   font-family: Arial;
+  color: #4A4A4A;
 }
 
 .container {
@@ -16,6 +17,10 @@ body {
 
 .baseline {
   align-items: baseline;
+}
+
+.vertical-bottom {
+  align-items: flex-end;
 }
 
 .vertical-center {
@@ -89,6 +94,30 @@ body {
         font-size: 21px;
         padding-left: 10px;
       }
+    }
+  }
+}
+
+.footer {
+  background-color: #DEE0E2;
+  border-top: 1px solid #4A4A4A;
+  padding: 70px 0px 60px;
+
+  .disclaimer{
+    width: 80%;
+
+    .licence {
+      margin-right: 5px;
+    }
+  }
+
+  .logo {
+    img {
+      max-height: 140px;
+    }
+
+    p {
+      margin-bottom: 0px;
     }
   }
 }
