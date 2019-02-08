@@ -7,7 +7,7 @@ from django.conf import settings
 
 def index(request):
   context = {
-      'user': {
+      'session_user': {
         'name': 'Andrea Smith',
         'role': 'MEO'
       },
@@ -17,4 +17,5 @@ def index(request):
 
 
 def login(request):
-  return HttpResponse('Login to access your cases')
+  context = {}
+  return render(request, 'home/login.html', context)
