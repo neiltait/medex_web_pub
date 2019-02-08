@@ -9,6 +9,9 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
 
     <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" >
+
+    {% block extra_css %}
+    {% endblock %}
   </head>
 
   <body>

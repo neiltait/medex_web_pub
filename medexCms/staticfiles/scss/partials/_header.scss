@@ -1,0 +1,74 @@
+.gds-banner {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 7px 0px;
+  line-height: 1;
+
+  .logo {
+    font-weight: 400;
+    font-size: 30px;
+    width: 29%;
+    align-items: center;
+
+    &__icon {
+      margin-right: 5px;
+    }
+  }
+
+  .title {
+    font-weight: 400;
+    font-size: 30px;
+    width: 40%;
+  }
+
+}
+
+.banner-divider {
+  border-color: #005DA6;
+  border-style: solid;
+  margin: 0px;
+  border-width: 5px;
+}
+
+.medex-banner {
+  background-color: #D8D8D8;
+  color: #4A4A4A;
+  font-size: 27px;
+
+  .menu {
+    padding: 20px 0px 15px;
+    justify-content: space-around;
+
+    .home {
+      width: 60%;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    .btn-list {
+      width: 40%;
+      justify-content: flex-end;
+
+      .user {
+        &__name, &__role {
+          font-size: 21px;
+          border-right: 1px solid #4A4A4A;
+          padding: 0px 10px;
+        }
+      }
+
+      .notifications {
+        border-right: 1px solid #4A4A4A;
+        padding: 0px 10px;
+      }
+
+      .logout {
+        font-size: 21px;
+        padding-left: 10px;
+      }
+    }
+  }
+}

@@ -17,33 +17,41 @@
 </div>
 
 
-<div class="medex-banner">
-  <div class="container">
-    <hr class="banner-divider" />
-    
-    <div class="flex-row baseline menu">
-      <div class="home">
-        <img src="{% static 'images/home_icon.png' %}" width="44" height="34" alt="">
-        Home
-      </div>
-
-      <div class="btn-list flex-row">
-        <div class="user__name">
-          {{user.name}}
+{% if session_user %}
+  <div class="medex-banner">
+    <div class="container">
+      <hr class="banner-divider" />
+      
+      <div class="flex-row baseline menu">
+        <div class="home">
+          <a href="/">
+            <img src="{% static 'images/home_icon.png' %}" width="44" height="34" alt="">
+            Home
+          </a>
         </div>
 
-        <div class="user__role">
-          {{user.role}}
-        </div>
+        <div class="btn-list flex-row">
+          <div class="user__name">
+            {{session_user.name}}
+          </div>
 
-        <div class="notifications">
-          
-        </div>
+          <div class="user__role">
+            {{session_user.role}}
+          </div>
 
-        <div class="logout">
-          Logout
+          <div class="notifications">
+            
+          </div>
+
+          <div class="logout">
+            Logout
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+{% else %}
+  <div class="container">
+    <hr class="banner-divider" />
+  </div>
+{% endif %}
