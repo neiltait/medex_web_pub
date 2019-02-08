@@ -1,0 +1,131 @@
+body {
+  margin: 0px;
+  font-family: Arial;
+  color: #4A4A4A;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 990px;
+  position: relative;
+}
+
+.page-content {
+  margin-top: 85px;
+
+  .page-title {
+    margin-top: 0px;
+  }
+}
+
+.flex-row {
+  display: flex;
+}
+
+.baseline {
+  align-items: baseline;
+}
+
+.vertical-bottom {
+  align-items: flex-end;
+}
+
+.vertical-center {
+  align-items: center;
+}
+
+
+.gds-banner {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 7px 0px;
+  line-height: 1;
+
+  .logo {
+    font-weight: 400;
+    font-size: 30px;
+    width: 29%;
+    align-items: center;
+
+    &__icon {
+      margin-right: 5px;
+    }
+  }
+
+  .title {
+    font-weight: 400;
+    font-size: 30px;
+    width: 40%;
+  }
+
+}
+
+.medex-banner {
+  background-color: #D8D8D8;
+  color: #4A4A4A;
+  font-size: 27px;
+
+  .banner-divider {
+    border-color: #005DA6;
+    border-style: solid;
+    margin: 0px;
+    border-width: 5px;
+  }
+
+  .menu {
+    padding: 20px 0px 15px;
+    justify-content: space-around;
+
+    .home {
+      width: 60%;
+    }
+
+    .btn-list {
+      width: 40%;
+      justify-content: flex-end;
+
+      .user {
+        &__name, &__role {
+          font-size: 21px;
+          border-right: 1px solid #4A4A4A;
+          padding: 0px 10px;
+        }
+      }
+
+      .notifications {
+        border-right: 1px solid #4A4A4A;
+        padding: 0px 10px;
+      }
+
+      .logout {
+        font-size: 21px;
+        padding-left: 10px;
+      }
+    }
+  }
+}
+
+.footer {
+  background-color: #DEE0E2;
+  border-top: 1px solid #4A4A4A;
+  padding: 70px 0px 60px;
+
+  .disclaimer{
+    width: 80%;
+
+    .licence {
+      margin-right: 5px;
+    }
+  }
+
+  .logo {
+    img {
+      max-height: 140px;
+    }
+
+    p {
+      margin-bottom: 0px;
+    }
+  }
+}

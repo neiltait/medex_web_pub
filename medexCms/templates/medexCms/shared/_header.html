@@ -1,0 +1,49 @@
+{% load staticfiles %}
+
+<div class="gds-banner">
+  <div class="container">
+    <div class="flex-row vertical-center">
+      <div class="logo flex-row">
+        <img class='logo__icon' src="{% static 'images/gov_logo_inverted.png' %}" width="36" height="32" alt="">
+
+        GOV.UK
+      </div>
+
+      <div class="title">
+        Medical Examiners Service
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="medex-banner">
+  <div class="container">
+    <hr class="banner-divider" />
+    
+    <div class="flex-row baseline menu">
+      <div class="home">
+        <img src="{% static 'images/home_icon.png' %}" width="44" height="34" alt="">
+        Home
+      </div>
+
+      <div class="btn-list flex-row">
+        <div class="user__name">
+          {{user.name}}
+        </div>
+
+        <div class="user__role">
+          {{user.role}}
+        </div>
+
+        <div class="notifications">
+          
+        </div>
+
+        <div class="logout">
+          Logout
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
