@@ -1,0 +1,36 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/home/login.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block page %}
+  <div class="login-page">
+    <h1 class="page-title">
+      Sign in
+    </h1>
+
+    <h2>
+      Enter your Medical Examiner credentials to sign in.
+    </h2>
+
+    <form id="login-form" action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+
+      <div class="flex-row baseline form-row">
+        <label for="user_id">User ID</label>
+
+        <input class="form-field" type="text" name="user_id">
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <label for="password">Password</label>
+
+        <input class="form-field" type="password" name="password">
+      </div>
+      
+      <input class="login-btn" type="submit" value="Sign in" />
+    </form>
+  </div>
+{% endblock %}
