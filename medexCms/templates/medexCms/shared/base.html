@@ -1,9 +1,13 @@
 {% load sass_tags %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html>
   <head>
     <title>Medical Examiners Portal</title>
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+
     <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" >
   </head>
 
