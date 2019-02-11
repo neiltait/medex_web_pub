@@ -38,3 +38,9 @@ def login(request):
 
   context['errors'] = errors
   return render(request, 'home/login.html', context)
+
+
+def logout(request):
+  #TODO submit logout request to OCTA
+
+  return redirect('/login')
