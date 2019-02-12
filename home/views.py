@@ -5,6 +5,8 @@ from django.template import loader
 
 from errors import messages, status
 
+from .forms import LoginForm
+
 def index(request):
   context = {
       'session_user': {
@@ -22,15 +24,10 @@ def login(request):
   status_code = status.success()
 
   if (request.POST):
-    user_id = request.POST.get('user_id')
-    password = request.POST.get('password')
-    context['user_id'] = user_id
-    details_present = True if user_id and password else False
-    if details_present:
-      # TODO submit details to OCTA
-      # Temporary auth check until we have OCTA integrated
-      # may need to add in an attempt check if OCTA doesn't have one.
-      if user_id == 'Matt' and password == 'Password':
+    form = LoginForm(request.POST)
+    context['user_id'] = form.user_id
+    if form.is_valid():
+      if form.is_authorised():
         return redirect('/')
       else:
         errors.append(messages.invalid_credentials())
