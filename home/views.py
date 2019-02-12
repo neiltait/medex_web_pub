@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from django.conf import settings
-
+from errors import messages, status
 
 def index(request):
   context = {
@@ -19,6 +19,7 @@ def index(request):
 def login(request):
   context = {}
   errors = []
+  status_code = status.success()
 
   if (request.POST):
     user_id = request.POST.get('user_id')
@@ -32,12 +33,14 @@ def login(request):
       if user_id == 'Matt' and password == 'Password':
         return redirect('/')
       else:
-        errors.append('Invalid User ID and/or Password entered')
+        errors.append(messages.invalid_credentials())
+        status_code = status.unauthorised()
     else:
-      errors.append('Please enter a User ID and Password')
+      errors.append(messages.missing_credentials())
+      status_code = status.unauthorised()
 
   context['errors'] = errors
-  return render(request, 'home/login.html', context)
+  return render(request, 'home/login.html', context, status=status_code)
 
 
 def logout(request):
