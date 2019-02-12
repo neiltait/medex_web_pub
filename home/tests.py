@@ -6,6 +6,8 @@ from errors import messages, status
 
 class HomeViewsTests(MedExTestCase):
 
+  #### Login tests
+
   def test_landing_on_login_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/login')
     self.assertTemplateUsed(response, 'home/login.html')
@@ -111,3 +113,20 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(error_list[0], messages.invalid_credentials())
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
+
+
+  #### Logout tests
+  
+  def test_logout_returns_redirect_to_login_page_on_submission(self):
+    response = self.client.get('/logout')
+    self.assertEqual(response.status_code, status.redirect())
+    self.assertEqual(response.url, '/login')
+
+
+  #### Index tests
+
+  def test_landing_on_the_landing_page_returns_the_correct_template(self):
+    #TODO expand the test once the page is filled out
+    response = self.client.get('/')
+    self.assertEqual(response.status_code, status.success())
+    self.assertTemplateUsed(response, 'home/index.html')
