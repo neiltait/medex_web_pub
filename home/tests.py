@@ -2,7 +2,7 @@ from medexCms.test.utils import MedExTestCase
 
 from .views import login
 
-from errors import messages
+from errors import messages, status
 
 def get_error_list(response):
   return response.context['errors']
@@ -19,7 +19,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 302)
+    self.assertEqual(response.status_code, status.redirect())
     self.assertEqual(response.url, '/')
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_given(self):
@@ -29,7 +29,7 @@ class HomeViewsTests(MedExTestCase):
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
@@ -42,7 +42,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
@@ -55,7 +55,7 @@ class HomeViewsTests(MedExTestCase):
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
@@ -68,7 +68,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
@@ -81,7 +81,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
@@ -94,7 +94,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, 401)
+    self.assertEqual(response.status_code, status.unauthorised())
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
