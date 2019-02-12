@@ -7,3 +7,6 @@ class MedExTestCase(TestCase):
 
     def assertIsFalse(self, value):
         self.assertIs(value, False)
+
+    def get_context_value(self, context, key):
+      return context[key]

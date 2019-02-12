@@ -4,21 +4,15 @@ from .views import login
 
 from errors import messages, status
 
-def get_error_list(response):
-  return response.context['errors']
-
-def get_user_id(response):
-  return response.context['user_id']
-
 class HomeViewsTests(MedExTestCase):
 
   def test_landing_on_login_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/login')
     self.assertTemplateUsed(response, 'home/login.html')
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 0)
     try: 
-      self.assertEqual(get_user_id(response), None)
+      self.assertEqual(self.get_context_value(response.context, 'user_id'), None)
       self.assertFalse('Test failed to produce expected key error')
     except KeyError:
       self.assertTrue('Test produced expected key error')
@@ -42,10 +36,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_no_user_id_given(self):
@@ -56,10 +50,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_or_user_id_given(self):
@@ -70,10 +64,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.missing_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_password_given(self):
@@ -84,10 +78,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_given(self):
@@ -98,10 +92,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_and_password_given(self):
@@ -112,8 +106,8 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.unauthorised())
-    error_list = get_error_list(response)
+    error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.invalid_credentials())
-    self.assertEqual(get_user_id(response), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
