@@ -1,8 +1,8 @@
 from medexCms.test.utils import MedExTestCase
 
-from .views import login
-
 from errors import messages, status
+
+from .forms import LoginForm
 
 class HomeViewsTests(MedExTestCase):
 
@@ -130,3 +130,65 @@ class HomeViewsTests(MedExTestCase):
     response = self.client.get('/')
     self.assertEqual(response.status_code, status.success())
     self.assertTemplateUsed(response, 'home/index.html')
+
+
+class HomeFormsTests(MedExTestCase):
+
+
+  #### LoginForm tests
+
+  def test_the_form_attributes_are_set_on_init(self):
+    user_id = 'Test User'
+    password = 'TestPassword'
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertEqual(form.user_id, user_id)
+    self.assertEqual(form.password, password)
+
+  def test_LoginForm_is_valid_returns_true_if_user_id_and_password_both_present(self):
+    user_id = 'Test User'
+    password = 'TestPassword'
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsTrue(form.is_valid())
+
+  def test_LoginForm_is_valid_returns_false_if_password_is_not_present(self):
+    user_id = 'Test User'
+    password = ''
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+  def test_LoginForm_is_valid_returns_false_if_user_id_is_not_present(self):
+    user_id = ''
+    password = 'TestPassword'
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+  def test_LoginForm_is_valid_returns_false_if_user_id_and_password_both_not_present(self):
+    user_id = ''
+    password = ''
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+  #TODO needs to be switched from inital dummy creds to Test creds after OCTA integration
+  def test_LoginForm_is_authorised_returns_true_if_user_id_and_password_both_correct(self):
+    user_id = 'Matt'
+    password = 'Password'
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsTrue(form.is_valid())
+
+  def test_LoginForm_is_authorised_returns_false_if_password_is_not_correct(self):
+    user_id = 'Matt'
+    password = ''
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+  def test_LoginForm_is_authorised_returns_false_if_user_id_is_not_correct(self):
+    user_id = ''
+    password = 'Password'
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+  def test_LoginForm_is_authorised_returns_false_if_user_id_and_password_both_not_correct(self):
+    user_id = ''
+    password = ''
+    form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
