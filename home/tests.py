@@ -2,6 +2,8 @@ from medexCms.test.utils import MedExTestCase
 
 from .views import login
 
+from errors import messages
+
 def get_error_list(response):
   return response.context['errors']
 
@@ -25,6 +27,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.missing_credentials())
 
   def test_login_returns_unauthourised_and_error_message_when_no_user_id_given(self):
     user_login_credentials = {
@@ -35,6 +38,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.missing_credentials())
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_or_user_id_given(self):
     user_login_credentials = {
@@ -45,6 +49,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.missing_credentials())
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_password_given(self):
     user_login_credentials = {
@@ -55,6 +60,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.invalid_credentials())
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_given(self):
     user_login_credentials = {
@@ -65,6 +71,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.invalid_credentials())
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_and_password_given(self):
     user_login_credentials = {
@@ -75,3 +82,4 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, 401)
     error_list = get_error_list(response)
     self.assertEqual(len(error_list), 1)
+    self.assertEqual(error_list[0], messages.invalid_credentials())
