@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from django.conf import settings
-
+from errors import messages
 
 def index(request):
   context = {
@@ -33,10 +33,10 @@ def login(request):
       if user_id == 'Matt' and password == 'Password':
         return redirect('/')
       else:
-        errors.append('Invalid User ID and/or Password entered')
+        errors.append(messages.invalid_credentials())
         status = 401
     else:
-      errors.append('Please enter a User ID and Password')
+      errors.append(messages.missing_credentials())
       status = 401
 
   context['errors'] = errors
