@@ -12,6 +12,18 @@ def get_user_id(response):
 
 class HomeViewsTests(MedExTestCase):
 
+  def test_landing_on_login_page_loads_the_correct_template_with_empty_context(self):
+    response = self.client.get('/login')
+    self.assertTemplateUsed(response, 'home/login.html')
+    error_list = get_error_list(response)
+    self.assertEqual(len(error_list), 0)
+    try: 
+      self.assertEqual(get_user_id(response), None)
+      self.assertFalse('Test failed to produce expected key error')
+    except KeyError:
+      self.assertTrue('Test produced expected key error')
+
+
   def test_login_returns_redirect_to_landing_page_on_sucess(self):
     user_id = 'Matt'
     user_login_credentials = {
