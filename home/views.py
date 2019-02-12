@@ -19,6 +19,7 @@ def index(request):
 def login(request):
   context = {}
   errors = []
+  status = 200
 
   if (request.POST):
     user_id = request.POST.get('user_id')
@@ -33,11 +34,13 @@ def login(request):
         return redirect('/')
       else:
         errors.append('Invalid User ID and/or Password entered')
+        status = 401
     else:
       errors.append('Please enter a User ID and Password')
+      status = 401
 
   context['errors'] = errors
-  return render(request, 'home/login.html', context)
+  return render(request, 'home/login.html', context, status=status)
 
 
 def logout(request):
