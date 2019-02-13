@@ -6,8 +6,9 @@ from django.template import loader
 from rest_framework import status
 
 from alerts import messages
+from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
 
-from .forms import LoginForm
+from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
 
 def index(request):
   context = {
@@ -50,8 +51,32 @@ def logout(request):
 
 def forgotten_password(request):
   context = {}
-  return render(request, 'home/forgotten-password.html', context)
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  if(request.POST):
+    form = ForgottenPasswordForm(request.POST)
+    if form.is_valid():
+      alerts.append(generate_info_alert(messages.FORGOTTEN_PASSWORD_SENT))
+    else:
+      alerts.append(generate_error_alert(messages.MISSING_USER_ID))
+      status_code = status.HTTP_400_BAD_REQUEST
+
+  context['alerts'] = alerts
+  return render(request, 'home/forgotten-password.html', context, status=status_code)
 
 def forgotten_userid(request):
   context = {}
-  return render(request, 'home/forgotten-userid.html', context)
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  if(request.POST):
+    form = ForgottenUserIdForm(request.POST)
+    if form.is_valid():
+      alerts.append(generate_info_alert(messages.FORGOTTEN_ID_SENT))
+    else:
+      alerts.append(generate_error_alert(messages.MISSING_EMAIL))
+      status_code = status.HTTP_400_BAD_REQUEST
+
+  context['alerts'] = alerts
+  return render(request, 'home/forgotten-userid.html', context, status=status_code)
