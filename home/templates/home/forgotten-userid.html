@@ -15,10 +15,8 @@
       Request a reminder
     </h2>
 
-    {% for error in errors %}
-      <div class="notification error">
-        {{ error }}
-      </div>
+    {% for alert in alerts %}
+      {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
     <form id="reset-form" action="{% url 'forgotten-userid' %}" method="post">
