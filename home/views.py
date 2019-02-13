@@ -44,3 +44,12 @@ def logout(request):
   #TODO submit logout request to OCTA
 
   return redirect('/login')
+
+
+def forgotten_password(request):
+  context = {}
+  return render(request, 'home/forgotten-password.html', context)
+
+def forgotten_userid(request):
+  context = {}
+  return render(request, 'home/forgotten-userid.html', context)
