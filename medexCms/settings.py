@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home.apps.HomeConfig',
     'errors.apps.ErrorsConfig',
+    'errors.apps.AlertsConfig',
     'sass_processor',
 ]
 
