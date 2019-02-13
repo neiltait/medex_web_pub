@@ -13,8 +13,8 @@ class HomeViewsTests(MedExTestCase):
   def test_landing_on_login_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/login')
     self.assertTemplateUsed(response, 'home/login.html')
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 0)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 0)
     try: 
       self.assertEqual(self.get_context_value(response.context, 'user_id'), None)
       self.assertFalse('Test failed to produce expected key error')
@@ -39,9 +39,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -53,9 +54,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -67,9 +69,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -81,9 +84,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -95,9 +99,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -109,9 +114,10 @@ class HomeViewsTests(MedExTestCase):
     }
     response = self.client.post('/login', user_login_credentials)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 1)
+    self.assertEqual(alert_list[0]['type'], utils.ERROR)
+    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
