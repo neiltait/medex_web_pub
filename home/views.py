@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from errors import messages, status
+from rest_framework import status
 
 from alerts import messages
 
@@ -23,7 +23,7 @@ def index(request):
 def login(request):
   context = {}
   errors = []
-  status_code = status.success()
+  status_code = status.HTTP_200_OK
 
   if (request.POST):
     form = LoginForm(request.POST)
@@ -32,11 +32,11 @@ def login(request):
       if form.is_authorised():
         return redirect('/')
       else:
-        status_code = status.unauthorised()
         errors.append(messages.INVALID_CREDENTIALS)
+        status_code = status.HTTP_401_UNAUTHORIZED
     else:
-      status_code = status.unauthorised()
       errors.append(messages.MISSING_CREDENTIALS)
+      status_code = status.HTTP_401_UNAUTHORIZED
 
   context['errors'] = errors
   return render(request, 'home/login.html', context, status=status_code)

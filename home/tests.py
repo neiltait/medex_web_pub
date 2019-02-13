@@ -1,6 +1,6 @@
 from medexCms.test.utils import MedExTestCase
 
-from errors import messages, status
+from rest_framework import status
 
 from alerts import messages
 
@@ -28,7 +28,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.redirect())
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/')
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_given(self):
@@ -38,7 +38,7 @@ class HomeViewsTests(MedExTestCase):
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
@@ -52,7 +52,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
@@ -66,7 +66,7 @@ class HomeViewsTests(MedExTestCase):
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
@@ -80,7 +80,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
@@ -94,7 +94,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
@@ -108,7 +108,7 @@ class HomeViewsTests(MedExTestCase):
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.unauthorised())
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
     self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
@@ -120,7 +120,7 @@ class HomeViewsTests(MedExTestCase):
   
   def test_logout_returns_redirect_to_login_page_on_submission(self):
     response = self.client.get('/logout')
-    self.assertEqual(response.status_code, status.redirect())
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
 
 
@@ -129,7 +129,7 @@ class HomeViewsTests(MedExTestCase):
   def test_landing_on_the_landing_page_returns_the_correct_template(self):
     #TODO expand the test once the page is filled out
     response = self.client.get('/')
-    self.assertEqual(response.status_code, status.success())
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertTemplateUsed(response, 'home/index.html')
 
 
