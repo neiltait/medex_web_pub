@@ -5,6 +5,8 @@ from django.template import loader
 
 from errors import messages, status
 
+from alerts import messages
+
 from .forms import LoginForm
 
 def index(request):
@@ -30,11 +32,11 @@ def login(request):
       if form.is_authorised():
         return redirect('/')
       else:
-        errors.append(messages.invalid_credentials())
         status_code = status.unauthorised()
+        errors.append(messages.INVALID_CREDENTIALS)
     else:
-      errors.append(messages.missing_credentials())
       status_code = status.unauthorised()
+      errors.append(messages.MISSING_CREDENTIALS)
 
   context['errors'] = errors
   return render(request, 'home/login.html', context, status=status_code)

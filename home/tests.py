@@ -2,6 +2,8 @@ from medexCms.test.utils import MedExTestCase
 
 from errors import messages, status
 
+from alerts import messages
+
 from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
 
 class HomeViewsTests(MedExTestCase):
@@ -18,7 +20,6 @@ class HomeViewsTests(MedExTestCase):
       self.assertFalse('Test failed to produce expected key error')
     except KeyError:
       self.assertTrue('Test produced expected key error')
-
 
   def test_login_returns_redirect_to_landing_page_on_sucess(self):
     user_id = 'Matt'
@@ -40,7 +41,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.missing_credentials())
+    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -54,7 +55,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.missing_credentials())
+    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -68,7 +69,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.missing_credentials())
+    self.assertEqual(error_list[0], messages.MISSING_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -82,7 +83,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.invalid_credentials())
+    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -96,7 +97,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.invalid_credentials())
+    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
@@ -110,7 +111,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.unauthorised())
     error_list = self.get_context_value(response.context, 'errors')
     self.assertEqual(len(error_list), 1)
-    self.assertEqual(error_list[0], messages.invalid_credentials())
+    self.assertEqual(error_list[0], messages.INVALID_CREDENTIALS)
     self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
     self.assertTemplateUsed(response, 'home/login.html')
 
