@@ -26,7 +26,7 @@ SECRET_KEY = '***REMOVED***'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://medex-cms.azurewebsites.net/'
+    'medex-cms.azurewebsites.net'
 ]
 
 
