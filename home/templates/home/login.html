@@ -15,10 +15,8 @@
       Enter your Medical Examiner credentials to sign in.
     </h2>
 
-    {% for error in errors %}
-      <div class="notification error">
-        {{ error }}
-      </div>
+    {% for alert in alerts %}
+      {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
     <form id="login-form" action="{% url 'login' %}" method="post">

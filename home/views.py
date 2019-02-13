@@ -23,7 +23,7 @@ def index(request):
 
 def login(request):
   context = {}
-  errors = []
+  alerts = []
   status_code = status.HTTP_200_OK
 
   if (request.POST):
@@ -33,13 +33,13 @@ def login(request):
       if form.is_authorised():
         return redirect('/')
       else:
-        errors.append(messages.INVALID_CREDENTIALS)
+        alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
         status_code = status.HTTP_401_UNAUTHORIZED
     else:
-      errors.append(messages.MISSING_CREDENTIALS)
+      alerts.append(generate_error_alert(messages.MISSING_CREDENTIALS))
       status_code = status.HTTP_401_UNAUTHORIZED
 
-  context['errors'] = errors
+  context['alerts'] = alerts
   return render(request, 'home/login.html', context, status=status_code)
 
 
