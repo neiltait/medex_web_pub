@@ -26,6 +26,7 @@ SECRET_KEY = '***REMOVED***'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     'medex-cms.azurewebsites.net'
 ]
 
