@@ -156,21 +156,27 @@ class HomeViewsTests(MedExTestCase):
   def test_landing_on_forgotten_user_id_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/forgotten-userid')
     self.assertTemplateUsed(response, 'home/forgotten-userid.html')
-    error_list = self.get_context_value(response.context, 'errors')
-    self.assertEqual(len(error_list), 0)
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 0)
 
   def test_forgotten_userid_returns_success_and_notification_on_success(self):
-    response = self.client.get('/forgotten-userid')
+    reset_form = {
+      'email_address': 'Test.User@email.com'
+    }
+    response = self.client.post('/forgotten-userid', reset_form)
     self.assertTemplateUsed(response, 'home/forgotten-userid.html')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     alerts_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alerts_list), 1)
     self.assertEqual(alerts_list[0]['type'], utils.INFO)
-    self.assertEqual(alerts_list[0]['message'], messages.FORGOTTEN_PASSWORD_SENT)
+    self.assertEqual(alerts_list[0]['message'], messages.FORGOTTEN_ID_SENT)
 
   def test_forgotten_userid_returns_bad_request_and_and_correct_error_on_missing_email(self):
-    response = self.client.get('/forgotten-password')
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
+    reset_form = {
+      'email_address': ''
+    }
+    response = self.client.post('/forgotten-userid', reset_form)
+    self.assertTemplateUsed(response, 'home/forgotten-userid.html')
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     alerts_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alerts_list), 1)
