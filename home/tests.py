@@ -2,7 +2,7 @@ from medexCms.test.utils import MedExTestCase
 
 from errors import messages, status
 
-from .forms import LoginForm
+from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
 
 class HomeViewsTests(MedExTestCase):
 
@@ -191,4 +191,40 @@ class HomeFormsTests(MedExTestCase):
     user_id = ''
     password = ''
     form = LoginForm({'user_id': user_id, 'password': password})
+    self.assertIsFalse(form.is_valid())
+
+
+  #### ForgottenPasswordForm tests
+
+  def test_the_form_attributes_are_set_on_init(self):
+    user_id = 'Test User'
+    form = ForgottenPasswordForm({'user_id': user_id})
+    self.assertEqual(form.user_id, user_id)
+
+  def test_ForgottenPasswordForm_is_valid_returns_true_if_user_id_present(self):
+    user_id = 'Test User'
+    form = ForgottenPasswordForm({'user_id': user_id})
+    self.assertIsTrue(form.is_valid())
+
+  def test_ForgottenPasswordForm_is_valid_returns_false_if_user_id_not_present(self):
+    user_id = ''
+    form = ForgottenPasswordForm({'user_id': user_id})
+    self.assertIsFalse(form.is_valid())
+
+
+  #### ForgottenUserIdForm tests
+
+  def test_the_form_attributes_are_set_on_init(self):
+    email_address = 'Test.User@email.com'
+    form = ForgottenUserIdForm({'email_address': email_address})
+    self.assertEqual(form.email_address, email_address)
+
+  def test_ForgottenUserIdForm_is_valid_returns_true_if_email_address_present(self):
+    email_address = 'Test.User@email.com'
+    form = ForgottenUserIdForm({'email_address': email_address})
+    self.assertIsTrue(form.is_valid())
+
+  def test_ForgottenUserIdForm_is_valid_returns_false_if_email_address_not_present(self):
+    email_address = ''
+    form = ForgottenUserIdForm({'email_address': email_address})
     self.assertIsFalse(form.is_valid())
