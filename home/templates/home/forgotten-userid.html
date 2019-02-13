@@ -1,0 +1,34 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/home/login.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block page %}
+  <div class="forgotten-userid-page">
+    <h1 class="page-title">
+      Forgotten User ID
+    </h1>
+
+    <h2>
+      Request a reminder
+    </h2>
+
+    {% for alert in alerts %}
+      {% include 'alerts/partials/_alert.html' %}
+    {% endfor %}
+
+    <form id="reset-form" action="{% url 'forgotten-userid' %}" method="post">
+      {% csrf_token %}
+
+      <div class="flex-row baseline form-row">
+        <label for="email_address">Email Address</label>
+
+        <input class="form-field" type="text" name="email_address" value="{{email_address}}">
+      </div>
+      
+      <input class="login-btn" type="submit" value="Submit" />
+    </form>
+  </div>
+{% endblock %}

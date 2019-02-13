@@ -3,9 +3,12 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from errors import messages, status
+from rest_framework import status
 
-from .forms import LoginForm
+from alerts import messages
+from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
+
+from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
 
 def index(request):
   context = {
@@ -20,8 +23,8 @@ def index(request):
 
 def login(request):
   context = {}
-  errors = []
-  status_code = status.success()
+  alerts = []
+  status_code = status.HTTP_200_OK
 
   if (request.POST):
     form = LoginForm(request.POST)
@@ -30,13 +33,13 @@ def login(request):
       if form.is_authorised():
         return redirect('/')
       else:
-        errors.append(messages.invalid_credentials())
-        status_code = status.unauthorised()
+        alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
+        status_code = status.HTTP_401_UNAUTHORIZED
     else:
-      errors.append(messages.missing_credentials())
-      status_code = status.unauthorised()
+      alerts.append(generate_error_alert(messages.MISSING_CREDENTIALS))
+      status_code = status.HTTP_401_UNAUTHORIZED
 
-  context['errors'] = errors
+  context['alerts'] = alerts
   return render(request, 'home/login.html', context, status=status_code)
 
 
@@ -44,3 +47,36 @@ def logout(request):
   #TODO submit logout request to OCTA
 
   return redirect('/login')
+
+
+def forgotten_password(request):
+  context = {}
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  if(request.POST):
+    form = ForgottenPasswordForm(request.POST)
+    if form.is_valid():
+      alerts.append(generate_info_alert(messages.FORGOTTEN_PASSWORD_SENT))
+    else:
+      alerts.append(generate_error_alert(messages.MISSING_USER_ID))
+      status_code = status.HTTP_400_BAD_REQUEST
+
+  context['alerts'] = alerts
+  return render(request, 'home/forgotten-password.html', context, status=status_code)
+
+def forgotten_userid(request):
+  context = {}
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  if(request.POST):
+    form = ForgottenUserIdForm(request.POST)
+    if form.is_valid():
+      alerts.append(generate_info_alert(messages.FORGOTTEN_ID_SENT))
+    else:
+      alerts.append(generate_error_alert(messages.MISSING_EMAIL))
+      status_code = status.HTTP_400_BAD_REQUEST
+
+  context['alerts'] = alerts
+  return render(request, 'home/forgotten-userid.html', context, status=status_code)

@@ -26,6 +26,7 @@ SECRET_KEY = '***REMOVED***'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     'medex-cms.azurewebsites.net'
 ]
 
@@ -39,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'home.apps.HomeConfig',
     'errors.apps.ErrorsConfig',
+    'alerts.apps.AlertsConfig',
     'sass_processor',
 ]
 

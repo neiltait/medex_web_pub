@@ -1,9 +1,9 @@
-.login-page {
+.login-page, .forgotten-password-page, .forgotten-userid-page {
   h2 {
     font-weight: 100;
   }
 
-  #login-form {
+  #login-form, #reset-form {
     margin-bottom: 150px;
 
     .form-row {
@@ -31,6 +31,10 @@
       box-shadow: 0 2px 0 #003618;
       border: 2px solid transparent;
       border-radius: 0;
+    }
+
+    .forgotten-creds {
+      margin-top: 10px;
     }
   }
 }
