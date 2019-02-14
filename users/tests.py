@@ -62,8 +62,8 @@ class UsersViewsTest(MedExTestCase):
     user_id = 'TestUser'
     response = self.client.get('/users/manage/' + user_id)
     self.assertTemplateUsed(response, 'users/manage.html')
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 0)
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 0)
     managed_user = self.get_context_value(response.context, 'managed_user')
     self.assertEqual(managed_user.user_id, user_id)
 
@@ -71,8 +71,8 @@ class UsersViewsTest(MedExTestCase):
     user_id = 'AUser'
     response = self.client.get('/users/manage/' + user_id)
     self.assertTemplateUsed(response, 'users/manage.html')
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 1)
     self.assertEqual(alerts_list[0]['type'], utils.ERROR)
     self.assertEqual(alerts_list[0]['message'], messages.OBJECT_NOT_FOUND % 'user')
     managed_user = self.get_context_value(response.context, 'managed_user')
