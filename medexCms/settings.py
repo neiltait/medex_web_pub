@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'errors.apps.ErrorsConfig',
     'alerts.apps.AlertsConfig',
+    'users.apps.UsersConfig',
     'sass_processor',
 ]
 
