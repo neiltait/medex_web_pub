@@ -30,3 +30,18 @@ class User():
       })
     else:
       return None
+
+  @classmethod
+  def load_by_user_id(cls, user_id):
+    # TODO need to tie into the api when possible
+    if user_id == 'TestUser':
+      return User({
+        'user_id': 'TestUser',
+        'first_name': 'Test',
+        'last_name': 'User',
+        'email_address': 'test.user@email.com',
+        'role': 'MEO',
+        'permissions': [],
+      })
+    else:
+      return None
