@@ -79,6 +79,15 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(managed_user, None)
 
 
+  #### User create tests
+
+  def test_landing_on_the_user_creation_page_loads_the_correct_template(self):
+    response = self.client.get('/users/new')
+    self.assertTemplateUsed(response, 'users/new.html')
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 0)
+
+
 class UsersFormsTests(MedExTestCase):
 
 
