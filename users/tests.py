@@ -5,6 +5,16 @@ from rest_framework import status
 from alerts import utils, messages
 
 from .forms import UserLookupForm
+from .models import User
+
+user_dict = {
+  'user_id': 'TestUser',
+  'first_name': 'Test',
+  'last_name': 'User',
+  'email_address': 'test.user@email.com',
+  'role': 'MEO',
+  'permissions': [],
+}
 
 class UsersViewsTest(MedExTestCase):
 
@@ -17,13 +27,13 @@ class UsersViewsTest(MedExTestCase):
     alert_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alert_list), 0)
 
-  def test_user_lookup_returns_redirect_to_manage_user_page_if_user_found(self):
+  def test_user_lookup_returns_redirect_to_manage_user_page_if_user_exists(self):
     user_email = {
-      'email_address': 'user.test@email.com',
+      'email_address': user_dict['email_address'],
     }
     response = self.client.post('/users/lookup', user_email)
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/users/TestUser') # TODO need to swap 'TestUser' for the user id for the found user
+    self.assertEqual(response.url, '/users/' + user_dict['user_id'])
 
   def test_user_lookup_returns_bad_request_and_correct_error_on_missing_email(self):
     user_email = {
@@ -56,3 +66,35 @@ class UsersFormsTests(MedExTestCase):
     email = ''
     form = UserLookupForm({ 'email_address': email })
     self.assertIsFalse(form.is_valid())
+
+class UsersModelsTests(MedExTestCase):
+
+
+  #### User tests
+
+  def test_User_initialisation_correctly_sets_the_fields_from_dict(self):
+    user_obj = User(user_dict)
+    self.assertEqual(user_obj.user_id, user_dict['user_id'])
+    self.assertEqual(user_obj.first_name, user_dict['first_name'])
+    self.assertEqual(user_obj.last_name, user_dict['last_name'])
+    self.assertEqual(user_obj.email_address, user_dict['email_address'])
+    self.assertEqual(user_obj.role, user_dict['role'])
+    self.assertEqual(user_obj.permissions, user_dict['permissions'])
+
+  def test_User_full_name_method_returns_first_and_last_name_combined(self):
+    user_obj = User(user_dict)
+    expected_result = user_dict['first_name'] + ' ' + user_dict['last_name']
+    self.assertEqual(user_obj.full_name(), expected_result)
+
+  def test_User_str_method_returns_first_and_last_name_combined(self):
+    user_obj = User(user_dict)
+    expected_result = user_dict['first_name'] + ' ' + user_dict['last_name']
+    self.assertEqual(user_obj.__str__(), expected_result)
+
+  def test_User_load_by_email_returns_a_user_object_if_the_email_has_an_account(self):
+    response = User.load_by_email('test.user@email.com')
+    self.assertEqual(type(response), User)
+
+  def test_User_load_by_email_returns_a_None_object_if_the_email_doesnt_have_an_account(self):
+    response = User.load_by_email('a.user@email.com')
+    self.assertEqual(response, None)
