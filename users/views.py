@@ -1,7 +1,12 @@
 from django.shortcuts import render
 
 def user_lookup(request):
-  context = {}
+  context = {
+    'session_user': {
+      'name': 'Andrea Smith',
+      'role': 'MEO'
+    },
+  }
   alerts = []
 
   context['alerts'] = alerts
