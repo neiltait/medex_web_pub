@@ -6,6 +6,7 @@ from alerts import messages
 from alerts.utils import generate_error_alert
 
 from .forms import UserLookupForm
+from .models import User
 
 def user_lookup(request):
   context = {
@@ -20,7 +21,11 @@ def user_lookup(request):
   if (request.POST):
     form = UserLookupForm(request.POST)
     if (form.is_valid()):
-      return redirect('/users/TestUser')
+      loaded_user = User.load_by_email(form.email_address)
+      if (loaded_user):
+        return redirect('/users/' + loaded_user.user_id)
+      else:
+        return redirect('/users/new')
     else:
       alerts.append(generate_error_alert(messages.MISSING_EMAIL))
       status_code = status.HTTP_400_BAD_REQUEST
