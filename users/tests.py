@@ -2,6 +2,8 @@ from medexCms.test.utils import MedExTestCase
 
 from rest_framework import status
 
+from alerts import utils, messages
+
 from .forms import UserLookupForm
 
 class UsersViewsTest(MedExTestCase):
