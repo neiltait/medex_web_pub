@@ -55,6 +55,16 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(alerts_list[0]['type'], utils.ERROR)
     self.assertEqual(alerts_list[0]['message'], messages.MISSING_EMAIL)
 
+  def test_landing_on_the_user_manage_page_loads_the_correct_template_with_the_users_details_present(self):
+    user_id = 'TestUser'
+    response = self.client.get('/users/manage/' + user_id)
+    self.assertTemplateUsed(response, 'users/manage.html')
+    alert_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alert_list), 0)
+    managed_user = self.get_context_value(response.context, 'managed_user')
+    self.assertEqual(managed_user.user_id, user_id)
+
+
 class UsersFormsTests(MedExTestCase):
 
 
