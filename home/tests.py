@@ -292,7 +292,7 @@ class HomeFormsTests(MedExTestCase):
   def test_the_form_attributes_are_set_on_init(self):
     email_address = 'Test.User@email.com'
     form = ForgottenUserIdForm({'email_address': email_address})
-    self.assertEqual(form.email_address, email_address)
+    self.assertEqual(form.email_address, email_address.lower())
 
   def test_ForgottenUserIdForm_is_valid_returns_true_if_email_address_present(self):
     email_address = 'Test.User@email.com'

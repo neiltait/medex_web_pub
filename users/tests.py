@@ -45,7 +45,7 @@ class UsersFormsTests(MedExTestCase):
   def test_the_form_attributes_are_set_on_init(self):
     email = 'Test.User@email.com'
     form = UserLookupForm({ 'email_address': email })
-    self.assertEqual(form.email_address, email)
+    self.assertEqual(form.email_address, email.lower())
 
   def test_UserLookupForm_is_valid_returns_true_if_email_is_present(self):
     email = 'Test.User@email.com'
