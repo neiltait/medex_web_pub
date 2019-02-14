@@ -32,3 +32,17 @@ def user_lookup(request):
 
   context['alerts'] = alerts
   return render(request, 'users/lookup.html', context, status=status_code)
+
+def manage_user(request, user_id):
+  context = {}
+  alerts = []
+  status_code = status.HTTP_200_OK
+  managed_user = User.load_by_user_id(user_id)
+
+  if not managed_user:
+    alerts.append(generate_error_alert(messages.OBJECT_NOT_FOUND % 'user'))
+    status_code = 404 # TODO replace with constant
+
+  context['alerts'] = alerts
+  context['managed_user'] = managed_user
+  return render(request, 'users/manage.html', context, status=status_code)
