@@ -41,8 +41,16 @@ def manage_user(request, user_id):
 
   if not managed_user:
     alerts.append(generate_error_alert(messages.OBJECT_NOT_FOUND % 'user'))
-    status_code = 404 # TODO replace with constant
+    status_code = status.HTTP_404_NOT_FOUND
 
   context['alerts'] = alerts
   context['managed_user'] = managed_user
   return render(request, 'users/manage.html', context, status=status_code)
+
+def create_user(request):
+  context = {}
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  context['alerts'] = alerts
+  return render(request, 'users/new.html', context, status=status_code)
