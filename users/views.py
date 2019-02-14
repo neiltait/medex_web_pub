@@ -1,3 +1,8 @@
 from django.shortcuts import render
 
-# Create your views here.
+def user_lookup(request):
+  context = {}
+  alerts = []
+
+  context['alerts'] = alerts
+  return render(request, 'users/lookup.html', context)
