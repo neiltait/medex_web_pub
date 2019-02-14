@@ -19,7 +19,7 @@
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
-    <form id="lookup-form" action="{% url 'login' %}" method="post">
+    <form id="lookup-form" action="{% url 'user_lookup' %}" method="post">
       {% csrf_token %}
 
       <div class="flex-row baseline form-row">
