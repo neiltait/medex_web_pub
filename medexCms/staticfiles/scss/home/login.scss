@@ -1,36 +1,11 @@
 .login-page, .forgotten-password-page, .forgotten-userid-page {
-  h2 {
-    font-weight: 100;
-  }
-
   #login-form, #reset-form {
     margin-bottom: 150px;
 
     .form-row {
-      margin-bottom: 15px;
-
-      label {
-        font-size: 24px;
-        min-width: 200px;
-      }
-
       .form-field {
         width: 200px;
-        font-size: 24px;
-        border: 1.5px solid #4A4A4A;
       }
-
-    }
-
-    .login-btn {
-      margin-top: 20px;
-      font-size: 24px;
-      background-color: #00823b;
-      color: #FFFFFF;
-      padding: 5px 10px;
-      box-shadow: 0 2px 0 #003618;
-      border: 2px solid transparent;
-      border-radius: 0;
     }
 
     .forgotten-creds {
