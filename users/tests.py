@@ -2,6 +2,8 @@ from medexCms.test.utils import MedExTestCase
 
 from rest_framework import status
 
+from .forms import UserLookupForm
+
 class UsersViewsTest(MedExTestCase):
 
 
@@ -36,19 +38,19 @@ class UsersViewsTest(MedExTestCase):
 class UsersFormsTests(MedExTestCase):
 
 
-  #### LookupForm tests
+  #### UserLookupForm tests
 
   def test_the_form_attributes_are_set_on_init(self):
     email = 'Test.User@email.com'
-    form = LoginForm({ 'email_address': email })
+    form = UserLookupForm({ 'email_address': email })
     self.assertEqual(form.email_address, email)
 
-  def test_LookupForm_is_valid_returns_true_if_email_is_present(self):
+  def test_UserLookupForm_is_valid_returns_true_if_email_is_present(self):
     email = 'Test.User@email.com'
-    form = LoginForm({ 'email_address': email })
+    form = UserLookupForm({ 'email_address': email })
     self.assertIsTrue(form.is_valid())
 
-  def test_LookupForm_is_valid_returns_false_if_email_is_not_present(self):
+  def test_UserLookupForm_is_valid_returns_false_if_email_is_not_present(self):
     email = ''
-    form = LoginForm({ 'email_address': email })
+    form = UserLookupForm({ 'email_address': email })
     self.assertIsFalse(form.is_valid())
