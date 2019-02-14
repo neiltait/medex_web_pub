@@ -23,7 +23,7 @@ def user_lookup(request):
     if (form.is_valid()):
       loaded_user = User.load_by_email(form.email_address)
       if (loaded_user):
-        return redirect('/users/' + loaded_user.user_id)
+        return redirect('/users/manage/' + loaded_user.user_id)
       else:
         return redirect('/users/new')
     else:

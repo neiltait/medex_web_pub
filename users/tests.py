@@ -33,7 +33,7 @@ class UsersViewsTest(MedExTestCase):
     }
     response = self.client.post('/users/lookup', user_email)
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/users/' + user_dict['user_id'])
+    self.assertEqual(response.url, '/users/manage/' + user_dict['user_id'])
 
   def test_user_lookup_returns_redirect_to_new_user_page_if_user_doesnt_exist(self):
     user_email = {
