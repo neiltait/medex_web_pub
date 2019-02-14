@@ -35,6 +35,14 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/users/' + user_dict['user_id'])
 
+  def test_user_lookup_returns_redirect_to_new_user_page_if_user_doesnt_exist(self):
+    user_email = {
+      'email_address': 'another.user@email.com',
+    }
+    response = self.client.post('/users/lookup', user_email)
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/users/new')
+
   def test_user_lookup_returns_bad_request_and_correct_error_on_missing_email(self):
     user_email = {
       'email_address': ''
