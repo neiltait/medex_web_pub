@@ -85,6 +85,7 @@ class UsersFormsTests(MedExTestCase):
     form = UserLookupForm({ 'email_address': email })
     self.assertIsFalse(form.is_valid())
 
+
 class UsersModelsTests(MedExTestCase):
 
 
@@ -115,4 +116,12 @@ class UsersModelsTests(MedExTestCase):
 
   def test_User_load_by_email_returns_a_None_object_if_the_email_doesnt_have_an_account(self):
     response = User.load_by_email('a.user@email.com')
+    self.assertEqual(response, None)
+
+  def test_User_load_by_user_id_returns_a_user_object_if_the_id_has_an_account(self):
+    response = User.load_by_user_id('TestUser')
+    self.assertEqual(type(response), User)
+
+  def test_User_load_by_user_id_returns_a_None_object_if_the_id_doesnt_have_an_account(self):
+    response = User.load_by_user_id('AUser')
     self.assertEqual(response, None)
