@@ -4,6 +4,9 @@ from rest_framework import status
 
 class UsersViewsTest(MedExTestCase):
 
+
+  #### Lookup tests
+
   def test_landing_on_the_user_lookup_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/users/lookup')
     self.assertTemplateUsed(response, 'users/lookup.html')
@@ -29,3 +32,23 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(len(alerts_list), 1)
     self.assertEqual(alerts_list[0]['type'], utils.ERROR)
     self.assertEqual(alerts_list[0]['message'], messages.MISSING_EMAIL)
+
+class UsersFormsTests(MedExTestCase):
+
+
+  #### LookupForm tests
+
+  def test_the_form_attributes_are_set_on_init(self):
+    email = 'Test.User@email.com'
+    form = LoginForm({ 'email_address': email })
+    self.assertEqual(form.email_address, email)
+
+  def test_LookupForm_is_valid_returns_true_if_email_is_present(self):
+    email = 'Test.User@email.com'
+    form = LoginForm({ 'email_address': email })
+    self.assertIsTrue(form.is_valid())
+
+  def test_LookupForm_is_valid_returns_false_if_email_is_not_present(self):
+    email = ''
+    form = LoginForm({ 'email_address': email })
+    self.assertIsFalse(form.is_valid())
