@@ -1,6 +1,8 @@
 @import 'partials/header';
 @import 'partials/footer';
 @import 'partials/notifications';
+@import 'partials/buttons';
+@import 'partials/forms';
 
 body {
   margin: 0px;
@@ -25,6 +27,10 @@ input {
   .page-title {
     margin-top: 0px;
     font-size: 48px;
+  }
+
+  .page-subheading {
+    font-weight: 100;
   }
 }
 

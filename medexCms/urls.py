@@ -1,19 +1,4 @@
-"""medexCms URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
+from django.conf.urls import url
 from django.urls import include, path
 
 from home import views
@@ -24,4 +9,5 @@ urlpatterns = [
   path('logout', views.logout, name='logout'),
   path('forgotten-password', views.forgotten_password, name='forgotten-password'),
   path('forgotten-userid', views.forgotten_userid, name='forgotten-userid'),
+  url(r'^users/', include('users.urls')),
 ]
