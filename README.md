@@ -55,7 +55,7 @@ The project is developed using the TDD approach, using the unittest module for w
 
 The target coverage level for the project is:
 
-- >80% coverage for unit testing
+- &lt;80% coverage for unit testing
 - Feature tests for each user feature, covering all probable scenarios.
 
 #### Commands
@@ -66,7 +66,7 @@ The unit tests can be run with the 'test' command in the bin directory, or can b
 
 Feature development in this project is following the git-flow development pattern.
 
-When starting a new project feature you should create a new branch named in the format 'feature/`ticket-id`-`branch-name`
+When starting a new project feature you should create a new branch named in the format 'feature/`ticket-id`-`branch-name`'
 
 Once development on the branch is complete, the branch should be pushed to the Github repository and a pull request should be opened against the master branch.
 
