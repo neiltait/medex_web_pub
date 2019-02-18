@@ -2,6 +2,7 @@
 # http://docs.microsoft.com/azure/devops/pipelines/languages/docker?view=vsts
 trigger:
 - master
+- feature/*
 
 pool:
   vmImage: 'Ubuntu 16.04'
