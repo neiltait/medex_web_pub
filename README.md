@@ -3,8 +3,22 @@
 This respository contains the source code for the Medical Examiners Service CMS, providing the frontend UI and the logic for accessing and processing data from the Medical Examiners Service Data API.
 
 ### Table of Contents
-1. [Project Status](#project-status)
-
+* [Project Status](#project-status)
+  * [Sandbox](#sandbox)
+  * [Staging](#staging)
+  * [Production](#production)
+* [Development](#development)
+  * [Tech Stack](#tech-stack)
+  * [Running Local Development](#running-local-development)
+    * [Environment Variables](#environment-variables)
+    * [Starting the server](#starting-the-server)
+  * [Testing](#testing)
+    * [Startegy](#strategy)
+    * [Commands](#commands)
+  * [Feature development](#feature-development)
+* [Continuous Integration and Deployment Pipeline](#continuous-integration-and-deployment-pipeline)
+  * [Continuous Integration](#continuous-integration)
+  * [Continuous Deployment](#continuous-deployment)
 
 ## Project Status
 
