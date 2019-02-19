@@ -16,15 +16,15 @@ class HomeViewsTests(MedExTestCase):
     alert_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alert_list), 0)
     try: 
-      self.assertEqual(self.get_context_value(response.context, 'user_id'), None)
+      self.assertEqual(self.get_context_value(response.context, 'email_address'), None)
       self.assertFalse('Test failed to produce expected key error')
     except KeyError:
       self.assertTrue('Test produced expected key error')
 
   def test_login_returns_redirect_to_landing_page_on_sucess(self):
-    user_id = 'Matt'
+    email_address = 'Matt'
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -32,9 +32,9 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.url, '/')
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_given(self):
-    user_id = 'Matt'
+    email_address = 'Matt'
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -43,13 +43,13 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address.lower())
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_no_user_id_given(self):
-    user_id = ''
+    email_address = ''
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -58,13 +58,13 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_no_password_or_user_id_given(self):
-    user_id = ''
+    email_address = ''
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': '',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -73,13 +73,13 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_password_given(self):
-    user_id = 'Matt'
+    email_address = 'Matt'
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -88,13 +88,13 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address.lower())
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_given(self):
-    user_id = 'matt'
+    email_address = 'david'
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': 'Password',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -103,13 +103,13 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
     self.assertTemplateUsed(response, 'home/login.html')
 
   def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_and_password_given(self):
-    user_id = 'matt'
+    email_address = 'matt'
     user_login_credentials = {
-      'user_id': user_id,
+      'email_address': email_address,
       'password': 'password',
     }
     response = self.client.post('/login', user_login_credentials)
@@ -118,7 +118,7 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(len(alert_list), 1)
     self.assertEqual(alert_list[0]['type'], utils.ERROR)
     self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'user_id'), user_id)
+    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
     self.assertTemplateUsed(response, 'home/login.html')
 
 
@@ -213,59 +213,59 @@ class HomeFormsTests(MedExTestCase):
   #### LoginForm tests
 
   def test_the_form_attributes_are_set_on_init(self):
-    user_id = 'Test User'
+    email_address = 'Test User'
     password = 'TestPassword'
-    form = LoginForm({'user_id': user_id, 'password': password})
-    self.assertEqual(form.user_id, user_id)
+    form = LoginForm({'email_address': email_address, 'password': password})
+    self.assertEqual(form.email_address, email_address)
     self.assertEqual(form.password, password)
 
   def test_LoginForm_is_valid_returns_true_if_user_id_and_password_both_present(self):
-    user_id = 'Test User'
+    email_address = 'Test User'
     password = 'TestPassword'
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsTrue(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_password_is_not_present(self):
-    user_id = 'Test User'
+    email_address = 'Test User'
     password = ''
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_user_id_is_not_present(self):
-    user_id = ''
+    email_address = ''
     password = 'TestPassword'
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_user_id_and_password_both_not_present(self):
-    user_id = ''
+    email_address = ''
     password = ''
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
   #TODO needs to be switched from inital dummy creds to Test creds after OCTA integration
   def test_LoginForm_is_authorised_returns_true_if_user_id_and_password_both_correct(self):
-    user_id = 'Matt'
+    email_address = 'Matt'
     password = 'Password'
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsTrue(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_password_is_not_correct(self):
-    user_id = 'Matt'
+    email_address = 'Matt'
     password = ''
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_user_id_is_not_correct(self):
-    user_id = ''
+    email_address = ''
     password = 'Password'
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_user_id_and_password_both_not_correct(self):
-    user_id = ''
+    email_address = ''
     password = ''
-    form = LoginForm({'user_id': user_id, 'password': password})
+    form = LoginForm({'email_address': email_address, 'password': password})
     self.assertIsFalse(form.is_valid())
 
 
