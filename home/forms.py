@@ -4,6 +4,7 @@ class LoginForm():
   def __init__(self, request):
     self.email_address = request.get('email_address').lower()
     self.password = request.get('password')
+    self.persist_user = request.get('persist')
 
   def is_valid(self):
     return True if self.email_address and self.password else False
