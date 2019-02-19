@@ -1,26 +1,26 @@
 @import '../variables';
 
 .notification {
-  padding: 0.33em 0.66em;
-  border: 1.5px solid transparent;
-  border-radius: 0.33em;
+  font-size: $notification-size;
   margin-top: 1.5em;
   margin-bottom: 1em;
-  font-size: $notification-size;
 
   &.error {
     color: $error-color;
-    background-color: $error-background;
-    border-color: $error-border;
+    /*background-color: $error-background;
+    border-color: $error-border;*/
   }
 
   &.success {
     color: $success-color;
-    background-color: $success-background;
-    border-color: $success-border;
+    /*background-color: $success-background;
+    border-color: $success-border;*/
   }
 
   &.info {
+    padding: 0.33em 0.66em;
+    border: 1.5px solid transparent;
+    border-radius: 0.33em;
     color: $info-color;
     background-color: $info-background;
     border-color: $info-border;
