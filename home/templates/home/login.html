@@ -19,15 +19,11 @@
       {% csrf_token %}
 
       <div class="flex-row baseline form-row">
-        <label for="user_id">User ID</label>
-
-        <input class="form-field" type="text" name="user_id" value="{{user_id}}">
+        <input class="form-field" type="text" name="user_id" value="{{user_id}}" placeholder="Enter email">
       </div>
 
       <div class="flex-row baseline form-row">
-        <label for="password">Password</label>
-
-        <input class="form-field" type="password" name="password">
+        <input class="form-field" type="password" name="password" placeholder="Enter password">
       </div>
       
       <input class="submit-btn" type="submit" value="Sign in" />
