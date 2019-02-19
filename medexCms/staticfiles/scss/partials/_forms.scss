@@ -16,4 +16,13 @@
       border: 1.5px solid $dark-grey;
     }
   }
+
+  &.error {
+    margin-top: 1rem;
+    .form-row {
+      .form-field {
+        border: 1.5px solid $error-border;
+      }
+    }
+  }
 }
