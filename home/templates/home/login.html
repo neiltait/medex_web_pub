@@ -8,12 +8,8 @@
 {% block page %}
   <div class="login-page">
     <h1 class="page-title">
-      Sign in
+      {{ page_heading }}
     </h1>
-
-    <h2 class="page-subheading">
-      Enter your Medical Examiner credentials to sign in.
-    </h2>
 
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}

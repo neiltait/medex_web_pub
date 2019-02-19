@@ -22,7 +22,9 @@ def index(request):
 
 
 def login(request):
-  context = {}
+  context = {
+    'page_heading': 'Welcome to the Medical Examiners Service'
+  }
   alerts = []
   status_code = status.HTTP_200_OK
 
