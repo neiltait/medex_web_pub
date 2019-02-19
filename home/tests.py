@@ -212,60 +212,70 @@ class HomeFormsTests(MedExTestCase):
 
   #### LoginForm tests
 
-  def test_the_form_attributes_are_set_on_init(self):
+  def test_passing_in_submissions_sets_the_attributes(self):
     email_address = 'Test User'
     password = 'TestPassword'
-    form = LoginForm({'email_address': email_address, 'password': password})
-    self.assertEqual(form.email_address, email_address)
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
+    self.assertEqual(form.email_address, email_address.lower())
     self.assertEqual(form.password, password)
+    self.assertIsFalse(form.persist_user)
 
   def test_LoginForm_is_valid_returns_true_if_user_id_and_password_both_present(self):
     email_address = 'Test User'
     password = 'TestPassword'
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsTrue(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_password_is_not_present(self):
     email_address = 'Test User'
     password = ''
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_user_id_is_not_present(self):
     email_address = ''
     password = 'TestPassword'
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_valid_returns_false_if_user_id_and_password_both_not_present(self):
     email_address = ''
     password = ''
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
   #TODO needs to be switched from inital dummy creds to Test creds after OCTA integration
   def test_LoginForm_is_authorised_returns_true_if_user_id_and_password_both_correct(self):
     email_address = 'Matt'
     password = 'Password'
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsTrue(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_password_is_not_correct(self):
     email_address = 'Matt'
     password = ''
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_user_id_is_not_correct(self):
     email_address = ''
     password = 'Password'
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
   def test_LoginForm_is_authorised_returns_false_if_user_id_and_password_both_not_correct(self):
     email_address = ''
     password = ''
-    form = LoginForm({'email_address': email_address, 'password': password})
+    persist = False
+    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
     self.assertIsFalse(form.is_valid())
 
 
