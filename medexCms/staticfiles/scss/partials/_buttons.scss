@@ -1,10 +1,12 @@
+@import '../variables';
+
 .submit-btn {
   margin-top: 20px;
   font-size: 24px;
-  background-color: #00823b;
-  color: #FFFFFF;
+  background-color: $mid-green;
+  color: $white;
   padding: 5px 10px;
-  box-shadow: 0 2px 0 #003618;
+  box-shadow: 0 2px 0 $dark-green;
   border: 2px solid transparent;
   border-radius: 0;
 }

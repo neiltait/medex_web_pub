@@ -1,3 +1,5 @@
+@import '../variables';
+
 .notification {
   padding: 5px 10px;
   border: 1.5px solid transparent;
@@ -5,20 +7,20 @@
   margin-bottom: 15px;
 
   &.error {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+    color: $error-color;
+    background-color: $error-background;
+    border-color: $error-border;
   }
 
   &.success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+    color: $success-color;
+    background-color: $success-background;
+    border-color: $success-border;
   }
 
   &.info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
+    color: $info-color;
+    background-color: $info-background;
+    border-color: $info-border;
   }
 }

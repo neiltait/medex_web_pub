@@ -3,15 +3,16 @@
 @import 'partials/notifications';
 @import 'partials/buttons';
 @import 'partials/forms';
+@import 'variables';
 
 body {
   margin: 0px;
-  font-family: Arial;
-  color: #4A4A4A;
+  font-family: $primary-font;
+  color: $primary-font-color;
 }
 
 input {
-  font-family: Arial;
+  font-family: $primary-font;
 }
 
 .container {
