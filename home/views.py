@@ -30,7 +30,7 @@ def login(request):
 
   if (request.POST):
     form = LoginForm(request.POST)
-    context['user_id'] = form.user_id
+    context['email_address'] = form.email_address
     if form.is_valid():
       if form.is_authorised():
         return redirect('/')
