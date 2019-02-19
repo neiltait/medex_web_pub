@@ -33,7 +33,10 @@ def login(request):
     context['email_address'] = form.email_address
     if form.is_valid():
       if form.is_authorised():
-        return redirect('/')
+        response = redirect('/')
+        if form.persist_user:
+          ## TODO implement user 'Remember me' when better defined and connect to API
+        return response
       else:
         alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
         status_code = status.HTTP_401_UNAUTHORIZED
