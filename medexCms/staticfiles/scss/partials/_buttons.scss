@@ -1,11 +1,11 @@
 @import '../variables';
 
 .submit-btn {
-  margin-top: 20px;
-  font-size: 24px;
+  margin-top: 1em;
+  font-size: $default-font-size;
   background-color: $mid-green;
   color: $white;
-  padding: 5px 10px;
+  padding: 0.33em 0.66em;
   box-shadow: 0 2px 0 $dark-green;
   border: 2px solid transparent;
   border-radius: 0;
