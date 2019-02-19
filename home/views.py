@@ -41,6 +41,8 @@ def login(request):
       alerts.append(generate_error_alert(messages.MISSING_CREDENTIALS))
       status_code = status.HTTP_401_UNAUTHORIZED
 
+    context['invalid'] = True
+
   context['alerts'] = alerts
   return render(request, 'home/login.html', context, status=status_code)
 

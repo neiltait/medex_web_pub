@@ -15,7 +15,7 @@
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
-    <form id="login-form" class="form" action="{% url 'login' %}" method="post">
+    <form id="login-form" class="form{% if invalid %} error{% endif %}" action="{% url 'login' %}" method="post">
       {% csrf_token %}
 
       <div class="flex-row baseline form-row">
