@@ -198,7 +198,7 @@ class HomeViewsTests(MedExTestCase):
     response = self.client.get('/reset-sent')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertTemplateUsed(response, 'home/reset-sent.html')
-    self.assertEqual(self.get_context_value(response.context, 'sub_heading'), messages.FORGOTTEN_PASSWORD_SENT)
+    self.assertEqual(self.get_context_value(response.context, 'content'), messages.FORGOTTEN_PASSWORD_SENT)
 
 
 class HomeFormsTests(MedExTestCase):

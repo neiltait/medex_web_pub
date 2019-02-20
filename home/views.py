@@ -89,6 +89,6 @@ def forgotten_password(request):
 def reset_sent(request):
   context = {
     'page_heading': 'Welcome to the Medical Examiners Service',
-    'sub_heading': messages.FORGOTTEN_PASSWORD_SENT
+    'content': messages.FORGOTTEN_PASSWORD_SENT
   }
   return render(request, 'home/reset-sent.html', context)
