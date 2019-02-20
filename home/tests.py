@@ -148,7 +148,7 @@ class HomeViewsTests(MedExTestCase):
 
   def test_forgotten_password_returns_success_and_notification_on_success(self):
     reset_form = {
-      'user_id': 'TestUser'
+      'email_address': 'test.user@email.com'
     }
     response = self.client.post('/forgotten-password', reset_form)
     self.assertTemplateUsed(response, 'home/forgotten-password.html')
@@ -161,7 +161,7 @@ class HomeViewsTests(MedExTestCase):
 
   def test_forgotten_password_returns_bad_request_and_and_correct_error_on_missing_userid(self):
     reset_form = {
-      'user_id': ''
+      'email_address': ''
     }
     response = self.client.post('/forgotten-password', reset_form)
     self.assertTemplateUsed(response, 'home/forgotten-password.html')
@@ -169,7 +169,7 @@ class HomeViewsTests(MedExTestCase):
     alerts_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alerts_list), 1)
     self.assertEqual(alerts_list[0]['type'], utils.ERROR)
-    self.assertEqual(alerts_list[0]['message'], messages.MISSING_USER_ID)
+    self.assertEqual(alerts_list[0]['message'], messages.MISSING_EMAIL)
 
 
   #### Logout tests
@@ -271,18 +271,18 @@ class HomeFormsTests(MedExTestCase):
   #### ForgottenPasswordForm tests
 
   def test_the_form_attributes_are_set_on_init(self):
-    user_id = 'Test User'
-    form = ForgottenPasswordForm({'user_id': user_id})
-    self.assertEqual(form.user_id, user_id)
+    email_address = 'test.user@email.com'
+    form = ForgottenPasswordForm({'email_address': email_address})
+    self.assertEqual(form.email_address, email_address)
 
-  def test_ForgottenPasswordForm_is_valid_returns_true_if_user_id_present(self):
-    user_id = 'Test User'
-    form = ForgottenPasswordForm({'user_id': user_id})
+  def test_ForgottenPasswordForm_is_valid_returns_true_if_email_address_present(self):
+    email_address = 'test.user@email.com'
+    form = ForgottenPasswordForm({'email_address': email_address})
     self.assertIsTrue(form.is_valid())
 
-  def test_ForgottenPasswordForm_is_valid_returns_false_if_user_id_not_present(self):
-    user_id = ''
-    form = ForgottenPasswordForm({'user_id': user_id})
+  def test_ForgottenPasswordForm_is_valid_returns_false_if_email_address_not_present(self):
+    email_address = ''
+    form = ForgottenPasswordForm({'email_address': email_address})
     self.assertIsFalse(form.is_valid())
 
 
