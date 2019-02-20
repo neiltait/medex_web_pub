@@ -195,9 +195,9 @@ class HomeViewsTests(MedExTestCase):
   #### Reset sent tests
 
   def test_landing_on_reset_page_returns_the_correct_template_and_content(self):
-    response = self.client.get('/reset_sent')
+    response = self.client.get('/reset-sent')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertTemplateUsed(response, 'home/reset_sent.html')
+    self.assertTemplateUsed(response, 'home/reset-sent.html')
     self.assertEqual(self.get_context_value(response.context, 'sub_heading'), messages.FORGOTTEN_PASSWORD_SENT)
 
 
