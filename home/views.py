@@ -76,7 +76,7 @@ def forgotten_password(request):
   if(request.POST):
     form = ForgottenPasswordForm(request.POST)
     if form.is_valid():
-      alerts.append(generate_info_alert(messages.FORGOTTEN_PASSWORD_SENT))
+      return redirect('/reset-sent')
     else:
       alerts.append(generate_error_alert(messages.MISSING_EMAIL))
       status_code = status.HTTP_400_BAD_REQUEST

@@ -151,12 +151,8 @@ class HomeViewsTests(MedExTestCase):
       'email_address': 'test.user@email.com'
     }
     response = self.client.post('/forgotten-password', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.INFO)
-    self.assertEqual(alerts_list[0]['message'], messages.FORGOTTEN_PASSWORD_SENT)
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/reset-sent')
 
 
   def test_forgotten_password_returns_bad_request_and_and_correct_error_on_missing_userid(self):
