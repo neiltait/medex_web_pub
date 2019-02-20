@@ -80,6 +80,7 @@ def forgotten_password(request):
     else:
       alerts.append(generate_error_alert(messages.MISSING_EMAIL))
       status_code = status.HTTP_400_BAD_REQUEST
+      context['invalid'] = True
 
   context['alerts'] = alerts
   return render(request, 'home/forgotten-password.html', context, status=status_code)
