@@ -6,6 +6,6 @@ MISSING_USER_ID = 'Please enter a User ID'
 
 MISSING_EMAIL = 'Please enter an email address'
 
-FORGOTTEN_PASSWORD_SENT = 'If the user ID provided is valid an email has been sent to help you reset your password'
+FORGOTTEN_PASSWORD_SENT = 'If the email address provided is valid password reset instructions have been sent.'
 
 OBJECT_NOT_FOUND = 'The %s requested could not be found'
