@@ -78,7 +78,7 @@ def forgotten_password(request):
     if form.is_valid():
       alerts.append(generate_info_alert(messages.FORGOTTEN_PASSWORD_SENT))
     else:
-      alerts.append(generate_error_alert(messages.MISSING_USER_ID))
+      alerts.append(generate_error_alert(messages.MISSING_EMAIL))
       status_code = status.HTTP_400_BAD_REQUEST
 
   context['alerts'] = alerts
