@@ -34,8 +34,8 @@ def login(request):
     if form.is_valid():
       if form.is_authorised():
         response = redirect('/')
-        if form.persist_user:
-          ## TODO implement user 'Remember me' when better defined and connect to API
+        ## TODO implement user 'Remember me' when better defined and connect to API
+        # if form.persist_user:
         return response
       else:
         alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
