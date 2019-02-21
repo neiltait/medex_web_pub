@@ -4,3 +4,4 @@ libsass
 django-compressor
 django-sass-processor
 djangorestframework
+requests
