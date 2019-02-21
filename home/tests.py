@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.http import HttpRequest
 
+from http.cookies import SimpleCookie
+
 from rest_framework import status
 
 import uuid
@@ -26,6 +28,12 @@ class HomeViewsTests(MedExTestCase):
       self.assertFalse('Test failed to produce expected key error')
     except KeyError:
       self.assertTrue('Test produced expected key error')
+
+  def test_login_returns_redirect_to_landing_page_if_user_logged_in(self):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.get('/login')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/')
 
   def test_login_returns_redirect_to_landing_page_on_sucess(self):
     email_address = 'Matt'
@@ -208,9 +216,16 @@ class HomeViewsTests(MedExTestCase):
 
   def test_landing_on_the_landing_page_returns_the_correct_template(self):
     #TODO expand the test once the page is filled out
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertTemplateUsed(response, 'home/index.html')
+
+  def test_landing_on_the_landing_page_redirects_to_login_if_the_user_not_logged_in(self):
+    #TODO expand the test once the page is filled out
+    response = self.client.get('/')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/login')
 
 
 class HomeFormsTests(MedExTestCase):
