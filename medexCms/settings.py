@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'errors.apps.ErrorsConfig',
     'alerts.apps.AlertsConfig',
     'users.apps.UsersConfig',
+    'examinations.apps.ExaminationsConfig',
     'sass_processor',
 ]
 
