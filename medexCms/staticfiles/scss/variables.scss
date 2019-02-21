@@ -1,16 +1,19 @@
 /* Colour vars */
-$dark-grey: #4A4A4A;
-$light-grey: #a0a0a0;
-$dark-green: #003618;
-$mid-green: #00823b;
+$nhs-grey: #425563;
+$nhs-light-grey: #AEB7BD;
+$nhs-green: #007F3B;
+$nhs-dark-green: #003618;
 $nhs-blue: #005EB8;
-$nhs-light-blue: #0081cc;
+$nhs-dark-blue: #003087;
+$nhs-bright-blue: #0072CE;
+$nhs-light-blue: #41B6E6;
+$nhs-aqua-blue: #00A9CE;
 $white: #FFFFFF;
-$black: #000000;
+$black: #212B32;
 
 /* Font vars */
 $primary-font: Arial;
-$primary-font-color: $dark-grey;
+$primary-font-color: $black;
 $default-font-size: 19px;
 $default-line-height: 28px;
 $nhs-heading-xl-size: 48px;
