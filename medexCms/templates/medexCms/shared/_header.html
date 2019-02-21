@@ -1,5 +1,71 @@
 {% load staticfiles %}
 
-<div class="header">
-  <img class="banner" src="{% static 'images/header-banner.png' %}" alt="">
-</div>
+{% if session_user %}
+  <div class="header__nav">
+    <div class="container">
+      <div class="flex-row vertical-center">
+        <div class="logo">
+          <img class='logo__icon' src="{% static 'images/nhs_logo.png' %}" alt="">
+        </div>
+
+        <div class="title">
+          Medical Examiners Service
+        </div>
+      </div>
+
+      <hr class="nav-divider">
+
+      <div class="flex-row baseline menu">
+        <div class="nav-list flex-row baseline">
+          <div class="nav-list--item">
+            <a href="/">
+              Home
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              New Case
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              Closed Cases
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              ME Network
+            </a>
+          </div>
+        </div>
+
+        <div class="btn-list flex-row baseline">
+          <div class="user-name btn-list--item">
+            {{session_user.name}}
+          </div>
+
+          <div class="btn-list--item">
+            {{session_user.role}}
+          </div>
+
+          <div class="notifications btn-list--item">
+            <img class='logo__icon' src="{% static 'images/notification.png' %}" alt="">
+          </div>
+
+          <div class="btn-list--item">
+            <a href="/logout">
+              Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="header__banner">
+    <img class="banner" src="{% static 'images/header-banner.png' %}" alt="">
+  </div>
+{% endif %}
