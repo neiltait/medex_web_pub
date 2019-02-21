@@ -9,8 +9,12 @@ from alerts import messages
 from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
 
 from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
+from .utils import check_logged_in, redirect_to_landing, redirect_to_login
 
 def index(request):
+  if not check_logged_in(request):
+    return redirect_to_login()
+    
   context = {
       'session_user': {
         'name': 'Andrea Smith',
@@ -27,6 +31,8 @@ def login(request):
   }
   alerts = []
   status_code = status.HTTP_200_OK
+  if check_logged_in(request):
+    return redirect_to_landing()
 
   if (request.POST):
     form = LoginForm(request.POST)
