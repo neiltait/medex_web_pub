@@ -3,15 +3,20 @@
 @import 'partials/notifications';
 @import 'partials/buttons';
 @import 'partials/forms';
+@import 'variables';
+
+html {
+  font-size: $default-font-size;
+}
 
 body {
   margin: 0px;
-  font-family: Arial;
-  color: #4A4A4A;
+  font-family: $primary-font;
+  color: $primary-font-color;
 }
 
 input {
-  font-family: Arial;
+  font-family: $primary-font;
 }
 
 .container {
@@ -22,16 +27,22 @@ input {
 }
 
 .page-content {
-  margin-top: 85px;
+  margin-top: 4rem;
 
   .page-title {
     margin-top: 0px;
-    font-size: 48px;
+    font-size: $primary-heading-size;
+    margin-bottom: 0px;
   }
 
   .page-subheading {
+    font-size: $secondary-heading-size;
     font-weight: 100;
   }
+}
+
+.small-print {
+  font-size: $small-print-size;
 }
 
 .flex-row {

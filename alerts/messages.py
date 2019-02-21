@@ -1,4 +1,4 @@
-INVALID_CREDENTIALS = 'Invalid User ID and/or Password entered'
+INVALID_CREDENTIALS = "Your email and password combination doesn't seem to work. Please try again"
 
 MISSING_CREDENTIALS = 'Please enter a User ID and Password'
 

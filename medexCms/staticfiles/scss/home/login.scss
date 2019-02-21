@@ -1,10 +1,12 @@
 .login-page, .forgotten-password-page, .forgotten-userid-page {
+  width: 60%;
+
   #login-form, #reset-form {
     margin-bottom: 150px;
 
     .form-row {
       .form-field {
-        width: 200px;
+        width: 75%;
       }
     }
 

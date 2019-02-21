@@ -1,13 +1,54 @@
-.form-row {
-  margin-bottom: 15px;
+@import '../variables';
 
-  label {
-    font-size: 24px;
-    min-width: 200px;
+.form {
+  margin-top: 3.5rem;
+
+  .form-row {
+    margin-bottom: 0.66em;
+
+    label {
+      min-width: 200px;
+    }
+
+    .form-field {
+      font-size: $default-font-size;
+      color: $primary-font-color;
+      border: 1.2px solid $light-grey;
+      padding: 0.33em 0.5em;
+
+      &::placeholder {
+        color: $light-grey;
+      }
+    }
   }
 
-  .form-field {
-    font-size: 24px;
-    border: 1.5px solid #4A4A4A;
+  &.error {
+    margin-top: 1rem;
+    .form-row {
+      .form-field {
+        border: 1.5px solid $error-border;
+      }
+    }
+  }
+}
+
+.checkbox {
+  -webkit-appearance: none;
+  background-color: $white;
+  border: 1.2px solid $light-grey;
+  padding: 0.35rem;
+  display: inline-block;
+  position: relative;
+  margin-right: 0.5rem;
+
+  &:checked {
+    &:after {
+      content: '\2714';
+      font-size: 0.6rem;
+      position: absolute;
+      top: 0px;
+      left: 0.1rem;
+      color: $primary-font-color;
+    }
   }
 }

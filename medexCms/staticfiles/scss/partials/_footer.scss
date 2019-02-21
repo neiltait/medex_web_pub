@@ -1,6 +1,8 @@
+@import '../variables';
+
 .footer {
-  background-color: #DEE0E2;
-  border-top: 1px solid #4A4A4A;
+  background-color: $light-grey;
+  border-top: 1px solid $dark-grey;
   padding: 70px 0px 60px;
 
   .disclaimer{
