@@ -33,9 +33,11 @@ def login(request):
     context['email_address'] = form.email_address
     if form.is_valid():
       if form.is_authorised():
-        response = redirect('/')
-        ## TODO implement user 'Remember me' when better defined and connect to API
-        # if form.persist_user:
+
+        response = redirect_to_landing()
+        response.set_cookie(settings.AUTH_TOKEN_NAME, form.auth_token)
+        # ## TODO implement user 'Remember me' when better defined and connect to API
+        # # if form.persist_user:
         return response
       else:
         alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
