@@ -1,49 +1,61 @@
 {% load staticfiles %}
 
-<div class="gds-banner">
-  <div class="container">
-    <div class="flex-row vertical-center">
-      <div class="logo flex-row">
-        <img class='logo__icon' src="{% static 'images/gov_logo_inverted.png' %}" width="36" height="32" alt="">
-
-        GOV.UK
-      </div>
-
-      <div class="title">
-        Medical Examiners Service
-      </div>
-    </div>
-  </div>
-</div>
-
-
 {% if session_user %}
-  <div class="medex-banner">
+  <div class="header__nav">
     <div class="container">
-      <hr class="banner-divider" />
-      
-      <div class="flex-row baseline menu">
-        <div class="home">
-          <a href="/">
-            <img src="{% static 'images/home_icon.png' %}" width="44" height="34" alt="">
-            Home
-          </a>
+      <div class="flex-row vertical-center">
+        <div class="logo">
+          <img class='logo__icon' src="{% static 'images/nhs_logo.png' %}" alt="">
         </div>
 
-        <div class="btn-list flex-row">
-          <div class="user__name">
+        <div class="title">
+          Medical Examiners Service
+        </div>
+      </div>
+
+      <hr class="nav-divider">
+
+      <div class="flex-row baseline menu">
+        <div class="nav-list flex-row baseline">
+          <div class="nav-list--item">
+            <a href="/">
+              Home
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              New Case
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              Closed Cases
+            </a>
+          </div>
+
+          <div class="nav-list--item">
+            <a href="#">
+              ME Network
+            </a>
+          </div>
+        </div>
+
+        <div class="btn-list flex-row baseline">
+          <div class="user-name btn-list--item">
             {{session_user.name}}
           </div>
 
-          <div class="user__role">
+          <div class="btn-list--item">
             {{session_user.role}}
           </div>
 
-          <div class="notifications">
-            
+          <div class="notifications btn-list--item">
+            <img class='logo__icon' src="{% static 'images/notification.png' %}" alt="">
           </div>
 
-          <div class="logout">
+          <div class="btn-list--item">
             <a href="/logout">
               Logout
             </a>
@@ -53,7 +65,7 @@
     </div>
   </div>
 {% else %}
-  <div class="container">
-    <hr class="banner-divider" />
+  <div class="header__banner">
+    <img class="banner" src="{% static 'images/header-banner.png' %}" alt="">
   </div>
 {% endif %}

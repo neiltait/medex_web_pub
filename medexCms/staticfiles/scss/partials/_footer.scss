@@ -1,25 +1,31 @@
 @import '../variables';
 
 .footer {
-  background-color: $light-grey;
-  border-top: 1px solid $dark-grey;
-  padding: 70px 0px 60px;
+  background-color: $nhs-blue;
+  color: $white;
+  padding: 0.75rem 0px;
 
-  .disclaimer{
-    width: 80%;
-
-    .licence {
-      margin-right: 5px;
-    }
+  &--row {
+    margin: 0.3rem 0px;
+    height: 2rem;
   }
 
-  .logo {
-    img {
-      max-height: 140px;
+  &--divider {
+    border-color: $nhs-light-blue;
+    border-style: solid;
+  }
+
+  &--item {
+    font-size: $notification-size;
+    margin-right: 1rem;
+
+    a {
+      color: $white;
+      text-decoration: none;
     }
 
     p {
-      margin-bottom: 0px;
+      margin: 0px;
     }
   }
 }
