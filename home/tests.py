@@ -1,10 +1,16 @@
-from medexCms.test.utils import MedExTestCase
+from django.conf import settings
+from django.http import HttpRequest
 
 from rest_framework import status
+
+import uuid
+
+from medexCms.test.utils import MedExTestCase
 
 from alerts import messages, utils
 
 from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
+from .utils import redirect_to_landing, redirect_to_login, check_logged_in
 
 class HomeViewsTests(MedExTestCase):
 
@@ -313,3 +319,42 @@ class HomeFormsTests(MedExTestCase):
     email_address = ''
     form = ForgottenUserIdForm({'email_address': email_address})
     self.assertIsFalse(form.is_valid())
+
+class HomeUtilsTests(MedExTestCase):
+
+  #### Checked logged in tests
+
+  def test_check_logged_in_returns_True_if_the_auth_token_is_valid(self):
+    request = HttpRequest()
+    request.COOKIES[settings.AUTH_TOKEN_NAME] = uuid.uuid4()
+    result = check_logged_in(request)
+    self.assertIsTrue(result)
+
+
+  #### TODO test needs updating and implementing when connected to OKTA
+  # def test_check_logged_in_returns_False_if_the_auth_token_is_valid(self):
+  #   request = HttpRequest()
+  #   request.COOKIES[settings.AUTH_TOKEN_NAME] = uuid.uuid4()
+  #   result = check_logged_in(request)
+  #   self.assertIsFalse(result)
+
+
+  def test_check_logged_in_returns_False_if_there_is_no_auth_token(self):
+    request = HttpRequest()
+    result = check_logged_in(request)
+    self.assertIsFalse(result)
+
+  #### Redirect to landing tests
+
+  def test_redirect_to_landing_returns_the_correct_status_code_and_path(self):
+    result = redirect_to_landing()
+    self.assertEqual(result.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(result.url, '/')
+
+
+  #### Redirect to login tests
+
+  def test_redirect_to_login_returns_the_correct_status_code_and_path(self):
+    result = redirect_to_login()
+    self.assertEqual(result.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(result.url, '/login')
