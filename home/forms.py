@@ -1,3 +1,6 @@
+import requests
+from rest_framework import status
+import uuid
 
 class LoginForm():
 
@@ -10,10 +13,20 @@ class LoginForm():
     return True if self.email_address and self.password else False
 
   def is_authorised(self):
-    # TODO submit details to OCTA
-    # Temporary auth check until we have OCTA integrated
-    # may need to add in an attempt check if OCTA doesn't have one.
-    return self.email_address == 'matt' and self.password == 'Password'
+    ## TODO submit details to OCTA
+
+    # response = requests.post(settings.API_URL + '/create-session', data = {'email_address': self.email_address, 'password': self.password})
+    # authenticated = response.status_code == status.HTTP_200_OK
+    # if authenticated:
+    #   self.auth_token = response.json['auth_token']
+    
+    ## Temporary auth check until we have OCTA integrated
+    ## may need to add in an attempt check if OCTA doesn't have one.
+    authenticated = self.email_address == 'matt' and self.password == 'Password'
+    if authenticated:
+      self.auth_token = uuid.uuid4()
+    
+    return authenticated
 
 
 class ForgottenPasswordForm():
