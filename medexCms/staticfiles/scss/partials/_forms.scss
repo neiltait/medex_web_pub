@@ -13,11 +13,11 @@
     .form-field {
       font-size: $default-font-size;
       color: $primary-font-color;
-      border: 1.2px solid $light-grey;
+      border: 1.2px solid $nhs-light-grey;
       padding: 0.33em 0.5em;
 
       &::placeholder {
-        color: $light-grey;
+        color: $nhs-light-grey;
       }
     }
   }
@@ -35,7 +35,7 @@
 .checkbox {
   -webkit-appearance: none;
   background-color: $white;
-  border: 1.2px solid $light-grey;
+  border: 1.2px solid $nhs-light-grey;
   padding: 0.35rem;
   display: inline-block;
   position: relative;

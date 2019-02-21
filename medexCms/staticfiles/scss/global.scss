@@ -31,18 +31,20 @@ input {
 
   .page-title {
     margin-top: 0px;
-    font-size: $primary-heading-size;
+    font-size: $nhs-heading-xl-size;
     margin-bottom: 0px;
   }
 
   .page-subheading {
-    font-size: $secondary-heading-size;
+    font-size: $nhs-heading-l-size;
+    line-height: $nhs-heading-l-line-height;
     font-weight: 100;
   }
 }
 
 .small-print {
-  font-size: $small-print-size;
+  font-size: $nhs-body-s-size;
+  line-height: $nhs-body-s-line-height;
 }
 
 .flex-row {
