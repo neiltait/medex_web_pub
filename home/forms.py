@@ -32,17 +32,7 @@ class LoginForm():
 class ForgottenPasswordForm():
 
   def __init__(self, request):
-    self.user_id = request.get('user_id')
-
-
-  def is_valid(self):
-    return True if self.user_id else False
-
-
-class ForgottenUserIdForm():
-
-  def __init__(self, request):
-    self.email_address = request.get('email_address').lower()
+    self.email_address = request.get('email_address')
 
 
   def is_valid(self):

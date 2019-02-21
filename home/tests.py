@@ -11,8 +11,9 @@ from medexCms.test.utils import MedExTestCase
 
 from alerts import messages, utils
 
-from .forms import LoginForm, ForgottenPasswordForm, ForgottenUserIdForm
+from .forms import LoginForm, ForgottenPasswordForm
 from .utils import redirect_to_landing, redirect_to_login, check_logged_in
+
 
 class HomeViewsTests(MedExTestCase):
 
@@ -147,56 +148,19 @@ class HomeViewsTests(MedExTestCase):
 
   def test_forgotten_password_returns_success_and_notification_on_success(self):
     reset_form = {
-      'user_id': 'TestUser'
+      'email_address': 'test.user@email.com'
     }
     response = self.client.post('/forgotten-password', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.INFO)
-    self.assertEqual(alerts_list[0]['message'], messages.FORGOTTEN_PASSWORD_SENT)
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/reset-sent')
 
 
   def test_forgotten_password_returns_bad_request_and_and_correct_error_on_missing_userid(self):
     reset_form = {
-      'user_id': ''
+      'email_address': ''
     }
     response = self.client.post('/forgotten-password', reset_form)
     self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.ERROR)
-    self.assertEqual(alerts_list[0]['message'], messages.MISSING_USER_ID)
-
-
-  #### Forgotten User ID tests
-
-  def test_landing_on_forgotten_user_id_page_loads_the_correct_template_with_empty_context(self):
-    response = self.client.get('/forgotten-userid')
-    self.assertTemplateUsed(response, 'home/forgotten-userid.html')
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 0)
-
-  def test_forgotten_userid_returns_success_and_notification_on_success(self):
-    reset_form = {
-      'email_address': 'Test.User@email.com'
-    }
-    response = self.client.post('/forgotten-userid', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-userid.html')
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.INFO)
-    self.assertEqual(alerts_list[0]['message'], messages.FORGOTTEN_ID_SENT)
-
-  def test_forgotten_userid_returns_bad_request_and_and_correct_error_on_missing_email(self):
-    reset_form = {
-      'email_address': ''
-    }
-    response = self.client.post('/forgotten-userid', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-userid.html')
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     alerts_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alerts_list), 1)
@@ -226,6 +190,15 @@ class HomeViewsTests(MedExTestCase):
     response = self.client.get('/')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
+
+
+  #### Reset sent tests
+
+  def test_landing_on_reset_page_returns_the_correct_template_and_content(self):
+    response = self.client.get('/reset-sent')
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertTemplateUsed(response, 'home/reset-sent.html')
+    self.assertEqual(self.get_context_value(response.context, 'content'), messages.FORGOTTEN_PASSWORD_SENT)
 
 
 class HomeFormsTests(MedExTestCase):
@@ -303,37 +276,20 @@ class HomeFormsTests(MedExTestCase):
   #### ForgottenPasswordForm tests
 
   def test_the_form_attributes_are_set_on_init(self):
-    user_id = 'Test User'
-    form = ForgottenPasswordForm({'user_id': user_id})
-    self.assertEqual(form.user_id, user_id)
+    email_address = 'test.user@email.com'
+    form = ForgottenPasswordForm({'email_address': email_address})
+    self.assertEqual(form.email_address, email_address)
 
-  def test_ForgottenPasswordForm_is_valid_returns_true_if_user_id_present(self):
-    user_id = 'Test User'
-    form = ForgottenPasswordForm({'user_id': user_id})
+  def test_ForgottenPasswordForm_is_valid_returns_true_if_email_address_present(self):
+    email_address = 'test.user@email.com'
+    form = ForgottenPasswordForm({'email_address': email_address})
     self.assertIsTrue(form.is_valid())
 
-  def test_ForgottenPasswordForm_is_valid_returns_false_if_user_id_not_present(self):
-    user_id = ''
-    form = ForgottenPasswordForm({'user_id': user_id})
-    self.assertIsFalse(form.is_valid())
-
-
-  #### ForgottenUserIdForm tests
-
-  def test_the_form_attributes_are_set_on_init(self):
-    email_address = 'Test.User@email.com'
-    form = ForgottenUserIdForm({'email_address': email_address})
-    self.assertEqual(form.email_address, email_address.lower())
-
-  def test_ForgottenUserIdForm_is_valid_returns_true_if_email_address_present(self):
-    email_address = 'Test.User@email.com'
-    form = ForgottenUserIdForm({'email_address': email_address})
-    self.assertIsTrue(form.is_valid())
-
-  def test_ForgottenUserIdForm_is_valid_returns_false_if_email_address_not_present(self):
+  def test_ForgottenPasswordForm_is_valid_returns_false_if_email_address_not_present(self):
     email_address = ''
-    form = ForgottenUserIdForm({'email_address': email_address})
+    form = ForgottenPasswordForm({'email_address': email_address})
     self.assertIsFalse(form.is_valid())
+
 
 class HomeUtilsTests(MedExTestCase):
 
