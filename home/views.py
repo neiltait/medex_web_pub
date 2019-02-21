@@ -55,7 +55,9 @@ def login(request):
 def logout(request):
   #TODO submit logout request to OCTA
 
-  return redirect('/login')
+  response = redirect_to_login()
+  response.delete_cookie(settings.AUTH_TOKEN_NAME)
+  return response
 
 
 def forgotten_password(request):
