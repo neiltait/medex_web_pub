@@ -16,7 +16,8 @@
   }
 
   &--item {
-    font-size: $notification-size;
+    font-size: $nhs-body-s-size;
+    line-height: $nhs-body-s-line-height;
     margin-right: 1rem;
 
     a {
