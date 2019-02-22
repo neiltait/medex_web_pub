@@ -4,23 +4,18 @@ from django.db import models
 
 class User():
 
-  def __init__(self, obj_dict):
-    self.user_id = obj_dict['user_id']
-    self.first_name = obj_dict['first_name']
-    self.last_name = obj_dict['last_name']
-    self.email_address = obj_dict['email_address']
-    self.permissions = obj_dict['permissions']
+  def __init__(self, obj_dict=None):
+    if obj_dict:
+      self.user_id = obj_dict['user_id']
+      self.first_name = obj_dict['first_name']
+      self.last_name = obj_dict['last_name']
+      self.email_address = obj_dict['email_address']
+      self.permissions = obj_dict['permissions']
 
 
   @classmethod
   def initialise_with_token(cls, request):
-    user = User({
-      'user_id': None,
-      'first_name': None,
-      'last_name': None,
-      'email_address': None,
-      'permissions': None
-    })
+    user = User()
 
     try:
       user.auth_token = request.COOKIES[settings.AUTH_TOKEN_NAME]
