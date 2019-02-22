@@ -1,0 +1,18 @@
+{% extends "medexCms/shared/base.html" %}
+
+{% block page %}
+  <div>
+    <h1 class="page-title">
+      {{ page_heading }}
+    </h1>
+
+    <h2 class="page-subheading">
+      {{ sub_heading }}
+    </h2>
+
+    {% for alert in alerts %}
+      {% include 'alerts/partials/_alert.html' %}
+    {% endfor %}
+
+  </div>
+{% endblock %}

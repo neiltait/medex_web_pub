@@ -10,7 +10,11 @@ def create_examination(request):
     return redirect_to_login()
 
 
-  context = {}
+  context = {
+    'session_user': user,
+    'page_heading': 'Add a new case',
+    'sub_heading': 'Primary information'
+  }
   alerts = []
 
   return render(request, 'examinations/create.html', context)
