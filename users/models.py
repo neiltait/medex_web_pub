@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+
 
 class User():
 
@@ -7,14 +9,39 @@ class User():
     self.first_name = obj_dict['first_name']
     self.last_name = obj_dict['last_name']
     self.email_address = obj_dict['email_address']
-    self.role = obj_dict['role']
+    self.auth_token = obj_dict['auth_token']
     self.permissions = obj_dict['permissions']
+
+  @classmethod
+  def initialise_with_token(request):
+    try:
+      cookie = request.COOKIES[settings.AUTH_TOKEN_NAME]
+    except KeyError:
+      cookie = None
+
+    return User({
+      'user_id': None,
+      'first_name': None,
+      'last_name': None,
+      'email_address': None,
+      'auth_token': cookie,
+      'permissions': None
+    })
 
   def __str__(self):
     return self.full_name()
 
   def full_name(self):
     return self.first_name + ' ' + self.last_name
+
+  def check_logged_in(self):
+    if self.auth_token:
+      # response = requests.post(settings.API_URL + '/validate-session', data = {'auth_token': cookie})
+      # authenticated = response.status_code == status.HTTP_200_OK
+      authenticated = True
+      return authenticated
+    else:
+      return False
 
   @classmethod
   def load_by_email(cls, email_address):

@@ -9,17 +9,17 @@ from alerts import messages
 from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
 
 from .forms import LoginForm, ForgottenPasswordForm
-from .utils import check_logged_in, redirect_to_landing, redirect_to_login
+from .utils import redirect_to_landing, redirect_to_login
+
+from users.models import User
 
 def index(request):
-  if not check_logged_in(request):
+  user = User.initialise_with_token(request)
+  if not user.check_logged_in():
     return redirect_to_login()
     
   context = {
-      'session_user': {
-        'name': 'Andrea Smith',
-        'role': 'MEO'
-      },
+      'session_user': user,
       'case_list': 'All your current open cases',
   }
   return render(request, 'home/index.html', context)
@@ -31,7 +31,9 @@ def login(request):
   }
   alerts = []
   status_code = status.HTTP_200_OK
-  if check_logged_in(request):
+
+  user = User.initialise_with_token(request)
+  if user.check_logged_in():
     return redirect_to_landing()
 
   if (request.POST):
