@@ -45,13 +45,16 @@ class User():
         'email_address': 'test.user@email.com',
         'permissions': [],
       }
-      self.user_id = response_data['user_id']
-      self.first_name = response_data['first_name']
-      self.last_name = response_data['last_name']
-      self.email_address = response_data['email_address']
-      self.permissions = response_data['permissions']
 
       authenticated = True
+
+      if authenticated:
+        self.user_id = response_data['user_id']
+        self.first_name = response_data['first_name']
+        self.last_name = response_data['last_name']
+        self.email_address = response_data['email_address']
+        self.permissions = response_data['permissions']
+        
       return authenticated
     else:
       return False
