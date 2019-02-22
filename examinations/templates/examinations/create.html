@@ -1,7 +1,12 @@
 {% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/examinations/create.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
 
 {% block page %}
-  <div>
+  <div class="examination__create">
     <h1 class="page-title">
       {{ page_heading }}
     </h1>
@@ -13,6 +18,95 @@
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
+
+    <form id="examination__create--form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_examination' %}" method="post">
+      {% csrf_token %}
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="last_name">Surname</label>
+
+          <input class="form-field" type="text" name="last_name" value="{{form.last_name}}">
+        </div>
+
+        <div class="form-item">
+          <label for="first_name">Given Name</label>
+          
+          <input class="form-field" type="text" name="first_name" value="{{form.first_name}}">
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="gender">Gender</label>
+
+          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
+
+          <label>Male</label>
+
+          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
+
+          <label>Female</label>
+
+          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
+
+          <label>Other</label>
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="nhs_number">NHS Number</label>
+
+          <input class="form-field" type="text" name="nhs_number" value="{{form.nhs_number}}">
+
+          <input type="checkbox" name="nhs_number_not_known" value="{{form.nhs_number_not_known}}">
+
+          <label for="nhs_number_not_known">Unknown</label>
+        </div>
+
+        <div class="form-item">
+          <label for="hospital_number">Hospital Number</label>
+          
+          <input class="form-field" type="text" name="hospital_number" value="{{form.hospital_number}}">
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="date_of_birth">Date of birth</label>
+
+          <input class="form-field" type="text" name="date_of_birth" value="{{form.date_of_birth}}">
+
+        </div>
+
+        <div class="form-item">
+          <label for="date_of_death">Date of death</label>
+          
+          <input class="form-field" type="text" name="date_of_death" value="{{form.date_of_death}}">
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="time_of_death">Time of death</label>
+
+          <input class="form-field" type="text" name="time_of_death" value="{{form.time_of_death}}">
+
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label for="place_of_death">Place where death occurred</label>
+
+          <input class="form-field" type="text" name="place_of_death" value="{{form.place_of_death}}">
+
+        </div>
+      </div>
+      
+      <input class="submit-btn" type="submit" value="Create case" />
+    </form>
 
   </div>
 {% endblock %}
