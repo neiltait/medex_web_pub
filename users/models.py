@@ -9,24 +9,24 @@ class User():
     self.first_name = obj_dict['first_name']
     self.last_name = obj_dict['last_name']
     self.email_address = obj_dict['email_address']
-    self.auth_token = obj_dict['auth_token']
     self.permissions = obj_dict['permissions']
 
   @classmethod
-  def initialise_with_token(request):
-    try:
-      cookie = request.COOKIES[settings.AUTH_TOKEN_NAME]
-    except KeyError:
-      cookie = None
-
-    return User({
+  def initialise_with_token(cls, request):
+    user = User({
       'user_id': None,
       'first_name': None,
       'last_name': None,
       'email_address': None,
-      'auth_token': cookie,
       'permissions': None
     })
+
+    try:
+      user.auth_token = request.COOKIES[settings.AUTH_TOKEN_NAME]
+    except KeyError:
+      user.auth_token = None
+
+    return user
 
   def __str__(self):
     return self.full_name()

@@ -12,7 +12,7 @@ from medexCms.test.utils import MedExTestCase
 from alerts import messages, utils
 
 from .forms import LoginForm, ForgottenPasswordForm
-from .utils import redirect_to_landing, redirect_to_login, check_logged_in
+from .utils import redirect_to_landing, redirect_to_login
 
 
 class HomeViewsTests(MedExTestCase):
@@ -292,28 +292,6 @@ class HomeFormsTests(MedExTestCase):
 
 
 class HomeUtilsTests(MedExTestCase):
-
-  #### Checked logged in tests
-
-  def test_check_logged_in_returns_True_if_the_auth_token_is_valid(self):
-    request = HttpRequest()
-    request.COOKIES[settings.AUTH_TOKEN_NAME] = uuid.uuid4()
-    result = check_logged_in(request)
-    self.assertIsTrue(result)
-
-
-  #### TODO test needs updating and implementing when connected to OKTA
-  # def test_check_logged_in_returns_False_if_the_auth_token_is_valid(self):
-  #   request = HttpRequest()
-  #   request.COOKIES[settings.AUTH_TOKEN_NAME] = uuid.uuid4()
-  #   result = check_logged_in(request)
-  #   self.assertIsFalse(result)
-
-
-  def test_check_logged_in_returns_False_if_there_is_no_auth_token(self):
-    request = HttpRequest()
-    result = check_logged_in(request)
-    self.assertIsFalse(result)
 
   #### Redirect to landing tests
 
