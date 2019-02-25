@@ -29,7 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    'medex-cms.azurewebsites.net'
+    'medex-cms.azurewebsites.net',
+    'medex-cms-sandbox.azurewebsites.net'
 ]
 
 
