@@ -9,7 +9,7 @@ pool:
 
 variables:
   imageName: 'medex-cms:$(Build.BuildId)'
-  dockerId: medexcms
+  dockerId: medexcmsSandbox
 
 steps:
 - task: UsePythonVersion@0
