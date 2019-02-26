@@ -10,4 +10,5 @@ urlpatterns = [
   path('forgotten-password', views.forgotten_password, name='forgotten-password'),
   path('reset-sent', views.reset_sent, name='reset-sent'),
   url(r'^users/', include('users.urls')),
+  url(r'^cases/', include('examinations.urls')),
 ]

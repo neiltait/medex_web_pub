@@ -120,7 +120,6 @@ class UsersModelsTests(MedExTestCase):
     self.assertEqual(user_obj.first_name, user_dict['first_name'])
     self.assertEqual(user_obj.last_name, user_dict['last_name'])
     self.assertEqual(user_obj.email_address, user_dict['email_address'])
-    self.assertEqual(user_obj.role, user_dict['role'])
     self.assertEqual(user_obj.permissions, user_dict['permissions'])
 
   def test_User_full_name_method_returns_first_and_last_name_combined(self):
