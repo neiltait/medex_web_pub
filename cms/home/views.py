@@ -55,6 +55,7 @@ def login(request):
     context['invalid'] = True
 
   context['alerts'] = alerts
+  print(context)
   return render(request, 'home/login.html', context, status=status_code)
 
 
