@@ -41,18 +41,20 @@
       <div class="flex-row baseline form-row">
         <div class="form-item">
           <label class="form-item--header" for="gender">Gender</label>
-
-          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
-
-          <label>Male</label>
-
-          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
-
-          <label>Female</label>
-
-          <input class="form-field" type="radio" name="gender" value="{{form.gender}}">
-
-          <label>Other</label>
+            <div class="radiobutton__list flex-row">
+                <div class="radiobutton__item">
+                    <input class="form-field radiobutton__input" type="radio" name="gender" id="gender-1" value="male">
+                    <label class="radiobutton__label" for="gender-1">Male</label>
+                </div>
+                <div class="radiobutton__item">
+                    <input class="form-field radiobutton__input" type="radio" name="gender" id="gender-2" value="female">
+                    <label class="radiobutton__label" for="gender-2">Female</label>
+                </div>
+                <div class="radiobutton__item">
+                    <input class="form-field radiobutton__input" type="radio" name="gender" id="gender-3" value="other">
+                    <label class="radiobutton__label" for="gender-3">Other</label>
+                </div>
+            </div>
         </div>
       </div>
 
