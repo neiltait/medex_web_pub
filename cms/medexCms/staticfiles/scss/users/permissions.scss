@@ -1,0 +1,30 @@
+@import '../variables';
+
+.user-creation-page {
+  #new-user-form {
+    margin-bottom: 4rem;
+
+    .form-item {
+      width: 100%;
+      margin-bottom: 3rem;
+
+      &--header {
+        display: block;
+        margin-bottom: 0.75rem;
+      }
+
+      input {
+        width: 50%;
+      }
+
+      .dropdown {
+        width: 100%;
+        max-width: unset;
+      }
+    }
+
+    .small-print {
+      color: $nhs-light-grey;
+    }
+  }
+}

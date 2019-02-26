@@ -2,18 +2,70 @@
 {% load sass_tags %}
 
 {% block extra_css %}
-  <!-- <link href="{% sass_src 'scss/users/lookup.scss' %}" rel="stylesheet" type="text/css" > -->
+  <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}
 
 {% block page %}
-  <div class="user-lookup-page">
+  <div class="user-creation-page">
     <h1 class="page-title">
-      Invite New User
+      {{ page_heading }}
     </h1>
 
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
+    <form id="new-user-form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_user' %}" method="post">
+      {% csrf_token %}
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label class="form-item--header" for="email_address">Email address</label>
+
+          <input class="form-field" type="text" name="email_address" value="{{form.email_address}}">
+
+          <div class="small-print inline">
+            User found
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label class="form-item--header" for="locations">Add them to a trust and associated ME offices</label>
+
+          <div class="dropdown">
+              <select name="locations" required>
+                  <option value="" disabled hidden selected>Select a location</option>
+                  {% for trust in trusts %}
+                    <option value="{{trust.id}}">{{trust.name}}</option>
+                  {% endfor %}
+              </select>
+          </div>
+
+          <div class="small-print">
+            Leave empty if adding a national or regional administrator
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label class="form-item--header">What role will the user be performing?</label>
+
+          <div class="radiobutton__item">
+              <input class="form-field radiobutton__input" type="radio" name="role" id="role-1" value="me">
+              <label class="radiobutton__label" for="role-1">ME</label>
+          </div>
+
+          <div class="radiobutton__item">
+              <input class="form-field radiobutton__input" type="radio" name="role" id="role-2" value="meo">
+              <label class="radiobutton__label" for="role-2">MEO</label>
+          </div>
+        </div>
+      </div>
+      
+      <input class="submit-btn" type="submit" value="Invite" />
+    </form>
   </div>
 {% endblock %}
