@@ -21,7 +21,7 @@ class User():
 
   @classmethod
   def load_by_email(cls, email_address):
-    r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
+    # r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
     # TODO need to tie into the api when possible
     if email_address == 'test.user@email.com':
       return User({
