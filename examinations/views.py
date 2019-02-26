@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .forms import CreateExaminationForm
+from .forms import PrimaryExaminationInformationForm
 
 from home.utils import redirect_to_login
 
@@ -17,7 +17,7 @@ def create_examination(request):
     'session_user': user,
     'page_heading': 'Add a new case',
     'sub_heading': 'Primary information',
-    'form': CreateExaminationForm()
+    'form': PrimaryExaminationInformationForm()
   }
   alerts = []
 
