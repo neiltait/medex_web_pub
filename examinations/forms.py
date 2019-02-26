@@ -1,5 +1,5 @@
 
-class CreateExaminationForm():
+class PrimaryExaminationInformationForm():
 
   def __init__(self, request=None):
     if request:
