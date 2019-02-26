@@ -161,27 +161,22 @@
       <!-- Location -->
       <div class="flex-row baseline form-row">
         <div class="form-item">
-          <label class="form-item--header" for="place_of_death">Place where death occurred</label>
-
-          <input class="form-field" type="text" name="place_of_death" value="{{form.place_of_death}}">
-
-          <select class="dropdown" name="place_of_death">
-            <option value="" disabled hidden selected>Select a location</option>
-            <option value="unknown">Unknown</option>
-          </select>
+            <label class="form-item--header" for="place_of_death">Place where death occurred</label>
+            <div class="dropdown">
+                <select name="place_of_death" required>
+                    <option value="" disabled hidden selected>Select a location</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-item">
           <label class="form-item--header" for="me_office">ME Office responsible for case</label>
-
-          <!-- <select name="me_office" class="dropdown">
-            <option value="" disabled hidden selected>Select an office</option>
-            <option value="unknown">Unknown</option>
-          </select> -->
           <div class="dropdown">
-            <select name="me_office">
+            <select name="me_office" required>
               <option value="" disabled hidden selected>Select an office</option>
               <option value="unknown">Unknown</option>
+              <option value="hi">Hi</option>
             </select>
           </div>
         </div>

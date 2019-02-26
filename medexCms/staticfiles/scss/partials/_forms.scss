@@ -75,10 +75,11 @@
   display: block;
   max-width: 400px;
   min-width: 180px;
-  margin: 0 auto;
+  margin: 0;
   border: 1.5px solid $black;
   z-index: 10;
-  
+  line-height: 1.25;
+
   select {
     border: none;
     outline: none;
@@ -87,25 +88,29 @@
     -moz-appearance: none;
     appearance: none;
     border-radius: 0;
-    margin: 0;
+    margin-left: 10px;
     display: block;
     width: 100%;
-    padding: 12px 55px 15px 15px;
-    font-size: 14px;
-    color: #714BB9;
+    padding: 10px 55px 10px 15px;
+    font-size: $default-font-size;
+    color: $black;
+
+    &:invalid {
+      color: $nhs-light-grey;
+    }
   }
-  
+
   &:after {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 8px;
     width: 50px;
     height: 100%;
-    line-height: 38px;
-    content: '\2228';
+    line-height: $default-line-height;
+    content: '\25BC';
     text-align: center;
-    color: #714BB9;
-    font-size: 24px;
+    color: $black;
+    font-size: $default-font-size;
     z-index: -1;
   }
 }
