@@ -21,13 +21,7 @@ class User():
 
   @classmethod
   def load_by_email(cls, email_address):
-    NO_PROXY = {
-      'no': 'pass',
-    }
-    print(settings.API_URL)
-    # r = requests.get('https://62b2f542-43c1-4bd3-a312-44551e14f029.mock.pstmn.io')
     r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
-    print(r.text)
     # TODO need to tie into the api when possible
     if email_address == 'test.user@email.com':
       return User({
