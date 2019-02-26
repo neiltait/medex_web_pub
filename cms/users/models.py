@@ -1,4 +1,7 @@
+from django.conf import settings
 from django.db import models
+
+import requests
 
 class User():
 
@@ -18,15 +21,16 @@ class User():
 
   @classmethod
   def load_by_email(cls, email_address):
+    r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
     # TODO need to tie into the api when possible
     if email_address == 'test.user@email.com':
       return User({
-        'user_id': 'TestUser',
-        'first_name': 'Test',
-        'last_name': 'User',
-        'email_address': 'test.user@email.com',
-        'role': 'MEO',
-        'permissions': [],
+        "user_id": "TestUser",
+        "first_name": "Test",
+        "last_name": "User",
+        "email_address": "test.user@email.com",
+        "role": "MEO",
+        "permissions": [],
       })
     else:
       return None
