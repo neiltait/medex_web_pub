@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
 
-import requests
+from rest_framework import status
 
+from . import request_handler
 
 class User():
 
@@ -37,20 +38,12 @@ class User():
 
   def check_logged_in(self):
     if self.auth_token:
-      # response = requests.post(settings.API_URL + '/validate-session', data = {'auth_token': cookie})
-      # authenticated = response.status_code == status.HTTP_200_OK
-      # response_data = response.json()
-      response_data = {
-        'user_id': 'TestUser',
-        'first_name': 'Test',
-        'last_name': 'User',
-        'email_address': 'test.user@email.com',
-        'permissions': [],
-      }
-
-      authenticated = True
+      response = request_handler.validate_session(self.auth_token)
+      
+      authenticated = response.status_code == status.HTTP_200_OK
 
       if authenticated:
+        response_data = response.json()
         self.user_id = response_data['user_id']
         self.first_name = response_data['first_name']
         self.last_name = response_data['last_name']

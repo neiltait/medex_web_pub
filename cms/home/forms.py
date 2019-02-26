@@ -1,6 +1,12 @@
+from django.conf import settings
+
 import requests
+
 from rest_framework import status
+
 import uuid
+
+from . import request_handler
 
 class LoginForm():
 
@@ -15,16 +21,10 @@ class LoginForm():
   def is_authorised(self):
     ## TODO submit details to OCTA
 
-    # response = requests.post(settings.API_URL + '/create-session', data = {'email_address': self.email_address, 'password': self.password})
-    # authenticated = response.status_code == status.HTTP_200_OK
-    # if authenticated:
-    #   self.auth_token = response.json['auth_token']
-    
-    ## Temporary auth check until we have OCTA integrated
-    ## may need to add in an attempt check if OCTA doesn't have one.
-    authenticated = self.email_address == 'matt' and self.password == 'Password'
+    response = request_handler.create_session(self.email_address, self.password)
+    authenticated = response.status_code == status.HTTP_200_OK
     if authenticated:
-      self.auth_token = uuid.uuid4()
+      self.auth_token = response.json()['auth_token']
     
     return authenticated
 
