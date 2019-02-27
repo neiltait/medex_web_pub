@@ -10,9 +10,10 @@
 
     <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" >
     <script type="text/javascript" src="{{ STATIC_URL }} /static/js/jquery-3.3.1-min.js"></script>
-  
+
     {% block extra_css %}
     {% endblock %}
+
   </head>
 
   <body>
@@ -24,5 +25,10 @@
     </div>
 
     {% include 'medexCms/shared/_footer.html' %}
+
+    {% block scripts %}
+    {% endblock %}
   </body>
+
+
 </html>

@@ -197,3 +197,29 @@
     z-index: -1;
   }
 }
+
+.medex-textarea {
+  width: 100%;
+
+  &__textarea {
+    box-sizing: border-box; // should this be global?
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    padding: 5px;
+
+    resize: vertical;
+
+    border: 2px solid $black;
+    border-radius: 0;
+
+    -webkit-appearance: none;
+    font-size: $default-font-size;
+  }
+
+  &__label {
+    display: block;
+    font-size: $default-font-size;
+    margin-bottom: 5px;
+  }
+}

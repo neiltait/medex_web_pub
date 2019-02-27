@@ -32,7 +32,7 @@
 
         <div class="form-item">
           <label class="form-item--header" for="first_name">Given name(s)</label>
-          
+
           <input class="form-field" type="text" name="first_name" value="{{form.first_name}}">
         </div>
       </div>
@@ -55,6 +55,12 @@
                     <label class="radiobutton__label" for="gender-3">Other</label>
                 </div>
             </div>
+            <div class="flex-row">
+                <div class="medex-textarea" id="more-gender">
+                    <label class="medex-textarea__label" for="more-gender-detail">Please enter details below</label>
+                    <textarea class="medex-textarea__textarea" id="more-gender-detail" name="more-gender-detail" rows="3"></textarea>
+                </div>
+            </div>
         </div>
       </div>
 
@@ -74,7 +80,7 @@
 
         <div class="form-item">
           <label class="form-item--header" for="hospital_number">Hospital Number</label>
-          
+
           <input class="form-field" type="text" name="hospital_number" value="{{form.hospital_number}}" placeholder="Optional">
         </div>
       </div>
@@ -114,9 +120,9 @@
 
         <div class="form-item">
           <label class="form-item--header" for="date_of_death">Date of death</label>
-          
+
           <!-- <input class="form-field" type="text" name="date_of_death" value="{{form.date_of_death}}"> -->
-          
+
           <div class="flex-row baseline">
             <div>
               <label class="form-item--header" for="day_of_death">Day</label>
@@ -179,16 +185,38 @@
           <div class="dropdown">
             <select name="me_office" required>
               <option value="" disabled hidden selected>Select an office</option>
-                {% for location in locations %}
-                    <option value={{ location.id }}>{{ location.name }}</option>
+                {% for me_office in me_offices %}
+                    <option value={{ me_office.id }}>{{ me_office.name }}</option>
                 {% endfor %}
             </select>
           </div>
         </div>
       </div>
-      
+
       <input class="submit-btn" type="submit" value="Create case" />
     </form>
 
   </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script type="text/javascript">
+        function setGenderDetailsToggle() {
+            var moreGenderDetail = $("#more-gender")
+            moreGenderDetail.hide()
+            $('input[type=radio][name=gender]').change(
+                function () {
+                    if (this.value === "other") {
+                        moreGenderDetail.show()
+                    } else {
+                        moreGenderDetail.hide()
+                    }
+                }
+            )
+        }
+
+        setGenderDetailsToggle()
+    </script>
+
 {% endblock %}
