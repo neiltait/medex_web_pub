@@ -45,24 +45,27 @@
         <div class="form-item">
           <label class="form-item--header" for="locations">Add them to a trust and associated ME offices</label>
 
-          <div class="search-dropdown multiple">
+          <div class="search-dropdown multiple{% if form.locations_error %} error{% endif %}">
             <input class='selection-field' type="text" name="locations">
-            <input type="text" name="searchField">
+            <div class='search-field'>
+              <input type="text" name="searchField" placeholder="Search for a trust">
+            </div>
             <div class="options-list">
+              <p id="placeholder" class="options-list--placeholder">Please enter at least 3 characters to search</p>
               {% for trust in trusts %}
                 <option value="{{trust.id}}">{{trust.name}}</option>
               {% endfor %}
             </div>
           </div>
 
-          <div class="dropdown{% if form.locations_error %} error{% endif %}">
-              <select name="locations" required>
+          <!-- <div class="dropdown{% if form.locations_error %} error{% endif %}">
+              <select name="location-selector" required>
                   <option value="" disabled hidden selected>Select a location</option>
                   {% for trust in trusts %}
                     <option value="{{trust.id}}">{{trust.name}}</option>
                   {% endfor %}
               </select>
-          </div>
+          </div> -->
 
           <div class="small-print">
             Leave empty if adding a national or regional administrator
