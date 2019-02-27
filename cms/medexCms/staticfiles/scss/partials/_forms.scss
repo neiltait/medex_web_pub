@@ -48,6 +48,16 @@
       color: $primary-font-color;
     }
   }
+
+  &__label {
+    display: inline-block;
+    font-size: $default-font-size;
+    
+    &--dropdown-width {
+      min-width: calc(180px - 0.75rem);
+      max-width: calc(400px - 0.75rem);
+    }
+  }
 }
 
 .radiobutton {

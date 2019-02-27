@@ -180,17 +180,21 @@
             </div>
         </div>
 
-        <div class="form-item">
-          <label class="form-item--header" for="me_office">ME Office responsible for case</label>
-          <div class="dropdown">
-            <select name="me_office" required>
-              <option value="" disabled hidden selected>Select an office</option>
-                {% for me_office in me_offices %}
-                    <option value={{ me_office.id }}>{{ me_office.name }}</option>
-                {% endfor %}
-            </select>
-          </div>
-        </div>
+          <div class="form-item">
+              <label class="form-item--header" for="me_office">ME Office responsible for case</label>
+              <div class="dropdown">
+                <select name="me_office" required>
+                  <option value="" disabled hidden selected>Select an office</option>
+                    {% for me_office in me_offices %}
+                        <option value={{ me_office.id }}>{{ me_office.name }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+                <div class="checkbox-item">
+                    <input class="checkbox" type="checkbox" name="out_of_hours" value="{{form.out_of_hours}}">
+                    <label class="checkbox__label checkbox__label--dropdown-width" for="out_of_hours">Out of hours/urgent scrutiny has already taken place on this case.</label>
+               </div>
+            </div>
       </div>
 
       <input class="submit-btn" type="submit" value="Create" />
