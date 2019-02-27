@@ -1,8 +1,13 @@
 {% extends "medexCms/shared/base.html" %}
 {% load sass_tags %}
+{% load staticfiles %}
 
 {% block extra_css %}
   <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/search-dropdown.js' %}"></script>
 {% endblock %}
 
 {% block page %}
@@ -39,6 +44,16 @@
       <div class="flex-row baseline form-row">
         <div class="form-item">
           <label class="form-item--header" for="locations">Add them to a trust and associated ME offices</label>
+
+          <div class="search-dropdown multiple">
+            <input class='selection-field' type="text" name="locations">
+            <input type="text" name="searchField">
+            <div class="options-list">
+              {% for trust in trusts %}
+                <option value="{{trust.id}}">{{trust.name}}</option>
+              {% endfor %}
+            </div>
+          </div>
 
           <div class="dropdown{% if form.locations_error %} error{% endif %}">
               <select name="locations" required>
