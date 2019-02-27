@@ -21,11 +21,6 @@
 
   &.error {
     margin-top: 1rem;
-    .form-row {
-      .form-field {
-        border: 1.5px solid $error-border;
-      }
-    }
   }
 }
 
@@ -102,6 +97,10 @@
     border: 2px solid currentColor;
     border-radius: 50%;
     background: transparent;
+  }
+
+  &__input.error + &__label::before {
+    border: 2px solid $error-border;
   }
 
   &__input + &__label::after {

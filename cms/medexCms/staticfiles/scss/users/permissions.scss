@@ -2,7 +2,7 @@
 
 .user-creation-page {
   #new-user-form {
-    margin-bottom: 4rem;
+    margin-bottom: 7rem;
 
     .form-item {
       width: 100%;
@@ -15,11 +15,19 @@
 
       input {
         width: 50%;
+
+        &.error {
+          border: 1.5px solid $error-border;
+        }
       }
 
       .dropdown {
         width: 100%;
         max-width: unset;
+      }
+
+      .notification {
+        margin-top: 0;
       }
     }
 
