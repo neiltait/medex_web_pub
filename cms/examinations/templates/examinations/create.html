@@ -167,7 +167,9 @@
             <div class="dropdown">
                 <select name="place_of_death" required>
                     <option value="" disabled hidden selected>Select a location</option>
-                    <option value="unknown">Unknown</option>
+                    {% for location in locations %}
+                        <option value={{ location.id }}>{{ location.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -177,8 +179,9 @@
           <div class="dropdown">
             <select name="me_office" required>
               <option value="" disabled hidden selected>Select an office</option>
-              <option value="unknown">Unknown</option>
-              <option value="hi">Hi</option>
+                {% for location in locations %}
+                    <option value={{ location.id }}>{{ location.name }}</option>
+                {% endfor %}
             </select>
           </div>
         </div>
