@@ -14,6 +14,7 @@
       this.optionList = $(this.container.find('.options-list'));
       console.info('Initialising search dropdown', this.container);
       this.initialiseOptions();
+      this.watchForFocus();
       this.watchForSearchTerm();
     },
 
@@ -23,6 +24,19 @@
       for (var i = 0; i < options.length; i++) {
         this.options.push(new SearchOption(options[i], this.handleSelection.bind(this)));
       }
+    },
+
+    watchForFocus: function() {
+      var that = this;
+      this.searchField.focus(function() {
+        that.optionList.show();
+      });
+
+      $(document).click(function(e) {
+        if (!that.container[0].contains(e.target)) {
+          that.optionList.hide();
+        }
+      });
     },
 
     watchForSearchTerm: function() {
@@ -43,6 +57,11 @@
       }
     },
 
+    clearSearch: function() {
+      this.searchField[0].value = '';
+      this.clearFilter();
+    },
+
     filterOptionsList: function(searchTerm) {
       var searchTerm = searchTerm.toLowerCase();
       for (var i = 0; i < this.options.length; i++) {
@@ -56,6 +75,8 @@
       } else {
         this.handleMultilpeSelection(option);
       }
+      this.clearSearch();
+      this.optionList.hide();
     },
 
     handleSingleSelection: function(option) {
