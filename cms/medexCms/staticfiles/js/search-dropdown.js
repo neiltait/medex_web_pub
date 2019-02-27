@@ -12,6 +12,7 @@
       this.selectionField = this.container.find('.selection-field')[0];
       this.searchField = $(this.container.find('input[name=searchField]'));
       this.optionList = $(this.container.find('.options-list'));
+      this.placeholder = $(this.optionList.find('#placeholder'));
       console.info('Initialising search dropdown', this.container);
       this.initialiseOptions();
       this.watchForFocus();
@@ -44,8 +45,10 @@
       this.searchField.keyup(function(e) {
         if (e.target.value.length >= that.minSearchTermLength) {
           console.info('Filtering options');
+          that.placeholder.hide();
           that.filterOptionsList(e.target.value);
         } else {
+          that.placeholder.show();
           that.clearFilter();
         }
       });
