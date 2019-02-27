@@ -207,6 +207,11 @@
   .search-field {
     border: 1.5px solid $black;
     width: 100%;
+
+    &.error {
+      border: 1.5px solid $error-border;
+    }
+
     input {
       font-size: $default-font-size;
       line-height: $default-line-height;
