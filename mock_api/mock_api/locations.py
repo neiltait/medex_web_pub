@@ -13,7 +13,7 @@ def load_trust_list(request):
       'name': 'Sheffield NHS Trust',
     },
     {
-      'id': 1,
+      'id': 3,
       'name': 'Barts NHS Trust',
     }
   ]
