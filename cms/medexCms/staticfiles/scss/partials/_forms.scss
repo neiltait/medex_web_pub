@@ -52,11 +52,15 @@
   &__label {
     display: inline-block;
     font-size: $default-font-size;
-    
+
     &--dropdown-width {
       min-width: calc(180px - 0.75rem);
       max-width: calc(400px - 0.75rem);
     }
+  }
+
+  &:disabled {
+    background-color: $disabled-input-color;
   }
 }
 
@@ -212,7 +216,7 @@
   width: 100%;
 
   &__textarea {
-    box-sizing: border-box; // should this be global?
+    box-sizing: border-box;
     display: block;
     width: 100%;
     min-height: 40px;
@@ -225,11 +229,21 @@
 
     -webkit-appearance: none;
     font-size: $default-font-size;
+
+    &:disabled {
+      background-color: $disabled-input-color;
+    }
   }
 
   &__label {
     display: block;
     font-size: $default-font-size;
     margin-bottom: 5px;
+  }
+}
+
+.medex-input {
+  &:disabled {
+    background-color: $disabled-input-color;
   }
 }

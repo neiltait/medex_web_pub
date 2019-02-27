@@ -69,10 +69,10 @@
         <div class="form-item">
           <label class="form-item--header" for="nhs_number">NHS Number</label>
 
-          <input class="form-field" type="text" name="nhs_number" value="{{form.nhs_number}}">
+          <input class="form-field medex-input" type="text" name="nhs_number" id="nhs_number" value="{{form.nhs_number}}">
 
           <div class="checkbox-item flex-row vertical-center">
-            <input class="checkbox" type="checkbox" name="nhs_number_not_known" value="{{form.nhs_number_not_known}}">
+            <input class="checkbox" type="checkbox" name="nhs_number_not_known" id="nhs_number_not_known" value="{{form.nhs_number_not_known}}">
 
             <label for="nhs_number_not_known">Unknown</label>
           </div>
@@ -81,7 +81,7 @@
         <div class="form-item">
           <label class="form-item--header" for="hospital_number">Hospital Number</label>
 
-          <input class="form-field" type="text" name="hospital_number" value="{{form.hospital_number}}" placeholder="Optional">
+          <input class="form-field medex-input" type="text" name="hospital_number" value="{{form.hospital_number}}" placeholder="Optional">
         </div>
       </div>
 
@@ -95,24 +95,24 @@
             <div>
               <label class="form-item--header" for="day_of_birth">Day</label>
 
-              <input class="form-field" type="number" min="1" max="31" name="day_of_birth" value="{{form.day_of_birth}}">
+              <input class="form-field medex-input" id="day_of_birth" type="number" min="1" max="31" name="day_of_birth" value="{{form.day_of_birth}}">
             </div>
 
             <div>
               <label class="form-item--header" for="month_of_birth">Month</label>
 
-              <input class="form-field" type="number" min="1" max="12" name="month_of_birth" value="{{form.month_of_birth}}">
+              <input class="form-field medex-input" id="month_of_birth"  type="number" min="1" max="12" name="month_of_birth" value="{{form.month_of_birth}}">
             </div>
 
             <div>
               <label class="form-item--header" for="year_of_birth">Year</label>
 
-              <input class="form-field" type="number" min="1900" max="2019" name="year_of_birth" value="{{form.year_of_birth}}">
+              <input class="form-field medex-input" id="year_of_birth" type="number" min="1900" max="2019" name="year_of_birth" value="{{form.year_of_birth}}">
             </div>
           </div>
 
           <div class="checkbox-item flex-row vertical-center">
-            <input class="checkbox" type="checkbox" name="date_of_birth_not_known" value="{{form.date_of_birth_not_known}}">
+            <input class="checkbox" type="checkbox" id="date_of_birth_not_known" name="date_of_birth_not_known" value="{{form.date_of_birth_not_known}}">
 
             <label for="date_of_birth_not_known">Unknown</label>
           </div>
@@ -127,24 +127,24 @@
             <div>
               <label class="form-item--header" for="day_of_death">Day</label>
 
-              <input class="form-field" type="number" min="1" max="31" name="day_of_death" value="{{form.day_of_death}}">
+              <input class="form-field medex-input" id="day_of_death" type="number" min="1" max="31" name="day_of_death" value="{{form.day_of_death}}">
             </div>
 
             <div>
               <label class="form-item--header" for="month_of_death">Month</label>
 
-              <input class="form-field" type="number" min="1" max="12" name="month_of_death" value="{{form.month_of_death}}">
+              <input class="form-field medex-input" id="month_of_death" type="number" min="1" max="12" name="month_of_death" value="{{form.month_of_death}}">
             </div>
 
             <div>
               <label class="form-item--header" for="year_of_death">Year</label>
 
-              <input class="form-field" type="number" min="2018" max="3000" name="year_of_death" value="{{form.year_of_death}}">
+              <input class="form-field medex-input" id="year_of_death" type="number" min="2018" max="3000" name="year_of_death" value="{{form.year_of_death}}">
             </div>
           </div>
 
           <div class="checkbox-item flex-row vertical-center">
-            <input class="checkbox" type="checkbox" name="date_of_death_not_known" value="{{form.date_of_death_not_known}}">
+            <input class="checkbox" type="checkbox" id="date_of_death_not_known" name="date_of_death_not_known" value="{{form.date_of_death_not_known}}">
 
             <label for="date_of_death_not_known">Unknown</label>
           </div>
@@ -156,10 +156,10 @@
         <div class="form-item">
           <label class="form-item--header" for="time_of_death">Time of death</label>
 
-          <input class="form-field" type="time" name="time_of_death" value="{{form.time_of_death}}">
+          <input class="form-field medex-input" type="time" id="time_of_death" name="time_of_death" value="{{form.time_of_death}}">
 
           <div class="checkbox-item flex-row vertical-center">
-            <input class="checkbox" type="checkbox" name="time_of_death_not_known" value="{{form.time_of_death_not_known}}">
+            <input class="checkbox" type="checkbox" id="time_of_death_not_known" name="time_of_death_not_known" value="{{form.time_of_death_not_known}}">
 
             <label for="time_of_death_not_known">Unknown</label>
           </div>
@@ -220,7 +220,39 @@
             )
         }
 
+        function setEnabledDisabledTextInputs(textInputs, checkbox) {
+            checkbox.change(
+                function () {
+                    $.each(textInputs, function(index, textInput) {
+                        if(checkbox.prop('checked')) {
+                            textInput[0].disabled = true
+                        } else {
+                            textInput[0].disabled = false
+                        }
+                    })
+                }
+            );
+
+            for(textInput of textInputs) {
+                textInput.on('change keyup paste mouseup', onTextInputChange)
+            }
+
+            function onTextInputChange() {
+                let anyTextboxHasContent = false;
+                for(textInput of textInputs) {
+                    if(textInput.val() !== '') {
+                        anyTextboxHasContent = true;
+                        break
+                    }
+                }
+                checkbox.prop("disabled", anyTextboxHasContent)
+            }
+        }
         setGenderDetailsToggle()
+        setEnabledDisabledTextInputs([$("#nhs_number")], $("#nhs_number_not_known"))
+        setEnabledDisabledTextInputs([$("#time_of_death")], $("#time_of_death_not_known"))
+        setEnabledDisabledTextInputs([$("#day_of_death"), $("#month_of_death"), $("#year_of_death")], $("#date_of_death_not_known"))
+        setEnabledDisabledTextInputs([$("#day_of_birth"), $("#month_of_birth"), $("#year_of_birth")], $("#date_of_birth_not_known"))
     </script>
 
 {% endblock %}
