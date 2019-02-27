@@ -9,6 +9,7 @@ from locations.request_handler import load_trusts_list
 
 from home.utils import redirect_to_login
 
+from .forms import CreateUserForm
 from .models import User
 
 
@@ -23,7 +24,8 @@ def create_user(request):
   context = {
     'session_user': user,
     'page_heading': 'Add a user',
-    'trusts': trust_list
+    'trusts': trust_list,
+    'form': CreateUserForm()
   }
   alerts = []
   status_code = status.HTTP_200_OK
