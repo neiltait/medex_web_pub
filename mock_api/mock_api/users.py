@@ -65,6 +65,15 @@ def validate_session(request):
   status_code = 200 if session_user else 401
   return HttpResponse(json.dumps(session_user), content_type="application/json", status=status_code)
 
+@csrf_exempt
+def users(request):
+  if request.POST:
+    email = request.POST.get('email')
+    status_code =  200 if email != '' and email != None else 400
+    return HttpResponse(json.dumps({'id': 1}), content_type="application/json", status=status_code)
+  else:
+    return HttpResponse('', content_type="application/json", status=404)
+
 
 @csrf_exempt
 @require_POST
