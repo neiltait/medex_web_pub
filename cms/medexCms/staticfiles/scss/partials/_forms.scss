@@ -70,6 +70,11 @@
   &.error {
     border: 1.5px solid $error-border !important;
   }
+
+  &:focus {
+    outline: $focus-width solid $focus-color;
+    outline-offset: 0;
+  }
 }
 
 .radiobutton {
@@ -124,6 +129,12 @@
     border: 2px solid currentColor;
     border-radius: 50%;
     background: transparent;
+  }
+
+  &__input:focus + &__label::before {
+    outline: 3px solid transparent;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 $nhs-radios-focus-width $focus-color;
   }
 
   &__input + &__label::after {
@@ -270,5 +281,9 @@
       color: $error-color !important;
     }
   }
+
+  &:focus {
+    outline: $focus-width solid $focus-color;
+    outline-offset: 0;
   }
 }
