@@ -26,6 +26,10 @@
         border: 1.5px solid $error-border !important;
       }
     }
+
+    &::placeholder {
+      color: $error-color !important;
+    }
   }
 }
 
@@ -261,5 +265,10 @@
 
   &.error {
     border: 1.5px solid $error-border !important;
+
+    &::placeholder {
+      color: $error-color !important;
+    }
+  }
   }
 }

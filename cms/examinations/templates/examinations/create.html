@@ -207,6 +207,7 @@
 
     <script type="text/javascript">
         var showValidation = false;
+        let REQUIRED_PLACEHOLDER = "Required";
 
         function setSubmitButtonHandler() {
             $("#submit-btn").click(function(event) {
@@ -316,11 +317,6 @@
         }
         function validateMEOffice() {
             return $('#me_office').val()
-            {#courageous#}
-            {#flexible#}
-            {#curious#}
-            {#inclusive#}
-            {#delivery focussed#}
         }
 
         function highlightAllErrors() {
@@ -379,10 +375,14 @@
         function validateAndHighlightNames() {
             if(!showValidation || validateName()) {
                 $('#last_name').removeClass("error");
+                $('#last_name').attr("placeholder", "");
                 $('#first_name').removeClass("error");
+                $('#first_name').attr("placeholder", "");
             } else {
                 $('#last_name').addClass("error");
+                $('#last_name').attr("placeholder", REQUIRED_PLACEHOLDER);
                 $('#first_name').addClass("error");
+                $('#first_name').attr("placeholder", REQUIRED_PLACEHOLDER);
             }
         }
 
