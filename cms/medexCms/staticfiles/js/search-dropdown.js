@@ -68,22 +68,23 @@
     filterOptionsList: function(searchTerm) {
       var searchTerm = searchTerm.toLowerCase();
       for (var i = 0; i < this.options.length; i++) {
-        this.options[i].filterForSearch(searchTerm, this.selectionField.value);
+        this.options[i].filterForSearch(searchTerm, this.selectionField.value, this.isSingleSelection);
       }
     },
 
     handleSelection: function(option) {
+      this.clearSearch();
       if (this.isSingleSelection) {
         this.handleSingleSelection(option);
       } else {
         this.handleMultilpeSelection(option);
       }
-      this.clearSearch();
       this.optionList.hide();
     },
 
     handleSingleSelection: function(option) {
       this.selectionField.value = option.idValue;
+      this.searchField[0].value = option.textValue;
     },
 
     handleMultilpeSelection: function(option) {
@@ -97,7 +98,7 @@
 
   var SearchOption = function(option, handleSelectionCallback) {
     this.option = option;
-    this.textValue = option.innerText.toLowerCase();
+    this.textValue = option.innerText;
     this.idValue = option.value;
     this.handleSelection = handleSelectionCallback;
     this.setup();
@@ -116,8 +117,8 @@
       })
     },
 
-    filterForSearch: function(searchTerm, selectedOptions) {
-      if (this.textValue.indexOf(searchTerm) > -1 && selectedOptions.indexOf(this.idValue) === -1) {
+    filterForSearch: function(searchTerm, selectedOptions, isSingle) {
+      if (this.textValue.toLowerCase().indexOf(searchTerm) > -1 && (isSingle || selectedOptions.indexOf(this.idValue) === -1)) {
         $(this.option).show();
       } else {
         $(this.option).hide();
