@@ -4,7 +4,7 @@ from home.utils import redirect_to_login
 
 from users.models import User
 
-from .request_handler import get_locations_list, get_me_offices_list
+from examinations import request_handler
 from .forms import PrimaryExaminationInformationForm
 
 def create_examination(request):
@@ -13,8 +13,8 @@ def create_examination(request):
   if not user.check_logged_in():
     return redirect_to_login()
 
-  locations = get_locations_list()
-  me_offices = get_me_offices_list()
+  locations = request_handler.get_locations_list()
+  me_offices = request_handler.get_me_offices_list()
 
   context = {
     'session_user': user,
