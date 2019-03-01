@@ -5,7 +5,7 @@ from rest_framework import status
 from alerts import messages
 from alerts.utils import generate_error_alert
 
-from locations.request_handler import load_trusts_list
+from locations import request_handler as locations_request_handler
 
 from home.utils import redirect_to_landing, redirect_to_login
 
@@ -20,7 +20,7 @@ def create_user(request):
   if not user.check_logged_in():
     return redirect_to_login()
 
-  trust_list = load_trusts_list()
+  trust_list = locations_request_handler.load_trusts_list()
 
   context = {
     'session_user': user,

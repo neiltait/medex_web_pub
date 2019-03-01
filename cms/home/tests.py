@@ -69,7 +69,8 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/')
 
-  def test_login_returns_redirect_to_landing_page_on_sucess(self):
+  @patch('home.request_handler.create_session', return_value=SUCCESSFUL_SESSION_CREATION)
+  def test_login_returns_redirect_to_landing_page_on_success(self, mock_create_session):
     email_address = 'Matt'
     user_login_credentials = {
       'email_address': email_address,

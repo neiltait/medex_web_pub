@@ -16,6 +16,8 @@ from alerts import utils, messages
 
 from .models import User
 
+from locations import request_handler
+
 user_dict = {
   'user_id': '1',
   'first_name': 'Test',
@@ -29,13 +31,30 @@ SUCCESSFUL_VALIDATE_SESSION = Response()
 SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
 SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
 
+SUCCESSFUL_LOCATION_LOAD = [
+    {
+      'id': 10,
+      'name': 'Gloucester NHS Trust',
+    },
+    {
+      'id': 2,
+      'name': 'Sheffield NHS Trust',
+    },
+    {
+      'id': 3,
+      'name': 'Barts NHS Trust',
+    }
+  ]
+
+
 class UsersViewsTest(MedExTestCase):
 
 
   #### User create tests
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-  def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation):
+  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
+  def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation, mock_location_list):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/users/new')
     self.assertTemplateUsed(response, 'users/new.html')
