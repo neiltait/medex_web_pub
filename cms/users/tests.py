@@ -1,13 +1,23 @@
+from django.conf import settings
+
+from http.cookies import SimpleCookie
+
 from medexCms.test.utils import MedExTestCase
 
+from requests.models import Response
+
 from rest_framework import status
+
+from unittest.mock import patch
+
+import json, uuid
 
 from alerts import utils, messages
 
 from .models import User
 
 user_dict = {
-  'user_id': 'TestUser',
+  'user_id': '1',
   'first_name': 'Test',
   'last_name': 'User',
   'email_address': 'test.user@email.com',
@@ -15,12 +25,18 @@ user_dict = {
   'permissions': [],
 }
 
+SUCCESSFUL_VALIDATE_SESSION = Response()
+SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
+
 class UsersViewsTest(MedExTestCase):
 
 
   #### User create tests
 
-  def test_landing_on_the_user_creation_page_loads_the_correct_template(self):
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/users/new')
     self.assertTemplateUsed(response, 'users/new.html')
     alerts_list = self.get_context_value(response.context, 'alerts')
