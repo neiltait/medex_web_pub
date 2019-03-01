@@ -38,7 +38,6 @@ def create_user(request):
       response = request_handler.create_user({'email': form.email_address})
 
       if response.status_code == status.HTTP_200_OK:
-        print(response.json()['id'])
         return redirect_to_landing()
       else:
         alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
