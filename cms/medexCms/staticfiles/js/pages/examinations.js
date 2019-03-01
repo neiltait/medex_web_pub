@@ -1,199 +1,256 @@
-var showValidation = false;
 let REQUIRED_PLACEHOLDER = "Required";
 
-function setSubmitButtonHandler() {
-    $("#submit-btn").click(function (event) {
-        event.preventDefault();
-        if (validate()) {
-            $("#examination__create--form").submit();
-        } else {
-            showValidation = true;
-            highlightAllErrors();
-        }
-    });
-}
 
-function setGenderDetailsToggle() {
-    let moreGenderDetail = $("#more-gender");
-    moreGenderDetail.hide();
-    $('input[type=radio][name=gender]').change(
-        function () {
-            if (this.value === "other") {
-                moreGenderDetail.show()
+var Form = function (form) {
+    this.showValidation = true;
+    this.form = form;
+    this.setup();
+};
+
+Form.prototype = {
+    setup: function () {
+        this.inputGroups = [];
+        this.inputGroups.push(new TextInputsCheckboxGroup([this.form.find("#nhs_number")], this.form.find("#nhs_number_not_known")));
+        this.inputGroups.push(new TextInputsCheckboxGroup([this.form.find("#time_of_death")], this.form.find("#time_of_death_not_known")));
+        this.inputGroups.push(new TextInputsCheckboxGroup([this.form.find("#day_of_death"), this.form.find("#month_of_death"), this.form.find("#year_of_death")], this.form.find("#date_of_death_not_known")));
+        this.inputGroups.push(new TextInputsCheckboxGroup([this.form.find("#day_of_birth"), this.form.find("#month_of_birth"), this.form.find("#year_of_birth")], this.form.find("#date_of_birth_not_known")));
+
+        this.surnameInput = this.form.find("#last_name");
+        this.givenNameInput = this.form.find("#first_name");
+        this.setupGivenNameInput();
+        this.setupSurnameInput();
+
+        this.genderRadioButtons = this.form.find('input[type=radio][name=gender]');
+        this.genderDetailTextbox = this.form.find("#more-gender");
+
+        this.genderMale = this.form.find('#gender-1');
+        this.genderFemale = this.form.find('#gender-2');
+        this.genderOther = this.form.find('#gender-3');
+
+        this.setupGenderRadioButtons();
+
+        this.placeOfDeathSelect = this.form.find('#place_of_death');
+        this.placeOfDeathDropdown = this.form.find('#place_of_death_dropdown');
+        this.setupPlaceOfDeath();
+
+        this.meOfficeSelect = this.form.find('#me_office');
+        this.meOfficeDropdown = this.form.find('#me_office_dropdown');
+        this.setupMeOffice();
+
+        this.submitButton = this.form.find("#submit-btn");
+        this.setupSubmitButton()
+    },
+    setupSubmitButton: function () {
+        var that = this;
+        this.submitButton.click(function (event) {
+            event.preventDefault();
+            if (that.validate()) {
+                that.form.submit();
             } else {
-                moreGenderDetail.hide()
+                that.setValidationRequired();
+                that.highlightAllErrors();
+            }
+        });
+    },
+    validate: function () {
+        let nhsNumberIsValid = this.inputGroups[0].validateTextInputsCheckboxGroup();
+        let todIsValid = this.inputGroups[1].validateTextInputsCheckboxGroup();
+        let dodIsValid = this.inputGroups[2].validateTextInputsCheckboxGroup();
+        let dobIsValid = this.inputGroups[3].validateTextInputsCheckboxGroup();
+        let genderIsValid = this.validateGenderRadioButtons();
+        let surnameIsValid = this.validateSurname()
+        let givenNameIsValid = this.validateGivenName();
+        let podIsValid = this.validatePlaceOfDeath();
+        let meIsValid = this.validateMeOffice();
+
+        return nhsNumberIsValid && todIsValid && dobIsValid && podIsValid && meIsValid && dodIsValid && genderIsValid && surnameIsValid && givenNameIsValid
+    },
+    highlightAllErrors: function () {
+        return false
+    },
+    setupSurnameInput: function () {
+        this.surnameInput.change(this.validateAndHighlightSurname.bind(this));
+    },
+    setupGivenNameInput: function () {
+        this.givenNameInput.change(this.validateAndHighlightGivenName.bind(this));
+    },
+    setupGenderRadioButtons: function () {
+        this.genderDetailTextbox.hide();
+        var that = this;
+
+        this.genderRadioButtons.change(
+            function () {
+                if (this.value === "other") {
+                    that.genderDetailTextbox.show()
+                } else {
+                    that.genderDetailTextbox.hide()
+                }
+            }
+        )
+    },
+    setupPlaceOfDeath: function () {
+        this.placeOfDeathSelect.change(this.validateAndHighlightPlaceOfDeath.bind(this));
+    },
+    setupMeOffice: function () {
+        this.meOfficeSelect.change(this.validateAndHighlightMeOffice.bind(this));
+    },
+    validateGenderRadioButtons: function () {
+      return this.genderMale[0].checked || this.genderFemale[0].checked || this.genderOther[0].checked
+    },
+    validateAndHighlightMeOffice: function () {
+        if (!this.showValidation || this.validateMeOffice()) {
+            this.meOfficeDropdown.removeClass("error")
+        } else {
+            this.meOfficeDropdown.addClass("error")
+        }
+    },
+    validateAndHighlightPlaceOfDeath: function () {
+        if (!this.showValidation || this.validatePlaceOfDeath()) {
+            this.placeOfDeathDropdown.removeClass("error")
+        } else {
+            this.placeOfDeathDropdown.addClass("error")
+        }
+    },
+    validatePlaceOfDeath: function () {
+        return this.placeOfDeathSelect.val();
+    },
+    validateMeOffice: function () {
+        return this.meOfficeSelect.val();
+    },
+    validateAndHighlightGenderRadioButtons: function() {
+        if (!this.showValidation || this.validateGenderRadioButtons()) {
+            this.genderMale.removeClass("error");
+            this.genderFemale.removeClass("error");
+            this.genderOther.removeClass("error");
+        } else {
+            this.genderMale.addClass("error");
+            this.genderFemale.addClass("error");
+            this.genderOther.addClass("error");
+        }
+    },
+    validateAndHighlightSurname: function () {
+        if (!this.showValidation || this.validateSurname()) {
+            this.surnameInput.removeClass("error");
+            this.surnameInput.attr("placeholder", "");
+        } else {
+            this.surnameInput.addClass("error");
+            this.surnameInput.attr("placeholder", REQUIRED_PLACEHOLDER);
+        }
+    },
+    validateAndHighlightGivenName: function () {
+        console.log(this)
+        var that = this;
+        if (!this.showValidation || this.validateGivenName()) {
+            this.givenNameInput.removeClass("error");
+            this.givenNameInput.attr("placeholder", "");
+        } else {
+            this.givenNameInput.addClass("error");
+            this.givenNameInput.attr("placeholder", REQUIRED_PLACEHOLDER);
+        }
+    },
+    validateSurname: function () {
+        return this.surnameInput.val() !== ''
+    },
+    validateGivenName: function () {
+        return this.givenNameInput.val() !== ''
+    },
+    setValidationRequired: function () {
+        this.showValidation = true;
+        for (inputGroup of this.inputGroups) {
+            inputGroup.showValidation = true;
+        }
+    },
+    highlightAllErrors: function() {
+        this.inputGroups[0].validateAndHighlightTextInputsCheckboxGroup();
+        this.inputGroups[1].validateAndHighlightTextInputsCheckboxGroup();
+        this.inputGroups[2].validateAndHighlightTextInputsCheckboxGroup();
+        this.inputGroups[3].validateAndHighlightTextInputsCheckboxGroup();
+
+        this.validateAndHighlightPlaceOfDeath();
+        this.validateAndHighlightMeOffice();
+        this.validateAndHighlightGivenName();
+        this.validateAndHighlightSurname();
+        this.validateAndHighlightGenderRadioButtons();
+    }
+
+};
+
+var TextInputsCheckboxGroup = function (textboxes, checkbox) {
+    this.textboxes = textboxes;
+    this.checkbox = checkbox;
+    this.showValidation = true;
+    this.setup();
+};
+
+TextInputsCheckboxGroup.prototype = {
+    setup: function () {
+        console.info("Input group setup");
+
+        this.setupCheckboxHandler();
+        this.setupTextboxesHandler();
+
+    },
+    setupCheckboxHandler: function () {
+
+        var that = this;
+        this.checkbox.change(
+            function () {
+                $.each(that.textboxes, function (index, textInput) {
+
+                    if (that.checkbox.prop('checked')) {
+                        textInput[0].disabled = true
+                    } else {
+                        textInput[0].disabled = false
+                    }
+                });
+                that.validateAndHighlightTextInputsCheckboxGroup(that.textboxes, that.checkbox);
+            }
+        );
+    },
+    setupTextboxesHandler: function () {
+        var that = this;
+        for (textInput of that.textboxes) {
+            textInput.on('change keyup paste mouseup', function () {
+                that.checkbox.prop("disabled", that.anyTextBoxesHaveContent(that.textboxes));
+                that.validateAndHighlightTextInputsCheckboxGroup();
+            })
+        }
+    },
+    anyTextBoxesHaveContent: function () {
+        for (textInput of this.textboxes) {
+            if (textInput.val() !== '') {
+                return true
             }
         }
-    )
-}
-
-function setOnChangeHandlerForNameInputs() {
-    $('#last_name').change(validateAndHighlightNames);
-    $('#first_name').change(validateAndHighlightNames);
-}
-
-function setOnChangeHandlerForPlaceOfDeath() {
-    $('#place_of_death').change(validateAndHighlightPlaceOfDeath);
-}
-
-
-function setOnChangeHandlerForMEOffice() {
-    $('#me_office').change(validateAndHighlightMEOffice);
-}
-
-
-function setOnChangeHandlerForTextInputsCheckboxGroup(textInputs, checkbox) {
-    // add handler for the checkbox
-    checkbox.change(
-        function () {
-            $.each(textInputs, function (index, textInput) {
-                if (checkbox.prop('checked')) {
-                    textInput[0].disabled = true
-                } else {
-                    textInput[0].disabled = false
-                }
-            });
-            validateAndHighlightTextInputsCheckboxGroup(textInputs, checkbox);
+        return false
+    },
+    validateAndHighlightTextInputsCheckboxGroup: function () {
+        if (!this.showValidation || this.validateTextInputsCheckboxGroup()) {
+            for (textInput of this.textboxes) {
+                textInput.removeClass("error")
+            }
+            this.checkbox.removeClass("error")
+        } else {
+            for (textInput of this.textboxes) {
+                textInput.addClass("error")
+            }
+            this.checkbox.addClass("error")
         }
-    );
-
-    // add handler for all textboxes
-    for (textInput of textInputs) {
-        textInput.on('change keyup paste mouseup', function () {
-            checkbox.prop("disabled", anyTextBoxesHaveContent(textInputs));
-            validateAndHighlightTextInputsCheckboxGroup(textInputs, checkbox);
-        })
-    }
-}
-
-function allTextBoxesHaveContent(textInputs) {
-    for (textInput of textInputs) {
-        if (textInput.val() === '') {
-            return false
+    },
+    validateTextInputsCheckboxGroup: function () {
+        return this.allTextBoxesHaveContent() || this.checkbox.prop('checked')
+    },
+    allTextBoxesHaveContent: function () {
+        for (textInput of this.textboxes) {
+            if (textInput.val() === '') {
+                return false
+            }
         }
+        return true
     }
-    return true
-}
-
-function anyTextBoxesHaveContent(textInputs) {
-    for (textInput of textInputs) {
-        if (textInput.val() !== '') {
-            return true
-        }
-    }
-    return false
-}
-
-function validate() {
-    let nhsNumberIsValid = validateTextInputsCheckboxGroup([$("#nhs_number")], $("#nhs_number_not_known"));
-    let todIsValid = validateTextInputsCheckboxGroup([$("#time_of_death")], $("#time_of_death_not_known"));
-    let dodIsValid = validateTextInputsCheckboxGroup([$("#day_of_death"), $("#month_of_death"), $("#year_of_death")], $("#date_of_death_not_known"));
-    let dobIsValid = validateTextInputsCheckboxGroup([$("#day_of_birth"), $("#month_of_birth"), $("#year_of_birth")], $("#date_of_birth_not_known"));
-    let genderIsValid = validateGenderRadioButtons();
-    let nameIsValid = validateName();
-    let podIsValid = validatePlaceOfDeath();
-    let meIsValid = validateMEOffice();
-
-    return nhsNumberIsValid && todIsValid && dobIsValid && podIsValid && meIsValid && dodIsValid && genderIsValid && nameIsValid
-}
-
-function validateTextInputsCheckboxGroup(textInputs, checkbox) {
-    return allTextBoxesHaveContent(textInputs) || checkbox.prop('checked')
-}
-
-function validateGenderRadioButtons() {
-    return $("#gender-1")[0].checked || $("#gender-2")[0].checked || $("#gender-3")[0].checked
-}
-
-function validateName() {
-    return $('#last_name').val() !== '' && $('#first_name').val() !== ''
-}
-
-function validatePlaceOfDeath() {
-    return $('#place_of_death').val()
-}
-
-function validateMEOffice() {
-    return $('#me_office').val()
-}
-
-function highlightAllErrors() {
-    validateAndHighlightTextInputsCheckboxGroup([$("#nhs_number")], $("#nhs_number_not_known"));
-    validateAndHighlightTextInputsCheckboxGroup([$("#time_of_death")], $("#time_of_death_not_known"));
-    validateAndHighlightTextInputsCheckboxGroup([$("#day_of_death"), $("#month_of_death"), $("#year_of_death")], $("#date_of_death_not_known"));
-    validateAndHighlightTextInputsCheckboxGroup([$("#day_of_birth"), $("#month_of_birth"), $("#year_of_birth")], $("#date_of_birth_not_known"));
-    validateAndHighlightGenderRadioButtons();
-    validateAndHighlightPlaceOfDeath();
-    validateAndHighlightMEOffice();
-    validateAndHighlightNames();
-}
-
-function validateAndHighlightTextInputsCheckboxGroup(textInputs, checkbox) {
-    if (!showValidation || validateTextInputsCheckboxGroup(textInputs, checkbox)) {
-        for (textInput of textInputs) {
-            textInput.removeClass("error")
-        }
-        checkbox.removeClass("error")
-    } else {
-        for (textInput of textInputs) {
-            textInput.addClass("error")
-        }
-        checkbox.addClass("error")
-    }
-}
-
-function validateAndHighlightGenderRadioButtons() {
-    if (!showValidation || validateGenderRadioButtons()) {
-        $("#gender-1").removeClass("error");
-        $("#gender-2").removeClass("error");
-        $("#gender-3").removeClass("error");
-    } else {
-        $("#gender-1").addClass("error");
-        $("#gender-2").addClass("error");
-        $("#gender-3").addClass("error");
-    }
-}
-
-function validateAndHighlightPlaceOfDeath() {
-    if (!showValidation || validatePlaceOfDeath()) {
-        $('#place_of_death_dropdown').removeClass("error")
-    } else {
-        $('#place_of_death_dropdown').addClass("error")
-    }
-}
-
-function validateAndHighlightMEOffice() {
-    if (!showValidation || validateMEOffice()) {
-        $('#me_office_dropdown').removeClass("error")
-    } else {
-        $('#me_office_dropdown').addClass("error")
-    }
-}
-
-function validateAndHighlightNames() {
-    if (!showValidation || validateName()) {
-        $('#last_name').removeClass("error");
-        $('#last_name').attr("placeholder", "");
-        $('#first_name').removeClass("error");
-        $('#first_name').attr("placeholder", "");
-    } else {
-        $('#last_name').addClass("error");
-        $('#last_name').attr("placeholder", REQUIRED_PLACEHOLDER);
-        $('#first_name').addClass("error");
-        $('#first_name').attr("placeholder", REQUIRED_PLACEHOLDER);
-    }
-}
-
+};
 
 $(function () // execute once the DOM has loaded
 {
-    setSubmitButtonHandler();
-    setOnChangeHandlerForNameInputs();
-    setGenderDetailsToggle();
-    setOnChangeHandlerForTextInputsCheckboxGroup([$("#nhs_number")], $("#nhs_number_not_known"));
-    setOnChangeHandlerForTextInputsCheckboxGroup([$("#time_of_death")], $("#time_of_death_not_known"));
-    setOnChangeHandlerForTextInputsCheckboxGroup([$("#day_of_death"), $("#month_of_death"), $("#year_of_death")], $("#date_of_death_not_known"));
-    setOnChangeHandlerForTextInputsCheckboxGroup([$("#day_of_birth"), $("#month_of_birth"), $("#year_of_birth")], $("#date_of_birth_not_known"));
-    setOnChangeHandlerForPlaceOfDeath();
-    setOnChangeHandlerForMEOffice();
+    new Form($("#examination__create--form"));
 });
