@@ -13,7 +13,7 @@ from locations import request_handler as locations_request_handler
 from home.utils import redirect_to_landing, redirect_to_login
 
 from . import request_handler
-from .forms import CreateUserForm
+from .forms import CreateUserForm, PermissionBuilderForm
 from .models import User
 
 
@@ -70,4 +70,24 @@ def lookup_user(request):
 
 
 def add_permission(request, user_id):
-  pass
+  user = User.initialise_with_token(request)
+
+  if not user.check_logged_in():
+    return redirect_to_login()
+
+  context = {
+    'session_user': user,
+    'sub_heading': 'Add role and permission level',
+    'form': PermissionBuilderForm()
+  }
+  alerts = []
+  status_code = status.HTTP_200_OK
+
+  trust_list = locations_request_handler.load_trusts_list()
+  context['trusts'] = trust_list
+
+  managed_user = User.load_by_id(user_id)
+  context['managed_user'] = managed_user
+
+  context['alerts'] = alerts
+  return render(request, 'users/permission_builder.html', context, status=status_code)
