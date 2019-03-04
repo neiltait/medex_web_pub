@@ -148,6 +148,17 @@ class UsersFormsTests(MedExTestCase):
     self.assertIsTrue(create_form.validate())
     self.assertEqual(create_form.email_error, None)
 
+  def test_check_is_nhs_email_returns_true_if_email_is_nhs_domain(self):
+    email_address = 'test.user@nhs.uk'
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsTrue(create_form.check_is_nhs_email())
+
+  def test_check_is_nhs_email_returns_false_if_email_is_not_nhs_domain(self):
+    email_address = 'test.user@email.com'
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsFalse(create_form.check_is_nhs_email())
+
+
 
 class UsersModelsTests(MedExTestCase):
 

@@ -15,7 +15,11 @@ class CreateUserForm():
 
     if self.email_address == '' or self.email_address is None:
       self.email_error = messages.MISSING_EMAIL
-    elif '@nhs.uk' not in self.email_address:
+    elif not self.check_is_nhs_email():
       self.email_error = messages.INVALID_EMAIL_DOMAIN
     
     return False if self.email_error else True
+
+
+  def check_is_nhs_email(self):
+    return '@nhs.uk' in self.email_address
