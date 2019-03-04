@@ -243,10 +243,19 @@ class HomeViewsTests(MedExTestCase):
 
 #### Settings index tests
 
-  def test_landing_on_settigs_page_returns_the_correct_template_and_content(self):
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_logged_in(self, mock_auth_validation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/settings')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertTemplateUsed(response, 'home/settings.html')
+    self.assertTemplateUsed(response, 'home/settings_index.html')
+
+
+  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
+  def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(self, mock_auth_validation):
+    response = self.client.get('/settings')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/login')
 
 
 class HomeFormsTests(MedExTestCase):
