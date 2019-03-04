@@ -40,6 +40,13 @@ USERS = [
   }
 ]
 
+EMPTY_USER = {
+  'user_id': None,
+  'first_name': None,
+  'last_name': None,
+  'email_address': None
+}
+
 
 @csrf_exempt
 @require_POST
@@ -88,3 +95,11 @@ def load_by_email(request):
     'permissions': [],
   }
   return HttpResponse(json.dumps(user), content_type="application/json")
+
+def load_by_id(request, user_id):
+  searched_user = EMPTY_USER
+  for user in USERS:
+    if user['user_object']['user_id'] == user_id:
+      searched_user = user['user_object']
+  status_code = 200 if searched_user else 404
+  return HttpResponse(json.dumps(searched_user), content_type="application/json", status=status_code)
