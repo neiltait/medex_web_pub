@@ -87,6 +87,8 @@ def add_permission(request, user_id):
   context['trusts'] = trust_list
 
   managed_user = User.load_by_id(user_id)
+  if managed_user == None:
+    alerts.append(generate_error_alert(messages.OBJECT_NOT_FOUND % 'user'))
   context['managed_user'] = managed_user
 
   context['alerts'] = alerts
