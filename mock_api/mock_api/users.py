@@ -70,7 +70,8 @@ def users(request):
   if request.POST:
     email = request.POST.get('email')
     status_code =  200 if email != '' and email != None else 400
-    return HttpResponse(json.dumps({'id': 1}), content_type="application/json", status=status_code)
+    obj = {'id': 1} if status_code == 200 else None
+    return HttpResponse(json.dumps(obj), content_type="application/json", status=status_code)
   else:
     return HttpResponse('', content_type="application/json", status=404)
 

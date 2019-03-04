@@ -15,6 +15,7 @@ import json, uuid
 from alerts import utils, messages
 
 from .models import User
+from .forms import CreateUserForm
 
 from locations import request_handler
 
@@ -31,6 +32,10 @@ SUCCESSFUL_VALIDATE_SESSION = Response()
 SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
 SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
 
+UNSUCCESSFUL_VALIDATE_SESSION = Response()
+UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
+
 SUCCESSFUL_LOCATION_LOAD = [
     {
       'id': 10,
@@ -45,6 +50,14 @@ SUCCESSFUL_LOCATION_LOAD = [
       'name': 'Barts NHS Trust',
     }
   ]
+
+SUCCESSFUL_USER_CREATION = Response()
+SUCCESSFUL_USER_CREATION.status_code = status.HTTP_200_OK
+SUCCESSFUL_USER_CREATION._content = json.dumps({'id': 1}).encode('utf-8')
+
+UNSUCCESSFUL_USER_CREATION = Response()
+UNSUCCESSFUL_USER_CREATION.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_USER_CREATION._content = json.dumps(None).encode('utf-8')
 
 
 class UsersViewsTest(MedExTestCase):
@@ -61,9 +74,79 @@ class UsersViewsTest(MedExTestCase):
     alerts_list = self.get_context_value(response.context, 'alerts')
     self.assertEqual(len(alerts_list), 0)
 
+  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
+  def test_landing_on_the_user_creation_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
+    response = self.client.get('/users/new')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/login')
 
-# class UsersFormsTests(MedExTestCase):
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
+  def test_user_creation_endpoint_returns_a_bad_request_response_and_the_correct_alert_if_form_invalid(self, mock_auth_validation, mock_location_list):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.post('/users/new', {'email_address': 'test.user@email.com'})
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 1)
+    self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
+  @patch('users.request_handler.create_user', return_value=UNSUCCESSFUL_USER_CREATION)
+  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_location_list, mock_user_creation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 1)
+    self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
+
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
+  @patch('users.request_handler.create_user', return_value=SUCCESSFUL_USER_CREATION)
+  def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_location_list, mock_user_creation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/')
+
+
+class UsersFormsTests(MedExTestCase):
+
+  #### CreateUserForm tests
+
+  def test_CreateUserForm_initialises_blank_attributes_if_no_request_provided(self):
+    create_form = CreateUserForm()
+    self.assertEqual(create_form.email_address, '')
+
+  def test_CreateUserForm_initialises_with_filled_attributes_if_request_provided(self):
+    email_address = 'test.user@nhs.co.uk'
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertEqual(create_form.email_address, email_address)
+
+  def test_CreateUserForm_validates_as_false_if_email_is_empty_string_with_the_correct_error_message(self):
+    email_address = ''
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsFalse(create_form.validate())
+    self.assertEqual(create_form.email_error, messages.MISSING_EMAIL)
+
+  def test_CreateUserForm_validates_as_false_if_email_is_missing_with_the_correct_error_message(self):
+    email_address = None
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsFalse(create_form.validate())
+    self.assertEqual(create_form.email_error, messages.MISSING_EMAIL)
+
+  def test_CreateUserForm_validates_as_false_if_email_is_not_nhs_domain_with_the_correct_error_message(self):
+    email_address = 'test.user@email.com'
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsFalse(create_form.validate())
+    self.assertEqual(create_form.email_error, messages.INVALID_EMAIL_DOMAIN)
+
+  def test_CreateUserForm_validates_as_true_if_email_is_present_and_nhs_domain_with_no_error_message(self):
+    email_address = 'test.user@nhs.uk'
+    create_form = CreateUserForm({'email_address': email_address})
+    self.assertIsTrue(create_form.validate())
+    self.assertEqual(create_form.email_error, None)
 
 
 class UsersModelsTests(MedExTestCase):
