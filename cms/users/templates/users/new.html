@@ -40,59 +40,8 @@
           {% endif %}
         </div>
       </div>
-
-      <div class="flex-row baseline form-row">
-        <div class="form-item">
-          <label class="form-item--header" for="locations">Add them to a trust and associated ME offices</label>
-
-          <div class="search-dropdown">
-            <input class='selection-field' type="text" name="locations" value="{{form.locations}}">
-            <div class='search-field{% if form.locations_error %} error{% endif %}'>
-              <input type="text" name="searchField" placeholder="Search for a trust">
-            </div>
-            <div class="options-list">
-              <p id="placeholder" class="options-list--placeholder">Please enter at least 3 characters to search</p>
-              {% for trust in trusts %}
-                <option value="{{trust.id}}">{{trust.name}}</option>
-              {% endfor %}
-            </div>
-          </div>
-
-          <div id="admin-explanation" class="small-print">
-            Leave empty if adding a national or regional administrator
-          </div>
-
-          {% if form.locations_error %}
-            <div class="notification error">
-              {{form.locations_error}}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="flex-row baseline form-row">
-        <div class="form-item">
-          <label class="form-item--header">What role will the user be performing?</label>
-
-          <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-1" value="me" {% if form.role == 'me' %}checked{% endif %}>
-              <label class="radiobutton__label" for="role-1">ME</label>
-          </div>
-
-          <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-2" value="meo" {% if form.role == 'meo' %}checked{% endif %}>
-              <label class="radiobutton__label" for="role-2">MEO</label>
-          </div>
-
-          {% if form.role_error %}
-            <div class="notification error">
-              {{form.role_error}}
-            </div>
-          {% endif %}
-        </div>
-      </div>
       
-      <input class="submit-btn" type="submit" value="Invite" />
+      <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
     </form>
   </div>
 {% endblock %}
