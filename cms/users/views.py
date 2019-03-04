@@ -23,12 +23,9 @@ def create_user(request):
   if not user.check_logged_in():
     return redirect_to_login()
 
-  trust_list = locations_request_handler.load_trusts_list()
-
   context = {
     'session_user': user,
     'page_heading': 'Add a user',
-    'trusts': trust_list,
     'form': CreateUserForm()
   }
   alerts = []

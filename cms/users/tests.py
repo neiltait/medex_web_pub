@@ -67,8 +67,7 @@ class UsersViewsTest(MedExTestCase):
 #### User create tests
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
-  def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation, mock_location_list):
+  def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/users/new')
     self.assertTemplateUsed(response, 'users/new.html')
@@ -82,8 +81,7 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(response.url, '/login')
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
-  def test_user_creation_endpoint_returns_a_bad_request_response_and_the_correct_alert_if_form_invalid(self, mock_auth_validation, mock_location_list):
+  def test_user_creation_endpoint_returns_a_bad_request_response_and_the_correct_alert_if_form_invalid(self, mock_auth_validation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@email.com'})
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -92,9 +90,8 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
   @patch('users.request_handler.create_user', return_value=UNSUCCESSFUL_USER_CREATION)
-  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_location_list, mock_user_creation):
+  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_user_creation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -103,13 +100,13 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
   @patch('users.request_handler.create_user', return_value=SUCCESSFUL_USER_CREATION)
-  def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_location_list, mock_user_creation):
+  def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_user_creation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/users/%s/add_permission' % CREATED_USER_ID)
+
 
 #### User lookup tests
 
