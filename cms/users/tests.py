@@ -163,7 +163,6 @@ class UsersModelsTests(MedExTestCase):
     self.assertEqual(user_obj.first_name, mocks.user_dict['first_name'])
     self.assertEqual(user_obj.last_name, mocks.user_dict['last_name'])
     self.assertEqual(user_obj.email_address, mocks.user_dict['email_address'])
-    self.assertEqual(user_obj.permissions, mocks.user_dict['permissions'])
 
   def test_User_full_name_method_returns_first_and_last_name_combined(self):
     user_obj = User(mocks.user_dict)
@@ -183,10 +182,12 @@ class UsersModelsTests(MedExTestCase):
     response = User.load_by_email('a.user@email.com')
     self.assertEqual(response, None)
 
-  def test_User_load_by_user_id_returns_a_user_object_if_the_id_has_an_account(self):
-    response = User.load_by_user_id('TestUser')
+  @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
+  def test_User_load_by_id_returns_a_user_object_if_the_id_has_an_account(self, mock_user_load):
+    response = User.load_by_id(1)
     self.assertEqual(type(response), User)
 
-  def test_User_load_by_user_id_returns_a_None_object_if_the_id_doesnt_have_an_account(self):
-    response = User.load_by_user_id('AUser')
+  @patch('users.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_LOAD_USER)
+  def test_User_load_by_id_returns_a_None_object_if_the_id_doesnt_have_an_account(self, mock_user_load):
+    response = User.load_by_id(0)
     self.assertEqual(response, None)
