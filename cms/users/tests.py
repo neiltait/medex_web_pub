@@ -127,6 +127,24 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+#### Add permission tests
+
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
+  def test_landing_on_the_add_permission_page_loads_the_correct_template(self, mock_auth_validation, mock_location_list):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.get('/users/%s/add_permission' % CREATED_USER_ID)
+    self.assertTemplateUsed(response, 'users/permission_builder.html')
+    alerts_list = self.get_context_value(response.context, 'alerts')
+    self.assertEqual(len(alerts_list), 0)
+
+  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
+  def test_landing_on_the_add_permission_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
+    response = self.client.get('/users/%s/add_permission' % CREATED_USER_ID)
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/login')
+
+
 class UsersFormsTests(MedExTestCase):
 
 #### CreateUserForm tests
