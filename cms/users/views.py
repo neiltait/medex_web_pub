@@ -41,7 +41,7 @@ def create_user(request):
       response = request_handler.create_user({'email': form.email_address})
 
       if response.status_code == status.HTTP_200_OK:
-        return redirect_to_landing()
+        return redirect('/users/%s/add_permission' % response.json()['id'])
       else:
         alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
         status_code = response.status_code

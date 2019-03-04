@@ -51,9 +51,10 @@ SUCCESSFUL_LOCATION_LOAD = [
     }
   ]
 
+CREATED_USER_ID = 1
 SUCCESSFUL_USER_CREATION = Response()
 SUCCESSFUL_USER_CREATION.status_code = status.HTTP_200_OK
-SUCCESSFUL_USER_CREATION._content = json.dumps({'id': 1}).encode('utf-8')
+SUCCESSFUL_USER_CREATION._content = json.dumps({'id': CREATED_USER_ID}).encode('utf-8')
 
 UNSUCCESSFUL_USER_CREATION = Response()
 UNSUCCESSFUL_USER_CREATION.status_code = status.HTTP_400_BAD_REQUEST
@@ -108,7 +109,7 @@ class UsersViewsTest(MedExTestCase):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/')
+    self.assertEqual(response.url, '/users/%s/add_permission' % CREATED_USER_ID)
 
 #### User lookup tests
 
