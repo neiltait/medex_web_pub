@@ -78,7 +78,8 @@ def add_permission(request, user_id):
   context = {
     'session_user': user,
     'sub_heading': 'Add role and permission level',
-    'form': PermissionBuilderForm()
+    'form': PermissionBuilderForm(),
+    'submit_path': 'add_permission'
   }
   alerts = []
   status_code = status.HTTP_200_OK

@@ -36,3 +36,44 @@
     }
   }
 }
+
+.permission-builder-page {
+  #permission-builder-form {
+    margin-bottom: 7rem;
+
+    .form-item {
+      width: 100%;
+      margin-bottom: 3rem;
+
+      &--header {
+        display: block;
+        margin-bottom: 0.75rem;
+      }
+
+      .option-column {
+        margin-right: 2rem;
+      }
+
+      input {
+        width: 50%;
+
+        &.error {
+          border: 1.5px solid $error-border;
+        }
+      }
+
+      .dropdown {
+        width: 100%;
+        max-width: unset;
+      }
+
+      .notification {
+        margin-top: 0;
+      }
+    }
+
+    .small-print {
+      color: $nhs-light-grey;
+    }
+  }
+}
