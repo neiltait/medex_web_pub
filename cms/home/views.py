@@ -102,7 +102,7 @@ def settings_index(request):
     
   context = {
       'session_user': user,
-      'page_heading': 'All your current open cases',
+      'page_heading': 'Settings',
       'sub_heading': 'Overview',
   }
   return render(request, 'home/settings_index.html', context)
