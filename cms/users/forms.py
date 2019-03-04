@@ -23,3 +23,17 @@ class CreateUserForm():
 
   def check_is_nhs_email(self):
     return '@nhs.uk' in self.email_address
+
+
+class PermissionBuilderForm():
+  submit_btn_text = 'Save'
+
+  def __init__(self, request=None):
+    if request:
+      self.role = request.get('role')
+      self.permission_level = request.get('permission_level')
+      self.location = request.get('location')
+    else:
+      self.role = ''
+      self.permission_level = ''
+      self.location = ''
