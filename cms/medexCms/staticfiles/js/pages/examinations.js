@@ -3,6 +3,7 @@ let REQUIRED_PLACEHOLDER = "Required";
 
 var Form = function (form) {
     this.showValidation = true;
+    this.visibleHospitalNumbers = 1;
     this.form = form;
     this.setup();
 };
@@ -19,6 +20,13 @@ Form.prototype = {
         this.givenNameInput = this.form.find("#first_name");
         this.setupGivenNameInput();
         this.setupSurnameInput();
+
+        this.hospitalNumber1 = this.form.find("#hospital_number_1");
+        this.hospitalNumber1Label = this.form.find("#hospital_number_1_label");
+        this.hospitalNumber2 = this.form.find("#hospital_number_2");
+        this.hospitalNumber3 = this.form.find("#hospital_number_3");
+        this.hospitalNumberAddBtn = this.form.find("#hospital-number__add-btn");
+        this.setupHospitalNumberAddBtn();
 
         this.genderRadioButtons = this.form.find('input[type=radio][name=gender]');
         this.genderDetailTextbox = this.form.find("#more-gender");
@@ -51,6 +59,25 @@ Form.prototype = {
                 that.highlightAllErrors();
             }
         });
+    },
+    makeHospitalNumbersVisible: function () {
+        if(this.visibleHospitalNumbers >= 2) {
+            this.hospitalNumber1Label.html("Hospital Number 1");
+            this.hospitalNumber2.removeClass("medex-hidden")
+        }
+        if(this.visibleHospitalNumbers === 3) {
+            this.hospitalNumber3.removeClass("medex-hidden");
+            this.hospitalNumberAddBtn.addClass("medex-hidden");
+        }
+    },
+    setupHospitalNumberAddBtn: function () {
+        var that = this;
+        this.hospitalNumberAddBtn.click(function(event) {
+            event.preventDefault();
+
+            that.visibleHospitalNumbers += 1;
+            that.makeHospitalNumbersVisible();
+        })
     },
     validate: function () {
         let nhsNumberIsValid = this.inputGroups[0].validateTextInputsCheckboxGroup();

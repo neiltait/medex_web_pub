@@ -77,12 +77,21 @@
             <label for="nhs_number_not_known">Unknown</label>
           </div>
         </div>
-
-        <div class="form-item">
-          <label class="form-item--header" for="hospital_number">Hospital Number</label>
-
-          <input class="form-field medex-input" type="text" name="hospital_number" value="{{form.hospital_number}}" placeholder="Optional">
+          <div  class="form-item">
+        <div class="hospital-number__list-item" id="hospital_number_1">
+          <label class="form-item--header" for="hospital_number_1" id="hospital_number_1_label">Hospital Number</label>
+          <input class="form-field medex-input" type="text"  name="hospital_number_1" value="{{form.hospital_number}}" placeholder="Optional">
         </div>
+        <div class="hospital-number__list-item medex-hidden" id="hospital_number_2" >
+          <label class="form-item--header" for="hospital_number_2">Hospital Number 2</label>
+          <input class="form-field medex-input" type="text" name="hospital_number_2" value="{{form.hospital_number_2}}" placeholder="Optional">
+        </div>
+        <div class="hospital-number__list-item medex-hidden" id="hospital_number_3" >
+          <label class="form-item--header" for="hospital_number_3">Hospital Number 3</label>
+          <input class="form-field medex-input" type="text"name="hospital_number_3" value="{{form.hospital_number_3}}" placeholder="Optional">
+        </div>
+         <button class="medex-hyperlink-button" id="hospital-number__add-btn">Add another</button>
+          </div>
       </div>
 
       <!-- Dates -->
