@@ -13,7 +13,6 @@ class User():
       self.first_name = obj_dict['first_name']
       self.last_name = obj_dict['last_name']
       self.email_address = obj_dict['email_address']
-      self.permissions = obj_dict['permissions']
 
 
   @classmethod
@@ -48,7 +47,6 @@ class User():
         self.first_name = response_data['first_name']
         self.last_name = response_data['last_name']
         self.email_address = response_data['email_address']
-        self.permissions = response_data['permissions']
         
       return authenticated
     else:
@@ -72,15 +70,12 @@ class User():
 
 
   @classmethod
-  def load_by_user_id(cls, user_id):
-    # TODO need to tie into the api when possible
-    if user_id == 'TestUser':
-      return User({
-        'user_id': 'TestUser',
-        'first_name': 'Test',
-        'last_name': 'User',
-        'email_address': 'test.user@email.com',
-        'permissions': [],
-      })
+  def load_by_id(cls, user_id):
+    response = request_handler.load_by_id(user_id)
+
+    authenticated = response.status_code == status.HTTP_200_OK
+
+    if authenticated:
+      return User(response.json())
     else:
       return None

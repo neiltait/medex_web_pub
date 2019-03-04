@@ -7,3 +7,6 @@ def validate_session(cookie):
 
 def create_user(user_object):
   return requests.post('%s/users' % settings.API_URL, data = user_object)
+
+def load_by_id(user_id):
+  return requests.get('%s/users/%s' % (settings.API_URL, user_id))
