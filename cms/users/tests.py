@@ -63,7 +63,7 @@ UNSUCCESSFUL_USER_CREATION._content = json.dumps(None).encode('utf-8')
 class UsersViewsTest(MedExTestCase):
 
 
-  #### User create tests
+#### User create tests
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
   @patch('locations.request_handler.load_trusts_list', return_value=SUCCESSFUL_LOCATION_LOAD)
@@ -110,10 +110,28 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/')
 
+#### User lookup tests
+
+  def test_user_lookup_returns_unauthorised_when_called_whilst_not_logged_in(self):
+    response = self.client.post('/users/lookup', {'email_address': 'test.user@nhs.uk'})
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  def test_user_lookup_returns_not_found_when_email_not_in_okta(self, mock_auth_validation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.post('/users/lookup', {'email_address': 'test.user@email.com'})
+    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+  @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+  def test_user_lookup_returns_success_when_email_is_in_okta(self, mock_auth_validation):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    response = self.client.post('/users/lookup', {'email_address': 'test.user@nhs.uk'})
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 class UsersFormsTests(MedExTestCase):
 
-  #### CreateUserForm tests
+#### CreateUserForm tests
 
   def test_CreateUserForm_initialises_blank_attributes_if_no_request_provided(self):
     create_form = CreateUserForm()
@@ -163,7 +181,7 @@ class UsersFormsTests(MedExTestCase):
 class UsersModelsTests(MedExTestCase):
 
 
-  #### User tests
+#### User tests
 
   def test_User_initialisation_correctly_sets_the_fields_from_dict(self):
     user_obj = User(user_dict)
