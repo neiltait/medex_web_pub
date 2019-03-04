@@ -1,4 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from rest_framework import status
 
@@ -51,3 +54,19 @@ def create_user(request):
 
   context['alerts'] = alerts
   return render(request, 'users/new.html', context, status=status_code)
+
+@csrf_exempt
+@require_POST
+def lookup_user(request):
+  user = User.initialise_with_token(request)
+  if not user.check_logged_in():
+    return JsonResponse({}, status=status.HTTP_401_UNAUTHORIZED)
+
+  form = CreateUserForm(request.POST)
+
+  ### TODO check user exists against OKTA
+  #Temp check until then
+  if form.check_is_nhs_email() :
+    return JsonResponse({'found': True}, status=status.HTTP_200_OK)
+  else:
+    return JsonResponse({'found': False}, status=status.HTTP_404_NOT_FOUND)
