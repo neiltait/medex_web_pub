@@ -67,3 +67,7 @@ def lookup_user(request):
     return JsonResponse({'found': True}, status=status.HTTP_200_OK)
   else:
     return JsonResponse({'found': False}, status=status.HTTP_404_NOT_FOUND)
+
+
+def add_permission(request, user_id):
+  pass
