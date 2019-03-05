@@ -35,10 +35,10 @@ class PermissionBuilderForm():
       self.region = request.get('region')
       self.trust = request.get('trust')
     else:
-      self.role = ''
-      self.permission_level = ''
-      self.region = ''
-      self.trust = ''
+      self.role = None
+      self.permission_level = None
+      self.region = None
+      self.trust = None
 
   def is_valid(self):
     self.role_error = None
