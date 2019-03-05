@@ -85,15 +85,12 @@ Form.prototype = {
         let dodIsValid = this.inputGroups[2].validateTextInputsCheckboxGroup();
         let dobIsValid = this.inputGroups[3].validateTextInputsCheckboxGroup();
         let genderIsValid = this.validateGenderRadioButtons();
-        let surnameIsValid = this.validateSurname()
+        let surnameIsValid = this.validateSurname();
         let givenNameIsValid = this.validateGivenName();
         let podIsValid = this.validatePlaceOfDeath();
         let meIsValid = this.validateMeOffice();
 
         return nhsNumberIsValid && todIsValid && dobIsValid && podIsValid && meIsValid && dodIsValid && genderIsValid && surnameIsValid && givenNameIsValid
-    },
-    highlightAllErrors: function () {
-        return false
     },
     setupSurnameInput: function () {
         this.surnameInput.change(this.validateAndHighlightSurname.bind(this));
