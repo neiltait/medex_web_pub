@@ -92,6 +92,9 @@ def add_permission(request, user_id):
     else: 
       alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
 
+    context['form'] = form
+    context['invalid'] = True
+
   trust_list = locations_request_handler.load_trusts_list()
   context['trusts'] = trust_list
 
