@@ -10,3 +10,6 @@ def create_user(user_object):
 
 def load_by_id(user_id):
   return requests.get('%s/users/%s' % (settings.API_URL, user_id))
+
+def create_permission(permission, user_id):
+  return requests.post('%s/users/%s/permissions' % (settings.API_URL, user_id), data = permission)

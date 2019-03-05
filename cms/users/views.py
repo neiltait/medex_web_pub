@@ -86,22 +86,32 @@ def add_permission(request, user_id):
 
   if request.POST:
     form = PermissionBuilderForm(request.POST)
+  
     if form.is_valid(): 
-      #TODO submit to API
-      pass
+      response = request_handler.create_permission(form.to_dict(), user_id)
+
+      if response.status_code == status.HTTP_200_OK:
+        return redirect('/settings')
+      else:
+        alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+        status_code = response.status_code
+
     else: 
       alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+      status_code = status.HTTP_400_BAD_REQUEST
 
     context['form'] = form
     context['invalid'] = True
 
-  context['trusts'] = locations_request_handler.load_trusts_list()
-  context['regions'] = locations_request_handler.load_region_list()
 
   managed_user = User.load_by_id(user_id)
+  context['managed_user'] = managed_user
+    
   if managed_user == None:
     alerts.append(generate_error_alert(messages.OBJECT_NOT_FOUND % 'user'))
-  context['managed_user'] = managed_user
+  else:
+    context['trusts'] = locations_request_handler.load_trusts_list()
+    context['regions'] = locations_request_handler.load_region_list()
 
   context['alerts'] = alerts
   return render(request, 'users/permission_builder.html', context, status=status_code)
