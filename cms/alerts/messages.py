@@ -12,8 +12,8 @@ FORGOTTEN_PASSWORD_SENT = 'If the email address provided is valid password reset
 
 OBJECT_NOT_FOUND = 'The %s requested could not be found'
 
-MISSING_LOCATIONS = 'Please select at least one location'
-
-MISSING_ROLE = 'Please select a role'
+FIELD_MISSING = 'Please enter %s'
 
 ERROR_IN_FORM = 'There are errors in the form see below for details'
+
+

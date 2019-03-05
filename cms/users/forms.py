@@ -47,16 +47,12 @@ class PermissionBuilderForm():
     self.region_error = None
 
     if self.role is None:
-      self.role_error = "Missing role"
-      print('role error')
+      self.role_error = messages.FIELD_MISSING % "a role"
     if self.permission_level is None:
-      self.permission_level_error = "Missing level"
-      print('level error')
+      self.permission_level_error = messages.FIELD_MISSING % "a level"
     if self.permission_level == 'trust' and self.trust is None:
-      print('trust error')
-      self.trust_error = "Missing trust"
+      self.trust_error = messages.FIELD_MISSING % "a trust"
     if self.permission_level == 'regional' and self.region is None:
-      self.region_error = "Missing region"
-      print('region error')
+      self.region_error = messages.FIELD_MISSING % "a region"
 
     return False if self.role_error or self.permission_level_error or self.trust_error or self.region_error else True
