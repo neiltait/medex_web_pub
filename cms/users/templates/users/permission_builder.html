@@ -143,7 +143,15 @@
           </div>
         </div>
 
-        <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+        <input type="text" name="add_another" value="false" hidden>
+
+        <div class="flex-row">
+          <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+        </div>
+
+        <div class="flex-row">
+          <button id="add-another" class="add-another">Save and add another permission</button>
+        </div>
       </form>
     {% else %}
       {% for alert in alerts %}

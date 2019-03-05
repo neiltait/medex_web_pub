@@ -11,6 +11,9 @@
       this.levelRadios = new RadioGroup(this.form.find('#level-radio-buttons'), this.handleLevelChange.bind(this));
       this.regionSelector = this.form.find('#region-selector');
       this.trustSelector = this.form.find('#trust-selector');
+      this.addAnotherInput = this.form.find('input[name=add_another]')
+      this.addAnotherButton = this.form.find('#add-another');
+      this.startClickWatcher();
     },
 
     handleRoleChange: function(target) {
@@ -28,6 +31,15 @@
         this.trustSelector.hide();
         this.regionSelector.hide();
       }
+    },
+
+    startClickWatcher: function() {
+      var that = this;
+      this.addAnotherButton.click(function(e) {
+        e.preventDefault();
+        that.addAnotherInput[0].value = 'true';
+        that.form.submit();
+      })
     }
   }
 

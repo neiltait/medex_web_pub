@@ -86,12 +86,16 @@ def add_permission(request, user_id):
 
   if request.POST:
     form = PermissionBuilderForm(request.POST)
+    add_another = True if request.POST.get('add_another') == "true" else False
   
     if form.is_valid(): 
       response = request_handler.create_permission(form.to_dict(), user_id)
 
       if response.status_code == status.HTTP_200_OK:
-        return redirect('/settings')
+        if add_another:
+          return redirect('add_permission', user_id=user_id)
+        else:
+          return redirect('/settings')
       else:
         alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
         status_code = response.status_code
