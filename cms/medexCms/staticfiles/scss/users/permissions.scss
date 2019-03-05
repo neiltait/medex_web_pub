@@ -41,6 +41,10 @@
   #permission-builder-form {
     margin-bottom: 7rem;
 
+    #level-radio-buttons, #trust-selector, #region-selector {
+      display: none;
+    }
+
     .form-item {
       width: 100%;
       margin-bottom: 3rem;

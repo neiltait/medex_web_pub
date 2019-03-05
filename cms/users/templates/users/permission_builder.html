@@ -6,6 +6,11 @@
   <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}
 
+{% block extra_js %}
+  <script src="{% static 'js/shared/search-dropdown.js' %}"></script>
+  <script src="{% static 'js/users/permission-builder.js' %}"></script>
+{% endblock %}
+
 {% block page %}
   <div class="permission-builder-page">
     {% if managed_user %}
@@ -29,7 +34,7 @@
         {% csrf_token %}
 
         <div class="flex-row baseline form-row">
-          <div class="form-item">
+          <div id='role-radio-buttons' class="form-item">
             <label class="form-item--header">What role will the user be performing?</label>
 
             <div class="flex-row">
@@ -62,7 +67,7 @@
         </div>
 
         <div class="flex-row baseline form-row">
-          <div class="form-item">
+          <div id="level-radio-buttons" class="form-item">
             <label class="form-item--header">What permission level do they need?</label>
 
             <div class="radiobutton__item">
@@ -89,7 +94,7 @@
         </div>
 
         <div class="flex-row baseline form-row">
-          <div class="form-item">
+          <div id="region-selector" class="form-item">
             <label class="form-item--header" for="trust">
               Region and associated NHS Trusts/ME Offices
             </label>
@@ -112,7 +117,7 @@
         </div>
 
         <div class="flex-row baseline form-row">
-          <div class="form-item">
+          <div id='trust-selector' class="form-item">
             <label class="form-item--header" for="trust">
               Trust
             </label>
