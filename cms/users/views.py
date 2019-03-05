@@ -84,6 +84,14 @@ def add_permission(request, user_id):
   alerts = []
   status_code = status.HTTP_200_OK
 
+  if request.POST:
+    form = PermissionBuilderForm(request.POST)
+    if form.is_valid(): 
+      #TODO submit to API
+      pass
+    else: 
+      alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+
   trust_list = locations_request_handler.load_trusts_list()
   context['trusts'] = trust_list
 

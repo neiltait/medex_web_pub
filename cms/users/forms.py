@@ -32,8 +32,31 @@ class PermissionBuilderForm():
     if request:
       self.role = request.get('role')
       self.permission_level = request.get('permission_level')
-      self.location = request.get('location')
+      self.region = request.get('region')
+      self.trust = request.get('trust')
     else:
       self.role = ''
       self.permission_level = ''
-      self.location = ''
+      self.region = ''
+      self.trust = ''
+
+  def is_valid(self):
+    self.role_error = None
+    self.permission_level_error = None
+    self.trust_error = None
+    self.region_error = None
+
+    if self.role is None:
+      self.role_error = "Missing role"
+      print('role error')
+    if self.permission_level is None:
+      self.permission_level_error = "Missing level"
+      print('level error')
+    if self.permission_level == 'trust' and self.trust is None:
+      print('trust error')
+      self.trust_error = "Missing trust"
+    if self.permission_level == 'regional' and self.region is None:
+      self.region_error = "Missing region"
+      print('region error')
+
+    return False if self.role_error or self.permission_level_error or self.trust_error or self.region_error else True
