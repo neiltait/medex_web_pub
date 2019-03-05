@@ -56,3 +56,11 @@ class PermissionBuilderForm():
       self.region_error = messages.FIELD_MISSING % "a region"
 
     return False if self.role_error or self.permission_level_error or self.trust_error or self.region_error else True
+
+  def to_dict(self):
+    return {
+      'role': self.role,
+      'permission_level': self.permission_level,
+      'region': self.region,
+      'trust': self.trust
+    }

@@ -271,6 +271,23 @@ class UsersFormsTests(MedExTestCase):
     self.assertEqual(form.region_error, None)
     self.assertEqual(form.trust_error, None)
 
+  def test_to_dict_returns_form_fields_as_a_dict(self):
+    role = 'sa'
+    level = 'trust'
+    trust = '1'
+    form_content = {
+      'role': role,
+      'permission_level': level,
+      'region': None,
+      'trust': trust
+    }
+    form = PermissionBuilderForm(form_content)
+    result = form.to_dict()
+    self.assertEqual(result['role'], role)
+    self.assertEqual(result['permission_level'], level)
+    self.assertEqual(result['region'], None)
+    self.assertEqual(result['trust'], trust)
+
 
 class UsersModelsTests(MedExTestCase):
 
