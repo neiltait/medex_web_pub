@@ -95,8 +95,8 @@ def add_permission(request, user_id):
     context['form'] = form
     context['invalid'] = True
 
-  trust_list = locations_request_handler.load_trusts_list()
-  context['trusts'] = trust_list
+  context['trusts'] = locations_request_handler.load_trusts_list()
+  context['regions'] = locations_request_handler.load_region_list()
 
   managed_user = User.load_by_id(user_id)
   if managed_user == None:
