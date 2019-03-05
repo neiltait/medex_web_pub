@@ -30,6 +30,18 @@ ME_OFFICES = [{
     'name': 'Gloucester Hospital ME Office',
 }]
 
+def get_minimal_create_form_data():
+    return {
+        'last_name': 'Nicks',
+        'first_name': 'Matt',
+        'gender': 'male',
+        'nhs_number_not_known': True,
+        'date_of_birth_not_known': True,
+        'time_of_death_not_known': True,
+        'date_of_death_not_known': True,
+        'place_of_death': 1,
+        'me_office': 1,
+    }
 
 class ExaminationsViewsTests(MedExTestCase):
 
@@ -220,3 +232,47 @@ class ExaminationsViewsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm({'me_office': 1})
         form.is_valid()
         self.assertIsNone(form.me_office_error)
+
+    def test_form_validates_with_required_data(self):
+        # Given a complete form
+        form_data = get_minimal_create_form_data()
+        form = PrimaryExaminationInformationForm(form_data)
+
+        # When it is validated
+        form_is_valid = form.is_valid()
+
+        # The whole form is valid
+        self.assertIsTrue(form_is_valid)
+
+    def test_form_validates_with_optional_data(self):
+        # Given a complete form including optional data
+        form_data = get_minimal_create_form_data()
+        form_data['gender_details'] = 'example gender details'
+        form_data['hospital_number_1'] = 'example hospital number 1'
+        form_data['hospital_number_2'] = 'example hospital number 2'
+        form_data['hospital_number_3'] = 'example hospital number 3'
+        form_data['out_of_hours'] = True
+        form = PrimaryExaminationInformationForm(form_data)
+
+        # When it is validated
+        form_is_valid = form.is_valid()
+
+        # The whole form is valid
+        self.assertIsTrue(form_is_valid)
+
+    def test_form_stores_optional_data(self):
+        # Given a complete form including optional data
+        form_data = get_minimal_create_form_data()
+        form_data['gender_details'] = 'example gender details'
+        form_data['hospital_number_1'] = 'example hospital number 1'
+        form_data['hospital_number_2'] = 'example hospital number 2'
+        form_data['hospital_number_3'] = 'example hospital number 3'
+        form_data['out_of_hours'] = True
+        form = PrimaryExaminationInformationForm(form_data)
+
+        # The optional data is parsed
+        self.assertIs(form.gender_details, 'example gender details')
+        self.assertIs(form.hospital_number_1, 'example hospital number 1')
+        self.assertIs(form.hospital_number_2, 'example hospital number 2')
+        self.assertIs(form.hospital_number_3, 'example hospital number 3')
+        self.assertIs(form.out_of_hours, True)
