@@ -71,17 +71,17 @@
             <label class="form-item--header">What permission level do they need?</label>
 
             <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-1" value="national" {% if form.level == 'national' %}checked{% endif %}>
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-1" value="national" {% if form.permission_level == 'national' %}checked{% endif %}>
               <label class="radiobutton__label" for="level-1">National</label>
             </div>
 
             <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-2" value="regional" {% if form.level == 'regional' %}checked{% endif %}>
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-2" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %}>
               <label class="radiobutton__label" for="level-2">Regional</label>
             </div>
 
             <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-3" value="trust" {% if form.level == 'trust' %}checked{% endif %}>
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-3" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %}>
               <label class="radiobutton__label" for="level-3">Trust</label>
             </div>
 

@@ -106,7 +106,6 @@ def load_by_id(request, user_id):
 
 @csrf_exempt
 def permissions(request, user_id):
-  print(10)
   if request.POST:
     role = request.POST.get('role')
     location = request.POST.get('location')

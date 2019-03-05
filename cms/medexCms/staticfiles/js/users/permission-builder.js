@@ -7,24 +7,39 @@
 
   PermissionBuilderForm.prototype = {
     setup: function() {
-      this.roleRadios = new RadioGroup(this.form.find('#role-radio-buttons'), this.handleRoleChange.bind(this));
-      this.levelRadios = new RadioGroup(this.form.find('#level-radio-buttons'), this.handleLevelChange.bind(this));
       this.regionSelector = this.form.find('#region-selector');
       this.trustSelector = this.form.find('#trust-selector');
       this.addAnotherInput = this.form.find('input[name=add_another]')
       this.addAnotherButton = this.form.find('#add-another');
+      this.setupLevelRadios();
+      this.setupRoleRadios();
       this.startClickWatcher();
+    },
+
+    setupRoleRadios: function() {
+      this.roleRadios = new RadioGroup(this.form.find('#role-radio-buttons'), this.handleRoleChange.bind(this));
+      if (this.roleRadios.selected()) {
+        this.handleRoleChange();
+      }
+    },
+
+    setupLevelRadios: function() {
+      this.levelRadios = new RadioGroup(this.form.find('#level-radio-buttons'), this.handleLevelChange.bind(this));
+      if (this.levelRadios.selected()) {
+        this.handleLevelChange(this.levelRadios.selected());
+      }
     },
 
     handleRoleChange: function(target) {
       this.levelRadios.show();
     },
 
-    handleLevelChange: function(target) {
-      if (target.value === 'regional') {
+    handleLevelChange: function(selectedLevel) {
+      console.log(selectedLevel)
+      if (selectedLevel === 'regional') {
         this.trustSelector.hide();
         this.regionSelector.show();
-      } else if (target.value === 'trust') {
+      } else if (selectedLevel === 'trust') {
         this.trustSelector.show();
         this.regionSelector.hide();
       } else {
@@ -59,13 +74,23 @@
       var that = this;
       for (var i = 0; i < this.radios.length; i++) {
         $(this.radios[i]).change(function(e) {
-          that.changeCallback(e.target);
+          that.changeCallback(e.target.value);
         });
       }
     },
 
     show: function() {
       this.wrapper.show();
+    },
+
+    selected: function() {
+      var optionSelected = null;
+      for (var i = 0; i < this.radios.length; i++) {
+        if (this.radios[i].checked) {
+          optionSelected = this.radios[i].value;
+        }
+      }
+      return optionSelected;
     }
   }
 
