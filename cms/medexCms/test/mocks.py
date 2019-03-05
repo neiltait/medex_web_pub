@@ -26,7 +26,7 @@ UNSUCCESSFUL_VALIDATE_SESSION = Response()
 UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
 UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
 
-SUCCESSFUL_LOCATION_LOAD = [
+SUCCESSFUL_TRUST_LOAD = [
     {
       'id': 1,
       'name': 'Gloucester NHS Trust',
@@ -38,6 +38,25 @@ SUCCESSFUL_LOCATION_LOAD = [
     {
       'id': 3,
       'name': 'Barts NHS Trust',
+    }
+  ]
+
+SUCCESSFUL_REGION_LOAD = [
+    {
+      'id': 1,
+      'name': 'North',
+    },
+    {
+      'id': 2,
+      'name': 'South',
+    },
+    {
+      'id': 3,
+      'name': 'East',
+    },
+    {
+      'id': 4,
+      'name': 'West',
     }
   ]
 

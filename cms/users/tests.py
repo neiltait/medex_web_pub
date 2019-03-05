@@ -88,7 +88,8 @@ class UsersViewsTest(MedExTestCase):
 #### Add permission tests
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=mocks.SUCCESSFUL_LOCATION_LOAD)
+  @patch('locations.request_handler.load_trusts_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+  @patch('locations.request_handler.load_region_list', return_value=mocks.SUCCESSFUL_REGION_LOAD)
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   def test_landing_on_the_add_permission_page_loads_the_correct_template(self, mock_auth_validation, mock_location_list, mock_load_user):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
@@ -104,7 +105,8 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(response.url, '/login')
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-  @patch('locations.request_handler.load_trusts_list', return_value=mocks.SUCCESSFUL_LOCATION_LOAD)
+  @patch('locations.request_handler.load_trusts_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+  @patch('locations.request_handler.load_region_list', return_value=mocks.SUCCESSFUL_REGION_LOAD)
   @patch('users.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_LOAD_USER)
   def test_landing_on_the_add_permission_page_loads_the_correct_template_with_alert_if_the_user_cant_be_found(self, mock_auth_validation, mock_location_list, mock_user_load):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
