@@ -76,3 +76,12 @@ SUCCESSFUL_LOAD_USER._content = json.dumps(user_dict).encode('utf-8')
 UNSUCCESSFUL_LOAD_USER = Response()
 UNSUCCESSFUL_LOAD_USER.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_LOAD_USER._content = json.dumps(empty_user).encode('utf-8')
+
+CREATED_PERMISSION_ID = 1
+SUCCESSFUL_PERMISSION_CREATION = Response()
+SUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_200_OK
+SUCCESSFUL_PERMISSION_CREATION._content = json.dumps({'permissionId': CREATED_PERMISSION_ID}).encode('utf-8')
+
+UNSUCCESSFUL_PERMISSION_CREATION = Response()
+UNSUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
