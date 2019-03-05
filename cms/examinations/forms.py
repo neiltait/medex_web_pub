@@ -104,6 +104,32 @@ class PrimaryExaminationInformationForm:
 
         return not self.has_errors
 
+    def to_object(self):
+        return {
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'gender': self.gender,
+            'gender_details': self.gender_details,
+            'nhs_number': self.nhs_number,
+            'nhs_number_not_known': self.nhs_number_not_known,
+            'hospital_number_1': self.hospital_number_1,
+            'hospital_number_2': self.hospital_number_2,
+            'hospital_number_3': self.hospital_number_3,
+            'day_of_birth': self.day_of_birth,
+            'month_of_birth': self.month_of_birth,
+            'year_of_birth': self.year_of_birth,
+            'date_of_birth_not_known': self.date_of_birth_not_known,
+            'day_of_death': self.day_of_death,
+            'month_of_death': self.month_of_death,
+            'year_of_death': self.year_of_death,
+            'date_of_death_not_known': self.date_of_death_not_known,
+            'time_of_death': self.time_of_death,
+            'time_of_death_not_known': self.time_of_death_not_known,
+            'place_of_death': self.place_of_death,
+            'me_office': self.me_office,
+            'out_of_hours': self.out_of_hours
+        }
+
     def text_and_checkbox_group_is_valid(self, textboxes, checkbox):
         if checkbox is None or checkbox is False:
             for textbox in textboxes:

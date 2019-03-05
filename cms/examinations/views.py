@@ -1,48 +1,45 @@
-from django.shortcuts import render
-from examinations import request_handler
-from home.utils import redirect_to_login
-from users.models import User
+import json
 
-from .forms import PrimaryExaminationInformationForm
+from django.shortcuts import render
+
+import alerts
+from alerts import messages
+from alerts.utils import generate_error_alert
+from examinations import request_handler
+from home.utils import redirect_to_login, redirect_to_landing
+from users.models import User
+from rest_framework import status
+
+from examinations.forms import PrimaryExaminationInformationForm
 
 
 def create_examination(request):
-    form = PrimaryExaminationInformationForm()
 
     user = User.initialise_with_token(request)
 
     if not user.check_logged_in():
         return redirect_to_login()
 
+    alerts = []
+    status_code = status.HTTP_200_OK
+
     if request.method == 'POST':
         form = PrimaryExaminationInformationForm(request.POST)
         if form.is_valid():
-            print(form)
+            response = request_handler.post_new_examination(form.to_object())
+            if response.status_code == status.HTTP_200_OK:
+                return redirect_to_landing()
+            else:
+                alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+                status_code = response.status_code
         else:
-            print("not valid")
+            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+            status_code = status.HTTP_400_BAD_REQUEST
 
-    return render_create_examination_form(request, user)
-
-
-def post_create_examination_form(request, user):
-    if validate_post_create_examination(request):
-        return post_create_examination_form(request)
-
-    else:
-        pass
+    return render_create_examination_form(request, user, alerts, status_code)
 
 
-def validate_post_create_examination(request):
-    form = PrimaryExaminationInformationForm(request=request.POST)
-    form.is_valid()
-    pass
-
-
-def post_new_examination(request):
-    pass
-
-
-def render_create_examination_form(request, user):
+def render_create_examination_form(request, user, alerts = [], status_code = status.HTTP_200_OK):
     locations = request_handler.get_locations_list()
     me_offices = request_handler.get_me_offices_list()
 
@@ -53,7 +50,7 @@ def render_create_examination_form(request, user):
         "locations": locations,
         "me_offices": me_offices,
         "form": PrimaryExaminationInformationForm(),
+        "alerts": alerts,
     }
-    alerts = []
 
-    return render(request, "examinations/create.html", context)
+    return render(request, "examinations/create.html", context, status=status_code)
