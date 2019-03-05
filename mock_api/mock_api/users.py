@@ -103,3 +103,17 @@ def load_by_id(request, user_id):
       searched_user = user['user_object']
   status_code = 200 if searched_user else 404
   return HttpResponse(json.dumps(searched_user), content_type="application/json", status=status_code)
+
+@csrf_exempt
+def permissions(request, user_id):
+  print(10)
+  if request.POST:
+    role = request.POST.get('role')
+    location = request.POST.get('location')
+    role_present = role != '' and role != None
+    status_code = 200 if role_present else 400
+    obj = {'id': 1} if role_present else None
+    return HttpResponse(json.dumps(obj), content_type="application/json", status=status_code)
+  else:
+    return HttpResponse('', content_type="application/json", status=404)
+
