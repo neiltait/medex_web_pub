@@ -24,9 +24,17 @@
 
     <form id="examination__create--form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_examination' %}" method="post">
       {% csrf_token %}
-    <div class="notification error medex-hidden" id="error_alert">
-        Please complete all required fields
-    </div>
+    <div class="nhsuk-error-summary medex-hidden" id="error_alert" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+  <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+    There is a problem
+  </h2>
+  <div class="nhsuk-error-summary__body">
+    <p>
+      Please correct the errors in this form
+    </p>
+
+  </div>
+</div>
 
       <!-- Names -->
       <div class="flex-row baseline form-row">
