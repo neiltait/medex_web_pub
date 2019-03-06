@@ -10,5 +10,11 @@ FORGOTTEN_PASSWORD_SENT = 'If the email address provided is valid password reset
 
 OBJECT_NOT_FOUND = 'The %s requested could not be found'
 
+FIELD_MISSING = 'Please enter %s'
+
+ERROR_IN_FORM = 'There are errors in the form see below for details'
+
+NOT_IN_OKTA = 'Users must be added to OKTA to show in the system'
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter a value for %s") % field_name

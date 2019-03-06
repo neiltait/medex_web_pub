@@ -19,8 +19,14 @@
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
+
+
+
     <form id="examination__create--form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_examination' %}" method="post">
       {% csrf_token %}
+    <div class="notification error medex-hidden" id="error_alert">
+        Please complete all required fields
+    </div>
 
       <!-- Names -->
       <div class="flex-row baseline form-row">

@@ -2,7 +2,7 @@ let REQUIRED_PLACEHOLDER = "Required";
 
 
 var Form = function (form) {
-    this.showValidation = true;
+    this.showValidation = false;
     this.visibleHospitalNumbers = 1;
     this.form = form;
     this.setup();
@@ -47,6 +47,8 @@ Form.prototype = {
 
         this.submitButton = this.form.find("#submit-btn");
         this.setupSubmitButton()
+
+        this.errorAlert = this.form.find("#error_alert");
     },
     setupSubmitButton: function () {
         var that = this;
@@ -57,6 +59,7 @@ Form.prototype = {
             } else {
                 that.setValidationRequired();
                 that.highlightAllErrors();
+                that.showFormError();
             }
         });
     },
@@ -162,7 +165,6 @@ Form.prototype = {
         }
     },
     validateAndHighlightGivenName: function () {
-        console.log(this)
         var that = this;
         if (!this.showValidation || this.validateGivenName()) {
             this.givenNameInput.removeClass("error");
@@ -184,6 +186,10 @@ Form.prototype = {
             inputGroup.showValidation = true;
         }
     },
+    showFormError: function() {
+        this.errorAlert.removeClass("medex-hidden");
+        window.scrollTo(0, 0);
+    },
     highlightAllErrors: function() {
         this.inputGroups[0].validateAndHighlightTextInputsCheckboxGroup();
         this.inputGroups[1].validateAndHighlightTextInputsCheckboxGroup();
@@ -202,17 +208,14 @@ Form.prototype = {
 var TextInputsCheckboxGroup = function (textboxes, checkbox) {
     this.textboxes = textboxes;
     this.checkbox = checkbox;
-    this.showValidation = true;
+    this.showValidation = false;
     this.setup();
 };
 
 TextInputsCheckboxGroup.prototype = {
     setup: function () {
-        console.info("Input group setup");
-
         this.setupCheckboxHandler();
         this.setupTextboxesHandler();
-
     },
     setupCheckboxHandler: function () {
 
@@ -249,6 +252,7 @@ TextInputsCheckboxGroup.prototype = {
         return false
     },
     validateAndHighlightTextInputsCheckboxGroup: function () {
+
         if (!this.showValidation || this.validateTextInputsCheckboxGroup()) {
             for (textInput of this.textboxes) {
                 textInput.removeClass("error")

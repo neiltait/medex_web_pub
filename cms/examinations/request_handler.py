@@ -19,6 +19,6 @@ def get_locations_list():
 def get_me_offices_list():
     return requests.get(settings.API_URL + '/me_offices/get_me_offices_list').json()
 
-def post_new_examination(examination_object):
 
+def post_new_examination(examination_object):
     return requests.post('%s/cases/create' % settings.API_URL, data=json.dumps(examination_object))
