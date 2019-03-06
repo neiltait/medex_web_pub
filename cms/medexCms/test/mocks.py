@@ -85,3 +85,11 @@ SUCCESSFUL_PERMISSION_CREATION._content = json.dumps({'permissionId': CREATED_PE
 UNSUCCESSFUL_PERMISSION_CREATION = Response()
 UNSUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_400_BAD_REQUEST
 UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_USER_LOOKUP = Response()
+SUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_200_OK
+SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
+
+UNSUCCESSFUL_USER_LOOKUP = Response()
+UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
+UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')

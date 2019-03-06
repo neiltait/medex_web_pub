@@ -1,5 +1,7 @@
 from alerts import messages
 
+from . import request_handler
+
 class CreateUserForm():
   submit_btn_text = 'Save and add role/permission'
 
@@ -23,6 +25,14 @@ class CreateUserForm():
 
   def check_is_nhs_email(self):
     return '@nhs.uk' in self.email_address
+
+  def check_is_in_okta(self):
+    ## TODO call out to OKTA to check email in system
+    response = request_handler.check_email_in_okta(self.email_address)
+    exists = response.status_code == 200
+    if not exists:
+      self.email_error = messages.NOT_IN_OKTA
+    return exists
 
 
 class PermissionBuilderForm():
