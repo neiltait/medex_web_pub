@@ -51,17 +51,17 @@ Form.prototype = {
         this.errorAlert = this.form.find("#error_alert");
     },
     setupSubmitButton: function () {
-        var that = this;
-        this.submitButton.click(function (event) {
-            event.preventDefault();
-            if (that.validate()) {
-                that.form.submit();
-            } else {
-                that.setValidationRequired();
-                that.highlightAllErrors();
-                that.showFormError();
-            }
-        });
+        // var that = this;
+        // this.submitButton.click(function (event) {
+        //     event.preventDefault();
+        //     if (that.validate()) {
+        //         that.form.submit();
+        //     } else {
+        //         that.setValidationRequired();
+        //         that.highlightAllErrors();
+        //         that.showFormError();
+        //     }
+        // });
     },
     makeHospitalNumbersVisible: function () {
         if(this.visibleHospitalNumbers >= 2) {
