@@ -29,8 +29,9 @@ Form.prototype = {
         this.setupHospitalNumberAddBtn();
 
         this.genderRadioButtons = this.form.find('input[type=radio][name=gender]');
-        this.genderDetailTextbox = this.form.find("#more-gender");
 
+        this.genderDetailArea = this.form.find("#more-gender-detail-area")
+        this.genderDetailTextbox = this.form.find("#more-gender");
         this.genderMale = this.form.find('#gender-1');
         this.genderFemale = this.form.find('#gender-2');
         this.genderOther = this.form.find('#gender-3');
@@ -102,15 +103,15 @@ Form.prototype = {
         this.givenNameInput.change(this.validateAndHighlightGivenName.bind(this));
     },
     setupGenderRadioButtons: function () {
-        this.genderDetailTextbox.hide();
+        this.genderDetailArea.hide();
         var that = this;
 
         this.genderRadioButtons.change(
             function () {
                 if (this.value === "other") {
-                    that.genderDetailTextbox.show()
+                    that.genderDetailArea.show()
                 } else {
-                    that.genderDetailTextbox.hide()
+                    that.genderDetailArea.hide()
                 }
             }
         )
