@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block page %}
+            <div class="nhsuk-width-container">
     <div class="examination__create">
         {% if alerts|length > 0 %}
 
@@ -18,16 +19,15 @@
                     <p>
                         Please correct the errors in this form
                     </p>
-
                 </div>
             </div>
         {% endif %}
 
-        <h1 class="page-title">
+        <h1 class="nhs-heading-xl">
             {{ page_heading }}
         </h1>
 
-        <h2 class="page-subheading">
+        <h2 class="nhs-heading-l">
             {{ sub_heading }}
         </h2>
 
@@ -36,7 +36,7 @@
         {% endfor %}
 
 
-        <div class="nhsuk-width-container">
+
 
             <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
                   action="{% url 'create_examination' %}" method="post">
@@ -47,22 +47,26 @@
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half">
                         <fieldset class="nhsuk-fieldset">
-                            <div class="nhsuk-form-group">
+                            <div class="nhsuk-form-group {% if errors.last_name %}nhsuk-form-group--error{% endif %}">
                                 <label class="nhsuk-label" for="last_name">
                                     Surname
                                 </label>
-                                <input class="nhsuk-input nhsuk-input--width-10" id="last_name" name="last_name"
+                                {% if errors.last_name %}<span class="nhsuk-error-message">{{ errors.last_name }}</span>{% endif %}
+                                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.last_name %}nhsuk-input--error{% endif %}"
+                                       id="last_name" name="last_name"
                                        value="{{ form.last_name }}" type="text">
                             </div>
                         </fieldset>
                     </div>
                     <div class="nhsuk-grid-column-one-half">
                         <fieldset class="nhsuk-fieldset">
-                            <div class="nhsuk-form-group">
+                            <div class="nhsuk-form-group {% if errors.first_name %}nhsuk-form-group--error{% endif %}">
                                 <label class="nhsuk-label" for="first_name">
                                     First name
                                 </label>
-                                <input class="nhsuk-input nhsuk-input--width-10" id="first_name" name="first_name"
+                                {% if errors.first_name %}<span class="nhsuk-error-message">{{ errors.first_name }}</span>{% endif %}
+                                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.last_name %}nhsuk-input--error{% endif %}"
+                                       id="first_name" name="first_name"
                                        value="{{ form.first_name }}" type="text">
                             </div>
                         </fieldset>
@@ -107,8 +111,7 @@
                                         Can you provide more detail?
                                     </label>
                                     <textarea class="nhsuk-textarea medex-textarea"
-                                              id="more-gender-detail" name="more-gender-detail" rows="3"
-                                              aria-describedby="more-detail-hint"></textarea>
+                                              id="more-gender-detail" name="more-gender-detail" rows="3"></textarea>
                                 </div>
                             </fieldset>
                         </div>
@@ -125,8 +128,7 @@
                                     NHS number
                                 </label>
                                 <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="nhs_number"
-                                       name="nhs_number"
-                                       type="text"
+                                       name="nhs_number" type="text"
                                        value="{{ form.nhs_number }}">
                             </div>
                             <div class="nhsuk-form-group">
@@ -348,10 +350,10 @@
 
                     <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group">
-                            <label class="nhsuk-label" for="place_of_death">
+                            <label class="nhsuk-label" for="me_office">
                                 Select an office
                             </label>
-                            <select class="nhsuk-select" id="place_of_death" name="place_of_death">
+                            <select class="nhsuk-select" id="me_office" name="me_office">
                                 <option value="" disabled hidden selected>Select an office</option>
                                 {% for me_office in me_offices %}
                                     <option value={{ me_office.id }}>{{ me_office.name }}</option>

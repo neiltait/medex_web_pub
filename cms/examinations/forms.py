@@ -53,6 +53,8 @@ class PrimaryExaminationInformationForm:
         self.out_of_hours = request.get("out_of_hours")
 
     def initialiseErrors(self):
+        self.errors = {'count': 0}
+
         self.first_name_error = None
         self.last_name_error = None
         self.nhs_number_error = None
@@ -64,45 +66,47 @@ class PrimaryExaminationInformationForm:
         self.me_office_error = None
 
     def is_valid(self):
-        self.has_errors = False
+        self.errors['count'] = 0
 
-        if self.first_name is None:
-            self.first_name_error = ErrorFieldRequiredMessage('first name')
-            self.has_errors = True
+        if self.first_name is None or len(self.first_name.strip()) == 0:
+            self.errors['first_name'] = ErrorFieldRequiredMessage('first name')
+            self.errors['count'] += 1
 
-        if self.last_name is None:
-            self.last_name_error = ErrorFieldRequiredMessage('last name')
-            self.has_errors = True
+        if self.last_name is None or len(self.last_name.strip()) == 0:
+            self.errors['last_name'] = ErrorFieldRequiredMessage('last name')
+            self.errors['count'] += 1
 
         if self.gender is None:
-            self.gender_error = ErrorFieldRequiredMessage('gender')
-            self.has_errors = True
+            self.errors['gender'] = ErrorFieldRequiredMessage('gender')
+            self.errors['count'] += 1
 
         if not self.text_and_checkbox_group_is_valid([self.nhs_number], self.nhs_number_not_known):
-            self.nhs_number_error = ErrorFieldRequiredMessage('NHS number')
-            self.has_errors = True
+            self.errors['nhs_number'] = ErrorFieldRequiredMessage('NHS number')
+            self.errors['count'] += 1
 
         if not self.text_and_checkbox_group_is_valid([self.time_of_death], self.time_of_death_not_known):
-            self.time_of_death_error = ErrorFieldRequiredMessage('time of death')
-            self.has_errors = True
+            self.errors['time_of_death'] = ErrorFieldRequiredMessage('time of death')
+            self.errors['count'] += 1
 
-        if not self.text_and_checkbox_group_is_valid([self.day_of_birth, self.month_of_birth, self.year_of_birth], self.date_of_birth_not_known):
-            self.date_of_birth_error = ErrorFieldRequiredMessage('date of birth')
-            self.has_errors = True
+        if not self.text_and_checkbox_group_is_valid([self.day_of_birth, self.month_of_birth, self.year_of_birth],
+                                                     self.date_of_birth_not_known):
+            self.errors['date_of_birth'] = ErrorFieldRequiredMessage('date of birth')
+            self.errors['count'] += 1
 
-        if not self.text_and_checkbox_group_is_valid([self.day_of_death, self.month_of_death, self.year_of_death], self.date_of_death_not_known):
-            self.date_of_death_error = ErrorFieldRequiredMessage('date of death')
-            self.has_errors = True
+        if not self.text_and_checkbox_group_is_valid([self.day_of_death, self.month_of_death, self.year_of_death],
+                                                     self.date_of_death_not_known):
+            self.errors['date_of_death'] = ErrorFieldRequiredMessage('date of death')
+            self.errors['count'] += 1
 
         if self.place_of_death is None:
-            self.place_of_death_error = ErrorFieldRequiredMessage("place of death")
-            self.has_errors = True
+            self.errors['place_of_death'] = ErrorFieldRequiredMessage('place of death')
+            self.errors['count'] += 1
 
         if self.me_office is None:
-            self.me_office_error = ErrorFieldRequiredMessage("ME office")
-            self.has_errors = True
+            self.errors['me_office'] = ErrorFieldRequiredMessage('ME office')
+            self.errors['count'] += 1
 
-        return not self.has_errors
+        return self.errors['count'] == 0
 
     def to_object(self):
         return {
@@ -136,4 +140,3 @@ class PrimaryExaminationInformationForm:
                 if textbox is None or len(textbox.strip()) == 0:
                     return False
         return True
-
