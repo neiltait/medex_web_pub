@@ -10,11 +10,9 @@ from unittest.mock import patch
 
 import json, uuid
 
+from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
 
-from alerts import messages, utils
-
-from .forms import ForgottenPasswordForm
 from .utils import redirect_to_landing, redirect_to_login
 
 
@@ -59,6 +57,7 @@ class HomeViewsTests(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
   def test_login_returns_redirect_to_landing_page_if_user_logged_in(self, mock_auth_validation):
+
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/login')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -66,12 +65,21 @@ class HomeViewsTests(MedExTestCase):
 
 
 #### Logout tests
-  
-  def test_logout_returns_redirect_to_login_page_on_submission(self):
+
+  @patch('home.request_handler.end_session', return_value=mocks.SUCCESSFUL_LOGOUT)
+  def test_logout_returns_redirect_to_login_page_on_submission(self, mock_logout):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
     response = self.client.get('/logout')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
 
+#### Login callback tests
+
+  @patch('home.request_handler.create_session', return_value=mocks.SUCCESSFUL_TOKEN_GENERATION)
+  def test_login_callback_returns_redirect_to_landing_page(self, mock_token_generation):
+    response = self.client.get('/login-callback?code=c15be3d1-513f-49dc-94f9-47449c1cfeb8')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/')
 
 #### Index tests
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
@@ -107,24 +115,7 @@ class HomeViewsTests(MedExTestCase):
 
 
 class HomeFormsTests(MedExTestCase):
-
-
-#### ForgottenPasswordForm tests
-
-  def test_the_form_attributes_are_set_on_init(self):
-    email_address = 'test.user@email.com'
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertEqual(form.email_address, email_address)
-
-  def test_ForgottenPasswordForm_is_valid_returns_true_if_email_address_present(self):
-    email_address = 'test.user@email.com'
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertIsTrue(form.is_valid())
-
-  def test_ForgottenPasswordForm_is_valid_returns_false_if_email_address_not_present(self):
-    email_address = ''
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertIsFalse(form.is_valid())
+  pass
 
 
 class HomeUtilsTests(MedExTestCase):

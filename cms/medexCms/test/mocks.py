@@ -1,8 +1,17 @@
+
 from requests.models import Response
 
 from rest_framework import status
 
 import json
+
+AUTH_TOKEN = {
+    "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
+    "id_token": "8a89be6d-70df-4b21-9d6e-82873d7ff1b0",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "scope": "openid profile email",
+}
 
 empty_user = {
   'user_id': None,
@@ -17,6 +26,10 @@ user_dict = {
   'last_name': 'User',
   'email_address': 'test.user@email.com',
 }
+
+SUCCESSFUL_TOKEN_GENERATION = Response()
+SUCCESSFUL_TOKEN_GENERATION.status_code = status.HTTP_200_OK
+SUCCESSFUL_TOKEN_GENERATION._content = json.dumps(AUTH_TOKEN).encode('utf-8')
 
 SUCCESSFUL_VALIDATE_SESSION = Response()
 SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
@@ -93,3 +106,6 @@ SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 UNSUCCESSFUL_USER_LOOKUP = Response()
 UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_LOGOUT = Response()
+SUCCESSFUL_LOGOUT.status_code = status.HTTP_200_OK
