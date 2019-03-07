@@ -36,8 +36,6 @@
         {% endfor %}
 
 
-
-
             <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
                   action="{% url 'create_examination' %}" method="post">
                 {% csrf_token %}
@@ -65,7 +63,7 @@
                                     First name
                                 </label>
                                 {% if errors.first_name %}<span class="nhsuk-error-message">{{ errors.first_name }}</span>{% endif %}
-                                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.last_name %}nhsuk-input--error{% endif %}"
+                                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.first_name %}nhsuk-input--error{% endif %}"
                                        id="first_name" name="first_name"
                                        value="{{ form.first_name }}" type="text">
                             </div>
@@ -76,31 +74,31 @@
                 <!-- Gender -->
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-two-thirds">
-                        <div class="nhsuk-form-group">
+                        <div class="nhsuk-form-group {% if errors.gender %}nhsuk-form-group--error{% endif %}">
 
                             <fieldset class="nhsuk-fieldset">
                                 <legend class="nhsuk-fieldset__legend">
                                     Gender
                                 </legend>
-
+                                {% if errors.gender %}<span class="nhsuk-error-message">{{ errors.gender }}</span>{% endif %}
                                 <div class="nhsuk-radios nhsuk-radios--inline">
                                     <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input" id="gender-1" name="gender" type="radio"
-                                               value="male">
+                                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                               id="gender-1" name="gender" type="radio" value="male">
                                         <label class="nhsuk-label nhsuk-radios__label" for="gender-1">
                                             Male
                                         </label>
                                     </div>
                                     <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input" id="gender-2" name="gender" type="radio"
-                                               value="female">
+                                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                               id="gender-2" name="gender" type="radio" value="female">
                                         <label class="nhsuk-label nhsuk-radios__label" for="gender-2">
                                             Female
                                         </label>
                                     </div>
                                     <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input" id="gender-3" name="gender" type="radio"
-                                               value="other">
+                                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                               id="gender-3" name="gender" type="radio" value="other">
                                         <label class="nhsuk-label nhsuk-radios__label" for="gender-3">
                                             Other
                                         </label>
@@ -129,7 +127,7 @@
                                 </label>
                                 <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="nhs_number"
                                        name="nhs_number" type="text"
-                                       value="{{ form.nhs_number }}">
+                                       value="{% if form.nhs_number %}{{ form.nhs_number }}{% endif %}">
                             </div>
                             <div class="nhsuk-form-group">
                                 <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
@@ -137,8 +135,8 @@
                                         <div class="nhsuk-checkboxes__item">
                                             <input class="nhsuk-checkboxes__input" id="nhs_number_not_known"
                                                    name="nhs_number_not_known" type="checkbox"
-                                                   value="{{ form.nhs_number_not_known }}">
-                                            <label class="nhsuk-label nhsuk-checkboxes__label" for="nationality-1">
+                                                   value="{{ form.nhs_number_not_known }}" {% if form.nhs_number_not_known %}checked{% endif %}>
+                                            <label class="nhsuk-label nhsuk-checkboxes__label" for="nhs_number_not_known">
                                                 Unknown
                                             </label>
                                         </div>
@@ -230,7 +228,7 @@
                                     <div class="nhsuk-checkboxes__item">
                                         <input class="nhsuk-checkboxes__input" id="date_of_birth_not_known"
                                                name="date_of_birth_not_known" type="checkbox"
-                                               value="{{ form.date_of_birth_not_known }}">
+                                               value="{{ form.date_of_birth_not_known }}" {% if form.date_of_birth_not_known %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-checkboxes__label"
                                                for="date_of_birth_not_known">
                                             Unknown
@@ -289,7 +287,7 @@
                                     <div class="nhsuk-checkboxes__item">
                                         <input class="nhsuk-checkboxes__input" id="date_of_death_not_known"
                                                name="date_of_death_not_known" type="checkbox"
-                                               value="{{ form.date_of_death_not_known }}">
+                                               value="{{ form.date_of_death_not_known }}" {% if form.date_of_death_not_known %} checked {% endif %}>
                                         <label class="nhsuk-label nhsuk-checkboxes__label"
                                                for="date_of_death_not_known">
                                             Unknown
@@ -321,7 +319,7 @@
                                         <div class="nhsuk-checkboxes__item">
                                             <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"
                                                    name="time_of_death_not_known" type="checkbox"
-                                                   value="{{ form.time_of_death_not_known }}">
+                                                   value="{{ form.time_of_death_not_known }}" {% if form.time_of_death_not_known %} checked {% endif %}>
                                             <label class="nhsuk-label nhsuk-checkboxes__label" for="nationality-1">
                                                 Unknown
                                             </label>
@@ -353,7 +351,7 @@
                             <label class="nhsuk-label" for="me_office">
                                 Select an office
                             </label>
-                            <select class="nhsuk-select" id="me_office" name="me_office">
+                            <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">
                                 <option value="" disabled hidden selected>Select an office</option>
                                 {% for me_office in me_offices %}
                                     <option value={{ me_office.id }}>{{ me_office.name }}</option>

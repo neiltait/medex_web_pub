@@ -17,6 +17,7 @@ def create_examination(request):
     alerts = []
     errors = {"count": 0}
     status_code = status.HTTP_200_OK
+    form = None
 
     if request.method == 'POST':
         form = PrimaryExaminationInformationForm(request.POST)
@@ -32,10 +33,10 @@ def create_examination(request):
             alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
             status_code = status.HTTP_400_BAD_REQUEST
 
-    return render_create_examination_form(request, user, alerts, errors, status_code)
+    return render_create_examination_form(request, user, alerts, errors, status_code, form)
 
 
-def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK):
+def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
     locations = request_handler.get_locations_list()
     me_offices = request_handler.get_me_offices_list()
 
@@ -45,7 +46,7 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
         "sub_heading": "Primary information",
         "locations": locations,
         "me_offices": me_offices,
-        "form": PrimaryExaminationInformationForm(),
+        "form": form if form else PrimaryExaminationInformationForm(),
         "alerts": alerts,
         "errors": errors,
     }
