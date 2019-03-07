@@ -22,9 +22,12 @@ Form.prototype = {
         this.setupSurnameInput();
 
         this.hospitalNumber1 = this.form.find("#hospital_number_1");
+        this.hospitalNumber1Textbox = this.form.find("#hospital_number_1_textbox");
         this.hospitalNumber1Label = this.form.find("#hospital_number_1_label");
         this.hospitalNumber2 = this.form.find("#hospital_number_2");
+        this.hospitalNumber2Textbox = this.form.find("#hospital_number_2_textbox");
         this.hospitalNumber3 = this.form.find("#hospital_number_3");
+        this.hospitalNumber3Textbox = this.form.find("#hospital_number_3_textbox");
         this.hospitalNumberAddBtn = this.form.find("#hospital-number__add-btn");
         this.setupHospitalNumberAddBtn();
 
@@ -47,9 +50,25 @@ Form.prototype = {
         this.setupMeOffice();
 
         this.submitButton = this.form.find("#submit-btn");
-        this.setupSubmitButton()
+        this.setupSubmitButton();
 
         this.errorAlert = this.form.find("#error_alert");
+
+        this.initialiseFormWithData();
+    },
+    initialiseFormWithData: function() {
+        for(inputGroup of this.inputGroups) {
+            inputGroup.enabledOrDisable();
+        }
+
+        if(this.hospitalNumber3Textbox.val() !== '') {
+            this.visibleHospitalNumbers = 3
+        } else if (this.hospitalNumber2Textbox.val() !== '') {
+            this.visibleHospitalNumbers = 2
+        } else {
+            this.visibleHospitalNumbers = 1
+        }
+        this.makeHospitalNumbersVisible()
     },
     setupSubmitButton: function () {
         // var that = this;
@@ -234,6 +253,24 @@ TextInputsCheckboxGroup.prototype = {
                 that.validateAndHighlightTextInputsCheckboxGroup(that.textboxes, that.checkbox);
             }
         );
+    },
+    enabledOrDisable: function () {
+        var that = this;
+        if (this.checkbox.prop('checked')) {
+            $.each(that.textboxes, function (index, textInput) {
+                textInput[0].disabled = true
+            })
+        } else {
+            var textboxesAreEmpty = true;
+            $.each(that.textboxes, function (index, textInput) {
+                if(textInput.val() !== '') {
+                    textboxesAreEmpty = false;
+                }
+            });
+            if(textboxesAreEmpty === false) {
+                that.checkbox.prop("disabled", true);
+            }
+        }
     },
     setupTextboxesHandler: function () {
         var that = this;
