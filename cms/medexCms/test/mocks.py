@@ -93,3 +93,11 @@ SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 UNSUCCESSFUL_USER_LOOKUP = Response()
 UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_CASE_CREATE = Response()
+SUCCESSFUL_CASE_CREATE.status_code = status.HTTP_200_OK
+SUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')
+
+UNSUCCESSFUL_CASE_CREATE = Response()
+UNSUCCESSFUL_CASE_CREATE.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')
