@@ -1,27 +1,5 @@
-.login-page, .forgotten-password-page, .forgotten-userid-page {
+.login-page {
   width: 60%;
-
-  #login-form, #reset-form {
-    margin-bottom: 150px;
-
-    .form-row {
-      .form-field {
-        width: 75%;
-      }
-    }
-
-    .forgotten-creds {
-      margin-top: 10px;
-    }
-  }
 }
 
-.reset-sent-page {
-  width: 60%;
-  margin-bottom: 5rem;
 
-  .page-body-content {
-    margin-top: 2rem;
-    margin-bottom: 3rem;
-  }
-}

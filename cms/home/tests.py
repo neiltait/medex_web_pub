@@ -65,37 +65,6 @@ class HomeViewsTests(MedExTestCase):
     self.assertEqual(response.url, '/')
 
 
-#### Forgotten Password tests
-
-  def test_landing_on_forgotten_password_page_loads_the_correct_template_with_empty_context(self):
-    response = self.client.get('/forgotten-password')
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 0)
-
-
-  def test_forgotten_password_returns_success_and_notification_on_success(self):
-    reset_form = {
-      'email_address': 'test.user@email.com'
-    }
-    response = self.client.post('/forgotten-password', reset_form)
-    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/reset-sent')
-
-
-  def test_forgotten_password_returns_bad_request_and_and_correct_error_on_missing_userid(self):
-    reset_form = {
-      'email_address': ''
-    }
-    response = self.client.post('/forgotten-password', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.ERROR)
-    self.assertEqual(alerts_list[0]['message'], messages.MISSING_EMAIL)
-
-
 #### Logout tests
   
   def test_logout_returns_redirect_to_login_page_on_submission(self):
@@ -118,15 +87,6 @@ class HomeViewsTests(MedExTestCase):
     response = self.client.get('/')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
-
-
-#### Reset sent tests
-
-  def test_landing_on_reset_page_returns_the_correct_template_and_content(self):
-    response = self.client.get('/reset-sent')
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertTemplateUsed(response, 'home/reset-sent.html')
-    self.assertEqual(self.get_context_value(response.context, 'content'), messages.FORGOTTEN_PASSWORD_SENT)
 
 
 #### Settings index tests

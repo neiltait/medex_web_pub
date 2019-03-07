@@ -5,11 +5,7 @@ from rest_framework import status
 
 import json
 
-from alerts import messages
-from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
-
 from . import request_handler
-from .forms import ForgottenPasswordForm
 from .utils import redirect_to_landing, redirect_to_login
 
 from users.models import User
@@ -58,34 +54,6 @@ def logout(request):
   response = redirect_to_login()
   response.delete_cookie(settings.AUTH_TOKEN_NAME)
   return response
-
-
-def forgotten_password(request):
-  context = {
-    'page_heading': 'Welcome to the Medical Examiners Service'
-  }
-  alerts = []
-  status_code = status.HTTP_200_OK
-
-  if(request.POST):
-    form = ForgottenPasswordForm(request.POST)
-    if form.is_valid():
-      return redirect('/reset-sent')
-    else:
-      alerts.append(generate_error_alert(messages.MISSING_EMAIL))
-      status_code = status.HTTP_400_BAD_REQUEST
-      context['invalid'] = True
-
-  context['alerts'] = alerts
-  return render(request, 'home/forgotten-password.html', context, status=status_code)
-
-
-def reset_sent(request):
-  context = {
-    'page_heading': 'Welcome to the Medical Examiners Service',
-    'content': messages.FORGOTTEN_PASSWORD_SENT
-  }
-  return render(request, 'home/reset-sent.html', context)
 
 
 def settings_index(request):
