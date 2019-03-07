@@ -105,8 +105,8 @@ venv.bak/
 .mypy_cache/
 
 # compiled css files
-**/staticfiles/css/
-
+*.css*
+!vendor.*css
 
 # Jetbrains stuff
 .idea
