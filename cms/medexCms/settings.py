@@ -19,7 +19,14 @@ API_URL = ''
 
 AUTH_TOKEN_NAME = 'medex_auth_token'
 
-API_URL = os.environ.get('API_URL')
+API_URL = os.environ.get('API_URL', 'http://localhost:9000')
+
+CMS_URL = os.environ.get('CMS_URL', 'http://localhost:12000')
+
+OP_DOMAIN = os.environ.get('OP_DOMAIN')
+OP_ISSUER = os.environ.get('OP_ISSUER')
+OP_ID = os.environ.get('OP_ID')
+OP_SECRET = os.environ.get('OP_SECRET')
 
 
 # Quick-start development settings - unsuitable for production

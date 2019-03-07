@@ -1,9 +1,13 @@
 from django.conf import settings
-from django.db import models
 
 from rest_framework import status
 
+from home import request_handler as home_request_handler
+
 from . import request_handler
+
+import json
+
 
 class User():
 
@@ -51,6 +55,11 @@ class User():
       return authenticated
     else:
       return False
+
+
+  def logout(self):
+    if self.auth_token:
+      home_request_handler.end_session(json.loads(self.auth_token))
 
 
   @classmethod
