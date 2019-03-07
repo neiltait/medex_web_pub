@@ -47,7 +47,7 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
         "locations": locations,
         "me_offices": me_offices,
         "form": form if form else PrimaryExaminationInformationForm(),
-        "alerts": alerts,
+        "alerts": [],
         "errors": errors,
     }
 
