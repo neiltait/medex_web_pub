@@ -1,0 +1,162 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/shared/search-dropdown.js' %}"></script>
+  <script src="{% static 'js/users/permission-builder.js' %}"></script>
+{% endblock %}
+
+{% block page %}
+  <div class="permission-builder-page">
+    {% if managed_user %}
+      <h1 class="page-title">
+        {% if managed_user.firstname %}
+          {{ managed_user.fullname }}
+        {% else %}
+          {{ managed_user.email_address }}
+        {% endif %}
+      </h1>
+
+      <h2 class="page-subheading">
+        {{ sub_heading}}
+      </h2>
+
+      {% for alert in alerts %}
+        {% include 'alerts/partials/_alert.html' %}
+      {% endfor %}
+
+      <form id="permission-builder-form" class="form{% if invalid %} error{% endif %}" action="{% url submit_path user_id=managed_user.user_id %}" method="post">
+        {% csrf_token %}
+
+        <div class="flex-row baseline form-row">
+          <div id='role-radio-buttons' class="form-item">
+            <label class="form-item--header">What role will the user be performing?</label>
+
+            <div class="flex-row">
+              <div class="option-column">
+                <div class="radiobutton__item">
+                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-1" value="me" {% if form.role == 'me' %}checked{% endif %}>
+                  <label class="radiobutton__label" for="role-1">ME</label>
+                </div>
+
+                <div class="radiobutton__item">
+                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-2" value="meo" {% if form.role == 'meo' %}checked{% endif %}>
+                  <label class="radiobutton__label" for="role-2">MEO</label>
+                </div>
+              </div>
+
+              <div class="option-column">
+                <div class="radiobutton__item">
+                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-3" value="sa" {% if form.role == 'sa' %}checked{% endif %}>
+                  <label class="radiobutton__label" for="role-3">System admin only</label>
+                </div>
+              </div>
+            </div>
+
+            {% if form.role_error %}
+              <div class="notification error">
+                {{form.role_error}}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex-row baseline form-row">
+          <div id="level-radio-buttons" class="form-item">
+            <label class="form-item--header">What permission level do they need?</label>
+
+            <div class="radiobutton__item">
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-1" value="national" {% if form.permission_level == 'national' %}checked{% endif %}>
+              <label class="radiobutton__label" for="level-1">National</label>
+            </div>
+
+            <div class="radiobutton__item">
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-2" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %}>
+              <label class="radiobutton__label" for="level-2">Regional</label>
+            </div>
+
+            <div class="radiobutton__item">
+              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-3" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %}>
+              <label class="radiobutton__label" for="level-3">Trust</label>
+            </div>
+
+            {% if form.permission_level_error %}
+              <div class="notification error">
+                {{form.permission_level_error}}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex-row baseline form-row">
+          <div id="region-selector" class="form-item">
+            <label class="form-item--header" for="trust">
+              Region and associated NHS Trusts/ME Offices
+            </label>
+
+            <div class="dropdown">
+                <select name="region">
+                    <option value="" disabled hidden selected>Select a region</option>
+                    {% for region in regions %}
+                      <option value="{{region.id}}">{{region.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if form.region_error %}
+              <div class="notification error">
+                {{form.region_error}}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex-row baseline form-row">
+          <div id='trust-selector' class="form-item">
+            <label class="form-item--header" for="trust">
+              Trust
+            </label>
+
+            <div class="search-dropdown">
+              <input class='selection-field' type="text" name="trust" value="{{form.trust}}">
+              <div class='search-field{% if form.trust_error %} error{% endif %}'>
+                <input type="text" name="searchField" placeholder="Search for a trust">
+              </div>
+              <div class="options-list">
+                <p id="placeholder" class="options-list--placeholder">Please enter at least 3 characters to search</p>
+                {% for trust in trusts %}
+                  <option value="{{trust.id}}">{{trust.name}}</option>
+                {% endfor %}
+              </div>
+            </div>
+
+            {% if form.trust_error %}
+              <div class="notification error">
+                {{form.trust_error}}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <input type="text" name="add_another" value="false" hidden>
+
+        <div class="flex-row">
+          <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+        </div>
+
+        <div class="flex-row">
+          <button id="add-another" class="add-another">Save and add another permission</button>
+        </div>
+      </form>
+    {% else %}
+      {% for alert in alerts %}
+        {% include 'alerts/partials/_alert.html' %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}

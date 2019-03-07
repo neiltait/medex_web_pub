@@ -21,11 +21,6 @@
 
   &.error {
     margin-top: 1rem;
-    .form-row {
-      .form-field {
-        border: 1.5px solid $error-border;
-      }
-    }
   }
 }
 
@@ -63,7 +58,7 @@
 
     min-height: $nhs-radios-size;
 
-    margin-bottom: 8px;
+    margin-bottom: 0.66rem;
     padding: 0 0 0 $nhs-radios-size;
 
     clear: left;
@@ -102,6 +97,10 @@
     border: 2px solid currentColor;
     border-radius: 50%;
     background: transparent;
+  }
+
+  &__input.error + &__label::before {
+    border: 2px solid $error-border;
   }
 
   &__input + &__label::after {
@@ -195,5 +194,59 @@
     color: $black;
     font-size: $default-font-size;
     z-index: -1;
+  }
+}
+
+.search-dropdown {
+  width: 100%;
+
+  .selection-field {
+    display: none;
+  }
+
+  .search-field {
+    border: 1.5px solid $black;
+    width: 100%;
+
+    &.error {
+      border: 1.5px solid $error-border;
+    }
+
+    input {
+      font-size: $default-font-size;
+      line-height: $default-line-height;
+      padding: 0.33em 1em;
+      border: 0px;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+  }
+
+  .options-list {
+    width: 100%;
+    border: 1.5px solid $black;
+    border-top: 0;
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: $white;
+    min-height: $default-line-height;
+
+    &--placeholder {
+      font-size: $nhs-body-s-size;
+      color: $nhs-light-grey;
+      padding: 0.33em 1em;
+      margin: 0;
+    }
+
+    option {
+      padding: 0.33em 1em;
+      display: none;
+
+      &:hover {
+        background-color: $nhs-blue;
+        color: white;
+      }
+    }
   }
 }

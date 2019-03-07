@@ -1,19 +1,43 @@
 {% extends "medexCms/shared/base.html" %}
 {% load sass_tags %}
+{% load staticfiles %}
 
 {% block extra_css %}
-  <!-- <link href="{% sass_src 'scss/users/lookup.scss' %}" rel="stylesheet" type="text/css" > -->
+  <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}
 
 {% block page %}
-  <div class="user-lookup-page">
+  <div class="user-creation-page">
     <h1 class="page-title">
-      Invite New User
+      {{ page_heading }}
     </h1>
 
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
+    <form id="new-user-form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_user' %}" method="post">
+      {% csrf_token %}
+
+      <div class="flex-row baseline form-row">
+        <div class="form-item">
+          <label class="form-item--header" for="email_address">Email address</label>
+
+          <input class="form-field{% if form.email_error %} error{% endif %}" type="text" name="email_address" value="{{form.email_address}}">
+
+          <div class="small-print inline">
+            &#10003; User found
+          </div>
+
+          {% if form.email_error %}
+            <div class="notification error">
+              {{form.email_error}}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+    </form>
   </div>
 {% endblock %}

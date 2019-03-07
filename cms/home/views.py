@@ -57,7 +57,6 @@ def login(request):
     context['invalid'] = True
 
   context['alerts'] = alerts
-  print(context)
   return render(request, 'home/login.html', context, status=status_code)
 
 
@@ -95,3 +94,15 @@ def reset_sent(request):
     'content': messages.FORGOTTEN_PASSWORD_SENT
   }
   return render(request, 'home/reset-sent.html', context)
+
+def settings_index(request):
+  user = User.initialise_with_token(request)
+  if not user.check_logged_in():
+    return redirect_to_login()
+    
+  context = {
+      'session_user': user,
+      'page_heading': 'Settings',
+      'sub_heading': 'Overview',
+  }
+  return render(request, 'home/settings_index.html', context)

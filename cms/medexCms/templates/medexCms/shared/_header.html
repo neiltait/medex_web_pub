@@ -34,31 +34,32 @@
               Closed Cases
             </a>
           </div>
-
-          <div class="nav-list--item">
-            <a href="#">
-              ME Network
-            </a>
-          </div>
         </div>
 
         <div class="btn-list flex-row baseline">
-          <div class="user-name btn-list--item">
-            {{session_user.full_name}}
-          </div>
-
-          <div class="btn-list--item">
-            {{session_user.role}}
-          </div>
-
           <div class="notifications btn-list--item">
             <img class='logo__icon' src="{% static 'images/notification.png' %}" alt="">
           </div>
 
-          <div class="btn-list--item">
-            <a href="/logout">
-              Logout
+          <div class="user-name btn-list--item nav-dropdown">
+            <a href="#">
+              {{session_user.full_name}}
+              &#9660;
             </a>
+
+            <div class="nav-dropdown--content">
+              <div class="nav-dropdown--item">
+                <a href="/settings">
+                  Settings
+                </a>
+              </div>
+              
+              <div class="nav-dropdown--item">
+                <a href="/logout">
+                  Logout
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

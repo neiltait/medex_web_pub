@@ -1,0 +1,32 @@
+{% extends "medexCms/shared/base.html" %}
+
+{% block page %}
+  <div class="settings-index">
+    <h1 class="page-title">
+      {{page_heading}}
+    </h1>
+
+    <h2 class="page-subheading">
+      {{sub_heading}}
+    </h2>
+
+    <i>Temp page structure until page built</i>
+    <div class="flex-row">
+      <div class="trusts">
+        <a href="#">0 of 210</a>
+        <p>
+          NHS Trusts in the ME Netowrk
+        </p>
+      </div>
+
+      <div class="users">
+        <a href="#">20</a>
+        <p>Users</p>
+      </div>
+    </div>
+
+    <a class="primary-btn" href="/users/new">
+      Add a user
+    </a>
+  </div>
+{% endblock %}
