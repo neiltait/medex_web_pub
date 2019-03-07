@@ -15,8 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-API_URL = ''
-
 AUTH_TOKEN_NAME = 'medex_auth_token'
 
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
@@ -24,7 +22,7 @@ API_URL = os.environ.get('API_URL', 'http://localhost:9000')
 CMS_URL = os.environ.get('CMS_URL', 'http://localhost:12000')
 
 OP_DOMAIN = os.environ.get('OP_DOMAIN')
-OP_ISSUER = os.environ.get('OP_ISSUER')
+OP_ISSUER = os.environ.get('OP_ISSUER', '/oauth/default')
 OP_ID = os.environ.get('OP_ID')
 OP_SECRET = os.environ.get('OP_SECRET')
 

@@ -51,7 +51,12 @@ This project uses the following technologies:
 
 Running the project locally requires the following environment variables to be set:
 
-- API_URL - this is the address for the Data API.
+- API_URL - this is the address for the Data API. (Defaults to 'http://localhost:9000')
+- CMS_URL - this is the domain the cms is running on. (Defaults to 'http://localhost:12000')
+- OP_DOMAIN - the domain name for the OKTA auth service used in this environment
+- OP_ISSUER - the method and the auth service being used to authenticate (Defaults to '/oauth/default')
+- OP_ID - the client ID provide by OKTA
+- OP_SECRET - the client secret provided by OKTA
 
 #### Starting the server
 
