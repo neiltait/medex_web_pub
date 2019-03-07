@@ -50,7 +50,7 @@ class PrimaryExaminationInformationForm:
         self.time_of_death_not_known = True if "time_of_death_not_known" in request else False
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
-        self.out_of_hours = request.get("out_of_hours")
+        self.out_of_hours = True if "out_of_hours" in request else False
 
     def initialiseErrors(self):
         self.errors = {'count': 0}
