@@ -151,7 +151,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIsFalse("nhs_number" in form.errors)
 
     def test_nhs_number_group_does_not_validate_if_no_information_entered(self):
-        form = PrimaryExaminationInformationForm({'nhs_number': '', 'nhs_number_not_known': False})
+        form = PrimaryExaminationInformationForm({'nhs_number': ''})
         form.is_valid()
         self.assertEqual(form.errors["nhs_number"], ErrorFieldRequiredMessage('NHS number'))
 
@@ -166,7 +166,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIsFalse("time_of_death" in form.errors)
 
     def test_time_of_death_group_does_not_validate_if_no_information_entered(self):
-        form = PrimaryExaminationInformationForm({'time_of_death': '', 'time_of_death_not_known': False})
+        form = PrimaryExaminationInformationForm({'time_of_death': ''})
         form.is_valid()
         self.assertEqual(form.errors["time_of_death"], ErrorFieldRequiredMessage('time of death'))
 
@@ -181,12 +181,12 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIsFalse("day_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_not_validate_if_no_information_entered(self):
-        form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': False})
+        form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
         self.assertEqual(form.errors["date_of_birth"], ErrorFieldRequiredMessage('date of birth'))
 
     def test_date_of_birth_group_does_not_validate_if_partial_information_entered(self):
-        form = PrimaryExaminationInformationForm({'day_of_birth': '26', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': False})
+        form = PrimaryExaminationInformationForm({'day_of_birth': '26', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
         self.assertEqual(form.errors["date_of_birth"], ErrorFieldRequiredMessage('date of birth'))
 
@@ -197,17 +197,17 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIsFalse("date_of_death" in form.errors)
 
     def test_date_of_death_group_does_validate_if_all_date_boxes_are_filled(self):
-        form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978', 'date_of_death_not_known': False})
+        form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978'})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
 
     def test_date_of_death_group_does_not_validate_if_no_information_entered(self):
-        form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': False})
+        form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
         self.assertEqual(form.errors["date_of_death"], ErrorFieldRequiredMessage('date of death'))
 
     def test_date_of_death_group_does_not_validate_if_partial_information_entered(self):
-        form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '', 'year_of_death': '', 'date_of_birth_not_known': False})
+        form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
         self.assertEqual(form.errors["date_of_death"], ErrorFieldRequiredMessage('date of death'))
 
