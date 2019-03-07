@@ -120,13 +120,14 @@
                 <!-- Numbers -->
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-fieldset medex-text-checkbox-group">
+                        <div class="nhsuk-form-group {% if errors.nhs_number %}nhsuk-form-group--error{% endif %} medex-text-checkbox-group">
                             <div class="medex-text-checkbox-group__textbox" id="nhs_number_group">
                                 <label class="nhsuk-label" for="nhs_number">
                                     NHS number
                                 </label>
-                                <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="nhs_number"
-                                       name="nhs_number" type="text"
+                                {% if errors.nhs_number %}<span class="nhsuk-error-message">{{ errors.nhs_number }}</span>{% endif %}
+                                <input class="nhsuk-input nhsuk-input--width-10 medex-input {% if errors.nhs_number %}nhsuk-input--error{% endif %}"
+                                       id="nhs_number" name="nhs_number" type="text"
                                        value="{% if form.nhs_number %}{{ form.nhs_number }}{% endif %}">
                             </div>
                             <div class="nhsuk-form-group">
@@ -179,11 +180,13 @@
                 <!-- Dates -->
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group medex-text-checkbox-group__textbox">
+                        <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
+                        <div class="medex-text-checkbox-group__textbox">
                             <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
                                 <legend class="nhsuk-fieldset__legend">
                                     Date of birth
                                 </legend>
+                                {% if errors.date_of_birth %}<span class="nhsuk-error-message">{{ errors.date_of_birth }}</span>{% endif %}
                                 <div class="nhsuk-date-input" id="date_of_birth">
                                     <div class="nhsuk-date-input__item">
                                         <div class="nhsuk-form-group">
@@ -222,7 +225,7 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="nhsuk-form-group">
+
                             <fieldset class="nhsuk-fieldset">
                                 <div class="nhsuk-checkboxes">
                                     <div class="nhsuk-checkboxes__item">
@@ -240,11 +243,14 @@
                     </div>
 
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group medex-text-checkbox-group__textbox">
+
+                        <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
+                        <div class="medex-text-checkbox-group__textbox">
                             <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
                                 <legend class="nhsuk-fieldset__legend">
                                     Date of death
                                 </legend>
+                                {% if errors.date_of_death %}<span class="nhsuk-error-message">{{ errors.date_of_death }}</span>{% endif %}
                                 <div class="nhsuk-date-input" id="date_of_death">
                                     <div class="nhsuk-date-input__item">
                                         <div class="nhsuk-form-group">
@@ -281,7 +287,6 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="nhsuk-form-group">
                             <fieldset class="nhsuk-fieldset">
                                 <div class="nhsuk-checkboxes">
                                     <div class="nhsuk-checkboxes__item">
@@ -297,17 +302,18 @@
                             </fieldset>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Time of death -->
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-fieldset medex-text-checkbox-group">
+
+                        <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_death %}nhsuk-form-group--error{% endif %}">
                             <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
                                 <label class="nhsuk-label" for="time_of_death">
                                     Time of death
                                 </label>
+                                {% if errors.time_of_death %}<span class="nhsuk-error-message">{{ errors.time_of_death }}</span>{% endif %}
                                 <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_death"
                                        name="time_of_death"
                                        type="time"
@@ -333,10 +339,11 @@
 
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
+                        <div class="nhsuk-form-group {% if errors.place_of_death %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="place_of_death">
                                 Place where death occurred
                             </label>
+                            {% if errors.place_of_death %}<span class="nhsuk-error-message">{{ errors.place_of_death }}</span>{% endif %}
                             <select class="nhsuk-select" id="place_of_death" name="place_of_death">
                                 <option value="" disabled hidden selected>Select a location</option>
                                 {% for location in locations %}
@@ -347,10 +354,11 @@
                     </div>
 
                     <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
+                        <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="me_office">
                                 Select an office
                             </label>
+                            {% if errors.me_office %}<span class="nhsuk-error-message">{{ errors.me_office }}</span>{% endif %}
                             <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">
                                 <option value="" disabled hidden selected>Select an office</option>
                                 {% for me_office in me_offices %}
