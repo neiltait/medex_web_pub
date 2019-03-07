@@ -6,6 +6,8 @@ MISSING_USER_ID = 'Please enter a User ID'
 
 MISSING_EMAIL = 'Please enter an email address'
 
+INVALID_EMAIL_DOMAIN = 'You must use an nhs.uk email address'
+
 FORGOTTEN_PASSWORD_SENT = 'If the email address provided is valid password reset instructions have been sent.'
 
 OBJECT_NOT_FOUND = 'The %s requested could not be found'
@@ -17,4 +19,4 @@ ERROR_IN_FORM = 'There are errors in the form see below for details'
 NOT_IN_OKTA = 'Users must be added to OKTA to show in the system'
 
 def ErrorFieldRequiredMessage(field_name):
-    return ("Please enter a value for %s") % field_name
+    return ("Please enter %s") % field_name

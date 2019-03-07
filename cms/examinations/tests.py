@@ -1,3 +1,4 @@
+import json
 import uuid
 from http.cookies import SimpleCookie
 from unittest.mock import patch
@@ -18,6 +19,7 @@ TRUSTS = [{
     'id': '3',
     'name': 'Gloucester Hospital',
 }]
+from requests.models import Response
 
 ME_OFFICES = [{
     'id': '1',
@@ -29,6 +31,7 @@ ME_OFFICES = [{
     'id': '3',
     'name': 'Gloucester Hospital ME Office',
 }]
+
 
 def get_minimal_create_form_data():
     return {
@@ -42,6 +45,23 @@ def get_minimal_create_form_data():
         'place_of_death': 1,
         'me_office': 1,
     }
+
+
+user_obj = {
+    'user_id': '1',
+    'first_name': 'Test',
+    'last_name': 'User',
+    'email_address': 'test.user@nhs.uk',
+    'permissions': []
+}
+SUCCESSFUL_VALIDATE_SESSION = Response()
+SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_obj).encode('utf-8')
+
+UNSUCCESSFUL_VALIDATE_SESSION = Response()
+UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_401_UNAUTHORIZED
+UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
+
 
 class ExaminationsViewsTests(MedExTestCase):
 
@@ -80,7 +100,6 @@ class ExaminationsViewsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(request={'last_name': 'nicks'})
         form.is_valid()
         self.assertIsFalse("last_name" in form.errors)
-
 
     def test_given_create_examination_without_gender_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
@@ -171,12 +190,14 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(form.errors["time_of_death"], ErrorFieldRequiredMessage('time of death'))
 
     def test_date_of_birth_group_does_validate_if_checkbox_ticked(self):
-        form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': True})
+        form = PrimaryExaminationInformationForm(
+            {'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': True})
         form.is_valid()
         self.assertIsFalse("day_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_validate_if_all_date_boxes_are_filled(self):
-        form = PrimaryExaminationInformationForm({'day_of_birth': '26', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
+        form = PrimaryExaminationInformationForm(
+            {'day_of_birth': '26', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
         form.is_valid()
         self.assertIsFalse("day_of_birth" in form.errors)
 
@@ -190,14 +211,15 @@ class ExaminationsViewsTests(MedExTestCase):
         form.is_valid()
         self.assertEqual(form.errors["date_of_birth"], ErrorFieldRequiredMessage('date of birth'))
 
-
     def test_date_of_death_group_does_validate_if_checkbox_ticked(self):
-        form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True})
+        form = PrimaryExaminationInformationForm(
+            {'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
 
     def test_date_of_death_group_does_validate_if_all_date_boxes_are_filled(self):
-        form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978'})
+        form = PrimaryExaminationInformationForm(
+            {'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978'})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
 
@@ -212,7 +234,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(form.errors["date_of_death"], ErrorFieldRequiredMessage('date of death'))
 
     def test_place_of_death_does_not_validate_if_missing(self):
-        form = PrimaryExaminationInformationForm({'test':'data'})
+        form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
         self.assertEqual(form.errors["place_of_death"], ErrorFieldRequiredMessage('place of death'))
 
@@ -222,7 +244,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIsFalse("place_of_death" in form.errors)
 
     def test_me_office_does_not_validate_if_missing(self):
-        form = PrimaryExaminationInformationForm({'test':'data'})
+        form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
         self.assertEqual(form.errors["me_office"], ErrorFieldRequiredMessage('ME office'))
 
@@ -257,6 +279,14 @@ class ExaminationsViewsTests(MedExTestCase):
 
         # The whole form is valid
         self.assertIsTrue(form_is_valid)
+        #### Create case tests
+
+    @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        response = self.client.get('/cases/create')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/create.html')
 
     def test_form_stores_optional_data(self):
         # Given a complete form including optional data
@@ -274,3 +304,9 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIs(form.hospital_number_2, 'example hospital number 2')
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
         self.assertIs(form.out_of_hours, True)
+
+    @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
+        response = self.client.get('/cases/create')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')

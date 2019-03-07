@@ -65,13 +65,38 @@
             padding-right: 0px;
           }
 
-          &.user-name {
-            border-right: 1px solid $white;
-          }
-
           &.notifications {
             img {
               width: 0.75rem;
+            }
+          }
+
+          &.nav-dropdown {
+            position: relative;
+            .nav-dropdown--content {
+              padding: 0.25rem;
+              display: none;
+              position: absolute;
+              background-color: $white;
+              border: 1px solid $nhs-blue;
+              box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+              color: $nhs-blue;
+              z-index: 20;
+
+              .nav-dropdown--item {
+                border-bottom: 1px solid $nhs-blue;
+                padding: 0.2rem 0;
+
+                &:last-of-type {
+                  border-bottom: 0;
+                }
+              }
+            }
+
+            &:hover {
+              .nav-dropdown--content {
+                display: block;
+              }
             }
           }
         }

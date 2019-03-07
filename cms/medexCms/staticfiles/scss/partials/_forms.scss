@@ -26,15 +26,125 @@
         border: 1.5px solid $error-border !important;
       }
     }
+  }
+}
+
+.checkbox {
+  -webkit-appearance: none;
+  background-color: $white;
+  border: 1.5px solid $black;
+  padding: 0.35rem;
+  display: inline-block;
+  position: relative;
+  margin-right: 0.5rem;
 
     &::placeholder {
       color: $error-color !important;
     }
   }
-}
+
 
 .medex-textarea {
   width: 100%;
+}
+
+.radiobutton {
+  &__list {
+    justify-content: space-between;
+  }
+
+  &__item {
+
+    display: block;
+
+    position: relative;
+
+    min-height: $nhs-radios-size;
+
+    margin-bottom: 0.66rem;
+    padding: 0 0 0 $nhs-radios-size;
+
+    clear: left;
+  }
+
+  &__item:last-child,
+  &__item:last-of-type {
+    margin-bottom: 0;
+  }
+  &__input {
+    position: absolute;
+
+    z-index: 1;
+    top: 0;
+    left: 0;
+
+    width: $nhs-radios-size;
+    height: $nhs-radios-size;
+
+    cursor: pointer;
+
+    margin: 0;
+    opacity: 0;
+  }
+
+  &__input + &__label::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: $nhs-radios-size;
+    height: $nhs-radios-size;
+
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  &__input.error + &__label::before {
+    border: 2px solid $error-border;
+  }
+
+  &__input + &__label::after {
+    content: "";
+
+    position: absolute;
+    top: calc((#{$nhs-radios-size} - #{$nhs-radios-internal-size}) / 2);
+    left: calc((#{$nhs-radios-size} - #{$nhs-radios-internal-size}) / 2);
+
+    width: $nhs-radios-internal-size;
+    height: $nhs-radios-internal-size;
+
+    //border: 0 solid currentColor;
+    border-radius: 100%;
+    opacity: 0;
+    background: currentColor;
+  }
+
+  &__input:checked + &__label::after {
+    opacity: 1;
+  }
+
+  // Disabled state
+  &__input:disabled,
+  &__input:disabled + &__label {
+    cursor: default;
+  }
+
+  &__input:disabled + &__label {
+    opacity: .5;
+  }
+
+  &__label {
+    display: inline-block;
+    margin-bottom: 0;
+    padding: 8px $nhs-radios-label-padding-left-right 8px;
+    cursor: pointer;
+    // remove 300ms pause on mobile
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+  }
 }
 
 .medex-input {
@@ -69,5 +179,59 @@
 .medex-text-checkbox-group {
   &__textbox {
     margin-bottom: .5rem;
+  }
+}
+
+.search-dropdown {
+  width: 100%;
+
+  .selection-field {
+    display: none;
+  }
+
+  .search-field {
+    border: 1.5px solid $black;
+    width: 100%;
+
+    &.error {
+      border: 1.5px solid $error-border;
+    }
+
+    input {
+      font-size: $default-font-size;
+      line-height: $default-line-height;
+      padding: 0.33em 1em;
+      border: 0px;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+  }
+
+  .options-list {
+    width: 100%;
+    border: 1.5px solid $black;
+    border-top: 0;
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: $white;
+    min-height: $default-line-height;
+
+    &--placeholder {
+      font-size: $nhs-body-s-size;
+      color: $nhs-light-grey;
+      padding: 0.33em 1em;
+      margin: 0;
+    }
+
+    option {
+      padding: 0.33em 1em;
+      display: none;
+
+      &:hover {
+        background-color: $nhs-blue;
+        color: white;
+      }
+    }
   }
 }
