@@ -38,5 +38,21 @@
                 background-color: $nhs-very-light-grey;
             }
         }
+
+        .sticky-save {
+            position: fixed;
+            bottom:0;
+            left: 0;
+            z-index: 100;
+
+            width: 100%;
+            padding: 0.5rem;
+
+            text-align: right;
+
+            display: none;
+            background-color: $white;
+
+        }
     }
 }
