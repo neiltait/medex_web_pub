@@ -1,0 +1,138 @@
+<!-- Address -->
+<div class="flex-row form-row flex-vertical">
+  <div class="form-item">
+    <label class="form-item--header" for="address_line_1">Building and street</label>
+    <input id="address_line_1" class="form-field" type="text" name="address_line_1" value="{{form.address_line_1}}">
+  </div>
+
+  <div class="form-item">
+    <input id="address_line_2" class="form-field" type="text" name="address_line_2" value="{{form.address_line_2}}">
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header" for="address_town">Town or city</label>
+    <input id="address_town" class="form-field" type="text" name="address_town" value="{{form.address_town}}">
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header" for="address_county">County</label>
+    <input id="address_county" class="form-field" type="text" name="address_county" value="{{form.address_county}}">
+  </div>
+</div>
+
+<!-- Postcode -->
+<div class="flex-row baseline form-row">
+  <div class="form-item">
+    <label class="form-item--header" for="address_postcode">Postcode of residential address</label>
+
+    <input id="address_postcode" class="form-field" type="text" name="address_postcode" value="{{form.address_postcode}}">
+  </div>
+</div>
+
+<!-- Occupation -->
+<div class="flex-row form-row">
+  <div class="form-item">
+    <label class="form-item--header" for="relevant_occupation">Relevant occupation</label>
+    <p class="small-print">Add any information about the patient's work history that could have contributed to their death</p>
+    <textarea id="relevant_occupation" class="form-field" type="text" name="relevant_occupation">
+      {{form.relevant_occupation}}
+    </textarea>
+  </div>
+</div>
+
+<!-- Care organisation -->
+<div class="flex-row baseline form-row">
+  <div class="form-item">
+    <label class="form-item--header" for="care_organisation">Organisation responsible for care prior to death</label>
+    <input id="care_organisation" class="form-field" type="text" name="care_organisation" value="{{form.care_organisation}}">
+  </div>
+</div>
+
+<!-- Funeral arrangements -->
+<div class="flex-row baseline form-row flex-vertical">
+  <div class="form-item">
+    <label class="form-item--header">Funeral arrangements</label>
+    <div class="option-column">
+      <div class="radiobutton__item">
+        <input class="form-field radiobutton__input{% if form.funeral_arrangements_error %} error{% endif %}" type="radio" name="funeral_arrangements"
+               id="arrangement-1" value="cremation" {% if form.funeral_arrangements == 'cremation' %}checked{% endif %}>
+        <label class="radiobutton__label" for="arrangement-1">Cremation</label>
+      </div>
+
+      <div class="radiobutton__item">
+        <input class="form-field radiobutton__input{% if form.funeral_arrangements_error %} error{% endif %}" type="radio" name="funeral_arrangements"
+               id="arrangement-2" value="burial" {% if form.funeral_arrangements == 'burial' %}checked{% endif %}>
+        <label class="radiobutton__label" for="arrangement-2">Burial</label>
+      </div>
+    </div>
+
+    <div class="option-column">
+      <div class="radiobutton__item">
+        <input class="form-field radiobutton__input{% if form.funeral_arrangements_error %} error{% endif %}" type="radio" name="funeral_arrangements"
+               id="arrangement-3" value="at_sea" {% if form.funeral_arrangements == 'at_sea' %}checked{% endif %}>
+        <label class="radiobutton__label" for="arrangement-3">Buried at sea</label>
+      </div>
+
+      <div class="radiobutton__item">
+        <input class="form-field radiobutton__input{% if form.funeral_arrangements_error %} error{% endif %}" type="radio" name="funeral_arrangements"
+               id="arrangement-4" value="repatriation" {% if form.funeral_arrangements == 'repatriation' %}checked{% endif %}>
+        <label class="radiobutton__label" for="arrangement-4">Repatriation</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header">Does the patient have any devices implanted that could cause issues at cremation?</label>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="implanted_devices_yes" class="checkbox" type="checkbox" name="implanted_devices" value="yes"
+      {% if form.implanted_devices == 'yes' %} checked{% endif%}>
+
+      <label for="implanted_devices_yes">Yes</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="implanted_devices_no" class="checkbox" type="checkbox" name="implanted_devices" value="no"
+      {% if form.implanted_devices == 'no' %} checked{% endif%}>
+
+      <label for="implanted_devices_no">No</label>
+    </div>
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header" for="implanted_devices_details">Enter details below</label>
+    <textarea id="implanted_devices_details" class="form-field" type="text" name="implanted_devices_details">
+      {{form.implanted_devices_details}}
+    </textarea>
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header" for="funeral_directors">Funeral directors</label>
+    <input id="funeral_directors" class="form-field" type="text" name="funeral_directors" value="{{form.funeral_directors}}">
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header">Personal effects</label>
+    <p class="small-print">Is there any property to collect from the ward?</p>
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="personal_effects_yes" class="checkbox" type="checkbox" name="personal_effects" value="yes"
+      {% if form.personal_effects == 'yes' %} checked{% endif%}>
+
+      <label for="personal_effects_yes">Yes</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="personal_effects_no" class="checkbox" type="checkbox" name="personal_effects" value="no"
+      {% if form.personal_effects == 'no' %} checked{% endif%}>
+
+      <label for="personal_effects_no">No</label>
+    </div>
+  </div>
+
+  <div class="form-item">
+    <label class="form-item--header" for="personal_effects_details">Enter details below</label>
+    <textarea id="personal_effects_details" class="form-field" type="text" name="personal_effects_details">
+      {{form.personal_effects_details}}
+    </textarea>
+  </div>
+</div>

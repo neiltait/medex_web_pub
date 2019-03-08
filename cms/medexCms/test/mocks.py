@@ -5,6 +5,8 @@ from rest_framework import status
 
 import json
 
+# Variables/Objects
+
 AUTH_TOKEN = {
     "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
     "id_token": "8a89be6d-70df-4b21-9d6e-82873d7ff1b0",
@@ -12,6 +14,10 @@ AUTH_TOKEN = {
     "expires_in": 3600,
     "scope": "openid profile email",
 }
+
+#### Users
+
+CREATED_USER_ID = 1
 
 empty_user = {
   'user_id': None,
@@ -27,18 +33,11 @@ user_dict = {
   'email_address': 'test.user@email.com',
 }
 
-SUCCESSFUL_TOKEN_GENERATION = Response()
-SUCCESSFUL_TOKEN_GENERATION.status_code = status.HTTP_200_OK
-SUCCESSFUL_TOKEN_GENERATION._content = json.dumps(AUTH_TOKEN).encode('utf-8')
+#### Permissions
 
-SUCCESSFUL_VALIDATE_SESSION = Response()
-SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
-SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
+CREATED_PERMISSION_ID = 1
 
-UNSUCCESSFUL_VALIDATE_SESSION = Response()
-UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
-UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
-
+#### Locations
 SUCCESSFUL_TRUST_LOAD = [
     {
       'id': 1,
@@ -73,7 +72,35 @@ SUCCESSFUL_REGION_LOAD = [
     }
   ]
 
-CREATED_USER_ID = 1
+SUCCESSFUL_ME_OFFICES_LOAD = [{
+    'id': '1',
+    'name': 'Barnet Hospital ME Office',
+}, {
+    'id': '2',
+    'name': 'Sheffield Hospital ME Office',
+}, {
+    'id': '3',
+    'name': 'Gloucester Hospital ME Office',
+}]
+
+#### Examintations
+
+CREATED_EXAMINATION_ID = 1
+
+# Responses
+
+SUCCESSFUL_TOKEN_GENERATION = Response()
+SUCCESSFUL_TOKEN_GENERATION.status_code = status.HTTP_200_OK
+SUCCESSFUL_TOKEN_GENERATION._content = json.dumps(AUTH_TOKEN).encode('utf-8')
+
+SUCCESSFUL_VALIDATE_SESSION = Response()
+SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
+
+UNSUCCESSFUL_VALIDATE_SESSION = Response()
+UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
+
 SUCCESSFUL_USER_CREATION = Response()
 SUCCESSFUL_USER_CREATION.status_code = status.HTTP_200_OK
 SUCCESSFUL_USER_CREATION._content = json.dumps({'id': CREATED_USER_ID}).encode('utf-8')
@@ -90,7 +117,6 @@ UNSUCCESSFUL_LOAD_USER = Response()
 UNSUCCESSFUL_LOAD_USER.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_LOAD_USER._content = json.dumps(empty_user).encode('utf-8')
 
-CREATED_PERMISSION_ID = 1
 SUCCESSFUL_PERMISSION_CREATION = Response()
 SUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_200_OK
 SUCCESSFUL_PERMISSION_CREATION._content = json.dumps({'permissionId': CREATED_PERMISSION_ID}).encode('utf-8')

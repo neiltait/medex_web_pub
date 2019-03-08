@@ -54,3 +54,17 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
     }
 
     return render(request, "examinations/create.html", context, status=status_code)
+
+
+def edit_examination(request, examination_id):
+    user = User.initialise_with_token(request)
+
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    context = {
+        'session_user': user,
+        'examination_id': examination_id
+    }
+
+    return render(request, 'examinations/edit.html', context)

@@ -1,0 +1,209 @@
+<div class="form-section">
+  <h3>
+    Patient Details
+  </h3>
+
+  <h4>
+    Primary information
+  </h4>
+  <!-- Names -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header" for="last_name">Surname</label>
+
+      <input class="form-field" type="text" name="last_name" value="{{ form.last_name }}">
+    </div>
+
+    <div class="form-item">
+      <label class="form-item--header" for="first_name">Given name(s)</label>
+
+      <input class="form-field" type="text" name="first_name" value="{{ form.first_name }}">
+    </div>
+  </div>
+
+  <!-- Gender -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header" for="gender">Gender</label>
+      <div class="radiobutton__list flex-row">
+        <div class="radiobutton__item">
+          <input class="form-field radiobutton__input" type="radio" name="gender"
+                 id="gender-1" value="male">
+          <label class="radiobutton__label" for="gender-1">Male</label>
+        </div>
+        <div class="radiobutton__item">
+          <input class="form-field radiobutton__input" type="radio" name="gender"
+                 id="gender-2" value="female">
+          <label class="radiobutton__label" for="gender-2">Female</label>
+        </div>
+        <div class="radiobutton__item">
+          <input class="form-field radiobutton__input" type="radio" name="gender"
+                 id="gender-3" value="other">
+          <label class="radiobutton__label" for="gender-3">Other</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numbers -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header" for="nhs_number">NHS Number</label>
+
+      <input class="form-field" type="text" name="nhs_number" value="{{ form.nhs_number }}">
+
+      <div class="checkbox-item flex-row vertical-center">
+        <input class="checkbox" type="checkbox" name="nhs_number_not_known"
+               value="{{ form.nhs_number_not_known }}">
+
+        <label for="nhs_number_not_known">Unknown</label>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label class="form-item--header" for="hospital_number">Hospital Number</label>
+
+      <input class="form-field" type="text" name="hospital_number"
+             value="{{ form.hospital_number }}" placeholder="Optional">
+    </div>
+  </div>
+
+  <!-- Dates -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header">Date of birth</label>
+
+      <!-- <input class="form-field" type="text" name="date_of_birth" value="{{form.date_of_birth}}"> -->
+      <div class="flex-row baseline">
+        <div>
+          <label class="form-item--header" for="day_of_birth">Day</label>
+
+          <input class="form-field" type="number" min="1" max="31" name="day_of_birth"
+                 value="{{ form.day_of_birth }}">
+        </div>
+
+        <div>
+          <label class="form-item--header" for="month_of_birth">Month</label>
+
+          <input class="form-field" type="number" min="1" max="12" name="month_of_birth"
+                 value="{{ form.month_of_birth }}">
+        </div>
+
+        <div>
+          <label class="form-item--header" for="year_of_birth">Year</label>
+
+          <input class="form-field" type="number" min="1900" max="2019" name="year_of_birth"
+                 value="{{ form.year_of_birth }}">
+        </div>
+      </div>
+
+      <div class="checkbox-item flex-row vertical-center">
+        <input class="checkbox" type="checkbox" name="date_of_birth_not_known"
+               value="{{ form.date_of_birth_not_known }}">
+
+        <label for="date_of_birth_not_known">Unknown</label>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label class="form-item--header" for="date_of_death">Date of death</label>
+
+      <!-- <input class="form-field" type="text" name="date_of_death" value="{{form.date_of_death}}"> -->
+
+      <div class="flex-row baseline">
+        <div>
+          <label class="form-item--header" for="day_of_death">Day</label>
+
+          <input class="form-field" type="number" min="1" max="31" name="day_of_death"
+                 value="{{ form.day_of_death }}">
+        </div>
+
+        <div>
+          <label class="form-item--header" for="month_of_death">Month</label>
+
+          <input class="form-field" type="number" min="1" max="12" name="month_of_death"
+                 value="{{ form.month_of_death }}">
+        </div>
+
+        <div>
+          <label class="form-item--header" for="year_of_death">Year</label>
+
+          <input class="form-field" type="number" min="2018" max="3000" name="year_of_death"
+                 value="{{ form.year_of_death }}">
+        </div>
+      </div>
+
+      <div class="checkbox-item flex-row vertical-center">
+        <input class="checkbox" type="checkbox" name="date_of_death_not_known"
+               value="{{ form.date_of_death_not_known }}">
+
+        <label for="date_of_death_not_known">Unknown</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time of death -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header" for="time_of_death">Time of death</label>
+
+      <input class="form-field" type="time" name="time_of_death" value="{{ form.time_of_death }}">
+
+      <div class="checkbox-item flex-row vertical-center">
+        <input class="checkbox" type="checkbox" name="time_of_death_not_known"
+               value="{{ form.time_of_death_not_known }}">
+
+        <label for="time_of_death_not_known">Unknown</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div class="flex-row baseline form-row">
+    <div class="form-item">
+      <label class="form-item--header" for="place_of_death">Place where death occurred</label>
+      <div class="dropdown">
+        <select name="place_of_death" required>
+          <option value="" disabled hidden selected>Select a location</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label class="form-item--header" for="me_office">ME Office responsible for case</label>
+      <div class="dropdown">
+        <select name="me_office" required>
+          <option value="" disabled hidden selected>Select an office</option>
+          <option value="unknown">Unknown</option>
+          <option value="hi">Hi</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="form-section">
+  <h4>
+    Secondary information
+  </h4>
+
+  {% include 'examinations/partials/_secondary_information.html' %}
+</div>
+
+<div class="form-section">
+  <h4>
+    Bereaved or representative information
+  </h4>
+
+  {% include 'examinations/partials/_bereaved_information.html' %}
+</div>
+
+<div class="form-section">
+  <h4>
+    Request for rapid release
+  </h4>
+
+  {% include 'examinations/partials/_urgency_information.html' %}
+</div>
