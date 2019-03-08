@@ -33,6 +33,7 @@ def edit_examination(request, examination_id):
 
     context = {
         'session_user': user,
+        'examination_id': examination_id
     }
 
     return render(request, 'examinations/edit.html', context)
