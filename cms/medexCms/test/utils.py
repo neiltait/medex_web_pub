@@ -8,5 +8,8 @@ class MedExTestCase(TestCase):
     def assertIsFalse(self, value):
         self.assertIs(value, False)
 
+    def assertIsNone(self, value):
+        self.assertIsTrue(value is None)
+
     def get_context_value(self, context, key):
       return context[key]
