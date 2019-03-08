@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-  <link href="{% sass_src 'scss/examinations/edit.scss' %}" rel="stylesheet" type="text/css" >
+  <link href="{% sass_src 'scss/examinations/edit.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block extra_js %}
@@ -28,68 +28,45 @@
       {% include 'alerts/partials/_alert.html' %}
     {% endfor %}
 
-    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}" action="{% url 'edit_examination' examination_id=examination_id %}" method="post">
+    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'edit_examination' examination_id=examination_id %}" method="post">
       {% csrf_token %}
 
       <div class="form-tabs flex-row baseline">
-        <div class="tab-item active">
+        <div class="tab-item active" id="patient-details-tab">
           Patient details
         </div>
 
-        <div class="tab-item">
+        <div class="tab-item" id="medical-team-tab">
           Medical team
         </div>
 
-        <div class="tab-item">
+        <div class="tab-item" id="case-breakdown-tab">
           Case breakdown
         </div>
 
-        <div class="tab-item">
+        <div class="tab-item" id="case-outcomes-tab">
           Case outcomes
         </div>
       </div>
 
-      <div class="form-section">
-
-        <h3>
-          Patient Details
-        </h3>
-
-        <h4>
-          Primary information
-        </h4>
-
-        {% include 'examinations/partials/_primary_information.html' %}
+      <div class="form-tab" id="patient-details-section">
+        {% include "examinations/partials/_patient_details.html" %}
       </div>
 
-
-      <div class="form-section">
-        <h4>
-          Secondary information
-        </h4>
-
-        {% include 'examinations/partials/_secondary_information.html' %}
+      <div class="form-tab medex-hidden" id="medical-team-section">
+        {% include "examinations/partials/_medical_team.html" %}
       </div>
-
-      <div class="form-section">
-        <h4>
-          Bereaved or representative information
-        </h4>
-
-        {% include 'examinations/partials/_bereaved_information.html' %}
+      <div class="form-tab medex-hidden" id="case-breakdown-section">
+        {% include "examinations/partials/_case_breakdown.html" %}
       </div>
-
-      <div class="form-section">
-        <h4>
-          Request for rapid release
-        </h4>
-
-        {% include 'examinations/partials/_urgency_information.html' %}
+      <div class="form-tab medex-hidden" id="case-outcomes-section">
+        {% include "examinations/partials/_case_outcomes.html" %}
       </div>
 
       <div class="sticky-save">
         <div class="container">
-          <input class="submit-btn" type="submit" value="Save changes" />
+          <input class="submit-btn" type="submit" value="Save changes"/>
         </div>
       </div>
     </form>
