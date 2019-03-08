@@ -9,14 +9,12 @@ from rest_framework import status
 
 from unittest.mock import patch
 
-import json, uuid
+import uuid
 
 from alerts import utils, messages
 
 from .models import User
 from .forms import CreateUserForm, PermissionBuilderForm
-
-from locations import request_handler
 
 
 class UsersViewsTest(MedExTestCase):

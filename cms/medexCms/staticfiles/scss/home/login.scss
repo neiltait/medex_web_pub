@@ -1,27 +1,40 @@
-.login-page, .forgotten-password-page, .forgotten-userid-page {
-  width: 60%;
+@import '../partials/_buttons.scss';
+@import '../variables';
 
-  #login-form, #reset-form {
-    margin-bottom: 150px;
+.login-page {
+    width: 60%;
 
-    .form-row {
-      .form-field {
-        width: 75%;
-      }
+    #sign-in-widget {
+        #okta-sign-in.auth-container.main-container {
+            margin: 0;
+            margin-bottom: 140px;
+            border: none;
+            box-shadow: none;
+
+            .okta-sign-in-header.auth-header {
+                border: none;
+            }
+
+            .auth-content {
+                padding: 0;
+
+                .o-form-head {
+                    display: none;
+                }
+
+                .link.js-help-link {
+                    display: none;
+                }
+
+                .o-form-button-bar .button {
+                    width: auto;
+                }
+
+                .button-primary {
+                    @extend .submit-btn;
+                    background: $nhs-green;
+                }
+            }
+        }
     }
-
-    .forgotten-creds {
-      margin-top: 10px;
-    }
-  }
-}
-
-.reset-sent-page {
-  width: 60%;
-  margin-bottom: 5rem;
-
-  .page-body-content {
-    margin-top: 2rem;
-    margin-bottom: 3rem;
-  }
 }

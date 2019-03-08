@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http import HttpRequest
 
 from http.cookies import SimpleCookie
 
@@ -11,14 +10,10 @@ from unittest.mock import patch
 
 import json, uuid
 
+from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
 
-from alerts import messages, utils
-
-from .forms import LoginForm, ForgottenPasswordForm
 from .utils import redirect_to_landing, redirect_to_login
-
-from users import request_handler
 
 
 user_obj = {
@@ -53,8 +48,6 @@ class HomeViewsTests(MedExTestCase):
   def test_landing_on_login_page_loads_the_correct_template_with_empty_context(self):
     response = self.client.get('/login')
     self.assertTemplateUsed(response, 'home/login.html')
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 0)
     try: 
       self.assertEqual(self.get_context_value(response.context, 'email_address'), None)
       self.assertFalse('Test failed to produce expected key error')
@@ -64,157 +57,29 @@ class HomeViewsTests(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
   def test_login_returns_redirect_to_landing_page_if_user_logged_in(self, mock_auth_validation):
+
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.get('/login')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/')
 
-  @patch('home.request_handler.create_session', return_value=SUCCESSFUL_SESSION_CREATION)
-  def test_login_returns_redirect_to_landing_page_on_success(self, mock_create_session):
-    email_address = 'Matt'
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': 'Password',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/')
-
-  def test_login_returns_unauthourised_and_error_message_when_no_password_given(self):
-    email_address = 'Matt'
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': '',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address.lower())
-    self.assertTemplateUsed(response, 'home/login.html')
-
-  def test_login_returns_unauthourised_and_error_message_when_no_user_id_given(self):
-    email_address = ''
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': 'Password',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
-    self.assertTemplateUsed(response, 'home/login.html')
-
-  def test_login_returns_unauthourised_and_error_message_when_no_password_or_user_id_given(self):
-    email_address = ''
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': '',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.MISSING_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
-    self.assertTemplateUsed(response, 'home/login.html')
-
-  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-  @patch('home.request_handler.create_session', return_value=UNSUCCESSFUL_SESSION_CREATION)
-  def test_login_returns_unauthourised_and_error_message_when_incorrect_password_given(self, mock_auth_validation, mock_session_creation):
-    email_address = 'Matt'
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': 'password',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address.lower())
-    self.assertTemplateUsed(response, 'home/login.html')
-
-  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-  @patch('home.request_handler.create_session', return_value=UNSUCCESSFUL_SESSION_CREATION)
-  def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_given(self, mock_auth_validation, mock_session_creation):
-    email_address = 'david'
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': 'Password',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
-    self.assertTemplateUsed(response, 'home/login.html')
-
-  @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-  @patch('home.request_handler.create_session', return_value=UNSUCCESSFUL_SESSION_CREATION)
-  def test_login_returns_unauthourised_and_error_message_when_incorrect_user_id_and_password_given(self, mock_auth_validation, mock_session_creation):
-    email_address = 'matt'
-    user_login_credentials = {
-      'email_address': email_address,
-      'password': 'password',
-    }
-    response = self.client.post('/login', user_login_credentials)
-    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    alert_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alert_list), 1)
-    self.assertEqual(alert_list[0]['type'], utils.ERROR)
-    self.assertEqual(alert_list[0]['message'], messages.INVALID_CREDENTIALS)
-    self.assertEqual(self.get_context_value(response.context, 'email_address'), email_address)
-    self.assertTemplateUsed(response, 'home/login.html')
-
-
-#### Forgotten Password tests
-
-  def test_landing_on_forgotten_password_page_loads_the_correct_template_with_empty_context(self):
-    response = self.client.get('/forgotten-password')
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 0)
-
-
-  def test_forgotten_password_returns_success_and_notification_on_success(self):
-    reset_form = {
-      'email_address': 'test.user@email.com'
-    }
-    response = self.client.post('/forgotten-password', reset_form)
-    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    self.assertEqual(response.url, '/reset-sent')
-
-
-  def test_forgotten_password_returns_bad_request_and_and_correct_error_on_missing_userid(self):
-    reset_form = {
-      'email_address': ''
-    }
-    response = self.client.post('/forgotten-password', reset_form)
-    self.assertTemplateUsed(response, 'home/forgotten-password.html')
-    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['type'], utils.ERROR)
-    self.assertEqual(alerts_list[0]['message'], messages.MISSING_EMAIL)
-
 
 #### Logout tests
-  
-  def test_logout_returns_redirect_to_login_page_on_submission(self):
+
+  @patch('home.request_handler.end_session', return_value=mocks.SUCCESSFUL_LOGOUT)
+  def test_logout_returns_redirect_to_login_page_on_submission(self, mock_logout):
+    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
     response = self.client.get('/logout')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
 
+#### Login callback tests
+
+  @patch('home.request_handler.create_session', return_value=mocks.SUCCESSFUL_TOKEN_GENERATION)
+  def test_login_callback_returns_redirect_to_landing_page(self, mock_token_generation):
+    response = self.client.get('/login-callback?code=c15be3d1-513f-49dc-94f9-47449c1cfeb8')
+    self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+    self.assertEqual(response.url, '/')
 
 #### Index tests
   @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
@@ -230,15 +95,6 @@ class HomeViewsTests(MedExTestCase):
     response = self.client.get('/')
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/login')
-
-
-#### Reset sent tests
-
-  def test_landing_on_reset_page_returns_the_correct_template_and_content(self):
-    response = self.client.get('/reset-sent')
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertTemplateUsed(response, 'home/reset-sent.html')
-    self.assertEqual(self.get_context_value(response.context, 'content'), messages.FORGOTTEN_PASSWORD_SENT)
 
 
 #### Settings index tests
@@ -259,93 +115,7 @@ class HomeViewsTests(MedExTestCase):
 
 
 class HomeFormsTests(MedExTestCase):
-
-
-#### LoginForm tests
-
-  def test_passing_in_submissions_sets_the_attributes(self):
-    email_address = 'Test User'
-    password = 'TestPassword'
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertEqual(form.email_address, email_address.lower())
-    self.assertEqual(form.password, password)
-    self.assertIsFalse(form.persist_user)
-
-  def test_LoginForm_is_valid_returns_true_if_user_id_and_password_both_present(self):
-    email_address = 'Test User'
-    password = 'TestPassword'
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsTrue(form.is_valid())
-
-  def test_LoginForm_is_valid_returns_false_if_password_is_not_present(self):
-    email_address = 'Test User'
-    password = ''
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-  def test_LoginForm_is_valid_returns_false_if_user_id_is_not_present(self):
-    email_address = ''
-    password = 'TestPassword'
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-  def test_LoginForm_is_valid_returns_false_if_user_id_and_password_both_not_present(self):
-    email_address = ''
-    password = ''
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-  #TODO needs to be switched from inital dummy creds to Test creds after OCTA integration
-  def test_LoginForm_is_authorised_returns_true_if_user_id_and_password_both_correct(self):
-    email_address = 'Matt'
-    password = 'Password'
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsTrue(form.is_valid())
-
-  def test_LoginForm_is_authorised_returns_false_if_password_is_not_correct(self):
-    email_address = 'Matt'
-    password = ''
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-  def test_LoginForm_is_authorised_returns_false_if_user_id_is_not_correct(self):
-    email_address = ''
-    password = 'Password'
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-  def test_LoginForm_is_authorised_returns_false_if_user_id_and_password_both_not_correct(self):
-    email_address = ''
-    password = ''
-    persist = False
-    form = LoginForm({'email_address': email_address, 'password': password, 'persist': persist})
-    self.assertIsFalse(form.is_valid())
-
-
-#### ForgottenPasswordForm tests
-
-  def test_the_form_attributes_are_set_on_init(self):
-    email_address = 'test.user@email.com'
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertEqual(form.email_address, email_address)
-
-  def test_ForgottenPasswordForm_is_valid_returns_true_if_email_address_present(self):
-    email_address = 'test.user@email.com'
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertIsTrue(form.is_valid())
-
-  def test_ForgottenPasswordForm_is_valid_returns_false_if_email_address_not_present(self):
-    email_address = ''
-    form = ForgottenPasswordForm({'email_address': email_address})
-    self.assertIsFalse(form.is_valid())
+  pass
 
 
 class HomeUtilsTests(MedExTestCase):

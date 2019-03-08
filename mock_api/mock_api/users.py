@@ -64,13 +64,8 @@ def create_session(request):
 @csrf_exempt
 @require_POST
 def validate_session(request):
-  auth_token = request.POST.get('auth_token')
-  session_user = None
-  for user in USERS:
-    if user['session_key'] == auth_token:
-      session_user = user['user_object']
-  status_code = 200 if session_user else 401
-  return HttpResponse(json.dumps(session_user), content_type="application/json", status=status_code)
+  status_code = 200
+  return HttpResponse(json.dumps(USERS[0]['user_object']), content_type="application/json", status=status_code)
 
 @csrf_exempt
 def users(request):

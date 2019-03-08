@@ -4,6 +4,11 @@ services:
   web:
     environment:
       API_URL: ${API_URL}
+      CMS_URL: ${CMS_URL}
+      OP_DOMAIN: ${OP_DOMAIN}
+      OP_ISSUER: ${OP_ISSUER}
+      OP_ID: ${OP_ID}
+      OP_SECRET: ${OP_SECRET}
     build: ./cms
     command: python manage.py runserver 0.0.0.0:8000
     volumes:

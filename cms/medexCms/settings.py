@@ -20,6 +20,13 @@ AUTH_TOKEN_NAME = 'medex_auth_token'
 # Note - docker url is API_URL=http://api:8000
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
 
+CMS_URL = os.environ.get('CMS_URL', 'http://localhost:12000')
+
+OP_DOMAIN = os.environ.get('OP_DOMAIN')
+OP_ISSUER = os.environ.get('OP_ISSUER', '/oauth/default')
+OP_ID = os.environ.get('OP_ID')
+OP_SECRET = os.environ.get('OP_SECRET')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/

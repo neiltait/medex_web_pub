@@ -1,17 +1,15 @@
 from django.conf import settings
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.template import loader
 
 from rest_framework import status
 
-from alerts import messages
-from alerts.utils import generate_error_alert, generate_success_alert, generate_info_alert
+import json
 
-from .forms import LoginForm, ForgottenPasswordForm
+from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
 from users.models import User
+
 
 def index(request):
   user = User.initialise_with_token(request)
@@ -25,75 +23,38 @@ def index(request):
   return render(request, 'home/index.html', context)
 
 
+def login_callback(request):
+  token_response = request_handler.create_session(request.GET.get('code'))
+  response = redirect_to_landing()
+  response.set_cookie(settings.AUTH_TOKEN_NAME, json.dumps(token_response.json()))
+  return response
+
+
 def login(request):
   context = {
-    'page_heading': 'Welcome to the Medical Examiners Service'
+    'page_heading': 'Welcome to the Medical Examiners Service',
+    'base_uri': settings.OP_DOMAIN,
+    'client_id': settings.OP_ID,
+    'cms_url': settings.CMS_URL,
+    'issuer': settings.OP_ISSUER
   }
-  alerts = []
   status_code = status.HTTP_200_OK
 
   user = User.initialise_with_token(request)
   if user.check_logged_in():
     return redirect_to_landing()
 
-  if (request.POST):
-    form = LoginForm(request.POST)
-    context['email_address'] = form.email_address
-    if form.is_valid():
-      if form.is_authorised():
-
-        response = redirect_to_landing()
-        response.set_cookie(settings.AUTH_TOKEN_NAME, form.auth_token)
-        # ## TODO implement user 'Remember me' when better defined and connect to API
-        # # if form.persist_user:
-        return response
-      else:
-        alerts.append(generate_error_alert(messages.INVALID_CREDENTIALS))
-        status_code = status.HTTP_401_UNAUTHORIZED
-    else:
-      alerts.append(generate_error_alert(messages.MISSING_CREDENTIALS))
-      status_code = status.HTTP_401_UNAUTHORIZED
-
-    context['invalid'] = True
-
-  context['alerts'] = alerts
   return render(request, 'home/login.html', context, status=status_code)
 
 
 def logout(request):
-  #TODO submit logout request to OCTA
+  user = User.initialise_with_token(request)
+  user.logout()
 
   response = redirect_to_login()
   response.delete_cookie(settings.AUTH_TOKEN_NAME)
   return response
 
-
-def forgotten_password(request):
-  context = {
-    'page_heading': 'Welcome to the Medical Examiners Service'
-  }
-  alerts = []
-  status_code = status.HTTP_200_OK
-
-  if(request.POST):
-    form = ForgottenPasswordForm(request.POST)
-    if form.is_valid():
-      return redirect('/reset-sent')
-    else:
-      alerts.append(generate_error_alert(messages.MISSING_EMAIL))
-      status_code = status.HTTP_400_BAD_REQUEST
-      context['invalid'] = True
-
-  context['alerts'] = alerts
-  return render(request, 'home/forgotten-password.html', context, status=status_code)
-
-
-def reset_sent(request):
-  context = {
-    'page_heading': 'Welcome to the Medical Examiners Service',
-    'content': messages.FORGOTTEN_PASSWORD_SENT
-  }
-  return render(request, 'home/reset-sent.html', context)
 
 def settings_index(request):
   user = User.initialise_with_token(request)
