@@ -34,8 +34,8 @@
         .form-section {
             padding: 1rem 2rem;
 
-            &:nth-child(even) {
-                background-color: $nhs-very-light-grey;
+            &:nth-child(odd) {
+                background-color: $white;
             }
         }
 
