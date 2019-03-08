@@ -21,6 +21,11 @@
 
   &.error {
     margin-top: 1rem;
+    .form-row {
+      .form-field {
+        border: 1.5px solid $error-border !important;
+      }
+    }
   }
 }
 
@@ -33,16 +38,14 @@
   position: relative;
   margin-right: 0.5rem;
 
-  &:checked {
-    &:after {
-      content: '\2714';
-      font-size: 0.6rem;
-      position: absolute;
-      top: 0px;
-      left: 0.1rem;
-      color: $primary-font-color;
+    &::placeholder {
+      color: $error-color !important;
     }
   }
+
+
+.medex-textarea {
+  width: 100%;
 }
 
 .radiobutton {
@@ -123,7 +126,7 @@
     opacity: 1;
   }
 
-    // Disabled state
+  // Disabled state
   &__input:disabled,
   &__input:disabled + &__label {
     cursor: default;
@@ -142,58 +145,40 @@
     -ms-touch-action: manipulation;
     touch-action: manipulation;
   }
+}
 
-  &__hint {
-    display: block;
-    padding-right: $nhs-radios-label-padding-left-right;
-    padding-left: $nhs-radios-label-padding-left-right;
+.medex-input {
+  &:disabled {
+    background-color: $nhs_disabled-background;
+    border-color: $nhs_disabled-border;
   }
 }
 
+.medex-hidden {
+  display: none;
+}
 
+.medex-hyperlink-button {
+  background:none!important;
+   color:$nhs-blue;
+   border:none;
+   padding:0!important;
+   font: inherit;
+    font-size: $nhs-body-s-size;
+   /*border is optional*/
+   border-bottom:1px solid #444;
+   cursor: pointer;
+}
 
-.dropdown {
-  position: relative;
-  display: block;
-  max-width: 400px;
-  min-width: 180px;
-  margin: 0;
-  border: 1.5px solid $black;
-  z-index: 10;
-  line-height: 1.25;
-
-  select {
-    border: none;
-    outline: none;
-    background: transparent;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 0;
-    margin-left: 10px;
-    display: block;
-    width: 100%;
-    padding: 10px 55px 10px 15px;
-    font-size: $default-font-size;
-    color: $black;
-
-    &:invalid {
-      color: $nhs-light-grey;
-    }
+.hospital-number {
+  &__list-item {
+    margin-bottom: 1rem;
   }
+}
 
-  &:after {
-    position: absolute;
-    right: 0;
-    top: 8px;
-    width: 50px;
-    height: 100%;
-    line-height: $default-line-height;
-    content: '\25BC';
-    text-align: center;
-    color: $black;
-    font-size: $default-font-size;
-    z-index: -1;
+.medex-text-checkbox-group {
+  &__textbox {
+    margin-bottom: .5rem;
   }
 }
 

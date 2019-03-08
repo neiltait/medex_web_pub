@@ -109,3 +109,11 @@ UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_LOGOUT = Response()
 SUCCESSFUL_LOGOUT.status_code = status.HTTP_200_OK
+
+SUCCESSFUL_CASE_CREATE = Response()
+SUCCESSFUL_CASE_CREATE.status_code = status.HTTP_200_OK
+SUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')
+
+UNSUCCESSFUL_CASE_CREATE = Response()
+UNSUCCESSFUL_CASE_CREATE.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')

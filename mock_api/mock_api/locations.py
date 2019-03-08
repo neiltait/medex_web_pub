@@ -42,3 +42,17 @@ def load_regions_list(request):
     }
   ]
   return HttpResponse(json.dumps(region_list), content_type="application/json")
+
+@require_GET
+def get_locations_list(request):
+  locations = [{
+    'id': '1',
+    'name': 'Barnet Hospital',
+  }, {
+    'id': '2',
+    'name': 'Sheffield Hospital',
+  }, {
+    'id': '3',
+    'name': 'Gloucester Hospital',
+  }]
+  return HttpResponse(json.dumps(locations), content_type="application/json")

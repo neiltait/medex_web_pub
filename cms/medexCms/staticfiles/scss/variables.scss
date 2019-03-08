@@ -1,6 +1,10 @@
 /* Colour vars */
 $nhs-grey: #425563;
 $nhs-light-grey: #AEB7BD;
+
+$nhs_disabled-border: #aeb7bd;
+$nhs_disabled-background: #f0f4f5;
+
 $nhs-green: #007F3B;
 $nhs-dark-green: #003618;
 $nhs-blue: #005EB8;
@@ -47,7 +51,13 @@ $info-color: #0c5460;
 $info-background: #d1ecf1;
 $info-border: #bee5eb;
 
+$focus-width: 3px;
+$focus-color: #FFB81C;
+
+$disabled-input-color:$nhs-light-grey;
+
 /* Component vars */
 $nhs-radios-size: 36px;
 $nhs-radios-internal-size: 20px;
 $nhs-radios-label-padding-left-right: 5px;
+$nhs-radios-focus-width: 4px;
