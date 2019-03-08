@@ -67,20 +67,6 @@ UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
 
 class ExaminationsViewsTests(MedExTestCase):
 
-    #### Create case tests
-    @patch('examinations.request_handler.get_locations_list', return_value=TRUSTS)
-    @patch('examinations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
-    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_location_list, mock_office_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.get('/cases/create')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTemplateUsed(response, 'examinations/create.html')
-
-    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self):
-        response = self.client.get('/cases/create')
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/login')
-
     def test_given_create_examination_without_first_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
         result = form.is_valid()
@@ -301,16 +287,26 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIs(form.out_of_hours, True)
 
     @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation):
+    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
+    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
+    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation,  mock_locations_list, mock_me_offices_list):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
         response = self.client.get('/cases/create')
         self.assertTemplateUsed(response, 'examinations/create.html')
         alerts_list = self.get_context_value(response.context, 'alerts')
         self.assertEqual(len(alerts_list), 0)
 
+    @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self):
+        response = self.client.get('/cases/create')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')
+
 
     @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
+    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
+    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
+    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
         response = self.client.get('/cases/create')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
@@ -325,8 +321,9 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.UNSUCCESSFUL_CASE_CREATE)
-    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation,
-            mock_case_create):
+    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
+    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
+    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation, mock_case_create, mock_locations_list, mock_me_offices_list):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
         response = self.client.post('/cases/create', get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

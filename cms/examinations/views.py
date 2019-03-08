@@ -2,6 +2,8 @@ from alerts import messages
 from alerts.utils import generate_error_alert
 from django.shortcuts import render
 from examinations import request_handler
+from locations import request_handler as location_request_handler
+
 from examinations.forms import PrimaryExaminationInformationForm
 from home.utils import redirect_to_login, redirect_to_landing
 from rest_framework import status
@@ -37,8 +39,8 @@ def create_examination(request):
 
 
 def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
-    locations = request_handler.get_locations_list()
-    me_offices = request_handler.get_me_offices_list()
+    locations = location_request_handler.get_locations_list()
+    me_offices = location_request_handler.get_me_offices_list()
 
     context = {
         "session_user": user,
