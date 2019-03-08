@@ -18,3 +18,5 @@ ERROR_IN_FORM = 'There are errors in the form see below for details'
 
 NOT_IN_OKTA = 'Users must be added to OKTA to show in the system'
 
+def ErrorFieldRequiredMessage(field_name):
+    return ("Please enter %s") % field_name
