@@ -1,0 +1,47 @@
+<!-- Urgency reason -->
+<div class="flex-row baseline form-row">
+  <div class="form-item">
+    <label class="form-item--header">Select a reason</label>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="faith_death" class="checkbox" type="checkbox" name="faith_death" value="{{form.faith_death}}">
+
+      <label for="faith_death">Faith death</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="coroner_case" class="checkbox" type="checkbox" name="coroner_case" value="{{form.coroner_case}}">
+
+      <label for="coroner_case">Coroner case</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="child_death" class="checkbox" type="checkbox" name="child_death" value="{{form.child_death}}">
+
+      <label for="child_death">Child death</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="cultural_death" class="checkbox" type="checkbox" name="cultural_death" value="{{form.cultural_death}}">
+
+      <label for="cultural_death">Cultural death</label>
+    </div>
+
+    <div class="checkbox-item flex-row vertical-center">
+      <input id="other" class="checkbox" type="checkbox" name="other" value="{{form.other}}">
+
+      <label for="other">Other</label>
+    </div>
+  </div>
+</div>
+
+<!-- Additional details -->
+<div class="flex-row form-row">
+  <div class="form-item">
+    <label class="form-item--header" for="appointment_additional_details">Enter any additional details</label>
+
+    <textarea id="appointment_additional_details" class="form-field" type="text" name="appointment_additional_details">
+      {{form.appointment_additional_details}}
+    </textarea>
+  </div>
+</div>
