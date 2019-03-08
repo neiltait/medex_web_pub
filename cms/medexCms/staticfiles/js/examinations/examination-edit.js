@@ -17,6 +17,16 @@
       for (var i = 0; i < inputs.length; i++) {
         new Input(inputs[i], this.handleChange.bind(this));
       }
+
+      var selects = this.form.find('select');
+      for (var i = 0; i < selects.length; i++) {
+        new Input(selects[i], this.handleChange.bind(this));
+      }
+
+      var textAreas = this.form.find('textarea');
+      for (var i = 0; i < textAreas.length; i++) {
+        new Input(textAreas[i], this.handleChange.bind(this));
+      }
     },
 
     handleChange: function() {
