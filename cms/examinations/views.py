@@ -4,7 +4,8 @@ from django.shortcuts import render
 from examinations import request_handler
 from locations import request_handler as location_request_handler
 
-from examinations.forms import PrimaryExaminationInformationForm
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
+    BereavedInformationForm, UrgencyInformationForm
 from home.utils import redirect_to_login, redirect_to_landing
 from rest_framework import status
 from users.models import User
@@ -62,10 +63,27 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    errors = {"count": 0}
+    status_code = status.HTTP_200_OK
+    alerts = []
     primary_info_form = None
     secondary_info_form = None
     bereaved_info_form = None
     urgency_info_form = None
+
+    if request.method == 'POST':
+        primary_info_form = PrimaryExaminationInformationForm(request.POST)
+        secondary_info_form = SecondaryExaminationInformationForm(request.POST)
+        bereaved_info_form = BereavedInformationForm(request.POST)
+        urgency_info_form = UrgencyInformationForm(request.POST)
+        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form)
+        if forms_valid:
+            print('forms valid')
+        else:
+            error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] +\
+                          bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
+            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
+            status_code = status.HTTP_400_BAD_REQUEST
 
     context = {
         'session_user': user,
@@ -74,6 +92,14 @@ def edit_examination(request, examination_id):
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
+        'errors': errors,
+        'alerts': alerts,
+        'error_count': error_count,
     }
 
-    return render(request, 'examinations/edit.html', context)
+    return render(request, 'examinations/edit.html', context, status=status_code)
+
+
+def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
+    return primary_info_form.is_valid() and secondary_info_form.is_valid() and bereaved_info_form.is_valid()\
+           and urgency_info_form.is_valid()

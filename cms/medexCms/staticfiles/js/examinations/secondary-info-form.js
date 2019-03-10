@@ -7,7 +7,6 @@
 
     SecondaryInfoForm.prototype = {
         setup: function () {
-            console.log('initialising', this.form)
             this.personalEffectsGroup = new AdditionalInfoGroup(this.form.find('#implant-devices'), 'yes');
             this.personalEffectsGroup = new AdditionalInfoGroup(this.form.find('#personal-effects'), 'yes');
         }
@@ -28,8 +27,7 @@
 
         startWatcher: function () {
             var that = this;
-//            for (var i = 0; i < this.radios.length; i++) {
-//            }
+
             this.radios.change(function(e) {
               if (e.target.value === that.showValue) {
                 that.additionalInfoArea.show();

@@ -174,6 +174,7 @@ class PrimaryExaminationInformationForm:
 class SecondaryExaminationInformationForm:
 
   def __init__(self, request=None):
+    self.errors = {'count': 0}
     if request:
       self.address_line_1 = request.get('address_line_1')
       self.address_line_2 = request.get('address_line_2')
@@ -201,10 +202,14 @@ class SecondaryExaminationInformationForm:
       self.funeral_directors = ''
       self.personal_effects = ''
 
+  def is_valid(self):
+      return True
+
 
 class BereavedInformationForm:
 
   def __init__(self, request=None):
+    self.errors = {'count': 0}
     if request:
       self.bereaved_name = request.get('bereaved_name')
       self.relationship = request.get('relationship')
@@ -228,10 +233,14 @@ class BereavedInformationForm:
       self.time_of_appointment = ''
       self.appointment_additional_details = ''
 
+  def is_valid(self):
+      return True
+
 
 class UrgencyInformationForm:
 
   def __init__(self, request=None):
+    self.errors = {'count': 0}
     if request:
       self.faith_death = request.get('faith_death')
       self.coroner_case = request.get('coroner_case')
@@ -246,3 +255,6 @@ class UrgencyInformationForm:
       self.cultural_death = ''
       self.other = ''
       self.urgency_additional_details = ''
+
+  def is_valid(self):
+      return True
