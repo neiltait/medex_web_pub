@@ -318,5 +318,5 @@ TextInputsCheckboxGroup.prototype = {
 
 $(function () // execute once the DOM has loaded
 {
-    new Form($("#examination__create--form"));
+    new Form($(".primary-info-form"));
 });

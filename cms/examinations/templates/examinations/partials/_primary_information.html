@@ -1,342 +1,344 @@
-<!-- Names -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-        <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.first_name %}nhsuk-form-group--error{% endif %}">
-                <label class="nhsuk-label" for="first_name">
-                    First name
-                </label>
-                {% if errors.first_name %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.first_name }}</span>{% endif %}
-                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.first_name %}nhsuk-input--error{% endif %}"
-                       id="first_name" name="first_name"
-                       value="{{ form.first_name }}" type="text">
-            </div>
-        </fieldset>
-    </div>
-
-    <div class="nhsuk-grid-column-one-half">
-        <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.last_name %}nhsuk-form-group--error{% endif %}">
-                <label class="nhsuk-label" for="last_name">
-                    Surname
-                </label>
-                {% if errors.last_name %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.last_name }}</span>{% endif %}
-                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.last_name %}nhsuk-input--error{% endif %}"
-                       id="last_name" name="last_name"
-                       value="{{ form.last_name }}" type="text">
-            </div>
-        </fieldset>
-    </div>
-</div>
-
-<!-- Gender -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-two-thirds">
-        <div class="nhsuk-form-group {% if errors.gender %}nhsuk-form-group--error{% endif %}">
-
+<div class="primary-info-form">
+    <!-- Names -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
             <fieldset class="nhsuk-fieldset">
-                <legend class="nhsuk-fieldset__legend">
-                    Gender
-                </legend>
-                {% if errors.gender %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.gender }}</span>{% endif %}
-                <div class="nhsuk-radios nhsuk-radios--inline">
-                    <div class="nhsuk-radios__item">
-                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                               id="gender-1" name="gender" type="radio" value="male" {% if form.gender == 'male' %}checked{% endif %}>
-                        <label class="nhsuk-label nhsuk-radios__label" for="gender-1">
-                            Male
-                        </label>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                               id="gender-2" name="gender" type="radio" value="female" {% if form.gender == 'female' %}checked{% endif %}>
-                        <label class="nhsuk-label nhsuk-radios__label" for="gender-2">
-                            Female
-                        </label>
-                    </div>
-                    <div class="nhsuk-radios__item">
-                        <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                               id="gender-3" name="gender" type="radio" value="other" {% if form.gender == 'other' %}checked{% endif %}>
-                        <label class="nhsuk-label nhsuk-radios__label" for="gender-3">
-                            Other
-                        </label>
-                    </div>
-                </div>
-                <div class="nhsuk-form-group" id="more-gender-detail-area">
-                    <label class="nhsuk-label" for="more-gender-detail">
-                        Can you provide more detail?
+                <div class="nhsuk-form-group {% if errors.first_name %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="first_name">
+                        First name
                     </label>
-                    <textarea class="nhsuk-textarea medex-textarea"
-                              id="more-gender-detail" name="more-gender-detail" rows="3"></textarea>
+                    {% if errors.first_name %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.first_name }}</span>{% endif %}
+                    <input class="nhsuk-input nhsuk-input--width-10 {% if errors.first_name %}nhsuk-input--error{% endif %}"
+                           id="first_name" name="first_name"
+                           value="{{ form.first_name }}" type="text">
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="nhsuk-grid-column-one-half">
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.last_name %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="last_name">
+                        Surname
+                    </label>
+                    {% if errors.last_name %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.last_name }}</span>{% endif %}
+                    <input class="nhsuk-input nhsuk-input--width-10 {% if errors.last_name %}nhsuk-input--error{% endif %}"
+                           id="last_name" name="last_name"
+                           value="{{ form.last_name }}" type="text">
                 </div>
             </fieldset>
         </div>
     </div>
-</div>
 
-<!-- Numbers -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group {% if errors.nhs_number %}nhsuk-form-group--error{% endif %} medex-text-checkbox-group">
-            <div class="medex-text-checkbox-group__textbox" id="nhs_number_group">
-                <label class="nhsuk-label" for="nhs_number">
-                    NHS number
-                </label>
-                {% if errors.nhs_number %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.nhs_number }}</span>{% endif %}
-                <input class="nhsuk-input nhsuk-input--width-10 medex-input {% if errors.nhs_number %}nhsuk-input--error{% endif %}"
-                       id="nhs_number" name="nhs_number" type="text"
-                       value="{% if form.nhs_number %}{{ form.nhs_number }}{% endif %}">
+    <!-- Gender -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-two-thirds">
+            <div class="nhsuk-form-group {% if errors.gender %}nhsuk-form-group--error{% endif %}">
+
+                <fieldset class="nhsuk-fieldset">
+                    <legend class="nhsuk-fieldset__legend">
+                        Gender
+                    </legend>
+                    {% if errors.gender %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.gender }}</span>{% endif %}
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                   id="gender-1" name="gender" type="radio" value="male" {% if form.gender == 'male' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gender-1">
+                                Male
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                   id="gender-2" name="gender" type="radio" value="female" {% if form.gender == 'female' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gender-2">
+                                Female
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
+                                   id="gender-3" name="gender" type="radio" value="other" {% if form.gender == 'other' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gender-3">
+                                Other
+                            </label>
+                        </div>
+                    </div>
+                    <div class="nhsuk-form-group" id="more-gender-detail-area">
+                        <label class="nhsuk-label" for="more-gender-detail">
+                            Can you provide more detail?
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea"
+                                  id="more-gender-detail" name="more-gender-detail" rows="3"></textarea>
+                    </div>
+                </fieldset>
             </div>
+        </div>
+    </div>
+
+    <!-- Numbers -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group {% if errors.nhs_number %}nhsuk-form-group--error{% endif %} medex-text-checkbox-group">
+                <div class="medex-text-checkbox-group__textbox" id="nhs_number_group">
+                    <label class="nhsuk-label" for="nhs_number">
+                        NHS number
+                    </label>
+                    {% if errors.nhs_number %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.nhs_number }}</span>{% endif %}
+                    <input class="nhsuk-input nhsuk-input--width-10 medex-input {% if errors.nhs_number %}nhsuk-input--error{% endif %}"
+                           id="nhs_number" name="nhs_number" type="text"
+                           value="{% if form.nhs_number %}{{ form.nhs_number }}{% endif %}">
+                </div>
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-checkboxes">
+                            <div class="nhsuk-checkboxes__item">
+                                <input class="nhsuk-checkboxes__input" id="nhs_number_not_known"
+                                       name="nhs_number_not_known" type="checkbox"
+                                       value="{{ form.nhs_number_not_known }}" {% if form.nhs_number_not_known %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-checkboxes__label" for="nhs_number_not_known">
+                                    Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="nhsuk-grid-column-one-half">
+            <div class="form-item">
+                <div class="hospital-number__list-item" id="hospital_number_1">
+                    <label class="nhsuk-label" for="hospital_number_1" id="hospital_number_1_label">
+                        Hospital number
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_1_textbox"
+                           name="hospital_number_1" type="text"
+                           value="{{ form.hospital_number_1 }}" placeholder="Optional">
+                </div>
+                <div class="hospital-number__list-item medex-hidden" id="hospital_number_2">
+                    <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_2_label">
+                        Hospital number 2
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_2_textbox"
+                           name="hospital_number_2" type="text"
+                           value="{{ form.hospital_number_2 }}" placeholder="Optional">
+                </div>
+                <div class="hospital-number__list-item medex-hidden" id="hospital_number_3">
+                    <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_3_label">
+                        Hospital number 3
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_3_textbox"
+                           name="hospital_number_3" type="text"
+                           value="{{ form.hospital_number_3 }}" placeholder="Optional">
+                </div>
+                <button class="medex-hyperlink-button" id="hospital-number__add-btn">Add another</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dates -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
+                <div class="medex-text-checkbox-group__textbox">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                        <legend class="nhsuk-fieldset__legend">
+                            Date of birth
+                        </legend>
+                        {% if errors.date_of_birth %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_birth }}</span>{% endif %}
+                        <div class="nhsuk-date-input" id="date_of_birth">
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="day_of_birth">
+                                        Day
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
+                                           value="{{ form.day_of_birth }}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label"
+                                           for="month_of_birth">
+                                        Month
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="month_of_birth" name="month_of_birth" type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.month_of_birth }}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label"
+                                           for="year_of_birth">
+                                        Year
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                           id="year_of_birth" name="year_of_birth" type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.year_of_birth }}">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-checkboxes">
+                        <div class="nhsuk-checkboxes__item">
+                            <input class="nhsuk-checkboxes__input" id="date_of_birth_not_known"
+                                   name="date_of_birth_not_known" type="checkbox"
+                                   value="{{ form.date_of_birth_not_known }}" {% if form.date_of_birth_not_known %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-checkboxes__label"
+                                   for="date_of_birth_not_known">
+                                Unknown
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
+                <div class="medex-text-checkbox-group__textbox">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                        <legend class="nhsuk-fieldset__legend">
+                            Date of death
+                        </legend>
+                        {% if errors.date_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_death }}</span>{% endif %}
+                        <div class="nhsuk-date-input" id="date_of_death">
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="day_of_death">
+                                        Day
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="day_of_death" name="day_of_death" type="number" pattern="[0-9]*"
+                                           value="{{ form.day_of_death }}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="month_of_death">
+                                        Month
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="month_of_death" name="month_of_death" type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.month_of_death }}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="year_of_death">
+                                        Year
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                           id="year_of_death" name="year_of_death" type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.year_of_death }}">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-checkboxes">
+                        <div class="nhsuk-checkboxes__item">
+                            <input class="nhsuk-checkboxes__input" id="date_of_death_not_known"
+                                   name="date_of_death_not_known" type="checkbox"
+                                   value="{{ form.date_of_death_not_known }}" {% if form.date_of_death_not_known %} checked {% endif %}>
+                            <label class="nhsuk-label nhsuk-checkboxes__label"
+                                   for="date_of_death_not_known">
+                                Unknown
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time of death -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_death %}nhsuk-form-group--error{% endif %}">
+                <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
+                    <label class="nhsuk-label" for="time_of_death">
+                        Time of death
+                    </label>
+                    {% if errors.time_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.time_of_death }}</span>{% endif %}
+                    <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_death"
+                           name="time_of_death"
+                           type="time"
+                           value="{{ form.time_of_death }}">
+                </div>
+
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
+                        <div class="nhsuk-checkboxes">
+                            <div class="nhsuk-checkboxes__item">
+                                <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"
+                                       name="time_of_death_not_known" type="checkbox"
+                                       value="{{ form.time_of_death_not_known }}" {% if form.time_of_death_not_known %} checked {% endif %}>
+                                <label class="nhsuk-label nhsuk-checkboxes__label" for="time_of_death_not_known">
+                                    Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group {% if errors.place_of_death %}nhsuk-form-group--error{% endif %}">
+                <label class="nhsuk-label" for="place_of_death">
+                    Place where death occurred
+                </label>
+                {% if errors.place_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.place_of_death }}</span>{% endif %}
+                <select class="nhsuk-select" id="place_of_death" name="place_of_death">
+                    <option value="" disabled hidden selected>Select a location</option>
+                    {% for location in locations %}
+                        <option value={{ location.id }} {% if location.id == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
+                <label class="nhsuk-label" for="me_office">
+                    Select an office
+                </label>
+                {% if errors.me_office %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.me_office }}</span>{% endif %}
+                <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">
+                    <option value="" disabled hidden selected>Select an office</option>
+                    {% for me_office in me_offices %}
+                        <option value={{ me_office.id }} {% if me_office.id == form.me_office %}selected{% endif %}>{{ me_office.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-checkboxes">
                         <div class="nhsuk-checkboxes__item">
-                            <input class="nhsuk-checkboxes__input" id="nhs_number_not_known"
-                                   name="nhs_number_not_known" type="checkbox"
-                                   value="{{ form.nhs_number_not_known }}" {% if form.nhs_number_not_known %}checked{% endif %}>
-                            <label class="nhsuk-label nhsuk-checkboxes__label" for="nhs_number_not_known">
-                                Unknown
+                            <input class="nhsuk-checkboxes__input" id="out_of_hours"
+                                   name="out_of_hours" type="checkbox"
+                                   value="{{ form.out_of_hours }}" {% if form.out_of_hours %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-checkboxes__label" for="out_of_hours">
+                                Out of hours/urgent scrutiny has already taken place on this case.
                             </label>
                         </div>
                     </div>
                 </fieldset>
             </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-column-one-half">
-        <div class="form-item">
-            <div class="hospital-number__list-item" id="hospital_number_1">
-                <label class="nhsuk-label" for="hospital_number_1" id="hospital_number_1_label">
-                    Hospital number
-                </label>
-                <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_1_textbox"
-                       name="hospital_number_1" type="text"
-                       value="{{ form.hospital_number_1 }}" placeholder="Optional">
-            </div>
-            <div class="hospital-number__list-item medex-hidden" id="hospital_number_2">
-                <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_2_label">
-                    Hospital number 2
-                </label>
-                <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_2_textbox"
-                       name="hospital_number_2" type="text"
-                       value="{{ form.hospital_number_2 }}" placeholder="Optional">
-            </div>
-            <div class="hospital-number__list-item medex-hidden" id="hospital_number_3">
-                <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_3_label">
-                    Hospital number 3
-                </label>
-                <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_3_textbox"
-                       name="hospital_number_3" type="text"
-                       value="{{ form.hospital_number_3 }}" placeholder="Optional">
-            </div>
-            <button class="medex-hyperlink-button" id="hospital-number__add-btn">Add another</button>
-        </div>
-    </div>
-</div>
-
-<!-- Dates -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
-            <div class="medex-text-checkbox-group__textbox">
-                <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
-                    <legend class="nhsuk-fieldset__legend">
-                        Date of birth
-                    </legend>
-                    {% if errors.date_of_birth %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_birth }}</span>{% endif %}
-                    <div class="nhsuk-date-input" id="date_of_birth">
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="day_of_birth">
-                                    Day
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                       id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
-                                       value="{{ form.day_of_birth }}">
-                            </div>
-                        </div>
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label"
-                                       for="month_of_birth">
-                                    Month
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                       id="month_of_birth" name="month_of_birth" type="number"
-                                       pattern="[0-9]*"
-                                       value="{{ form.month_of_birth }}">
-                            </div>
-                        </div>
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label"
-                                       for="year_of_birth">
-                                    Year
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                       id="year_of_birth" name="year_of_birth" type="number"
-                                       pattern="[0-9]*"
-                                       value="{{ form.year_of_birth }}">
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <fieldset class="nhsuk-fieldset">
-                <div class="nhsuk-checkboxes">
-                    <div class="nhsuk-checkboxes__item">
-                        <input class="nhsuk-checkboxes__input" id="date_of_birth_not_known"
-                               name="date_of_birth_not_known" type="checkbox"
-                               value="{{ form.date_of_birth_not_known }}" {% if form.date_of_birth_not_known %}checked{% endif %}>
-                        <label class="nhsuk-label nhsuk-checkboxes__label"
-                               for="date_of_birth_not_known">
-                            Unknown
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-    </div>
-
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
-            <div class="medex-text-checkbox-group__textbox">
-                <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
-                    <legend class="nhsuk-fieldset__legend">
-                        Date of death
-                    </legend>
-                    {% if errors.date_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_death }}</span>{% endif %}
-                    <div class="nhsuk-date-input" id="date_of_death">
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="day_of_death">
-                                    Day
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                       id="day_of_death" name="day_of_death" type="number" pattern="[0-9]*"
-                                       value="{{ form.day_of_death }}">
-                            </div>
-                        </div>
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="month_of_death">
-                                    Month
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                       id="month_of_death" name="month_of_death" type="number"
-                                       pattern="[0-9]*"
-                                       value="{{ form.month_of_death }}">
-                            </div>
-                        </div>
-                        <div class="nhsuk-date-input__item">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="year_of_death">
-                                    Year
-                                </label>
-                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                       id="year_of_death" name="year_of_death" type="number"
-                                       pattern="[0-9]*"
-                                       value="{{ form.year_of_death }}">
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <fieldset class="nhsuk-fieldset">
-                <div class="nhsuk-checkboxes">
-                    <div class="nhsuk-checkboxes__item">
-                        <input class="nhsuk-checkboxes__input" id="date_of_death_not_known"
-                               name="date_of_death_not_known" type="checkbox"
-                               value="{{ form.date_of_death_not_known }}" {% if form.date_of_death_not_known %} checked {% endif %}>
-                        <label class="nhsuk-label nhsuk-checkboxes__label"
-                               for="date_of_death_not_known">
-                            Unknown
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-    </div>
-</div>
-
-<!-- Time of death -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_death %}nhsuk-form-group--error{% endif %}">
-            <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
-                <label class="nhsuk-label" for="time_of_death">
-                    Time of death
-                </label>
-                {% if errors.time_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.time_of_death }}</span>{% endif %}
-                <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_death"
-                       name="time_of_death"
-                       type="time"
-                       value="{{ form.time_of_death }}">
-            </div>
-
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
-                    <div class="nhsuk-checkboxes">
-                        <div class="nhsuk-checkboxes__item">
-                            <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"
-                                   name="time_of_death_not_known" type="checkbox"
-                                   value="{{ form.time_of_death_not_known }}" {% if form.time_of_death_not_known %} checked {% endif %}>
-                            <label class="nhsuk-label nhsuk-checkboxes__label" for="time_of_death_not_known">
-                                Unknown
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group {% if errors.place_of_death %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="place_of_death">
-                Place where death occurred
-            </label>
-            {% if errors.place_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.place_of_death }}</span>{% endif %}
-            <select class="nhsuk-select" id="place_of_death" name="place_of_death">
-                <option value="" disabled hidden selected>Select a location</option>
-                {% for location in locations %}
-                    <option value={{ location.id }} {% if location.id == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <div class="nhsuk-grid-column-one-half">
-        <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="me_office">
-                Select an office
-            </label>
-            {% if errors.me_office %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.me_office }}</span>{% endif %}
-            <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">
-                <option value="" disabled hidden selected>Select an office</option>
-                {% for me_office in me_offices %}
-                    <option value={{ me_office.id }} {% if me_office.id == form.me_office %}selected{% endif %}>{{ me_office.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="nhsuk-form-group">
-            <fieldset class="nhsuk-fieldset">
-                <div class="nhsuk-checkboxes">
-                    <div class="nhsuk-checkboxes__item">
-                        <input class="nhsuk-checkboxes__input" id="out_of_hours"
-                               name="out_of_hours" type="checkbox"
-                               value="{{ form.out_of_hours }}" {% if form.out_of_hours %}checked{% endif %}>
-                        <label class="nhsuk-label nhsuk-checkboxes__label" for="out_of_hours">
-                            Out of hours/urgent scrutiny has already taken place on this case.
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
         </div>
     </div>
 </div>
