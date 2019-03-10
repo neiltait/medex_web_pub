@@ -62,9 +62,18 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    primary_info_form = None
+    secondary_info_form = None
+    bereaved_info_form = None
+    urgency_info_form = None
+
     context = {
         'session_user': user,
-        'examination_id': examination_id
+        'examination_id': examination_id,
+        'primary_info_form': primary_info_form,
+        'secondary_info_form': secondary_info_form,
+        'bereaved_info_form': bereaved_info_form,
+        'urgency_info_form': urgency_info_form,
     }
 
     return render(request, 'examinations/edit.html', context)
