@@ -66,6 +66,7 @@ def edit_examination(request, examination_id):
     errors = {"count": 0}
     status_code = status.HTTP_200_OK
     alerts = []
+    error_count = 0
     primary_info_form = None
     secondary_info_form = None
     bereaved_info_form = None
@@ -101,5 +102,8 @@ def edit_examination(request, examination_id):
 
 
 def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
-    return primary_info_form.is_valid() and secondary_info_form.is_valid() and bereaved_info_form.is_valid()\
-           and urgency_info_form.is_valid()
+    primary_valid = primary_info_form.is_valid()
+    secondary_valid = secondary_info_form.is_valid()
+    bereaved_valid = bereaved_info_form.is_valid()
+    urgency_valid = urgency_info_form.is_valid()
+    return primary_valid and secondary_valid and bereaved_valid and urgency_valid
