@@ -1,12 +1,13 @@
+from django.shortcuts import render
+from rest_framework import status
+
 from alerts import messages
 from alerts.utils import generate_error_alert
-from django.shortcuts import render
 from examinations import request_handler
-from locations import request_handler as location_request_handler
-
 from examinations.forms import PrimaryExaminationInformationForm
 from home.utils import redirect_to_login, redirect_to_landing
-from rest_framework import status
+from locations import request_handler as location_request_handler
+from people import request_handler as people_request_handler
 from users.models import User
 
 
@@ -62,9 +63,14 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    medical_examiners = people_request_handler.get_medical_examiners_list()
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
+
     context = {
         'session_user': user,
-        'examination_id': examination_id
+        'examination_id': examination_id,
+        'medical_examiners': medical_examiners,
+        'medical_examiners_officers': medical_examiners_officers,
     }
 
     return render(request, 'examinations/edit.html', context)

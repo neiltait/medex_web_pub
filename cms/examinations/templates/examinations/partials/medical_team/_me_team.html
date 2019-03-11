@@ -4,41 +4,35 @@
       <h3 class="nhsuk-heading-m">Medical examiner team</h3>
       <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
-          <div class="nhsuk-form-group {% if errors.place_of_death %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="place_of_death">
+          <div class="nhsuk-form-group {% if errors.medical_examiners_officer %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="medical_examiners_officer">
               Medical examiner's officer
             </label>
             {% if errors.medical_examiners_officer %}<span
                 class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiners_officer }}</span>{% endif %}
             <select class="nhsuk-select" id="medical_examiners_officer" name="medical_examiners_officer">
               <option value="" disabled hidden selected>Please select</option>
-{#              {% for location in locations %}#}
-{#                <option#}
-{#                    value={{ location.id }} {% if location.id == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>#}
-{#              {% endfor %}#}
-                <option value="1">Alice Appleby</option>
-                <option value="2">Krishna Kandukuri</option>
-                <option value="3">Przemyslaw Melanczuk</option>
+              {% for meo in medical_examiners_officers %}
+                <option
+                    value={{ meo.id }} {% if meo.id == form.medical_examiners_officer %}selected{% endif %}>{{ meo.name }}</option>
+              {% endfor %}
             </select>
           </div>
         </div>
 
         <div class="nhsuk-grid-column-one-half">
-          <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="me_office">
+          <div class="nhsuk-form-group {% if errors.medical_examiner %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="medical_examiner">
               Medical examiner
             </label>
-            {% if errors.me_office %}
-              <span class="nhsuk-error-message medex-font-default-override">{{ errors.me_office }}</span>{% endif %}
-            <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">
+            {% if errors.medical_examiner %}
+              <span class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiner }}</span>{% endif %}
+            <select class="nhsuk-select" id="medical_examiner" name="medical_examiner" value="{{ form.medical_examiner }}">
               <option value="" disabled hidden selected>Please select</option>
-{#              {% for location in locations %}#}
-{#                <option#}
-{#                    value={{ location.id }} {% if location.id == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>#}
-{#              {% endfor %}#}
-                <option value="1">Dr Emma Acaster</option>
-                <option value="2">Dr Sumeet Chowdhury</option>
-                <option value="3">Dr Aisling Speed</option>
+              {% for me in medical_examiners %}
+                <option
+                    value={{ me.id }} {% if me.id == form.medical_examiner %}selected{% endif %}>{{ me.name }}</option>
+              {% endfor %}
             </select>
             </select>
           </div>
