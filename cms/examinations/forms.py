@@ -1,6 +1,7 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
-import datetime
+
+from medexCms.utils import validate_date
 
 
 class PrimaryExaminationInformationForm:
@@ -239,14 +240,11 @@ class BereavedInformationForm:
         valid_date = True
         if self.year_of_appointment is not None or self.month_of_appointment is not None or \
                 self.day_of_appointment is not None or self.time_of_appointment is not None:
-            try:
-                hours = self.time_of_appointment.split(':')[0]
-                mins = self.time_of_appointment.split(':')[1]
-                datetime.datetime(int(self.year_of_appointment), int(self.month_of_appointment),
-                                  int(self.day_of_appointment), int(hours), int(mins))
-                valid_date = True
-            except (ValueError, TypeError, AttributeError):
-                valid_date = False
+            hours = self.time_of_appointment.split(':')[0]
+            mins = self.time_of_appointment.split(':')[1]
+            valid_date = validate_date(self.year_of_appointment, self.month_of_appointment,
+                                       self.day_of_appointment, hours, mins)
+            if not valid_date:
                 self.errors['count'] += 1
                 self.errors['date_of_appointment'] = messages.INVALID_DATE
         return valid_date

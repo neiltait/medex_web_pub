@@ -64,7 +64,6 @@ def edit_examination(request, examination_id):
         return redirect_to_login()
 
     status_code = status.HTTP_200_OK
-    alerts = []
     error_count = 0
     primary_info_form = None
     secondary_info_form = None
@@ -82,7 +81,6 @@ def edit_examination(request, examination_id):
         else:
             error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] +\
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
-            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
             status_code = status.HTTP_400_BAD_REQUEST
 
     context = {
@@ -92,7 +90,6 @@ def edit_examination(request, examination_id):
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
-        'alerts': alerts,
         'error_count': error_count,
     }
 

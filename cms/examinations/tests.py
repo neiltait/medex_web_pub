@@ -91,9 +91,6 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/edit.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
 
 class ExaminationsFormsTests(MedExTestCase):
@@ -339,7 +336,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_bereaved_form_initialised_with_incomplete_returns_as_invalid(self):
         form_data = mocks.BEREAVED_EXAMINATION_DATA
-        form_data['year_of_appointment'] = None
+        form_data.pop('year_of_appointment', None)
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
