@@ -2,6 +2,7 @@ version: '3'
 
 services:
   web:
+    network_mode: "bridge"
     environment:
       API_URL: ${API_URL}
       CMS_URL: ${CMS_URL}

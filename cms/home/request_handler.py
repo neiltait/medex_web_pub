@@ -11,7 +11,7 @@ def create_session(code):
   }
   data = {
     'grant_type': 'authorization_code',
-    'redirect_uri': '%s/login-callback' % settings.OP_DOMAIN,
+    'redirect_uri': '%s/login-callback' % settings.CMS_URL,
     'code': code
   }
   return requests.post('%s%s/v1/token' % (settings.OP_DOMAIN, settings.OP_ISSUER),
