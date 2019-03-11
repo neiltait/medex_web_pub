@@ -139,7 +139,6 @@
 
   AddRemoveItemSection.prototype = {
     setup: function () {
-      debugger;
       this.panel = this.section.find('.add-remove-item-panel');
       this.addButton = this.section.find('.add-item-button');
       this.removeButton = this.section.find('.remove-item-button');
