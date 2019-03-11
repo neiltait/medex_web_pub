@@ -50,7 +50,7 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
         "locations": locations,
         "me_offices": me_offices,
         "form": form if form else PrimaryExaminationInformationForm(),
-        "alerts": [],
+        "alerts": alerts,
         "errors": errors,
     }
 
@@ -63,7 +63,6 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    errors = {"count": 0}
     status_code = status.HTTP_200_OK
     alerts = []
     error_count = 0
@@ -93,7 +92,6 @@ def edit_examination(request, examination_id):
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
-        'errors': errors,
         'alerts': alerts,
         'error_count': error_count,
     }

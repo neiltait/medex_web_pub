@@ -212,7 +212,6 @@ class BereavedInformationForm:
 
     def __init__(self, request=None):
         self.errors = {'count': 0}
-        print(request)
         if request:
             self.bereaved_name = request.get('bereaved_name')
             self.relationship = request.get('relationship')
@@ -225,16 +224,16 @@ class BereavedInformationForm:
             self.time_of_appointment = request.get('time_of_appointment')
             self.appointment_additional_details = request.get('appointment_additional_details')
         else:
-            self.bereaved_name = ''
-            self.relationship = ''
-            self.present_death = ''
-            self.phone_number = ''
-            self.informed = ''
-            self.day_of_appointment = ''
-            self.month_of_appointment = ''
-            self.year_of_appointment = ''
-            self.time_of_appointment = ''
-            self.appointment_additional_details = ''
+            self.bereaved_name = None
+            self.relationship = None
+            self.present_death = None
+            self.phone_number = None
+            self.informed = None
+            self.day_of_appointment = None
+            self.month_of_appointment = None
+            self.year_of_appointment = None
+            self.time_of_appointment = None
+            self.appointment_additional_details = None
 
     def is_valid(self):
         valid_date = True

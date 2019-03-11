@@ -6,23 +6,13 @@ from rest_framework import status
 from unittest.mock import patch
 
 from alerts.messages import ErrorFieldRequiredMessage
-from examinations.forms import PrimaryExaminationInformationForm
+from alerts import messages
+
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
+    BereavedInformationForm, UrgencyInformationForm
+
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
-
-
-def get_minimal_create_form_data():
-    return {
-        'last_name': 'Nicks',
-        'first_name': 'Matt',
-        'gender': 'male',
-        'nhs_number_not_known': True,
-        'date_of_birth_not_known': True,
-        'time_of_death_not_known': True,
-        'date_of_death_not_known': True,
-        'place_of_death': 1,
-        'me_office': 1,
-    }
 
 
 class ExaminationsViewsTests(MedExTestCase):
@@ -51,7 +41,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
     def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.post('/cases/create', get_minimal_create_form_data())
+        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/')
 
@@ -61,8 +51,21 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation, mock_case_create, mock_locations_list, mock_me_offices_list):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.post('/cases/create', get_minimal_create_form_data())
+        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.pop('first_name', None)
+        response = self.client.post('/cases/create', form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'examinations/create.html')
+        alerts_list = self.get_context_value(response.context, 'alerts')
+        self.assertEqual(len(alerts_list), 1)
+        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
 #### Edit case tests
 
@@ -78,6 +81,19 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit.html')
+
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_user_validation):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.pop('first_name', None)
+        response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'examinations/edit.html')
+        alerts_list = self.get_context_value(response.context, 'alerts')
+        self.assertEqual(len(alerts_list), 1)
+        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
 
 class ExaminationsFormsTests(MedExTestCase):
@@ -259,7 +275,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_form_validates_with_required_data(self):
         # Given a complete form
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form = PrimaryExaminationInformationForm(form_data)
 
         # When it is validated
@@ -270,7 +286,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_form_validates_with_optional_data(self):
         # Given a complete form including optional data
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form_data['gender_details'] = 'example gender details'
         form_data['hospital_number_1'] = 'example hospital number 1'
         form_data['hospital_number_2'] = 'example hospital number 2'
@@ -286,7 +302,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_form_stores_optional_data(self):
         # Given a complete form including optional data
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form_data['gender_details'] = 'example gender details'
         form_data['hospital_number_1'] = 'example hospital number 1'
         form_data['hospital_number_2'] = 'example hospital number 2'
@@ -301,3 +317,45 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
         self.assertIs(form.out_of_hours, True)
 
+#### Secondary Info Form tests
+
+    def test_secondary_form_initialised_empty_returns_as_valid(self):
+        form = SecondaryExaminationInformationForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_secondary_form_initialised_with_content_returns_as_valid(self):
+        form = SecondaryExaminationInformationForm(mocks.SECONDARY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
+
+#### Bereaved Info Form tests
+
+    def test_bereaved_form_initialised_empty_returns_as_valid(self):
+        form = BereavedInformationForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_bereaved_form_initialised_with_content_returns_as_valid(self):
+        form = BereavedInformationForm(mocks.BEREAVED_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
+
+    def test_bereaved_form_initialised_with_incomplete_returns_as_invalid(self):
+        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data['year_of_appointment'] = None
+        form = BereavedInformationForm(form_data)
+        self.assertIsFalse(form.is_valid())
+
+    def test_bereaved_form_initialised_with_invalid_date_returns_as_invalid(self):
+        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data['day_of_appointment'] = '31'
+        form_data['month_of_appointment'] = '2'
+        form = BereavedInformationForm(form_data)
+        self.assertIsFalse(form.is_valid())
+
+#### Urgency Info Form tests
+
+    def test_urgency_form_initialised_empty_returns_as_valid(self):
+        form = UrgencyInformationForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_urgency_form_initialised_with_content_returns_as_valid(self):
+        form = UrgencyInformationForm(mocks.URGENCY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
