@@ -46,7 +46,7 @@
     {% endfor %}
 
     <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-          action="{% url 'edit_examination' examination_id=examination_id %}" method="post">
+          action="{% url 'edit_examination' examination_id=examination_id %}" method="post" data-error-count="{{error_count}}">
       {% csrf_token %}
 
       <div class="form-tabs flex-row baseline">
