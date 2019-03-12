@@ -120,19 +120,21 @@ SECONDARY_EXAMINATION_DATA = {
     'personal_effects_details': ''
 }
 
-BEREAVED_EXAMINATION_DATA = {
-    'bereaved_name': 'Anne Smith',
-    'relationship': 'Wife',
-    'present_death': 'no',
-    'phone_number': '03069 990146',
-    'informed': 'yes',
-    'day_of_appointment': '1',
-    'month_of_appointment': '1',
-    'year_of_appointment': '2019',
-    'time_of_appointment': '12:00',
-    'appointment_additional_details': '',
-}
+
+def get_bereaved_examination_data():
+    return {
+        'bereaved_name': 'Anne Smith',
+        'relationship': 'Wife',
+        'present_death': 'no',
         'phone_number': '03069 990146',
+        'informed': 'yes',
+        'day_of_appointment': '1',
+        'month_of_appointment': '1',
+        'year_of_appointment': '2019',
+        'time_of_appointment': '12:00',
+        'appointment_additional_details': '',
+    }
+
 
 URGENCY_EXAMINATION_DATA = {
     'faith_death': 'yes',
