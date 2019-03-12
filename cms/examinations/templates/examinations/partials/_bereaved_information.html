@@ -1,105 +1,201 @@
 <!-- Representative -->
-<div class="flex-row baseline form-row flex-vertical">
-  <div class="form-item">
-    <label class="form-item--header" for="bereaved_name">Full name</label>
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-one-half">
+    <fieldset class="nhsuk-fieldset">
+      <div class="nhsuk-form-group {% if errors.bereaved_name %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="bereaved_name">Full name</label>
 
-    <input id="bereaved_name" class="form-field" type="text" name="bereaved_name" value="{{form.bereaved_name}}">
+        {% if errors.bereaved_name %}
+          <span class="nhsuk-error-message medex-font-default-override">{{ errors.bereaved_name }}</span>
+        {% endif %}
+
+        <input id="bereaved_name" type="text" name="bereaved_name" value="{{form.bereaved_name}}"
+               class="nhsuk-input nhsuk-input--width-10 {% if errors.bereaved_name %}nhsuk-input--error{% endif %}">
+      </div>
+    </fieldset>
+  </div>
+</div>
+
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-one-half">
+    <fieldset class="nhsuk-fieldset">
+      <div class="nhsuk-form-group {% if errors.relationship %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="bereaved_name">Relationship</label>
+
+        {% if errors.relationship %}
+          <span class="nhsuk-error-message medex-font-default-override">{{ errors.relationship }}</span>
+        {% endif %}
+
+        <input id="relationship" type="text" name="relationship" value="{{form.relationship}}"
+            class="nhsuk-input nhsuk-input--width-10 {% if errors.relationship %}nhsuk-input--error{% endif %}">
+      </div>
+    </fieldset>
   </div>
 
-  <div class="flex-row">
-    <div class="form-item">
-      <label class="form-item--header" for="relationship">Relationship</label>
+  <div class="nhsuk-grid-column-one-half">
+    <div class="nhsuk-form-group">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-radios nhsuk-radios--inline">
+          <div class="nhsuk-form-group {% if errors.present_death %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label">Present at death</label>
 
-      <input id="relationship" class="form-field" type="text" name="relationship" value="{{form.relationship}}">
-    </div>
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.present_death %}nhsuk-input--error{% endif %}"
+                     id="present-1" name="present_death" type="radio" value="yes"
+                     {% if form.present_death == 'yes' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="present-1">
+                  Yes
+              </label>
+            </div>
 
-    <div class="form-item">
-      <label class="form-item--header">Present at death</label>
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.present_death %}nhsuk-input--error{% endif %}"
+                     id="present-2" name="present_death" type="radio" value="no"
+                     {% if form.present_death == 'no' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="present-2">
+                  No
+              </label>
+            </div>
 
-      <div class="radiobutton__item">
-        <input class="form-field radiobutton__input{% if form.present_death_error %} error{% endif %}" type="radio" name="present_death"
-               id="present_death_yes" value="yes" {% if form.present_death == 'yes' %}checked{% endif %}>
-        <label class="radiobutton__label" for="present_death_yes">Yes</label>
-      </div>
-
-      <div class="radiobutton__item">
-        <input class="form-field radiobutton__input{% if form.present_death_error %} error{% endif %}" type="radio" name="present_death"
-               id="present_death_no" value="no" {% if form.present_death == 'no' %}checked{% endif %}>
-        <label class="radiobutton__label" for="present_death_no">No</label>
-      </div>
-
-      <div class="radiobutton__item">
-        <input class="form-field radiobutton__input{% if form.present_death_error %} error{% endif %}" type="radio" name="present_death"
-               id="present_death_unknown" value="unknown" {% if form.present_death == 'unknown' %}checked{% endif %}>
-        <label class="radiobutton__label" for="present_death_unknown">No</label>
-      </div>
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.present_death %}nhsuk-input--error{% endif %}"
+                     id="present-3" name="present_death" type="radio" value="unknown"
+                     {% if form.present_death == 'unknown' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="present-3">
+                Unknown
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
     </div>
   </div>
+</div>
 
-  <div class="flex-row">
-    <div class="form-item">
-      <label class="form-item--header" for="phone_number">Phone number</label>
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-one-half">
+    <fieldset class="nhsuk-fieldset">
+      <div class="nhsuk-form-group {% if errors.phone_number %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="phone_number">Phone number</label>
 
-      <input id="phone_number" class="form-field" type="number" name="phone_number" value="{{form.phone_number}}">
-    </div>
+        {% if errors.phone_number %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.phone_number }}</span>{% endif %}
 
-    <div class="form-item">
-      <label class="form-item--header">Informed</label>
-
-      <div class="radiobutton__item">
-        <input class="form-field radiobutton__input{% if form.informed_error %} error{% endif %}" type="radio" name="informed"
-               id="informed_yes" value="yes" {% if form.informed == 'yes' %}checked{% endif %}>
-        <label class="radiobutton__label" for="informed_yes">Yes</label>
+        <input id="phone_number" type="text" name="phone_number" value="{{form.phone_number}}"
+               class="nhsuk-input nhsuk-input--width-10 {% if errors.phone_number %}nhsuk-input--error{% endif %}">
       </div>
+    </fieldset>
+  </div>
 
-      <div class="radiobutton__item">
-        <input class="form-field radiobutton__input{% if form.informed_error %} error{% endif %}" type="radio" name="informed"
-               id="informed_no" value="no" {% if form.informed == 'no' %}checked{% endif %}>
-        <label class="radiobutton__label" for="informed_no">No</label>
-      </div>
+  <div class="nhsuk-grid-column-one-half">
+    <div class="nhsuk-form-group">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-radios nhsuk-radios--inline">
+          <div class="nhsuk-form-group {% if errors.present_death %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label">Informed</label>
+
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.informed %}nhsuk-input--error{% endif %}"
+                     id="informed-1" name="informed" type="radio" value="yes"
+                     {% if form.informed == 'yes' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="informed-1">
+                  Yes
+              </label>
+            </div>
+
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.informed %}nhsuk-input--error{% endif %}"
+                     id="informed-2" name="informed" type="radio" value="no"
+                     {% if form.informed == 'no' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="informed-2">
+                  No
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
     </div>
   </div>
 </div>
 
 <!-- Appointment details -->
-<div class="flex-row baseline form-row">
-  <div class="form-item">
-    <label class="form-item--header">Appointment date</label>
+<div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-full">
+        <div class="nhsuk-form-group {% if errors.date_of_appointment %}nhsuk-form-group--error{% endif %}">
+            <fieldset class="nhsuk-fieldset" aria-describedby="appointment-hint" role="group">
+                <legend class="nhsuk-fieldset__legend">
+                    Appointment date
+                </legend>
 
-    <div>
-      <label class="form-item--header" for="day_of_appointment">Day</label>
+                {% if errors.date_of_appointment %}
+                  <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_appointment }}</span>
+                {% endif %}
 
-      <input id="day_of_appointment" class="form-field" type="number" min="1" max="31" name="day_of_appointment"
-             value="{{form.day_of_appointment}}">
+                <div class="nhsuk-date-input" id="date_of_appointment">
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="day_of_appointment">
+                                Day
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                   id="day_of_appointment" name="day_of_appointment" type="number" pattern="[0-9]*"
+                                   value="{{ form.day_of_appointment }}">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="month_of_appointment">
+                                Month
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                   id="month_of_appointment" name="month_of_appointment" type="number"
+                                   pattern="[0-9]*" value="{{ form.month_of_appointment }}">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="year_of_appointment">
+                                Year
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                   id="year_of_appointment" name="year_of_appointment" type="number"
+                                   pattern="[0-9]*" value="{{ form.year_of_appointment }}">
+                        </div>
+                    </div>
+
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="time_of_appointment">
+                                Time
+                            </label>
+
+                            <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_appointment"
+                                   name="time_of_appointment" type="time" value="{{ form.time_of_appointment }}">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
     </div>
-
-    <div>
-      <label class="form-item--header" for="month_of_appointment">Month</label>
-
-      <input id="month_of_appointment" class="form-field" type="number" min="1" max="12" name="month_of_appointment"
-             value="{{form.month_of_appointment}}">
-    </div>
-
-    <div>
-      <label class="form-item--header" for="year_of_appointment">Year</label>
-
-      <input id="year_of_appointment" class="form-field" type="number" min="2018" max="3000" name="year_of_appointment"
-             value="{{form.year_of_appointment}}">
-    </div>
-
-    <div>
-      <input id="time_of_appointment" class="form-field" type="time" name="time_of_appointment" value="{{form.time_of_appointment}}">
-    </div>
-  </div>
 </div>
 
 <!-- Additional details -->
-<div class="flex-row form-row">
-  <div class="form-item">
-    <label class="form-item--header" for="appointment_additional_details">Enter any additional details</label>
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-full">
+    <div class="nhsuk-form-group">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.appointment_additional_details %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="appointment_additional_details">Enter details below</label>
 
-    <textarea id="appointment_additional_details" class="form-field" type="text" name="appointment_additional_details">
-      {{form.appointment_additional_details}}
-    </textarea>
+
+          {% if errors.appointment_additional_details %}
+            <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details }}</span>
+          {% endif %}
+
+          <textarea id="appointment_additional_details"
+              class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details %} nhsuk-textarea--error{% endif %}"
+              name="appointment_additional_details">{{form.appointment_additional_details}}</textarea>
+        </div>
+      </fieldset>
+    </div>
   </div>
 </div>

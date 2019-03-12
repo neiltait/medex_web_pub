@@ -1,47 +1,70 @@
 <!-- Urgency reason -->
-<div class="flex-row baseline form-row">
-  <div class="form-item">
-    <label class="form-item--header">Select a reason</label>
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-full">
+    <div class="nhsuk-form-group">
+      <fieldset class="nhsuk-fieldset">
+        <legend class="nhsuk-fieldset__legend">
+          Select a reason
+        </legend>
 
-    <div class="checkbox-item flex-row vertical-center">
-      <input id="faith_death" class="checkbox" type="checkbox" name="faith_death" value="{{form.faith_death}}">
+        <div class="nhsuk-checkboxes">
+          <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
+              <div class="nhsuk-checkboxes__item">
+                <input id="faith_death" class="nhsuk-checkboxes__input" type="checkbox" name="faith_death"
+                       value="yes" {% if form.faith_death == 'yes' %} checked{% endif%}>
+                <label class="nhsuk-label nhsuk-checkboxes__label" for="faith_death">Faith death</label>
+              </div>
 
-      <label for="faith_death">Faith death</label>
+              <div class="nhsuk-checkboxes__item">
+                <input id="cultural_death" class="nhsuk-checkboxes__input" type="checkbox" name="cultural_death"
+                       value="yes" {% if form.cultural_death == 'yes' %} checked{% endif%}>
+                <label class="nhsuk-label nhsuk-checkboxes__label" for="cultural_death">Cultural death</label>
+              </div>
+            </div>
+
+            <div class="nhsuk-grid-column-one-third">
+              <div class="nhsuk-checkboxes__item">
+                <input id="coroner_case" class="nhsuk-checkboxes__input" type="checkbox" name="coroner_case"
+                       value="yes" {% if form.coroner_case == 'yes' %} checked{% endif%}>
+                <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner_case">Coroner case</label>
+              </div>
+
+              <div class="nhsuk-checkboxes__item">
+                <input id="other" class="nhsuk-checkboxes__input" type="checkbox" name="other"
+                       value="yes" {% if form.other == 'yes' %} checked{% endif%}>
+                <label class="nhsuk-label nhsuk-checkboxes__label" for="other">Other</label>
+              </div>
+            </div>
+
+            <div class="nhsuk-grid-column-one-third">
+              <div class="nhsuk-checkboxes__item">
+                <input id="child_death" class="nhsuk-checkboxes__input" type="checkbox" name="child_death"
+                       value="yes" {% if form.child_death == 'yes' %} checked{% endif%}>
+                <label class="nhsuk-label nhsuk-checkboxes__label" for="child_death">Child death</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
     </div>
 
-    <div class="checkbox-item flex-row vertical-center">
-      <input id="coroner_case" class="checkbox" type="checkbox" name="coroner_case" value="{{form.coroner_case}}">
+    <div class="nhsuk-form-group">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.urgency_additional_details %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="urgency_additional_details">Enter any further relevant details</label>
 
-      <label for="coroner_case">Coroner case</label>
-    </div>
 
-    <div class="checkbox-item flex-row vertical-center">
-      <input id="child_death" class="checkbox" type="checkbox" name="child_death" value="{{form.child_death}}">
+          {% if errors.urgency_additional_details %}
+            <span class="nhsuk-error-message medex-font-default-override">{{ errors.urgency_additional_details }}</span>
+          {% endif %}
 
-      <label for="child_death">Child death</label>
-    </div>
-
-    <div class="checkbox-item flex-row vertical-center">
-      <input id="cultural_death" class="checkbox" type="checkbox" name="cultural_death" value="{{form.cultural_death}}">
-
-      <label for="cultural_death">Cultural death</label>
-    </div>
-
-    <div class="checkbox-item flex-row vertical-center">
-      <input id="other" class="checkbox" type="checkbox" name="other" value="{{form.other}}">
-
-      <label for="other">Other</label>
+          <textarea id="urgency_additional_details"
+              class="nhsuk-textarea medex-textarea{% if errors.urgency_additional_details %} nhsuk-textarea--error{% endif %}"
+              name="urgency_additional_details">{{form.urgency_additional_details}}</textarea>
+        </div>
+      </fieldset>
     </div>
   </div>
 </div>
 
-<!-- Additional details -->
-<div class="flex-row form-row">
-  <div class="form-item">
-    <label class="form-item--header" for="urgency_additional_details">Enter any additional details</label>
-
-    <textarea id="urgency_additional_details" class="form-field" type="text" name="urgency_additional_details">
-      {{form.urgency_additional_details}}
-    </textarea>
-  </div>
-</div>

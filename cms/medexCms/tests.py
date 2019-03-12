@@ -1,5 +1,8 @@
 from .test.utils import MedExTestCase
 
+from .utils import validate_date
+
+
 class MedexTestUtilsTests(MedExTestCase):
 
   def test_MedExTestCase_assertIsTrue_returns_true_when_passed_True(self):
@@ -75,4 +78,24 @@ class MedexTestUtilsTests(MedExTestCase):
       self.assertFalse('Test failed to produce expected key error')
     except KeyError:
       self.assertTrue('Test produced expected key error')
-    
+
+
+class MedexUtilsTests(MedExTestCase):
+
+  def test_validate_date_returns_true_for_a_valid_date_with_no_time_provided(self):
+    self.assertIsTrue(validate_date('2019', '12', '25'))
+
+  def test_validate_date_returns_true_for_a_valid_date_with_valid_time_provided(self):
+    self.assertIsTrue(validate_date('2019', '12', '25', '12', '00'))
+
+  def test_validate_date_returns_false_for_a_valid_date_with_invalid_time_provided(self):
+    self.assertIsFalse(validate_date('2019', '12', '25', '28', '70'))
+
+  def test_validate_date_returns_false_for_a_invalid_date_with_no_time_provided(self):
+    self.assertIsFalse(validate_date('2019', '2', '31'))
+
+  def test_validate_date_returns_false_for_a_invalid_date_with_invalid_time_provided(self):
+    self.assertIsFalse(validate_date('2019', '2', '31', '28', '70'))
+
+  def test_validate_date_returns_false_for_a_invalid_date_with_valid_time_provided(self):
+    self.assertIsFalse(validate_date('2019', '2', '31', '12', '00'))

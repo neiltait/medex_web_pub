@@ -1,4 +1,5 @@
 @import '../variables.scss';
+@import 'secondary-info.scss';
 
 .examination__edit {
     #examination__edit--form {
@@ -34,8 +35,8 @@
         .form-section {
             padding: 1rem 2rem;
 
-            &:nth-child(even) {
-                background-color: $nhs-very-light-grey;
+            &:nth-child(odd) {
+                background-color: $white;
             }
         }
 
