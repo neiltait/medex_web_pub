@@ -54,9 +54,10 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation):
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         form_data = mocks.get_minimal_create_form_data()
         form_data.pop('first_name', None)
