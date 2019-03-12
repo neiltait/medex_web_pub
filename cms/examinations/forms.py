@@ -252,15 +252,20 @@ class BereavedInformationForm:
 
     def is_valid(self):
         valid_date = True
-        if self.year_of_appointment is not None or self.month_of_appointment is not None or \
-                self.day_of_appointment is not None or self.time_of_appointment is not None:
+        if all(v is not (None or '') for v in [self.year_of_appointment, self.month_of_appointment,
+                                               self.day_of_appointment, self.time_of_appointment]):
             hours = self.time_of_appointment.split(':')[0]
             mins = self.time_of_appointment.split(':')[1]
             valid_date = validate_date(self.year_of_appointment, self.month_of_appointment,
                                        self.day_of_appointment, hours, mins)
-            if not valid_date:
-                self.errors['count'] += 1
-                self.errors['date_of_appointment'] = messages.INVALID_DATE
+
+        elif any(v is not (None or '') for v in [self.year_of_appointment, self.month_of_appointment,
+                                                 self.day_of_appointment, self.time_of_appointment]):
+            valid_date = False
+
+        if not valid_date:
+            self.errors['count'] += 1
+            self.errors['date_of_appointment'] = messages.INVALID_DATE
         return valid_date
 
 
