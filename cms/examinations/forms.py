@@ -1,6 +1,7 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from alerts.messages import ErrorFieldTooLong
+from alerts.messages import NAME_TOTAL_TOO_LONG
 
 from medexCms.utils import validate_date
 
@@ -97,16 +98,13 @@ class PrimaryExaminationInformationForm:
             self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
             self.errors["count"] += 1
 
-        if len(self.first_name.strip()) > 250:
-            self.errors["first_name"] = ErrorFieldTooLong(250)
+        if self.first_name and self.last_name and (len(self.first_name.strip()) + len(self.last_name.strip()) > 250):
+            self.errors["last_name"] = NAME_TOTAL_TOO_LONG
+            self.errors["first_name"] = NAME_TOTAL_TOO_LONG
             self.errors["count"] += 1
 
         if self.last_name is None or len(self.last_name.strip()) == 0:
             self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
-            self.errors["count"] += 1
-
-        if len(self.last_name.strip()) > 250:
-            self.errors["last_name"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if self.gender is None:

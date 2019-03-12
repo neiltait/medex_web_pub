@@ -20,6 +20,8 @@ NOT_IN_OKTA = 'Users must be added to OKTA to show in the system'
 
 INVALID_DATE = 'Please enter a valid date'
 
+NAME_TOTAL_TOO_LONG = 'Please enter fewer than 250 characters in total'
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 
