@@ -271,7 +271,7 @@ class BereavedInformationForm:
     def is_valid(self):
         valid_date_1 = True
         valid_date_2 = True
-
+    
         if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
                                                self.day_of_appointment_1, self.time_of_appointment_1]):
             hours = self.time_of_appointment_1.split(':')[0]
@@ -287,15 +287,15 @@ class BereavedInformationForm:
             self.errors['count'] += 1
             self.errors['date_of_appointment_1'] = messages.INVALID_DATE
 
-        if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                               self.day_of_appointment_1, self.time_of_appointment_1]):
-            hours = self.time_of_appointment_1.split(':')[0]
-            mins = self.time_of_appointment_1.split(':')[1]
-            valid_date_2 = validate_date(self.year_of_appointment_1, self.month_of_appointment_1,
-                                       self.day_of_appointment_1, hours, mins)
+        if all(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
+                                               self.day_of_appointment_2, self.time_of_appointment_2]):
+            hours = self.time_of_appointment_2.split(':')[0]
+            mins = self.time_of_appointment_2.split(':')[1]
+            valid_date_2 = validate_date(self.year_of_appointment_2, self.month_of_appointment_2,
+                                       self.day_of_appointment_2, hours, mins)
 
-        elif any(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                                 self.day_of_appointment_1, self.time_of_appointment_1]):
+        elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
+                                                 self.day_of_appointment_2, self.time_of_appointment_1]):
             valid_date_2 = False
 
         if not valid_date_2:

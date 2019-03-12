@@ -121,15 +121,24 @@ SECONDARY_EXAMINATION_DATA = {
 }
 
 BEREAVED_EXAMINATION_DATA = {
-    'bereaved_name': 'Anne Smith',
-    'relationship': 'Wife',
-    'present_death': 'no',
-    'phone_number': '03069 990146',
-    'informed': 'yes',
-    'day_of_appointment': '1',
-    'month_of_appointment': '1',
-    'year_of_appointment': '2019',
-    'time_of_appointment': '12:00',
+    'bereaved_name_1': 'Anne Smith',
+    'relationship_1': 'Wife',
+    'present_death_1': 'no',
+    'phone_number_1': '03069 990146',
+    'informed_1': 'yes',
+    'day_of_appointment_1': '1',
+    'month_of_appointment_1': '1',
+    'year_of_appointment_1': '2019',
+    'time_of_appointment_1': '12:00',
+    'bereaved_name_2': 'Bob Smith',
+    'relationship_2': 'Son',
+    'present_death_2': 'no',
+    'phone_number_2': '03069 990146',
+    'informed_2': 'yes',
+    'day_of_appointment_2': '1',
+    'month_of_appointment_2': '1',
+    'year_of_appointment_2': '2019',
+    'time_of_appointment_2': '12:00',
     'appointment_additional_details': '',
 }
 
