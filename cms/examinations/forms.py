@@ -64,19 +64,33 @@ class PrimaryExaminationInformationForm:
         self.out_of_hours = True if "out_of_hours" in request else False
 
     def set_hospital_numbers(self, request):
+        # get numbers
         self.hospital_number_1 = request.get("hospital_number_1")
         self.hospital_number_2 = request.get("hospital_number_2")
         self.hospital_number_3 = request.get("hospital_number_3")
-        numbers = [
+
+        # fill an array
+        hospital_numbers = [
             self.hospital_number_1,
             self.hospital_number_2,
             self.hospital_number_3,
         ]
-        filled_numbers = [number for number in numbers if number != ""]
+
+        # filter the array
+        filled_numbers = self.filter_to_not_blank_values(hospital_numbers)
         filled_numbers = filled_numbers + ["", "", ""]
+
+        # display results
         self.hospital_number_1 = filled_numbers[0]
         self.hospital_number_2 = filled_numbers[1]
         self.hospital_number_3 = filled_numbers[2]
+
+    def filter_to_not_blank_values(self, a_list):
+        not_empty = []
+        for item in a_list:
+            if item != '':
+                not_empty.append(item)
+        return not_empty
 
     def initialiseErrors(self):
         self.errors = {"count": 0}
