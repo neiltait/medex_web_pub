@@ -1,4 +1,7 @@
+from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
+
+from medexCms.utils import validate_date
 
 
 class PrimaryExaminationInformationForm:
@@ -59,19 +62,33 @@ class PrimaryExaminationInformationForm:
         self.out_of_hours = True if "out_of_hours" in request else False
 
     def set_hospital_numbers(self, request):
+        # get numbers
         self.hospital_number_1 = request.get("hospital_number_1")
         self.hospital_number_2 = request.get("hospital_number_2")
         self.hospital_number_3 = request.get("hospital_number_3")
-        numbers = [
+
+        # fill an array
+        hospital_numbers = [
             self.hospital_number_1,
             self.hospital_number_2,
             self.hospital_number_3,
         ]
-        filled_numbers = [number for number in numbers if number != ""]
+
+        # filter the array
+        filled_numbers = self.filter_to_not_blank_values(hospital_numbers)
         filled_numbers = filled_numbers + ["", "", ""]
+
+        # display results
         self.hospital_number_1 = filled_numbers[0]
         self.hospital_number_2 = filled_numbers[1]
         self.hospital_number_3 = filled_numbers[2]
+
+    def filter_to_not_blank_values(self, a_list):
+        not_empty = []
+        for item in a_list:
+            if item != '':
+                not_empty.append(item)
+        return not_empty
 
     def initialiseErrors(self):
         self.errors = {"count": 0}
@@ -173,76 +190,98 @@ class PrimaryExaminationInformationForm:
 
 class SecondaryExaminationInformationForm:
 
-  def __init__(self, request=None):
-    if request:
-      self.address_line_1 = request.get('address_line_1')
-      self.address_line_2 = request.get('address_line_2')
-      self.address_town = request.get('address_town')
-      self.address_county = request.get('address_county')
-      self.address_postcode = request.get('address_postcode')
-      self.relevant_occupation = request.get('relevant_occupation')
-      self.care_organisation = request.get('care_organisation')
-      self.funeral_arrangements = request.get('funeral_arrangements')
-      self.implanted_devices = request.get('implanted_devices')
-      self.implanted_devices_details = request.get('implanted_devices_details')
-      self.funeral_directors = request.get('funeral_directors')
-      self.personal_effects = request.get('personal_effects')
-      self.personal_effects_details = request.get('personal_effects_details')
-    else:
-      self.address_line_1 = ''
-      self.address_line_2 = ''
-      self.address_town = ''
-      self.address_county = ''
-      self.address_postcode = ''
-      self.relevant_occupation = ''
-      self.care_organisation = ''
-      self.funeral_arrangements = ''
-      self.implanted_devices = ''
-      self.funeral_directors = ''
-      self.personal_effects = ''
+    def __init__(self, request=None):
+        self.errors = {'count': 0}
+        if request:
+            self.address_line_1 = request.get('address_line_1')
+            self.address_line_2 = request.get('address_line_2')
+            self.address_town = request.get('address_town')
+            self.address_county = request.get('address_county')
+            self.address_postcode = request.get('address_postcode')
+            self.relevant_occupation = request.get('relevant_occupation')
+            self.care_organisation = request.get('care_organisation')
+            self.funeral_arrangements = request.get('funeral_arrangements')
+            self.implanted_devices = request.get('implanted_devices')
+            self.implanted_devices_details = request.get('implanted_devices_details')
+            self.funeral_directors = request.get('funeral_directors')
+            self.personal_effects = request.get('personal_effects')
+            self.personal_effects_details = request.get('personal_effects_details')
+        else:
+            self.address_line_1 = ''
+            self.address_line_2 = ''
+            self.address_town = ''
+            self.address_county = ''
+            self.address_postcode = ''
+            self.relevant_occupation = ''
+            self.care_organisation = ''
+            self.funeral_arrangements = ''
+            self.implanted_devices = ''
+            self.funeral_directors = ''
+            self.personal_effects = ''
+
+    def is_valid(self):
+        return True
 
 
 class BereavedInformationForm:
 
-  def __init__(self, request=None):
-    if request:
-      self.bereaved_name = request.get('bereaved_name')
-      self.relationship = request.get('relationship')
-      self.present_death = request.get('present_death')
-      self.phone_number = request.get('phone_number')
-      self.informed = request.get('informed')
-      self.day_of_appointment = request.get('day_of_appointment')
-      self.month_of_appointment = request.get('month_of_appointment')
-      self.year_of_appointment = request.get('year_of_appointment')
-      self.time_of_appointment = request.get('time_of_appointment')
-      self.appointment_additional_details = request.get('appointment_additional_details')
-    else:
-      self.bereaved_name = ''
-      self.relationship = ''
-      self.present_death = ''
-      self.phone_number = ''
-      self.informed = ''
-      self.day_of_appointment = ''
-      self.month_of_appointment = ''
-      self.year_of_appointment = ''
-      self.time_of_appointment = ''
-      self.appointment_additional_details = ''
+    def __init__(self, request=None):
+        self.errors = {'count': 0}
+        if request:
+            self.bereaved_name = request.get('bereaved_name')
+            self.relationship = request.get('relationship')
+            self.present_death = request.get('present_death')
+            self.phone_number = request.get('phone_number')
+            self.informed = request.get('informed')
+            self.day_of_appointment = request.get('day_of_appointment')
+            self.month_of_appointment = request.get('month_of_appointment')
+            self.year_of_appointment = request.get('year_of_appointment')
+            self.time_of_appointment = request.get('time_of_appointment')
+            self.appointment_additional_details = request.get('appointment_additional_details')
+        else:
+            self.bereaved_name = None
+            self.relationship = None
+            self.present_death = None
+            self.phone_number = None
+            self.informed = None
+            self.day_of_appointment = None
+            self.month_of_appointment = None
+            self.year_of_appointment = None
+            self.time_of_appointment = None
+            self.appointment_additional_details = None
+
+    def is_valid(self):
+        valid_date = True
+        if self.year_of_appointment is not None or self.month_of_appointment is not None or \
+                self.day_of_appointment is not None or self.time_of_appointment is not None:
+            hours = self.time_of_appointment.split(':')[0]
+            mins = self.time_of_appointment.split(':')[1]
+            valid_date = validate_date(self.year_of_appointment, self.month_of_appointment,
+                                       self.day_of_appointment, hours, mins)
+            if not valid_date:
+                self.errors['count'] += 1
+                self.errors['date_of_appointment'] = messages.INVALID_DATE
+        return valid_date
 
 
 class UrgencyInformationForm:
 
-  def __init__(self, request=None):
-    if request:
-      self.faith_death = request.get('faith_death')
-      self.coroner_case = request.get('coroner_case')
-      self.child_death = request.get('child_death')
-      self.cultural_death = request.get('cultural_death')
-      self.other = request.get('other')
-      self.urgency_additional_details = request.get('urgency_additional_details')
-    else:
-      self.faith_death = ''
-      self.coroner_case = ''
-      self.child_death = ''
-      self.cultural_death = ''
-      self.other = ''
-      self.urgency_additional_details = ''
+    def __init__(self, request=None):
+        self.errors = {'count': 0}
+        if request:
+            self.faith_death = request.get('faith_death')
+            self.coroner_case = request.get('coroner_case')
+            self.child_death = request.get('child_death')
+            self.cultural_death = request.get('cultural_death')
+            self.other = request.get('other')
+            self.urgency_additional_details = request.get('urgency_additional_details')
+        else:
+            self.faith_death = ''
+            self.coroner_case = ''
+            self.child_death = ''
+            self.cultural_death = ''
+            self.other = ''
+            self.urgency_additional_details = ''
+
+    def is_valid(self):
+        return True
