@@ -20,3 +20,6 @@ NOT_IN_OKTA = 'Users must be added to OKTA to show in the system'
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
+
+def ErrorFieldTooLong(character_max):
+    return ("Please enter fewer than %d characters") % character_max

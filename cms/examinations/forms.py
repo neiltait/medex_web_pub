@@ -1,4 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage
+from alerts.messages import ErrorFieldTooLong
 
 
 class PrimaryExaminationInformationForm:
@@ -93,8 +94,16 @@ class PrimaryExaminationInformationForm:
             self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
             self.errors["count"] += 1
 
+        if len(self.first_name.strip()) > 250:
+            self.errors["first_name"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
         if self.last_name is None or len(self.last_name.strip()) == 0:
             self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
+            self.errors["count"] += 1
+
+        if len(self.last_name.strip()) > 250:
+            self.errors["last_name"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if self.gender is None:
