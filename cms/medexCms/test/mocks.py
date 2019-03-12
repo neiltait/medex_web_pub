@@ -7,6 +7,8 @@ import json
 
 # Variables/Objects
 
+#### Sessions
+
 AUTH_TOKEN = {
     "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
     "id_token": "8a89be6d-70df-4b21-9d6e-82873d7ff1b0",
@@ -87,7 +89,62 @@ SUCCESSFUL_ME_OFFICES_LOAD = [{
 
 CREATED_EXAMINATION_ID = 1
 
+
+def get_minimal_create_form_data():
+    return {
+        'last_name': 'Nicks',
+        'first_name': 'Matt',
+        'gender': 'male',
+        'nhs_number_not_known': True,
+        'date_of_birth_not_known': True,
+        'time_of_death_not_known': True,
+        'date_of_death_not_known': True,
+        'place_of_death': 1,
+        'me_office': 1,
+    }
+
+
+SECONDARY_EXAMINATION_DATA = {
+    'address_line_1': '2 The Street',
+    'address_line_2': '',
+    'address_town': 'Anyville',
+    'address_county': 'London',
+    'address_postcode': 'A1 1AA',
+    'relevant_occupation': '',
+    'care_organisation': 'Anyville Hospital Trust',
+    'funeral_arrangements': 'burial',
+    'implanted_devices': 'no',
+    'implanted_devices_details': '',
+    'funeral_directors': 'Anyville Funeral Directors',
+    'personal_effects': 'no',
+    'personal_effects_details': ''
+}
+
+BEREAVED_EXAMINATION_DATA = {
+    'bereaved_name': 'Anne Smith',
+    'relationship': 'Wife',
+    'present_death': 'no',
+    'phone_number': '03069 990146',
+    'informed': 'yes',
+    'day_of_appointment': '1',
+    'month_of_appointment': '1',
+    'year_of_appointment': '2019',
+    'time_of_appointment': '12:00',
+    'appointment_additional_details': '',
+}
+
+URGENCY_EXAMINATION_DATA = {
+    'faith_death': 'yes',
+    'coroner_case': 'no',
+    'child_death': 'no',
+    'cultural_death': 'no',
+    'other': 'no',
+    'urgency_additional_details': '',
+}
+
 # Responses
+
+#### Sessions
 
 SUCCESSFUL_TOKEN_GENERATION = Response()
 SUCCESSFUL_TOKEN_GENERATION.status_code = status.HTTP_200_OK
@@ -100,6 +157,11 @@ SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
 UNSUCCESSFUL_VALIDATE_SESSION = Response()
 UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
 UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_LOGOUT = Response()
+SUCCESSFUL_LOGOUT.status_code = status.HTTP_200_OK
+
+#### Users
 
 SUCCESSFUL_USER_CREATION = Response()
 SUCCESSFUL_USER_CREATION.status_code = status.HTTP_200_OK
@@ -117,14 +179,6 @@ UNSUCCESSFUL_LOAD_USER = Response()
 UNSUCCESSFUL_LOAD_USER.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_LOAD_USER._content = json.dumps(empty_user).encode('utf-8')
 
-SUCCESSFUL_PERMISSION_CREATION = Response()
-SUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_200_OK
-SUCCESSFUL_PERMISSION_CREATION._content = json.dumps({'permissionId': CREATED_PERMISSION_ID}).encode('utf-8')
-
-UNSUCCESSFUL_PERMISSION_CREATION = Response()
-UNSUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_400_BAD_REQUEST
-UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
-
 SUCCESSFUL_USER_LOOKUP = Response()
 SUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_200_OK
 SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
@@ -133,8 +187,17 @@ UNSUCCESSFUL_USER_LOOKUP = Response()
 UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 
-SUCCESSFUL_LOGOUT = Response()
-SUCCESSFUL_LOGOUT.status_code = status.HTTP_200_OK
+#### Permissions
+
+SUCCESSFUL_PERMISSION_CREATION = Response()
+SUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_200_OK
+SUCCESSFUL_PERMISSION_CREATION._content = json.dumps({'permissionId': CREATED_PERMISSION_ID}).encode('utf-8')
+
+UNSUCCESSFUL_PERMISSION_CREATION = Response()
+UNSUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
+
+#### Examintations
 
 SUCCESSFUL_CASE_CREATE = Response()
 SUCCESSFUL_CASE_CREATE.status_code = status.HTTP_200_OK

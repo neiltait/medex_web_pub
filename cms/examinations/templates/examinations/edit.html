@@ -8,10 +8,25 @@
 
 {% block extra_js %}
   <script src="{% static 'js/examinations/examination-edit.js' %}"></script>
+  <script src="{% static 'js/pages/examinations.js' %}"></script>
+  <script src="{% static 'js/examinations/secondary-info-form.js' %}"></script>
 {% endblock %}
 
 {% block page %}
   <div class="examination__edit">
+    {% if error_count > 0 %}
+        <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
+             tabindex="-1">
+            <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="nhsuk-error-summary__body">
+                <p>
+                    Please correct the errors in this form
+                </p>
+            </div>
+        </div>
+    {% endif %}
     <h1 class="page-title">
       {{ page_heading }}
     </h1>
