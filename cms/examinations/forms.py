@@ -239,27 +239,28 @@ class BereavedInformationForm:
             self.time_of_appointment = request.get('time_of_appointment')
             self.appointment_additional_details = request.get('appointment_additional_details')
         else:
-            self.bereaved_name = None
-            self.relationship = None
-            self.present_death = None
-            self.phone_number = None
-            self.informed = None
-            self.day_of_appointment = None
-            self.month_of_appointment = None
-            self.year_of_appointment = None
-            self.time_of_appointment = None
-            self.appointment_additional_details = None
+            self.bereaved_name = ''
+            self.relationship = ''
+            self.present_death = ''
+            self.phone_number = ''
+            self.informed = ''
+            self.day_of_appointment = ''
+            self.month_of_appointment = ''
+            self.year_of_appointment = ''
+            self.time_of_appointment = ''
+            self.appointment_additional_details = ''
 
     def is_valid(self):
         valid_date = True
-        if all(v is not (None or '') for v in [self.year_of_appointment, self.month_of_appointment,
+
+        if all(v is not '' for v in [self.year_of_appointment, self.month_of_appointment,
                                                self.day_of_appointment, self.time_of_appointment]):
             hours = self.time_of_appointment.split(':')[0]
             mins = self.time_of_appointment.split(':')[1]
             valid_date = validate_date(self.year_of_appointment, self.month_of_appointment,
                                        self.day_of_appointment, hours, mins)
 
-        elif any(v is not (None or '') for v in [self.year_of_appointment, self.month_of_appointment,
+        elif any(v is not '' for v in [self.year_of_appointment, self.month_of_appointment,
                                                  self.day_of_appointment, self.time_of_appointment]):
             valid_date = False
 

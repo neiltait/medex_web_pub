@@ -88,6 +88,7 @@ class ExaminationsViewsTests(MedExTestCase):
     def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_user_validation):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         form_data = mocks.get_minimal_create_form_data()
+        form_data.update(mocks.BEREAVED_EXAMINATION_DATA)
         form_data.pop('first_name', None)
         response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
