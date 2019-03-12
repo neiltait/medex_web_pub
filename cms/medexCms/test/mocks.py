@@ -132,6 +132,7 @@ BEREAVED_EXAMINATION_DATA = {
     'time_of_appointment': '12:00',
     'appointment_additional_details': '',
 }
+        'phone_number': '03069 990146',
 
 URGENCY_EXAMINATION_DATA = {
     'faith_death': 'yes',

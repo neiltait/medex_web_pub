@@ -332,17 +332,17 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_content_returns_as_valid(self):
-        form = BereavedInformationForm(mocks.BEREAVED_EXAMINATION_DATA)
+        form = BereavedInformationForm(mocks.get_bereaved_examination_data())
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_returns_as_invalid(self):
-        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data = mocks.get_bereaved_examination_data()
         form_data.pop('year_of_appointment', None)
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date_returns_as_invalid(self):
-        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data = mocks.get_bereaved_examination_data()
         form_data['day_of_appointment'] = '31'
         form_data['month_of_appointment'] = '2'
         form = BereavedInformationForm(form_data)
