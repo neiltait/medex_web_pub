@@ -8,8 +8,8 @@ from unittest.mock import patch
 from alerts.messages import ErrorFieldRequiredMessage
 from alerts import messages
 
-from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
-    BereavedInformationForm, UrgencyInformationForm
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
 
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
@@ -106,7 +106,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_given_create_examination_with_first_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt'})
         form.is_valid()
-        self.assertIsNone(form.first_name_error)
+        self.assertIsFalse("first_name" in form.errors)
 
     def test_given_create_examination_without_last_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
@@ -356,4 +356,24 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_urgency_form_initialised_with_content_returns_as_valid(self):
         form = UrgencyInformationForm(mocks.URGENCY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
+
+#### Medical Team Form tests
+
+    def test_medical_team_member_form_initialised_empty_returns_as_valid(self):
+        form = MedicalTeamMembersForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_initialised_with_content_returns_as_valid(self):
+        form = MedicalTeamMembersForm(mocks.get_medical_team_form_data())
+        self.assertIsTrue(form.is_valid())
+
+#### Assigned Team Form tests
+
+    def test_medical_team_assigned_team_form_initialised_empty_returns_as_valid(self):
+        form = MedicalTeamAssignedTeamForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_assigned_team_form_initialised_with_content_returns_as_valid(self):
+        form = MedicalTeamAssignedTeamForm(mocks.get_assigned_medical_team_form_data())
         self.assertIsTrue(form.is_valid())

@@ -1,9 +1,7 @@
+import json
 
 from requests.models import Response
-
 from rest_framework import status
-
-import json
 
 # Variables/Objects
 
@@ -22,17 +20,17 @@ AUTH_TOKEN = {
 CREATED_USER_ID = 1
 
 empty_user = {
-  'user_id': None,
-  'first_name': None,
-  'last_name': None,
-  'email_address': None,
+    'user_id': None,
+    'first_name': None,
+    'last_name': None,
+    'email_address': None,
 }
 
 user_dict = {
-  'user_id': '1',
-  'first_name': 'Test',
-  'last_name': 'User',
-  'email_address': 'test.user@email.com',
+    'user_id': '1',
+    'first_name': 'Test',
+    'last_name': 'User',
+    'email_address': 'test.user@email.com',
 }
 
 #### Permissions
@@ -42,37 +40,37 @@ CREATED_PERMISSION_ID = 1
 #### Locations
 SUCCESSFUL_TRUST_LOAD = [
     {
-      'id': 1,
-      'name': 'Gloucester NHS Trust',
+        'id': 1,
+        'name': 'Gloucester NHS Trust',
     },
     {
-      'id': 2,
-      'name': 'Sheffield NHS Trust',
+        'id': 2,
+        'name': 'Sheffield NHS Trust',
     },
     {
-      'id': 3,
-      'name': 'Barts NHS Trust',
+        'id': 3,
+        'name': 'Barts NHS Trust',
     }
-  ]
+]
 
 SUCCESSFUL_REGION_LOAD = [
     {
-      'id': 1,
-      'name': 'North',
+        'id': 1,
+        'name': 'North',
     },
     {
-      'id': 2,
-      'name': 'South',
+        'id': 2,
+        'name': 'South',
     },
     {
-      'id': 3,
-      'name': 'East',
+        'id': 3,
+        'name': 'East',
     },
     {
-      'id': 4,
-      'name': 'West',
+        'id': 4,
+        'name': 'West',
     }
-  ]
+]
 
 SUCCESSFUL_ME_OFFICES_LOAD = [{
     'id': '1',
@@ -144,6 +142,38 @@ URGENCY_EXAMINATION_DATA = {
     'other': 'no',
     'urgency_additional_details': '',
 }
+
+
+def get_medical_team_form_data():
+    return {
+        'consultant_name_1': 'Dr Deborah Dale',
+        'consultant_role_1': 'Cardiologist',
+        'consultant_organisation_1': 'Sheffield Hospital',
+        'consultant_phone_number_1': '100',
+        'consultant_name_2': 'Mr Kiran Sharma',
+        'consultant_role_2': 'Transplant surgeon',
+        'consultant_organisation_2': 'Sheffield Hospital',
+        'consultant_phone_number_2': '200',
+        'consultant_name_3': '',
+        'consultant_role_3': '',
+        'consultant_organisation_3': '',
+        'consultant_phone_number_3': '',
+        'qap_name': '',
+        'qap_role': '',
+        'qap_organisation': '',
+        'qap_phone_number': '',
+        'gp_name': '',
+        'gp_role': '',
+        'gp_organisation': '',
+        'gp_phone_number': '',
+
+    }
+
+def get_assigned_medical_team_form_data():
+    return {
+        'medical_examiner':'Dr Charles Li',
+        'medical_examiners_officer':'Erica Barber',
+    }
 
 # Responses
 
