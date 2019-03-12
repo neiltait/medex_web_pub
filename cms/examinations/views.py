@@ -83,6 +83,11 @@ def edit_examination(request, examination_id):
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
             status_code = status.HTTP_400_BAD_REQUEST
 
+    modal_config = get_tab_change_modal_config()
+
+    locations = location_request_handler.get_locations_list()
+    me_offices = location_request_handler.get_me_offices_list()
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -91,6 +96,9 @@ def edit_examination(request, examination_id):
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
         'error_count': error_count,
+        'tab_modal': modal_config,
+        "locations": locations,
+        "me_offices": me_offices,
     }
 
     return render(request, 'examinations/edit.html', context, status=status_code)
@@ -102,3 +110,18 @@ def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_for
     bereaved_valid = bereaved_info_form.is_valid()
     urgency_valid = urgency_info_form.is_valid()
     return primary_valid and secondary_valid and bereaved_valid and urgency_valid
+
+
+def get_tab_change_modal_config():
+     return {
+        'id': 'tab-change-modal',
+        'content': 'You have unsaved changes, do you want to save them before continuing?',
+        'confirm_btn_id': 'save-continue',
+        'confirm_btn_text': 'Save and continue',
+        'extra_buttons': [
+            {
+                'id': 'discard',
+                'text': 'Discard and continue',
+            }
+        ],
+    }
