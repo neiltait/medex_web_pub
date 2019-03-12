@@ -22,6 +22,8 @@ INVALID_DATE = 'Please enter a valid date'
 
 NAME_TOTAL_TOO_LONG = 'Please enter fewer than 250 characters in total'
 
+DEATH_IS_NOT_AFTER_BIRTH = 'Death date must be after birth date'
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 

@@ -114,6 +114,13 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsFalse(result)
         self.assertEqual(form.errors["last_name"], ErrorFieldRequiredMessage('last name'))
 
+    def test_given_create_examination_with_name_greater_than_250_characters_does_not_validate(self):
+        form = PrimaryExaminationInformationForm(request={'first_name': 'matt' * 40,
+                                                          'last_name': 'matt' * 40})
+        form.is_valid()
+        self.assertIsTrue("first_name" in form.errors)
+        self.assertIsTrue("last_name" in form.errors)
+
     def test_given_create_examination_with_last_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'last_name': 'nicks'})
         form.is_valid()
@@ -211,13 +218,19 @@ class ExaminationsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(
             {'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': True})
         form.is_valid()
-        self.assertIsFalse("day_of_birth" in form.errors)
+        self.assertIsFalse("date_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_validate_if_all_date_boxes_are_filled(self):
         form = PrimaryExaminationInformationForm(
             {'day_of_birth': '26', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
         form.is_valid()
-        self.assertIsFalse("day_of_birth" in form.errors)
+        self.assertIsFalse("date_of_birth" in form.errors)
+
+    def test_date_of_birth_group_does_not_validate_if_date_boxes_are_filled_with_bad_date(self):
+        form = PrimaryExaminationInformationForm(
+            {'day_of_birth': '32', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
+        form.is_valid()
+        self.assertIsTrue("date_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': ''})
@@ -240,6 +253,12 @@ class ExaminationsFormsTests(MedExTestCase):
             {'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978'})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
+
+    def test_date_of_death_group_does_not_validate_if_date_boxes_are_filled_with_bad_date(self):
+        form = PrimaryExaminationInformationForm(
+            {'day_of_death': '32', 'month_of_death': '08', 'year_of_death': '2019'})
+        form.is_valid()
+        self.assertIsTrue("date_of_death" in form.errors)
 
     def test_date_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': ''})
