@@ -83,6 +83,31 @@ SUCCESSFUL_ME_OFFICES_LOAD = [{
     'name': 'Gloucester Hospital ME Office',
 }]
 
+
+SUCCESSFUL_MEDICAL_EXAMINERS = [{
+    'id': '1',
+    'name': 'Dr Susan Chang',
+}, {
+    'id': '2',
+    'name': 'Dr Andrew McCloud',
+}, {
+    'id': '3',
+    'name': 'Dr Anders Petersen',
+}]
+
+
+
+SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [{
+    'id': '1',
+    'name': 'Sofia Skouros',
+}, {
+    'id': '2',
+    'name': 'Alex McPherson',
+}, {
+    'id': '3',
+    'name': 'Suchi Kandukuri',
+}]
+
 #### Examintations
 
 CREATED_EXAMINATION_ID = 1
