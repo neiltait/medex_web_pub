@@ -1,7 +1,7 @@
 import datetime
 
 from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from alerts.messages import NAME_TOTAL_TOO_LONG
 from medexCms.utils import validate_date
 
@@ -102,17 +102,24 @@ class PrimaryExaminationInformationForm:
             self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
             self.errors["count"] += 1
 
-        if self.first_name and self.last_name and (len(self.first_name.strip()) + len(self.last_name.strip()) > 250):
-            self.errors["last_name"] = NAME_TOTAL_TOO_LONG
-            self.errors["first_name"] = NAME_TOTAL_TOO_LONG
+        if self.first_name and len(self.first_name) > 150:
+            self.errors["first_name"] = ErrorFieldTooLong(150)
             self.errors["count"] += 1
 
         if self.last_name is None or len(self.last_name.strip()) == 0:
             self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
             self.errors["count"] += 1
 
+        if self.last_name and len(self.last_name) > 150:
+            self.errors["last_name"] = ErrorFieldTooLong(150)
+            self.errors["count"] += 1
+
         if self.gender is None:
             self.errors["gender"] = ErrorFieldRequiredMessage("gender")
+            self.errors["count"] += 1
+
+        if self.gender == 'other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
+            self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(

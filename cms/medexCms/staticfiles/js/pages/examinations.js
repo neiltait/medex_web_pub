@@ -122,8 +122,13 @@ Form.prototype = {
         this.givenNameInput.change(this.validateAndHighlightGivenName.bind(this));
     },
     setupGenderRadioButtons: function () {
-        this.genderDetailArea.hide();
         var that = this;
+
+        if (this.genderRadioButtons[2].checked) {
+          that.genderDetailArea.show()
+        } else {
+          that.genderDetailArea.hide()
+        }
 
         this.genderRadioButtons.change(
             function () {

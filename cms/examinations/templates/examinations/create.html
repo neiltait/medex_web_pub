@@ -30,11 +30,6 @@
                 {{ sub_heading }}
             </h2>
 
-            {% for alert in alerts %}
-                {% include 'alerts/partials/_alert.html' %}
-            {% endfor %}
-
-
             <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
                   action="{% url 'create_examination' %}" method="post">
                 {% csrf_token %}
