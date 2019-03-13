@@ -1,6 +1,8 @@
-from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage
+import datetime
 
+from alerts import messages
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH
+from alerts.messages import NAME_TOTAL_TOO_LONG
 from medexCms.utils import validate_date
 
 
@@ -93,21 +95,16 @@ class PrimaryExaminationInformationForm:
     def initialiseErrors(self):
         self.errors = {"count": 0}
 
-        self.first_name_error = None
-        self.last_name_error = None
-        self.nhs_number_error = None
-        self.gender_error = None
-        self.date_of_death_error = None
-        self.time_of_death_error = None
-        self.date_of_birth_error = None
-        self.place_of_death_error = None
-        self.me_office_error = None
-
     def is_valid(self):
         self.errors["count"] = 0
 
         if self.first_name is None or len(self.first_name.strip()) == 0:
             self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
+            self.errors["count"] += 1
+
+        if self.first_name and self.last_name and (len(self.first_name.strip()) + len(self.last_name.strip()) > 250):
+            self.errors["last_name"] = NAME_TOTAL_TOO_LONG
+            self.errors["first_name"] = NAME_TOTAL_TOO_LONG
             self.errors["count"] += 1
 
         if self.last_name is None or len(self.last_name.strip()) == 0:
@@ -142,6 +139,21 @@ class PrimaryExaminationInformationForm:
                 self.date_of_death_not_known,
         ):
             self.errors["date_of_death"] = ErrorFieldRequiredMessage("date of death")
+            self.errors["count"] += 1
+
+        if not self.text_group_is_blank_or_contains_valid_date(self.day_of_death, self.month_of_death,
+                                                               self.year_of_death):
+            self.errors["date_of_death"] = INVALID_DATE
+            self.errors["count"] += 1
+
+        if not self.text_group_is_blank_or_contains_valid_date(self.day_of_birth, self.month_of_birth,
+                                                               self.year_of_birth):
+            self.errors["date_of_birth"] = INVALID_DATE
+            self.errors["count"] += 1
+
+        if not self.dates_are_blank_or_death_is_after_birth_date():
+            self.errors["date_of_birth"] = DEATH_IS_NOT_AFTER_BIRTH
+            self.errors["date_of_death"] = DEATH_IS_NOT_AFTER_BIRTH
             self.errors["count"] += 1
 
         if self.place_of_death is None:
@@ -186,6 +198,25 @@ class PrimaryExaminationInformationForm:
                 if textbox is None or len(textbox.strip()) == 0:
                     return False
         return True
+
+    def text_group_is_blank_or_contains_valid_date(self, day, month, year):
+        if day and month and year:
+            return validate_date(year, month, day)
+        else:
+            return True
+
+    def dates_are_blank_or_death_is_after_birth_date(self):
+        valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
+        valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+        if valid_date_of_death and valid_date_of_birth:
+            date_of_death = datetime.datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death), 0, 0)
+            date_of_birth = datetime.datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth), 0, 0)
+            if date_of_death >= date_of_birth:
+                return True
+            else:
+                return False
+        else:
+            return True
 
 
 class SecondaryExaminationInformationForm:
@@ -291,3 +322,88 @@ class UrgencyInformationForm:
 
     def is_valid(self):
         return True
+
+
+class MedicalTeamMembersForm:
+
+    def __init__(self, request=None):
+        self.initialiseErrors()
+        if request:
+            self.initialise_form_from_data(request)
+        else:
+            self.initialise_blank_form()
+
+    def initialise_blank_form(self):
+        self.consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+        self.consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+        self.consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+        self.qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+        self.gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+
+    def initialise_form_from_data(self, request):
+        self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
+                                              role=request.get('consultant_role_1'),
+                                              organisation=request.get('consultant_organisation_1'),
+                                              phone_number=request.get('consultant_phone_number_1'))
+        self.consultant_2 = MedicalTeamMember(name=request.get('consultant_name_2'),
+                                              role=request.get('consultant_role_2'),
+                                              organisation=request.get('consultant_organisation_2'),
+                                              phone_number=request.get('consultant_phone_number_2'))
+        self.consultant_3 = MedicalTeamMember(name=request.get('consultant_name_3'),
+                                              role=request.get('consultant_role_3'),
+                                              organisation=request.get('consultant_organisation_3'),
+                                              phone_number=request.get('consultant_phone_number_3'))
+        self.qap = MedicalTeamMember(name=request.get('qap_name'),
+                                     role=request.get('qap_role'),
+                                     organisation=request.get('qap_organisation'),
+                                     phone_number=request.get('qap_phone_number'))
+        self.gp = MedicalTeamMember(name=request.get('gp_name'),
+                                    role=request.get('gp_role'),
+                                    organisation=request.get('gp_organisation'),
+                                    phone_number=request.get('gp_phone_number'))
+        self.nursing_team = request.get('nursing_team')
+
+    def is_valid(self):
+        return True
+
+    def initialiseErrors(self):
+        self.errors = {"count": 0}
+
+
+class MedicalTeamMember:
+
+    def __init__(self, name='', role='', organisation='', phone_number=''):
+        self.name = name.strip() if name else ''
+        self.role = role
+        self.organisation = organisation
+        self.phone_number = phone_number
+
+    def has_name(self):
+        return self.name and len(self.name.strip()) > 0
+
+    def has_valid_name(self):
+        return len(self.name.strip()) < 250
+
+
+class MedicalTeamAssignedTeamForm:
+
+    def __init__(self, request=None):
+        self.initialiseErrors()
+        if request:
+            self.initialise_form_from_data(request)
+        else:
+            self.initialise_blank_form()
+
+    def initialise_blank_form(self):
+        self.medical_examiner = ''
+        self.medical_examiners_officer = ''
+
+    def initialise_form_from_data(self, request):
+        self.medical_examiner = request.get('medical_examiner')
+        self.medical_examiners_officer = request.get('medical_examiners_officer')
+
+    def is_valid(self):
+        return True
+
+    def initialiseErrors(self):
+        self.errors = {"count": 0}

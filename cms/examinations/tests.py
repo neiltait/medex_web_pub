@@ -8,8 +8,8 @@ from unittest.mock import patch
 from alerts.messages import ErrorFieldRequiredMessage
 from alerts import messages
 
-from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
-    BereavedInformationForm, UrgencyInformationForm
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
 
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
@@ -78,8 +78,10 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
+    @patch('people.request_handler.get_medical_examiners_officers_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
+    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -87,11 +89,13 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
+    @patch('people.request_handler.get_medical_examiners_officers_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.BEREAVED_EXAMINATION_DATA)
+        form_data.update(mocks.get_bereaved_examination_data())
         form_data.pop('first_name', None)
         response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -110,13 +114,20 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_given_create_examination_with_first_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt'})
         form.is_valid()
-        self.assertIsNone(form.first_name_error)
+        self.assertIsFalse("first_name" in form.errors)
 
     def test_given_create_examination_without_last_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
         result = form.is_valid()
         self.assertIsFalse(result)
         self.assertEqual(form.errors["last_name"], ErrorFieldRequiredMessage('last name'))
+
+    def test_given_create_examination_with_name_greater_than_250_characters_does_not_validate(self):
+        form = PrimaryExaminationInformationForm(request={'first_name': 'matt' * 40,
+                                                          'last_name': 'matt' * 40})
+        form.is_valid()
+        self.assertIsTrue("first_name" in form.errors)
+        self.assertIsTrue("last_name" in form.errors)
 
     def test_given_create_examination_with_last_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'last_name': 'nicks'})
@@ -215,13 +226,19 @@ class ExaminationsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(
             {'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': '', 'date_of_birth_not_known': True})
         form.is_valid()
-        self.assertIsFalse("day_of_birth" in form.errors)
+        self.assertIsFalse("date_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_validate_if_all_date_boxes_are_filled(self):
         form = PrimaryExaminationInformationForm(
             {'day_of_birth': '26', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
         form.is_valid()
-        self.assertIsFalse("day_of_birth" in form.errors)
+        self.assertIsFalse("date_of_birth" in form.errors)
+
+    def test_date_of_birth_group_does_not_validate_if_date_boxes_are_filled_with_bad_date(self):
+        form = PrimaryExaminationInformationForm(
+            {'day_of_birth': '32', 'month_of_birth': '08', 'year_of_birth': '1978', 'date_of_birth_not_known': False})
+        form.is_valid()
+        self.assertIsTrue("date_of_birth" in form.errors)
 
     def test_date_of_birth_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': ''})
@@ -244,6 +261,12 @@ class ExaminationsFormsTests(MedExTestCase):
             {'day_of_death': '26', 'month_of_death': '08', 'year_of_death': '1978'})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
+
+    def test_date_of_death_group_does_not_validate_if_date_boxes_are_filled_with_bad_date(self):
+        form = PrimaryExaminationInformationForm(
+            {'day_of_death': '32', 'month_of_death': '08', 'year_of_death': '2019'})
+        form.is_valid()
+        self.assertIsTrue("date_of_death" in form.errors)
 
     def test_date_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': ''})
@@ -336,17 +359,17 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_content_returns_as_valid(self):
-        form = BereavedInformationForm(mocks.BEREAVED_EXAMINATION_DATA)
+        form = BereavedInformationForm(mocks.get_bereaved_examination_data())
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_returns_as_invalid(self):
-        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data = mocks.get_bereaved_examination_data()
         form_data.pop('year_of_appointment', None)
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date_returns_as_invalid(self):
-        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data = mocks.get_bereaved_examination_data()
         form_data['day_of_appointment'] = '31'
         form_data['month_of_appointment'] = '2'
         form = BereavedInformationForm(form_data)
@@ -360,4 +383,24 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_urgency_form_initialised_with_content_returns_as_valid(self):
         form = UrgencyInformationForm(mocks.URGENCY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
+
+#### Medical Team Form tests
+
+    def test_medical_team_member_form_initialised_empty_returns_as_valid(self):
+        form = MedicalTeamMembersForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_initialised_with_content_returns_as_valid(self):
+        form = MedicalTeamMembersForm(mocks.get_medical_team_form_data())
+        self.assertIsTrue(form.is_valid())
+
+#### Assigned Team Form tests
+
+    def test_medical_team_assigned_team_form_initialised_empty_returns_as_valid(self):
+        form = MedicalTeamAssignedTeamForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_assigned_team_form_initialised_with_content_returns_as_valid(self):
+        form = MedicalTeamAssignedTeamForm(mocks.get_assigned_medical_team_form_data())
         self.assertIsTrue(form.is_valid())
