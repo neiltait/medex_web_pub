@@ -2,6 +2,7 @@ from alerts import messages
 
 from . import request_handler
 
+
 class CreateUserForm():
   submit_btn_text = 'Save and add role/permission'
 
@@ -21,7 +22,6 @@ class CreateUserForm():
       self.email_error = messages.INVALID_EMAIL_DOMAIN
     
     return False if self.email_error else True
-
 
   def check_is_nhs_email(self):
     return '@nhs.uk' in self.email_address
@@ -56,14 +56,13 @@ class PermissionBuilderForm():
     self.trust_error = None
     self.region_error = None
 
-
     if self.role is None or self.role is '':
       self.role_error = messages.FIELD_MISSING % "a role"
 
     if self.permission_level is None or self.permission_level is '':
       self.permission_level_error = messages.FIELD_MISSING % "a level"
 
-    if self.permission_level == 'trust' and (self.trust is None or self.trust is ''):
+    if self.permission_level == 'trust' and (self.trust is None or self.trust is '' or self.trust == 'None'):
       self.trust_error = messages.FIELD_MISSING % "a trust"
 
     if self.permission_level == 'regional' and (self.region is None or self.region is ''):
