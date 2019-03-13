@@ -1,0 +1,52 @@
+@import '../variables';
+
+.medex-modal-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+
+  width: 100%;
+  height: 100vh;
+
+  background-color: $nhs-grey-translucent;
+  display: none;
+
+  .medex-modal {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30vh;
+
+    width: 50%;
+    padding: 1.5rem;
+
+    background-color: $white;
+    border-radius: 5px;
+
+    .modal-btn-row {
+      justify-content: space-between;
+      margin-top: 25px;
+      margin-bottom: 15px;
+
+      .nhsuk-button {
+        margin-bottom: 0;
+        font-size: 1rem;
+      }
+
+      .modal-cancel-btn {
+        padding: 0.4em 0.75em;
+        border-radius: 4px;
+
+        background-color: $nhs-red;
+        border: 2px solid transparent;
+        box-shadow: 0 4px 0 #3f0000;
+
+        color: $white;
+        font-size: $default-font-size;
+        font-weight: 600;
+
+        cursor: pointer;
+      }
+    }
+  }
+}

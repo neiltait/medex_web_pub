@@ -13,6 +13,8 @@
 {% endblock %}
 
 {% block page %}
+  {% include 'alerts/partials/_modal.html' with config=tab_modal %}
+
   <div class="examination__edit">
     {% if error_count > 0 %}
         <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
@@ -44,7 +46,7 @@
     {% endfor %}
 
     <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-          action="{% url 'edit_examination' examination_id=examination_id %}" method="post">
+          action="{% url 'edit_examination' examination_id=examination_id %}" method="post" data-error-count="{{error_count}}">
       {% csrf_token %}
 
       <div class="form-tabs flex-row baseline">

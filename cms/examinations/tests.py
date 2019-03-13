@@ -76,21 +76,26 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
     @patch('people.request_handler.get_medical_examiners_officers_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_mes, mock_meos, mock_user_validation):
+    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit.html')
 
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
     @patch('people.request_handler.get_medical_examiners_officers_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_mes, mock_meos, mock_user_validation):
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation):
         self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
         form_data = mocks.get_minimal_create_form_data()
+        form_data.update(mocks.get_bereaved_examination_data())
         form_data.pop('first_name', None)
         response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

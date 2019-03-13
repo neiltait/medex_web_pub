@@ -9,10 +9,36 @@
     setup: function () {
       this.saveBar = this.form.find('.sticky-save');
       this.hasChanges = false;
+      this.hasErrors = this.form[0].dataset.errorCount > 0;
       this.initialiseInputs();
       this.initialiseTabs();
+      this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
       this.setupAdditionalNotes();
       this.setupAddRemoveItemSections();
+      this.setInitialView();
+    },
+
+    setInitialView: function() {
+      if (location.search && this.hasErrors) {
+        var paramsJSON = this.decodeQueryParams(location.search.substr(1));
+        this.showTab(paramsObject['previousTab']);
+        window.history.replaceState({}, document.title, location.origin + location.pathname);
+      }
+      else if (location.hash) {
+        this.showTab(location.hash.substr(1));
+        window.history.replaceState({}, document.title, location.origin + location.pathname);
+      }
+    },
+
+    decodeQueryParams: function(params) {
+      var pairs = params.split('&');
+      paramsObject = {};
+      pairs.forEach(function(pair) {
+        var key = pair.split('=')[0];
+        var value = pair.split('=')[1];
+        paramsObject[key] = value;
+      });
+      return paramsObject
     },
 
     initialiseTabs: function () {
@@ -38,35 +64,45 @@
         that.showTab("case-outcomes")
       });
     },
+
     setupAdditionalNotes() {
       var additionalNotesFields = $('.additional-notes');
       for (var i = 0; i < additionalNotesFields.length; i++) {
         new AdditionalNotesSection(additionalNotesFields[i]);
       }
     },
+
     setupAddRemoveItemSections() {
       var addRemoveItemSections = $('.add-remove-item-section')
       for (var i = 0; i < addRemoveItemSections.length; i++) {
         new AddRemoveItemSection(addRemoveItemSections[i]);
       }
     },
-    showTab: function (tabId) {
-      for (tab of [this.tab1, this.tab2, this.tab3, this.tab4]) {
-        if (tab[0].id === tabId + "-tab") {
-          tab.addClass("active")
-        } else {
-          tab.removeClass("active")
-        }
-      }
 
-      for (section of [this.section1, this.section2, this.section3, this.section4]) {
-        if (section[0].id === tabId + "-section") {
-          section.removeClass("medex-hidden")
-        } else {
-          section.addClass("medex-hidden")
+    showTab: function (tabId) {
+      if (this.hasChanges) {
+        var currentTab = this.form.find('.tab-item.active')[0].id.slice(0, -4);
+        this.tabChangeModal.show(tabId, currentTab);
+
+      } else {
+        for (tab of [this.tab1, this.tab2, this.tab3, this.tab4]) {
+          if (tab[0].id === tabId + "-tab") {
+            tab.addClass("active");
+          } else {
+            tab.removeClass("active");
+          }
+        }
+
+        for (section of [this.section1, this.section2, this.section3, this.section4]) {
+          if (section[0].id === tabId + "-section") {
+            section.removeClass("medex-hidden");
+          } else {
+            section.addClass("medex-hidden");
+          }
         }
       }
     },
+
     initialiseInputs: function () {
       var inputs = this.form.find('input');
       for (var i = 0; i < inputs.length; i++) {
@@ -82,6 +118,11 @@
       for (var i = 0; i < textAreas.length; i++) {
         new Input(textAreas[i], this.handleChange.bind(this));
       }
+    },
+
+    forceSave: function(currentTab, nextTab) {
+      this.form[0].action += '?previousTab=' + currentTab + '#' + nextTab;
+      this.form.submit();
     },
 
     handleChange: function () {
@@ -111,6 +152,40 @@
       this.input.on('input', this.changeCallback);
     }
   }
+
+  var ChangeTabModal = function(modal, saveCallBack) {
+    this.modal = $(modal);
+    this.saveCallBack = saveCallBack;
+    this.setup();
+  }
+
+  ChangeTabModal.prototype = {
+    setup: function() {
+      this.saveButton = this.modal.find('#save-continue');
+      this.discardButton = this.modal.find('#discard');
+      this.startWatchers();
+    },
+
+    startWatchers: function() {
+      var that = this;
+
+      this.saveButton.click(function() {
+        that.saveCallBack(that.currentTab, that.nextTab);
+      });
+
+      this.discardButton.click(function() {
+        window.location.hash = that.nextTab;
+        location.reload();
+      });
+    },
+
+    show: function(nextTab, currentTab) {
+      this.currentTab = currentTab;
+      this.nextTab = nextTab;
+      this.modal.show();
+    }
+  }
+
 
   var AdditionalNotesSection = function (section) {
     this.section = $(section);
