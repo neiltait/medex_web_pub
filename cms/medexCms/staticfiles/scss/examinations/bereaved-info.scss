@@ -1,0 +1,17 @@
+@import '../variables';
+
+.additional-bereaved {
+  .bereaved {
+    display: none;
+    border-top: 1px solid $nhs-grey;
+    padding-top: 1.5rem;
+  }
+
+  #add-another-btn {
+    margin-right: 2rem;
+  }
+
+  #remove-btn {
+    display: none;
+  }
+}

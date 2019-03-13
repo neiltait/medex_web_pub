@@ -259,46 +259,81 @@ class BereavedInformationForm:
     def __init__(self, request=None):
         self.errors = {'count': 0}
         if request:
-            self.bereaved_name = request.get('bereaved_name')
-            self.relationship = request.get('relationship')
-            self.present_death = request.get('present_death')
-            self.phone_number = request.get('phone_number')
-            self.informed = request.get('informed')
-            self.day_of_appointment = request.get('day_of_appointment')
-            self.month_of_appointment = request.get('month_of_appointment')
-            self.year_of_appointment = request.get('year_of_appointment')
-            self.time_of_appointment = request.get('time_of_appointment')
+            self.bereaved_name_1 = request.get('bereaved_name_1')
+            self.relationship_1 = request.get('relationship_1')
+            self.present_death_1 = request.get('present_death_1')
+            self.phone_number_1 = request.get('phone_number_1')
+            self.informed_1 = request.get('informed_1')
+            self.day_of_appointment_1 = request.get('day_of_appointment_1')
+            self.month_of_appointment_1 = request.get('month_of_appointment_1')
+            self.year_of_appointment_1 = request.get('year_of_appointment_1')
+            self.time_of_appointment_1 = request.get('time_of_appointment_1')
+            self.bereaved_name_2 = request.get('bereaved_name_2')
+            self.relationship_2 = request.get('relationship_2')
+            self.present_death_2 = request.get('present_death_2')
+            self.phone_number_2 = request.get('phone_number_2')
+            self.informed_2 = request.get('informed_2')
+            self.day_of_appointment_2 = request.get('day_of_appointment_2')
+            self.month_of_appointment_2 = request.get('month_of_appointment_2')
+            self.year_of_appointment_2 = request.get('year_of_appointment_2')
+            self.time_of_appointment_2 = request.get('time_of_appointment_2')
             self.appointment_additional_details = request.get('appointment_additional_details')
         else:
-            self.bereaved_name = ''
-            self.relationship = ''
-            self.present_death = ''
-            self.phone_number = ''
-            self.informed = ''
-            self.day_of_appointment = ''
-            self.month_of_appointment = ''
-            self.year_of_appointment = ''
-            self.time_of_appointment = ''
+            self.bereaved_name_1 = ''
+            self.relationship_1 = ''
+            self.present_death_1 = ''
+            self.phone_number_1 = ''
+            self.informed_1 = ''
+            self.day_of_appointment_1 = ''
+            self.month_of_appointment_1 = ''
+            self.year_of_appointment_1 = ''
+            self.time_of_appointment_1 = ''
+            self.bereaved_name_2 = ''
+            self.relationship_2 = ''
+            self.present_death_2 = ''
+            self.phone_number_2 = ''
+            self.informed_2 = ''
+            self.day_of_appointment_2 = ''
+            self.month_of_appointment_2 = ''
+            self.year_of_appointment_2 = ''
+            self.time_of_appointment_2 = ''
             self.appointment_additional_details = ''
 
     def is_valid(self):
-        valid_date = True
+        valid_date_1 = True
+        valid_date_2 = True
+    
+        if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
+                                               self.day_of_appointment_1, self.time_of_appointment_1]):
+            hours = self.time_of_appointment_1.split(':')[0]
+            mins = self.time_of_appointment_1.split(':')[1]
+            valid_date_1 = validate_date(self.year_of_appointment_1, self.month_of_appointment_1,
+                                       self.day_of_appointment_1, hours, mins)
 
-        if all(v is not '' for v in [self.year_of_appointment, self.month_of_appointment,
-                                               self.day_of_appointment, self.time_of_appointment]):
-            hours = self.time_of_appointment.split(':')[0]
-            mins = self.time_of_appointment.split(':')[1]
-            valid_date = validate_date(self.year_of_appointment, self.month_of_appointment,
-                                       self.day_of_appointment, hours, mins)
+        elif any(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
+                                                 self.day_of_appointment_1, self.time_of_appointment_1]):
+            valid_date_1 = False
 
-        elif any(v is not '' for v in [self.year_of_appointment, self.month_of_appointment,
-                                                 self.day_of_appointment, self.time_of_appointment]):
-            valid_date = False
-
-        if not valid_date:
+        if not valid_date_1:
             self.errors['count'] += 1
-            self.errors['date_of_appointment'] = messages.INVALID_DATE
-        return valid_date
+            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
+
+        if all(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
+                                               self.day_of_appointment_2, self.time_of_appointment_2]):
+            hours = self.time_of_appointment_2.split(':')[0]
+            mins = self.time_of_appointment_2.split(':')[1]
+            valid_date_2 = validate_date(self.year_of_appointment_2, self.month_of_appointment_2,
+                                       self.day_of_appointment_2, hours, mins)
+
+        elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
+                                                 self.day_of_appointment_2, self.time_of_appointment_1]):
+            valid_date_2 = False
+
+        if not valid_date_2:
+            self.errors['count'] += 1
+            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
+
+        return True if valid_date_1 and valid_date_2 else False
 
 
 class UrgencyInformationForm:
