@@ -64,6 +64,10 @@ input {
   align-items: center;
 }
 
+.flex-vertical {
+    flex-direction: column;
+}
+
 .inline {
   display: inline;
 }

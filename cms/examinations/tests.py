@@ -1,72 +1,102 @@
 import json
 import uuid
+from django.conf import settings
 from http.cookies import SimpleCookie
+from rest_framework import status
 from unittest.mock import patch
 
 from alerts.messages import ErrorFieldRequiredMessage
-from django.conf import settings
-from examinations.forms import PrimaryExaminationInformationForm
-from medexCms.test.utils import MedExTestCase
+from alerts import messages
+
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
+    BereavedInformationForm, UrgencyInformationForm
+
 from medexCms.test import mocks
-
-from rest_framework import status
-
-TRUSTS = [{
-    'id': '1',
-    'name': 'Barnet Hospital',
-}, {
-    'id': '2',
-    'name': 'Sheffield Hospital',
-}, {
-    'id': '3',
-    'name': 'Gloucester Hospital',
-}]
-from requests.models import Response
-
-ME_OFFICES = [{
-    'id': '1',
-    'name': 'Barnet Hospital ME Office',
-}, {
-    'id': '2',
-    'name': 'Sheffield Hospital ME Office',
-}, {
-    'id': '3',
-    'name': 'Gloucester Hospital ME Office',
-}]
-
-
-def get_minimal_create_form_data():
-    return {
-        'last_name': 'Nicks',
-        'first_name': 'Matt',
-        'gender': 'male',
-        'nhs_number_not_known': True,
-        'date_of_birth_not_known': True,
-        'time_of_death_not_known': True,
-        'date_of_death_not_known': True,
-        'place_of_death': 1,
-        'me_office': 1,
-    }
-
-
-user_obj = {
-    'user_id': '1',
-    'first_name': 'Test',
-    'last_name': 'User',
-    'email_address': 'test.user@nhs.uk',
-    'permissions': []
-}
-SUCCESSFUL_VALIDATE_SESSION = Response()
-SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
-SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_obj).encode('utf-8')
-
-UNSUCCESSFUL_VALIDATE_SESSION = Response()
-UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_401_UNAUTHORIZED
-UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
+from medexCms.test.utils import MedExTestCase
 
 
 class ExaminationsViewsTests(MedExTestCase):
 
+#### Create case tests
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation,  mock_locations_list, mock_me_offices_list):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        response = self.client.get('/cases/create')
+        self.assertTemplateUsed(response, 'examinations/create.html')
+        alerts_list = self.get_context_value(response.context, 'alerts')
+        self.assertEqual(len(alerts_list), 0)
+
+    @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
+        response = self.client.get('/cases/create')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
+    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/')
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.post_new_examination', return_value=mocks.UNSUCCESSFUL_CASE_CREATE)
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation, mock_case_create, mock_locations_list, mock_me_offices_list):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.pop('first_name', None)
+        response = self.client.post('/cases/create', form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'examinations/create.html')
+        alerts_list = self.get_context_value(response.context, 'alerts')
+        self.assertEqual(len(alerts_list), 1)
+        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
+
+#### Edit case tests
+
+    @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
+        response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_user_validation):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/edit.html')
+
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_user_validation):
+        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.pop('first_name', None)
+        response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'examinations/edit.html')
+
+
+class ExaminationsFormsTests(MedExTestCase):
+
+#### Primary Information Form
     def test_given_create_examination_without_first_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
         result = form.is_valid()
@@ -243,7 +273,7 @@ class ExaminationsViewsTests(MedExTestCase):
 
     def test_form_validates_with_required_data(self):
         # Given a complete form
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form = PrimaryExaminationInformationForm(form_data)
 
         # When it is validated
@@ -254,7 +284,7 @@ class ExaminationsViewsTests(MedExTestCase):
 
     def test_form_validates_with_optional_data(self):
         # Given a complete form including optional data
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form_data['gender_details'] = 'example gender details'
         form_data['hospital_number_1'] = 'example hospital number 1'
         form_data['hospital_number_2'] = 'example hospital number 2'
@@ -267,11 +297,10 @@ class ExaminationsViewsTests(MedExTestCase):
 
         # The whole form is valid
         self.assertIsTrue(form_is_valid)
-        #### Create case tests
 
     def test_form_stores_optional_data(self):
         # Given a complete form including optional data
-        form_data = get_minimal_create_form_data()
+        form_data = mocks.get_minimal_create_form_data()
         form_data['gender_details'] = 'example gender details'
         form_data['hospital_number_1'] = 'example hospital number 1'
         form_data['hospital_number_2'] = 'example hospital number 2'
@@ -286,44 +315,45 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
         self.assertIs(form.out_of_hours, True)
 
-    @patch('users.request_handler.validate_session', return_value=SUCCESSFUL_VALIDATE_SESSION)
-    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
-    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
-    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation,  mock_locations_list, mock_me_offices_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.get('/cases/create')
-        self.assertTemplateUsed(response, 'examinations/create.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 0)
+#### Secondary Info Form tests
 
-    @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self):
-        response = self.client.get('/cases/create')
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/login')
+    def test_secondary_form_initialised_empty_returns_as_valid(self):
+        form = SecondaryExaminationInformationForm()
+        self.assertIsTrue(form.is_valid())
 
+    def test_secondary_form_initialised_with_content_returns_as_valid(self):
+        form = SecondaryExaminationInformationForm(mocks.SECONDARY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
 
-    @patch('users.request_handler.validate_session', return_value=UNSUCCESSFUL_VALIDATE_SESSION)
-    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
-    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
-    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation, mock_locations_list, mock_me_offices_list):
-        response = self.client.get('/cases/create')
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/login')
+#### Bereaved Info Form tests
 
-    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
-    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.post('/cases/create', get_minimal_create_form_data())
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/')
+    def test_bereaved_form_initialised_empty_returns_as_valid(self):
+        form = BereavedInformationForm()
+        self.assertIsTrue(form.is_valid())
 
-    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    @patch('examinations.request_handler.post_new_examination', return_value=mocks.UNSUCCESSFUL_CASE_CREATE)
-    @patch('locations.request_handler.get_locations_list', return_value=TRUSTS)
-    @patch('locations.request_handler.get_me_offices_list', return_value=ME_OFFICES)
-    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation, mock_case_create, mock_locations_list, mock_me_offices_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-        response = self.client.post('/cases/create', get_minimal_create_form_data())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_bereaved_form_initialised_with_content_returns_as_valid(self):
+        form = BereavedInformationForm(mocks.BEREAVED_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
+
+    def test_bereaved_form_initialised_with_incomplete_returns_as_invalid(self):
+        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data.pop('year_of_appointment', None)
+        form = BereavedInformationForm(form_data)
+        self.assertIsFalse(form.is_valid())
+
+    def test_bereaved_form_initialised_with_invalid_date_returns_as_invalid(self):
+        form_data = mocks.BEREAVED_EXAMINATION_DATA
+        form_data['day_of_appointment'] = '31'
+        form_data['month_of_appointment'] = '2'
+        form = BereavedInformationForm(form_data)
+        self.assertIsFalse(form.is_valid())
+
+#### Urgency Info Form tests
+
+    def test_urgency_form_initialised_empty_returns_as_valid(self):
+        form = UrgencyInformationForm()
+        self.assertIsTrue(form.is_valid())
+
+    def test_urgency_form_initialised_with_content_returns_as_valid(self):
+        form = UrgencyInformationForm(mocks.URGENCY_EXAMINATION_DATA)
+        self.assertIsTrue(form.is_valid())
