@@ -1,13 +1,14 @@
+from django.shortcuts import render
+from rest_framework import status
+
 from alerts import messages
 from alerts.utils import generate_error_alert
-from django.shortcuts import render
 from examinations import request_handler
-from locations import request_handler as location_request_handler
-
-from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm,\
-    BereavedInformationForm, UrgencyInformationForm
+from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
 from home.utils import redirect_to_login, redirect_to_landing
-from rest_framework import status
+from locations import request_handler as location_request_handler
+from people import request_handler as people_request_handler
 from users.models import User
 
 
@@ -63,42 +64,58 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    medical_examiners = people_request_handler.get_medical_examiners_list()
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = None
     secondary_info_form = None
     bereaved_info_form = None
     urgency_info_form = None
+    medical_team_members_form = None
+    medical_team_assigned_team_form = None
 
     if request.method == 'POST':
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
-        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form)
+        medical_team_members_form = MedicalTeamMembersForm(request.POST)
+        medical_team_assigned_team_form = MedicalTeamAssignedTeamForm(request.POST)
+
+        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
+                                         medical_team_members_form)
         if forms_valid:
             print('forms valid')
         else:
-            error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] +\
+            error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] + \
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
             status_code = status.HTTP_400_BAD_REQUEST
 
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'medical_examiners': medical_examiners,
+        'medical_examiners_officers': medical_examiners_officers,
         'primary_info_form': primary_info_form,
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
+        'medical_team_form': medical_team_members_form,
+        'medical_team_assigned_form': medical_team_assigned_team_form,
+        'assigned_team_form': medical_team_members_form,
         'error_count': error_count,
     }
 
     return render(request, 'examinations/edit.html', context, status=status_code)
 
 
-def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
+def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
+        medical_team_members_form):
     primary_valid = primary_info_form.is_valid()
     secondary_valid = secondary_info_form.is_valid()
     bereaved_valid = bereaved_info_form.is_valid()
     urgency_valid = urgency_info_form.is_valid()
-    return primary_valid and secondary_valid and bereaved_valid and urgency_valid
+    medical_team_members_valid = medical_team_members_form.is_valid()
+
+    return primary_valid and secondary_valid and bereaved_valid and urgency_valid and medical_team_members_valid

@@ -1,0 +1,263 @@
+<div class="medex-form-section">
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-full">
+      <h3 class="nhsuk-heading-s">Consultants Information</h3>
+    </div>
+  </div>
+
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_name_1 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_name_1">
+            Consultant responsible for care
+          </label>
+          {% if errors.consultant_name_1 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_name_1 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_1 %}nhsuk-input--error{% endif %}"
+              id="consultant_name_1" name="consultant_name_1"
+              value="{{ form.consultant_name_1 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_role_1 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_role_1">
+            Role
+          </label>
+          {% if errors.consultant_role_1 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_role_1 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_1 %}nhsuk-input--error{% endif %}"
+              id="consultant_role_1" name="consultant_role_1"
+              value="{{ form.consultant_role_1 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_organisation_1 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_organisation_1">
+            Organisation
+          </label>
+          {% if errors.consultant_organisation_1 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_organisation_1 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_1 %}nhsuk-input--error{% endif %}"
+              id="consultant_organisation_1" name="consultant_organisation_1"
+              value="{{ form.consultant_organisation_1 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_phone_number_1 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_phone_number_1">
+            Personal phone / bleep number
+          </label>
+          {% if errors.consultant_phone_number_1 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_1 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_1 %}nhsuk-input--error{% endif %}"
+              id="consultant_phone_number_1" name="consultant_phone_number_1"
+              value="{{ form.consultant_phone_number_1 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-1">
+      <button class="medex-hyperlink-button additional-notes-button" id="consultant-note-1__btn">Add a note</button>
+      <div class="nhsuk-form-group medex-hidden additional-notes-panel" id="consultant-note-1__panel">
+        <label class="nhsuk-label" for="consultant-note-1">
+          Additional notes
+        </label>
+        <textarea class="nhsuk-textarea medex-textarea"
+                  id="consultant-note-1" name="consultant-note-1" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="medex-form-section">
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_name_2 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_name_2">
+            Other consultant responsible for care
+          </label>
+          {% if errors.consultant_name_2 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_name_2 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_2 %}nhsuk-input--error{% endif %}"
+              id="consultant_name_2" name="consultant_name_2"
+              value="{{ form.consultant_name_2 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_role_2 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_role_2">
+            Role
+          </label>
+          {% if errors.consultant_role_2 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_role_2 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_2 %}nhsuk-input--error{% endif %}"
+              id="consultant_role_2" name="consultant_role_2"
+              value="{{ form.consultant_role_2 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_organisation_2 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_organisation_2">
+            Organisation
+          </label>
+          {% if errors.consultant_organisation_2 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_organisation_2 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_2 %}nhsuk-input--error{% endif %}"
+              id="consultant_organisation_2" name="consultant_organisation_2"
+              value="{{ form.consultant_organisation_2 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-one-half">
+      <fieldset class="nhsuk-fieldset">
+        <div class="nhsuk-form-group {% if errors.consultant_phone_number_2 %}nhsuk-form-group--error{% endif %}">
+          <label class="nhsuk-label" for="consultant_phone_number_2">
+            Personal phone / bleep number
+          </label>
+          {% if errors.consultant_phone_number_2 %}
+            <span
+                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_2 }}</span>{% endif %}
+          <input
+              class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_2 %}nhsuk-input--error{% endif %}"
+              id="consultant_phone_number_2" name="consultant_phone_number_2"
+              value="{{ form.consultant_phone_number_2 }}" type="text">
+        </div>
+      </fieldset>
+    </div>
+    <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-2">
+      <button class="medex-hyperlink-button additional-notes-button">Add a note</button>
+      <div class="nhsuk-form-group medex-hidden additional-notes-panel">
+        <label class="nhsuk-label" for="consultant-note_2">
+          Additional notes
+        </label>
+        <textarea class="nhsuk-textarea medex-textarea"
+                  id="consultant-note_2" name="consultant-note_2" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="add-remove-item-section">
+  <div class="medex-form-section add-remove-item-panel medex-hidden">
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-one-half">
+        <fieldset class="nhsuk-fieldset">
+          <div class="nhsuk-form-group {% if errors.consultant_name_3 %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="consultant_name_3">
+              Third consultant responsible for care
+            </label>
+            {% if errors.consultant_name_3 %}
+              <span
+                  class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_name_3 }}</span>{% endif %}
+            <input
+                class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_3 %}nhsuk-input--error{% endif %}"
+                id="consultant_name_3" name="consultant_name_3"
+                value="{{ form.consultant_name_3 }}" type="text">
+          </div>
+        </fieldset>
+      </div>
+      <div class="nhsuk-grid-column-one-half">
+        <fieldset class="nhsuk-fieldset">
+          <div class="nhsuk-form-group {% if errors.consultant_role_3 %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="consultant_role_3">
+              Role
+            </label>
+            {% if errors.consultant_role_3 %}
+              <span
+                  class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_role_3 }}</span>{% endif %}
+            <input
+                class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_3 %}nhsuk-input--error{% endif %}"
+                id="consultant_role_3" name="consultant_role_3"
+                value="{{ form.consultant_role_3 }}" type="text">
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-one-half">
+        <fieldset class="nhsuk-fieldset">
+          <div class="nhsuk-form-group {% if errors.consultant_organisation_3 %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="consultant_organisation_3">
+              Organisation
+            </label>
+            {% if errors.consultant_organisation_3 %}
+              <span
+                  class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_organisation_3 }}</span>{% endif %}
+            <input
+                class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_3 %}nhsuk-input--error{% endif %}"
+                id="consultant_organisation_3" name="consultant_organisation_3"
+                value="{{ form.consultant_organisation_3 }}" type="text">
+          </div>
+        </fieldset>
+      </div>
+      <div class="nhsuk-grid-column-one-half">
+        <fieldset class="nhsuk-fieldset">
+          <div class="nhsuk-form-group {% if errors.consultant_phone_number_3 %}nhsuk-form-group--error{% endif %}">
+            <label class="nhsuk-label" for="consultant_phone_number_3">
+              Personal phone / bleep number
+            </label>
+            {% if errors.consultant_phone_number_3 %}
+              <span
+                  class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_3 }}</span>{% endif %}
+            <input
+                class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_3 %}nhsuk-input--error{% endif %}"
+                id="consultant_phone_number_3" name="consultant_phone_number_3"
+                value="{{ form.consultant_phone_number_3 }}" type="text">
+          </div>
+        </fieldset>
+      </div>
+      <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-3">
+        <button class="medex-hyperlink-button additional-notes-button">Add a note</button>
+        <div class="nhsuk-form-group medex-hidden additional-notes-panel">
+          <label class="nhsuk-label" for="consultant-note_3">
+            Additional notes
+          </label>
+          <textarea class="nhsuk-textarea medex-textarea"
+                    id="consultant-note_3" name="consultant-note_3" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-full">
+      <button class="nhsuk-button add-item-button" type="submit">
+        Add additional consultant
+      </button>
+      <button class="nhsuk-button nhsuk-button--secondary remove-item-button medex-hidden" type="submit">
+        Remove additional consultant
+      </button>
+    </div>
+  </div>
+</div>

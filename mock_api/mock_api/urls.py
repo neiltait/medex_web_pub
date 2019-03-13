@@ -5,6 +5,8 @@ from .me_offices import get_me_offices_list
 from .locations import get_locations_list
 from .users import load_by_email
 from .examinations import create_case
+from .medical_examiners import get_medical_examiners_list
+from .medical_examiners_officers import get_medical_examiners_officers_list
 
 from . import locations, users
 
@@ -21,4 +23,6 @@ urlpatterns = [
     path('locations/get_locations_list', get_locations_list, name='get_locations_list'),
     path('me_offices/get_me_offices_list', get_me_offices_list, name='get_me_offices_list'),
     path('cases/create', create_case, name='create_case'),
+    path('people/get_medical_examiners_list', get_medical_examiners_list, name='medical_examiners_list'),
+    path('people/get_medical_examiners_officers_list', get_medical_examiners_officers_list, name='medical_examiners_officers_list'),
 ]
