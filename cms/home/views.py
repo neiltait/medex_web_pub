@@ -26,7 +26,8 @@ def index(request):
 def login_callback(request):
   token_response = request_handler.create_session(request.GET.get('code'))
   response = redirect_to_landing()
-  response.set_cookie(settings.AUTH_TOKEN_NAME, json.dumps(token_response.json()))
+  auth_token = token_response.json().get('access_token')
+  response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
   return response
 
 
