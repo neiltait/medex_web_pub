@@ -8,32 +8,49 @@
 
 {% block page %}
   <div class="user-creation-page">
+    {% if invalid > 0 %}
+        <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
+             tabindex="-1">
+            <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="nhsuk-error-summary__body">
+                <p>
+                    Please correct the errors in this form
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
     <h1 class="page-title">
       {{ page_heading }}
     </h1>
 
-    {% for alert in alerts %}
-      {% include 'alerts/partials/_alert.html' %}
-    {% endfor %}
-
     <form id="new-user-form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_user' %}" method="post">
       {% csrf_token %}
 
-      <div class="flex-row baseline form-row">
-        <div class="form-item">
-          <label class="form-item--header" for="email_address">Email address</label>
-
-          <input id="email_address" class="form-field{% if form.email_error %} error{% endif %}" type="text" name="email_address" value="{{form.email_address}}">
-
-          {% if form.email_error %}
-            <div class="notification error">
-              {{form.email_error}}
-            </div>
-          {% endif %}
+      <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if form.email_error %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="email_address">
+                        Email address
+                    </label>
+                    {% if form.email_error %}
+                      <span class="nhsuk-error-message medex-font-default-override">{{ form.email_error }}</span>
+                    {% endif %}
+                    <input class="nhsuk-input {% if form.email_error %}nhsuk-input--error{% endif %}"
+                           id="email_address" name="email_address" value="{{ form.email_address }}" type="text">
+                </div>
+            </fieldset>
         </div>
       </div>
-      
-      <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+
+      <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-full">
+              <input id="submit-btn" class="nhsuk-button" type="submit" value="{{form.submit_btn_text}}"/>
+          </div>
+      </div>
     </form>
   </div>
 {% endblock %}

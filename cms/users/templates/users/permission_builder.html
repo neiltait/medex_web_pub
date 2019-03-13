@@ -14,6 +14,20 @@
 {% block page %}
   <div class="permission-builder-page">
     {% if managed_user %}
+      {% if invalid > 0 %}
+          <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
+               tabindex="-1">
+              <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                  There is a problem
+              </h2>
+              <div class="nhsuk-error-summary__body">
+                  <p>
+                      Please correct the errors in this form
+                  </p>
+              </div>
+          </div>
+      {% endif %}
+
       <h1 class="page-title">
         {% if managed_user.firstname %}
           {{ managed_user.fullname }}
@@ -26,131 +40,159 @@
         {{ sub_heading}}
       </h2>
 
-      {% for alert in alerts %}
-        {% include 'alerts/partials/_alert.html' %}
-      {% endfor %}
-
       <form id="permission-builder-form" class="form{% if invalid %} error{% endif %}" action="{% url submit_path user_id=managed_user.user_id %}" method="post">
         {% csrf_token %}
 
-        <div class="flex-row baseline form-row">
-          <div id='role-radio-buttons' class="form-item">
-            <label class="form-item--header">What role will the user be performing?</label>
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-two-thirds">
+            <div class="nhsuk-form-group {% if form.role_error %}nhsuk-form-group--error{% endif %}">
 
-            <div class="flex-row">
-              <div class="option-column">
-                <div class="radiobutton__item">
-                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-1" value="me" {% if form.role == 'me' %}checked{% endif %}>
-                  <label class="radiobutton__label" for="role-1">ME</label>
-                </div>
+              <fieldset id='role-radio-buttons' class="nhsuk-fieldset">
+                <legend class="nhsuk-fieldset__legend">
+                  What role will the user be performing?
+                </legend>
 
-                <div class="radiobutton__item">
-                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-2" value="meo" {% if form.role == 'meo' %}checked{% endif %}>
-                  <label class="radiobutton__label" for="role-2">MEO</label>
-                </div>
-              </div>
+                {% if form.role_error %}
+                  <span class="nhsuk-error-message medex-font-default-override">{{ form.role_error }}</span>
+                {% endif %}
 
-              <div class="option-column">
-                <div class="radiobutton__item">
-                  <input class="form-field radiobutton__input{% if form.role_error %} error{% endif %}" type="radio" name="role" id="role-3" value="sa" {% if form.role == 'sa' %}checked{% endif %}>
-                  <label class="radiobutton__label" for="role-3">System admin only</label>
+                <div class="nhsuk-radios">
+                  <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                      <div class="nhsuk-radios__item">
+                        <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
+                            id="role-1" name="role" type="radio" value="me" {% if form.role == 'me' %}checked{% endif %}>
+                        <label class="nhsuk-label nhsuk-radios__label" for="role-1">
+                          ME
+                        </label>
+                      </div>
+
+                      <div class="nhsuk-radios__item">
+                        <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
+                             id="role-2" name="role" type="radio" value="meo" {% if form.role == 'meo' %}checked{% endif %}>
+                        <label class="nhsuk-label nhsuk-radios__label" for="role-2">
+                          MEO
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="nhsuk-grid-column-one-half">
+                      <div class="nhsuk-radios__item">
+                        <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
+                             id="role-3" name="role" type="radio" value="other" {% if form.role == 'sa' %}checked{% endif %}>
+                        <label class="nhsuk-label nhsuk-radios__label" for="role-3">
+                          System admin only
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
-
-            {% if form.role_error %}
-              <div class="notification error">
-                {{form.role_error}}
-              </div>
-            {% endif %}
           </div>
         </div>
 
-        <div class="flex-row baseline form-row">
-          <div id="level-radio-buttons" class="form-item">
-            <label class="form-item--header">What permission level do they need?</label>
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-two-thirds">
+            <div class="nhsuk-form-group {% if form.permission_level_error %}nhsuk-form-group--error{% endif %}">
+              <fieldset id="level-radio-buttons" class="nhsuk-fieldset">
+                <legend class="nhsuk-fieldset__legend">
+                    What permission level do they need?
+                </legend>
 
-            <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-1" value="national" {% if form.permission_level == 'national' %}checked{% endif %}>
-              <label class="radiobutton__label" for="level-1">National</label>
+                {% if form.permission_level_error %}
+                  <span class="nhsuk-error-message medex-font-default-override">{{ form.permission_level_error }}</span>
+                {% endif %}
+
+                <div class="nhsuk-radios">
+                  <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
+                         id="level-1" name="permission_level" type="radio" value="national" {% if form.permission_level == 'national' %}checked{% endif %}>
+                    <label class="nhsuk-label nhsuk-radios__label" for="level-1">
+                      National
+                    </label>
+                  </div>
+
+                  <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
+                         id="level-2" name="permission_level" type="radio" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %}>
+                    <label class="nhsuk-label nhsuk-radios__label" for="level-2">
+                      Regional
+                    </label>
+                  </div>
+                    <div class="nhsuk-radios__item">
+                      <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
+                           id="level-3" name="permission_level" type="radio" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %}>
+                      <label class="nhsuk-label nhsuk-radios__label" for="level-3">
+                        Trust
+                      </label>
+                    </div>
+                  </div>
+              </fieldset>
             </div>
-
-            <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-2" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %}>
-              <label class="radiobutton__label" for="level-2">Regional</label>
-            </div>
-
-            <div class="radiobutton__item">
-              <input class="form-field radiobutton__input{% if form.permission_level_error %} error{% endif %}" type="radio" name="permission_level" id="level-3" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %}>
-              <label class="radiobutton__label" for="level-3">Trust</label>
-            </div>
-
-            {% if form.permission_level_error %}
-              <div class="notification error">
-                {{form.permission_level_error}}
-              </div>
-            {% endif %}
           </div>
         </div>
 
-        <div class="flex-row baseline form-row">
-          <div id="region-selector" class="form-item">
-            <label class="form-item--header" for="trust">
-              Region and associated NHS Trusts/ME Offices
-            </label>
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-full">
+            <div id="region-selector" class="nhsuk-form-group {% if form.region_error %}nhsuk-form-group--error{% endif %}">
+              <label class="nhsuk-label" for="region">
+                Region and associated NHS Trusts/ME Offices
+              </label>
 
-            <div class="dropdown">
-                <select name="region">
-                    <option value="" disabled hidden selected>Select a region</option>
-                    {% for region in regions %}
-                      <option value="{{region.id}}">{{region.name}}</option>
-                    {% endfor %}
-                </select>
-            </div>
+              {% if form.region_error %}
+                <span class="nhsuk-error-message medex-font-default-override">{{ errors.region_error }}</span>
+              {% endif %}
 
-            {% if form.region_error %}
-              <div class="notification error">
-                {{form.region_error}}
-              </div>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="flex-row baseline form-row">
-          <div id='trust-selector' class="form-item">
-            <label class="form-item--header" for="trust">
-              Trust
-            </label>
-
-            <div class="search-dropdown">
-              <input class='selection-field' type="text" name="trust" value="{{form.trust}}">
-              <div class='search-field{% if form.trust_error %} error{% endif %}'>
-                <input type="text" name="searchField" placeholder="Search for a trust">
-              </div>
-              <div class="options-list">
-                <p id="placeholder" class="options-list--placeholder">Please enter at least 3 characters to search</p>
-                {% for trust in trusts %}
-                  <option value="{{trust.id}}">{{trust.name}}</option>
+              <select class="nhsuk-select" id="region" name="region" value="{{ form.region }}">
+                <option value="" disabled hidden selected>Select an region</option>
+                {% for region in regions %}
+                  <option value={{ region.id }} {% if region.id == form.region %}selected{% endif %}>{{ region.name }}</option>
                 {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-full">
+            <div id='trust-selector' class="nhsuk-form-group {% if form.trust_error %}nhsuk-form-group--error{% endif %}">
+              <label class="nhsuk-label" for="trust">
+                Trust
+              </label>
+
+              {% if form.trust_error %}
+                <span class="nhsuk-error-message medex-font-default-override">{{ form.trust_error }}</span>
+              {% endif %}
+
+              <div class="search-dropdown">
+                <input id="trust" class='selection-field' type="text" name="trust" value="{{form.trust}}">
+                <div class='search-field{% if form.trust_error %} error{% endif %}'>
+                  <input type="text" name="searchField" placeholder="Search for a trust">
+                </div>
+                <div class="options-list">
+                  <p id="placeholder" class="options-list--placeholder">Please enter at least 3 characters to search</p>
+                  {% for trust in trusts %}
+                    <option value="{{trust.id}}">{{trust.name}}</option>
+                  {% endfor %}
+                </div>
               </div>
             </div>
-
-            {% if form.trust_error %}
-              <div class="notification error">
-                {{form.trust_error}}
-              </div>
-            {% endif %}
           </div>
         </div>
 
         <input type="text" name="add_another" value="false" hidden>
 
-        <div class="flex-row">
-          <input class="submit-btn" type="submit" value="{{form.submit_btn_text}}" />
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-full">
+            <input id="submit-btn" class="nhsuk-button" type="submit" value="{{form.submit_btn_text}}"/>
+          </div>
         </div>
 
-        <div class="flex-row">
-          <button id="add-another" class="add-another">Save and add another permission</button>
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-full">
+            <button id="add-another" class="nhsuk-button nhsuk-button--secondary">Save and add another permission</button>
+          </div>
         </div>
       </form>
     {% else %}
