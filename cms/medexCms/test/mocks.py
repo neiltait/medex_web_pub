@@ -146,7 +146,7 @@ SECONDARY_EXAMINATION_DATA = {
 
 def get_bereaved_examination_data():
     return {
-        'bereaved_name_1': 'Anne Smith',
+    'bereaved_name_1': 'Anne Smith',
     'relationship_1': 'Wife',
     'present_death_1': 'no',
     'phone_number_1': '03069 990146',
