@@ -23,11 +23,7 @@
         <div class="form-item">
           <label class="form-item--header" for="email_address">Email address</label>
 
-          <input class="form-field{% if form.email_error %} error{% endif %}" type="text" name="email_address" value="{{form.email_address}}">
-
-          <div class="small-print inline">
-            &#10003; User found
-          </div>
+          <input id="email_address" class="form-field{% if form.email_error %} error{% endif %}" type="text" name="email_address" value="{{form.email_address}}">
 
           {% if form.email_error %}
             <div class="notification error">

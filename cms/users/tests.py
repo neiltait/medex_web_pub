@@ -46,16 +46,6 @@ class UsersViewsTest(MedExTestCase):
     self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-  @patch('users.request_handler.check_email_in_okta', return_value=mocks.UNSUCCESSFUL_USER_LOOKUP)
-  def test_user_creation_endpoint_returns_a_not_found_response_and_the_correct_alert_if_email_not_in_okta(self, mock_auth_validation, mock_okta_check):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
-    response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
-    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    alerts_list = self.get_context_value(response.context, 'alerts')
-    self.assertEqual(len(alerts_list), 1)
-    self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
-
-  @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   @patch('users.request_handler.create_user', return_value=mocks.UNSUCCESSFUL_USER_CREATION)
   @patch('users.request_handler.check_email_in_okta', return_value=mocks.SUCCESSFUL_USER_LOOKUP)
   def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_user_creation, mock_okta_check):
