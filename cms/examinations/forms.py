@@ -1,6 +1,8 @@
-from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage
+import datetime
 
+from alerts import messages
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH
+from alerts.messages import NAME_TOTAL_TOO_LONG
 from medexCms.utils import validate_date
 
 
@@ -110,6 +112,11 @@ class PrimaryExaminationInformationForm:
             self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
             self.errors["count"] += 1
 
+        if self.first_name and self.last_name and (len(self.first_name.strip()) + len(self.last_name.strip()) > 250):
+            self.errors["last_name"] = NAME_TOTAL_TOO_LONG
+            self.errors["first_name"] = NAME_TOTAL_TOO_LONG
+            self.errors["count"] += 1
+
         if self.last_name is None or len(self.last_name.strip()) == 0:
             self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
             self.errors["count"] += 1
@@ -142,6 +149,21 @@ class PrimaryExaminationInformationForm:
                 self.date_of_death_not_known,
         ):
             self.errors["date_of_death"] = ErrorFieldRequiredMessage("date of death")
+            self.errors["count"] += 1
+
+        if not self.text_group_is_blank_or_contains_valid_date(self.day_of_death, self.month_of_death,
+                                                               self.year_of_death):
+            self.errors["date_of_death"] = INVALID_DATE
+            self.errors["count"] += 1
+
+        if not self.text_group_is_blank_or_contains_valid_date(self.day_of_birth, self.month_of_birth,
+                                                               self.year_of_birth):
+            self.errors["date_of_birth"] = INVALID_DATE
+            self.errors["count"] += 1
+
+        if not self.dates_are_blank_or_death_is_after_birth_date():
+            self.errors["date_of_birth"] = DEATH_IS_NOT_AFTER_BIRTH
+            self.errors["date_of_death"] = DEATH_IS_NOT_AFTER_BIRTH
             self.errors["count"] += 1
 
         if self.place_of_death is None:
@@ -186,6 +208,25 @@ class PrimaryExaminationInformationForm:
                 if textbox is None or len(textbox.strip()) == 0:
                     return False
         return True
+
+    def text_group_is_blank_or_contains_valid_date(self, day, month, year):
+        if day and month and year:
+            return validate_date(year, month, day)
+        else:
+            return True
+
+    def dates_are_blank_or_death_is_after_birth_date(self):
+        valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
+        valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+        if valid_date_of_death and valid_date_of_birth:
+            date_of_death = datetime.datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death), 0, 0)
+            date_of_birth = datetime.datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth), 0, 0)
+            if date_of_death >= date_of_birth:
+                return True
+            else:
+                return False
+        else:
+            return True
 
 
 class SecondaryExaminationInformationForm:
