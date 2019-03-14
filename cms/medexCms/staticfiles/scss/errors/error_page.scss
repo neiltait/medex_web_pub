@@ -1,0 +1,34 @@
+@import '../variables';
+
+.error-page {
+  margin-top: 50px;
+  margin-bottom: 100px;
+
+  .error-type {
+    font-size: 150px;
+    line-height: $nhs-heading-xl-line-height;
+
+    color: $nhs-blue;
+
+    margin-bottom: 0.66em;
+  }
+
+  .error-message {
+    font-size: $nhs-heading-m-line-height;
+    line-height: $nhs-heading-m-line-height;
+    color: $nhs-blue;
+  }
+}
+
+html, body {
+  background-color: $white;
+}
+
+@media (min-height: 650px) {
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}
