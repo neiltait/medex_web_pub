@@ -47,8 +47,7 @@ class UsersViewsTest(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   @patch('users.request_handler.create_user', return_value=mocks.UNSUCCESSFUL_USER_CREATION)
-  @patch('users.request_handler.check_email_in_okta', return_value=mocks.SUCCESSFUL_USER_LOOKUP)
-  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_user_creation, mock_okta_check):
+  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_user_creation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -58,13 +57,11 @@ class UsersViewsTest(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   @patch('users.request_handler.create_user', return_value=mocks.SUCCESSFUL_USER_CREATION)
-  @patch('users.request_handler.check_email_in_okta', return_value=mocks.SUCCESSFUL_USER_LOOKUP)
-  def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_user_creation, mock_okta_check):
+  def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_user_creation):
     self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/users/%s/add_permission' % mocks.CREATED_USER_ID)
-
 
 #### Add permission tests
 
@@ -197,19 +194,6 @@ class UsersFormsTests(MedExTestCase):
     email_address = 'test.user@email.com'
     create_form = CreateUserForm({'email_address': email_address})
     self.assertIsFalse(create_form.check_is_nhs_email())
-
-  @patch('users.request_handler.check_email_in_okta', return_value=mocks.UNSUCCESSFUL_USER_LOOKUP)
-  def test_check_is_in_okta_returns_false_if_email_is_not_in_okta_and_sets_error_meesage(self, mock_okta_check):
-    email_address = 'test.user@nhs.uk'
-    create_form = CreateUserForm({'email_address': email_address})
-    self.assertIsFalse(create_form.check_is_in_okta())
-    self.assertEqual(create_form.email_error, messages.NOT_IN_OKTA)
-
-  @patch('users.request_handler.check_email_in_okta', return_value=mocks.SUCCESSFUL_USER_LOOKUP)
-  def test_check_is_in_okta_returns_false_if_email_is_not_in_okta(self, mock_okta_check):
-    email_address = 'test.user@nhs.uk'
-    create_form = CreateUserForm({'email_address': email_address})
-    self.assertIsTrue(create_form.check_is_in_okta())
 
 #### PermissionBuilderForm tests
 
