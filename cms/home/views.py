@@ -3,8 +3,6 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
-import json
-
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
