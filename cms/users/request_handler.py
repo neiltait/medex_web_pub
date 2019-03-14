@@ -1,25 +1,20 @@
 from django.conf import settings
 
-from requests.models import Response
+from medexCms.models import MedexRequest
 
-from rest_framework import status
 
-import json
+def validate_session(auth_token):
+    return MedexRequest.post(auth_token, '%s/auth/validate-session' % settings.API_URL)
 
-import requests
 
-def validate_session(cookie):
-  headers = {
-    'authorization' : 'bearer ' + cookie
-  }
-  return requests.post('%s/auth/validate-session' % settings.API_URL, headers=headers)
+def create_user(user_object, auth_token):
+    return MedexRequest.post(auth_token, '%s/users' % settings.API_URL, user_object)
 
-def create_user(user_object):
-  return requests.post('%s/users' % settings.API_URL, data = user_object)
 
-def load_by_id(user_id):
-  return requests.get('%s/users/%s' % (settings.API_URL, user_id))
+def load_by_id(user_id, auth_token):
+    return MedexRequest.get(auth_token, '%s/users/%s' % (settings.API_URL, user_id))
 
-def create_permission(permission, user_id):
-  return requests.post('%s/users/%s/permissions' % (settings.API_URL, user_id), data = permission)
+
+def create_permission(permission, user_id, auth_token):
+    return MedexRequest.post(auth_token, '%s/users/%s/permissions' % (settings.API_URL, user_id), permission)
 

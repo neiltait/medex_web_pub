@@ -1,17 +1,17 @@
 import json
 
-import requests
 from django.conf import settings
 
-def get_coroner_statuses_list():
-    # return requests.get(settings.API_URL + '/datatype/coroner_status')
+from medexCms.models import MedexRequest
 
+
+def get_coroner_statuses_list():
     return [{'status': 'blocked'}]
 
 
-def post_new_examination(examination_object):
-    return requests.post('%s/cases/create' % settings.API_URL, data=json.dumps(examination_object))
+def post_new_examination(examination_object, auth_token):
+    return MedexRequest.post(auth_token, '%s/cases/create' % settings.API_URL, json.dumps(examination_object))
 
 
-def load_by_id(examination_id):
-    return requests.get('%s/examinations/%s' % (settings.API_URL, examination_id))
+def load_by_id(examination_id, auth_token):
+    return MedexRequest.get(auth_token, '%s/examinations/%s' % (settings.API_URL, examination_id))
