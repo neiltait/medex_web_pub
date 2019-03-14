@@ -21,4 +21,4 @@ def create_session(code):
 
 
 def end_session(cookie):
-  return requests.get('%s%s/v1/logout?id_token_hint=%s' % (settings.OP_DOMAIN, settings.OP_ISSUER, cookie['id_token']))
+  return requests.get('%s%s/v1/logout?id_token_hint=%s' % (settings.OP_DOMAIN, settings.OP_ISSUER, cookie))
