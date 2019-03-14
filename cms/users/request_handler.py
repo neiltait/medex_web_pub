@@ -23,9 +23,3 @@ def load_by_id(user_id):
 def create_permission(permission, user_id):
   return requests.post('%s/users/%s/permissions' % (settings.API_URL, user_id), data = permission)
 
-def check_email_in_okta(email_address):
-  ## TODO integrate with OKTA
-  response = Response()
-  response.status_code = status.HTTP_200_OK
-  response._content = json.dumps(None).encode('utf-8')
-  return response
