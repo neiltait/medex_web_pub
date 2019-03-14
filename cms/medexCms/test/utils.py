@@ -1,5 +1,10 @@
 from django.test import TestCase
 
+from http.cookies import SimpleCookie
+
+from medexCms.test import mocks
+
+
 class MedExTestCase(TestCase):
   
     def assertIsTrue(self, value):
@@ -10,6 +15,9 @@ class MedExTestCase(TestCase):
 
     def assertIsNone(self, value):
         self.assertIsTrue(value is None)
+
+    def set_auth_cookies(self):
+        self.client.cookies = SimpleCookie(mocks.AUTH_COOKIES)
 
     def get_context_value(self, context, key):
       return context[key]
