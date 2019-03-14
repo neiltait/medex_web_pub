@@ -39,8 +39,8 @@ class Examination():
             self.coroner_status = obj_dict.get("coronerStatus")
 
     @classmethod
-    def load_by_id(cls, examination_id):
-        response = request_handler.load_by_id(examination_id)
+    def load_by_id(cls, examination_id, auth_token):
+        response = request_handler.load_by_id(examination_id, auth_token)
 
         authenticated = response.status_code == status.HTTP_200_OK
 

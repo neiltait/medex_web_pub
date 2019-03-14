@@ -30,19 +30,16 @@ class User():
 
     return user
 
-
   def __str__(self):
     return self.full_name()
-
 
   def full_name(self):
     return self.first_name + ' ' + self.last_name
 
-
   def check_logged_in(self):
     if self.auth_token:
       response = request_handler.validate_session(self.auth_token)
-      
+
       authenticated = response.status_code == status.HTTP_200_OK
 
       if authenticated:

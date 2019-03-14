@@ -43,8 +43,8 @@ def create_examination(request):
 
 
 def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
-    locations = location_request_handler.get_locations_list()
-    me_offices = location_request_handler.get_me_offices_list()
+    locations = location_request_handler.get_locations_list(user.auth_token)
+    me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
     context = {
         "session_user": user,
@@ -66,7 +66,7 @@ def edit_examination(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = Examination.load_by_id(examination_id)
+    examination = Examination.load_by_id(examination_id, user.auth_token)
 
     if not examination:
         context = {

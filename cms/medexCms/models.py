@@ -11,7 +11,7 @@ class MedexRequest:
         return requests.get(url, headers=headers)
 
     @classmethod
-    def post(cls, auth_token, url, data):
+    def post(cls, auth_token, url, data={}):
         headers = {
             'authorization': 'bearer ' + auth_token
         }
