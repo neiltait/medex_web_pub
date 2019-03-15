@@ -3,9 +3,16 @@ import json
 from requests.models import Response
 from rest_framework import status
 
+from medexCms import settings
+
 # Variables/Objects
 
 #### Sessions
+
+AUTH_COOKIES = {
+    settings.AUTH_TOKEN_NAME: "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
+    settings.ID_TOKEN_NAME: "8a89be6d-70df-4b21-9d6e-82873d7ff1b0"
+}
 
 AUTH_TOKEN = {
     "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
@@ -72,41 +79,51 @@ SUCCESSFUL_REGION_LOAD = [
     }
 ]
 
-SUCCESSFUL_ME_OFFICES_LOAD = [{
-    'id': '1',
-    'name': 'Barnet Hospital ME Office',
-}, {
-    'id': '2',
-    'name': 'Sheffield Hospital ME Office',
-}, {
-    'id': '3',
-    'name': 'Gloucester Hospital ME Office',
-}]
+SUCCESSFUL_ME_OFFICES_LOAD = [
+    {
+       'id': '1',
+        'name': 'Barnet Hospital ME Office',
+    },
+    {
+        'id': '2',
+        'name': 'Sheffield Hospital ME Office',
+    },
+    {
+        'id': '3',
+        'name': 'Gloucester Hospital ME Office',
+    }
+]
 
 
-SUCCESSFUL_MEDICAL_EXAMINERS = [{
-    'id': '1',
-    'name': 'Dr Susan Chang',
-}, {
-    'id': '2',
-    'name': 'Dr Andrew McCloud',
-}, {
-    'id': '3',
-    'name': 'Dr Anders Petersen',
-}]
+SUCCESSFUL_MEDICAL_EXAMINERS = [
+    {
+        'id': '1',
+        'name': 'Dr Susan Chang',
+    },
+    {
+        'id': '2',
+        'name': 'Dr Andrew McCloud',
+    },
+    {
+        'id': '3',
+        'name': 'Dr Anders Petersen',
+    }
+]
 
-
-
-SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [{
-    'id': '1',
-    'name': 'Sofia Skouros',
-}, {
-    'id': '2',
-    'name': 'Alex McPherson',
-}, {
-    'id': '3',
-    'name': 'Suchi Kandukuri',
-}]
+SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [
+    {
+        'id': '1',
+        'name': 'Sofia Skouros',
+    },
+    {
+        'id': '2',
+        'name': 'Alex McPherson',
+    },
+    {
+        'id': '3',
+        'name': 'Suchi Kandukuri',
+    }
+]
 
 #### Examintations
 
@@ -243,6 +260,7 @@ def get_examination_response_object():
         "completed": "False",
         "coronerStatus": "False"
     }
+
 
 # Responses
 

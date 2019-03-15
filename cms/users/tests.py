@@ -1,15 +1,9 @@
-from django.conf import settings
-
-from http.cookies import SimpleCookie
-
 from medexCms.test.utils import MedExTestCase
 from medexCms.test import mocks
 
 from rest_framework import status
 
 from unittest.mock import patch
-
-import uuid
 
 from alerts import utils, messages
 
@@ -24,7 +18,7 @@ class UsersViewsTest(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   def test_landing_on_the_user_creation_page_loads_the_correct_template(self, mock_auth_validation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     response = self.client.get('/users/new')
     self.assertTemplateUsed(response, 'users/new.html')
     alerts_list = self.get_context_value(response.context, 'alerts')
@@ -38,7 +32,7 @@ class UsersViewsTest(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   def test_user_creation_endpoint_returns_a_bad_request_response_and_the_correct_alert_if_form_invalid(self, mock_auth_validation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     response = self.client.post('/users/new', {'email_address': 'test.user@email.com'})
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     alerts_list = self.get_context_value(response.context, 'alerts')
@@ -47,8 +41,9 @@ class UsersViewsTest(MedExTestCase):
 
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   @patch('users.request_handler.create_user', return_value=mocks.UNSUCCESSFUL_USER_CREATION)
-  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self, mock_auth_validation, mock_user_creation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+  def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self,
+                                                                           mock_auth_validation, mock_user_creation):
+    self.set_auth_cookies()
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     alerts_list = self.get_context_value(response.context, 'alerts')
@@ -58,7 +53,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
   @patch('users.request_handler.create_user', return_value=mocks.SUCCESSFUL_USER_CREATION)
   def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self, mock_auth_validation, mock_user_creation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
     self.assertEqual(response.url, '/users/%s/add_permission' % mocks.CREATED_USER_ID)
@@ -70,7 +65,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('locations.request_handler.load_region_list', return_value=mocks.SUCCESSFUL_REGION_LOAD)
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   def test_landing_on_the_add_permission_page_loads_the_correct_template(self, mock_auth_validation, mock_location_list, mock_region_list, mock_load_user):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     response = self.client.get('/users/%s/add_permission' % mocks.CREATED_USER_ID)
     self.assertTemplateUsed(response, 'users/permission_builder.html')
     alerts_list = self.get_context_value(response.context, 'alerts')
@@ -87,7 +82,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('locations.request_handler.load_region_list', return_value=mocks.SUCCESSFUL_REGION_LOAD)
   @patch('users.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_LOAD_USER)
   def test_landing_on_the_add_permission_page_loads_the_correct_template_with_alert_if_the_user_cant_be_found(self, mock_auth_validation, mock_location_list, mock_region_list, mock_user_load):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     response = self.client.get('/users/%s/add_permission' % mocks.CREATED_USER_ID)
     self.assertTemplateUsed(response, 'users/permission_builder.html')
     alerts_list = self.get_context_value(response.context, 'alerts')
@@ -99,7 +94,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('locations.request_handler.load_region_list', return_value=mocks.SUCCESSFUL_REGION_LOAD)
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   def test_submitting_an_invalid_form_returns_a_bad_request_response_and_an_error_message(self, mock_auth_validation, mock_location_list, mock_region_list, mock_user_load):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     submission = {'role': '', 'permission_level': 'national', 'region': '', 'trust': ''}
     response = self.client.post('/users/%s/add_permission' % mocks.CREATED_USER_ID, submission)
     self.assertTemplateUsed(response, 'users/permission_builder.html')
@@ -114,7 +109,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   @patch('users.request_handler.create_permission', return_value=mocks.UNSUCCESSFUL_PERMISSION_CREATION)
   def test_submitting_a_valid_form_that_errors_on_api_returns_the_status_from_server_and_an_error_message(self, mock_auth_validation, mock_location_list, mock_region_list, mock_user_load, mock_permission_creation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
     response = self.client.post('/users/%s/add_permission' % mocks.CREATED_USER_ID, submission)
     self.assertTemplateUsed(response, 'users/permission_builder.html')
@@ -129,7 +124,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   @patch('users.request_handler.create_permission', return_value=mocks.SUCCESSFUL_PERMISSION_CREATION)
   def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_settings_page(self, mock_auth_validation, mock_location_list, mock_region_list, mock_user_load, mock_permission_creation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
     response = self.client.post('/users/%s/add_permission' % mocks.CREATED_USER_ID, submission)
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -141,7 +136,7 @@ class UsersViewsTest(MedExTestCase):
   @patch('users.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_LOAD_USER)
   @patch('users.request_handler.create_permission', return_value=mocks.SUCCESSFUL_PERMISSION_CREATION)
   def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_permissions_page_if_add_another_selected(self, mock_auth_validation, mock_location_list, mock_region_list, mock_user_load, mock_permission_creation):
-    self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+    self.set_auth_cookies()
     submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': '', 'add_another': 'true'}
     response = self.client.post('/users/%s/add_permission' % mocks.CREATED_USER_ID, submission)
     self.assertEqual(response.status_code, status.HTTP_302_FOUND)

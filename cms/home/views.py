@@ -24,8 +24,10 @@ def index(request):
 def login_callback(request):
   token_response = request_handler.create_session(request.GET.get('code'))
   response = redirect_to_landing()
+  id_token = token_response.json().get('id_token')
   auth_token = token_response.json().get('access_token')
   response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+  response.set_cookie(settings.ID_TOKEN_NAME, id_token)
   return response
 
 
@@ -52,6 +54,7 @@ def logout(request):
 
   response = redirect_to_login()
   response.delete_cookie(settings.AUTH_TOKEN_NAME)
+  response.delete_cookie(settings.ID_TOKEN_NAME)
   return response
 
 

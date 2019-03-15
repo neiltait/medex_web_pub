@@ -1,6 +1,5 @@
 import json
-import uuid
-from http.cookies import SimpleCookie
+
 from unittest.mock import patch
 
 from django.conf import settings
@@ -23,7 +22,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation, mock_locations_list,
             mock_me_offices_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        self.set_auth_cookies()
         response = self.client.get('/cases/create')
         self.assertTemplateUsed(response, 'examinations/create.html')
         alerts_list = self.get_context_value(response.context, 'alerts')
@@ -41,7 +40,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
     def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        self.set_auth_cookies()
         response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/')
@@ -52,7 +51,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation,
             mock_case_create, mock_locations_list, mock_me_offices_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: uuid.uuid4()})
+        self.set_auth_cookies()
         response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -61,7 +60,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation,
             mock_locations_list, mock_me_offices_list):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data.pop('first_name', None)
         response = self.client.post('/cases/create', form_data)
@@ -88,7 +87,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
     def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_locations_list,
                                     mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        self.set_auth_cookies()
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit.html')
@@ -102,7 +101,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_CASE_LOAD)
     def test_landing_on_edit_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self,
                  mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        self.set_auth_cookies()
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
@@ -116,7 +115,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
     def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_locations_list,
                                     mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
-        self.client.cookies = SimpleCookie({settings.AUTH_TOKEN_NAME: json.dumps(mocks.AUTH_TOKEN)})
+        self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data.update(mocks.get_bereaved_examination_data())
         form_data.pop('first_name', None)
