@@ -4,8 +4,10 @@ from django.conf import settings
 
 from rest_framework import status
 
-from home import request_handler as home_request_handler
+from examinations.models import ExaminationOverview
 from examinations import request_handler as examination_request_handler
+
+from home import request_handler as home_request_handler
 
 from . import request_handler
 
@@ -21,7 +23,7 @@ class User:
             self.first_name = obj_dict['first_name']
             self.last_name = obj_dict['last_name']
             self.email_address = obj_dict['email_address']
-            self.examinations = []
+        self.examinations = []
 
     @classmethod
     def initialise_with_token(cls, request):
@@ -95,6 +97,7 @@ class User:
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            self.examinations = response.json()['examinations']
+            for examination in response.json()['examinations']:
+                self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
