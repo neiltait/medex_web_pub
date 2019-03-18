@@ -1,0 +1,15 @@
+{% extends "examinations/edit_shared.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block tab_css %}
+{% endblock %}
+
+{% block tab_js %}
+{% endblock %}
+
+{% block tab_content %}
+      <div class="form-tab" id="medical-team-section">
+        {% include "examinations/partials/_medical_team.html" %}
+      </div>
+{% endblock %}

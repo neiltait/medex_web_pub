@@ -46,10 +46,6 @@
       this.tab2 = this.form.find('#medical-team-tab');
       this.tab3 = this.form.find('#case-breakdown-tab');
       this.tab4 = this.form.find('#case-outcomes-tab');
-      this.section1 = this.form.find('#patient-details-section');
-      this.section2 = this.form.find('#medical-team-section');
-      this.section3 = this.form.find('#case-breakdown-section');
-      this.section4 = this.form.find('#case-outcomes-section');
       let that = this;
       this.tab1.click(function () {
         that.showTab("patient-details")
@@ -83,23 +79,6 @@
       if (this.hasChanges) {
         var currentTab = this.form.find('.tab-item.active')[0].id.slice(0, -4);
         this.tabChangeModal.show(tabId, currentTab);
-
-      } else {
-        for (tab of [this.tab1, this.tab2, this.tab3, this.tab4]) {
-          if (tab[0].id === tabId + "-tab") {
-            tab.addClass("active");
-          } else {
-            tab.removeClass("active");
-          }
-        }
-
-        for (section of [this.section1, this.section2, this.section3, this.section4]) {
-          if (section[0].id === tabId + "-section") {
-            section.removeClass("medex-hidden");
-          } else {
-            section.addClass("medex-hidden");
-          }
-        }
       }
     },
 
