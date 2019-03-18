@@ -3,9 +3,11 @@ from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
+from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+from examinations.models import Examination
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
@@ -41,8 +43,8 @@ def create_examination(request):
 
 
 def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
-    locations = location_request_handler.get_locations_list()
-    me_offices = location_request_handler.get_me_offices_list()
+    locations = location_request_handler.get_locations_list(user.auth_token)
+    me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
     context = {
         "session_user": user,
@@ -68,6 +70,15 @@ def edit_examination_patient_details(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    examination = Examination.load_by_id(examination_id, user.auth_token)
+
+    if not examination:
+        context = {
+            'session_user': user,
+            'error': NotFoundError('case'),
+        }
+        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = None
@@ -81,7 +92,8 @@ def edit_examination_patient_details(request, examination_id):
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
 
-        forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form)
+        forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
+                                                     urgency_info_form)
         if forms_valid:
             print('forms valid')
         else:
@@ -115,6 +127,15 @@ def edit_examination_medical_team(request, examination_id):
 
     if not user.check_logged_in():
         return redirect_to_login()
+
+    examination = Examination.load_by_id(examination_id, user.auth_token)
+
+    if not examination:
+        context = {
+            'session_user': user,
+            'error': NotFoundError('case'),
+        }
+        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
 
     medical_examiners = people_request_handler.get_medical_examiners_list()
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()

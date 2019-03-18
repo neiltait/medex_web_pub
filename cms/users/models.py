@@ -1,15 +1,21 @@
+import logging
+
 from django.conf import settings
 
 from rest_framework import status
+
+from examinations.models import ExaminationOverview
+from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
 
 from . import request_handler
 
-import json
+
+logger = logging.getLogger(__name__)
 
 
-class User():
+class User:
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -17,6 +23,7 @@ class User():
             self.first_name = obj_dict['first_name']
             self.last_name = obj_dict['last_name']
             self.email_address = obj_dict['email_address']
+        self.examinations = []
 
     @classmethod
     def initialise_with_token(cls, request):
@@ -58,7 +65,6 @@ class User():
         if self.auth_token and self.id_token:
             home_request_handler.end_session(self.id_token)
 
-
     @classmethod
     def load_by_email(cls, email_address):
         # r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
@@ -74,14 +80,27 @@ class User():
         else:
             return None
 
-
     @classmethod
     def load_by_id(cls, user_id):
         response = request_handler.load_by_id(user_id)
 
-        authenticated = response.status_code == status.HTTP_200_OK
+        success = response.status_code == status.HTTP_200_OK
 
-        if authenticated:
+        if success:
             return User(response.json())
         else:
             return None
+
+    def load_examinations(self):
+        response = examination_request_handler.load_users_examinations(self.user_id, self.auth_token)
+
+        success = response.status_code == status.HTTP_200_OK
+
+        if success:
+            for examination in response.json()['examinations']:
+                self.examinations.append(ExaminationOverview(examination))
+        else:
+            logger.error(response.status_code)
+
+    def examinations_count(self):
+        return len(self.examinations)
