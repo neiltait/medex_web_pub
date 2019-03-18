@@ -262,6 +262,9 @@ def get_examination_response_object():
     }
 
 
+USERS_EXAMINATION_LIST = [get_examination_response_object()]
+
+
 # Responses
 
 #### Sessions
