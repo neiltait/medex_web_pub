@@ -101,3 +101,6 @@ class User:
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
+
+    def examinations_count(self):
+        return len(self.examinations)
