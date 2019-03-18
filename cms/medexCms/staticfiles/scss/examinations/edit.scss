@@ -14,6 +14,7 @@
       flex-grow: 1;
       padding: 20px;
       text-align: center;
+      text-decoration: none;
 
       background-color: $nhs-dark-blue;
       color: $white;
@@ -25,6 +26,10 @@
 
       &:last-of-type {
         border: none;
+      }
+
+      &:hover {
+        box-shadow: none !important;
       }
 
       &.active {
