@@ -56,8 +56,18 @@
       </div>
     </div>
 
-    {% for examination in session_user.examinations %}
-      {% include 'examinations/partials/_case_card.html' with case=examination %}
-    {% endfor %}
+    {% if session_user.examinations_count == 0 %}
+      <h2>
+        Currently there are no cases for these filters
+      </h2>
+
+      <p>
+        Try choosing another place, person or status
+      </p>
+    {% else %}
+      {% for examination in session_user.examinations %}
+        {% include 'examinations/partials/_case_card.html' with case=examination %}
+      {% endfor %}
+    {% endif %}
   </div>
 {% endblock %}
