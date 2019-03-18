@@ -9,6 +9,9 @@ from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
 
+from permissions import request_handler as permissions_request_handler
+from permissions.models import Permission
+
 from . import request_handler
 
 
@@ -24,6 +27,7 @@ class User:
             self.last_name = obj_dict['last_name']
             self.email_address = obj_dict['email_address']
         self.examinations = []
+        self.permissions = []
 
     @classmethod
     def initialise_with_token(cls, request):
@@ -56,10 +60,14 @@ class User:
                 self.first_name = response_data['first_name']
                 self.last_name = response_data['last_name']
                 self.email_address = response_data['email_address']
+                self.load_permissions()
 
             return authenticated
         else:
             return False
+
+    def examinations_count(self):
+        return len(self.examinations)
 
     def logout(self):
         if self.auth_token and self.id_token:
@@ -91,6 +99,17 @@ class User:
         else:
             return None
 
+    def load_permissions(self):
+        response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
+
+        success = response.status_code == status.HTTP_200_OK
+
+        if success:
+            for permission in response.json()['permissions']:
+                self.permissions.append(Permission(permission))
+        else:
+            logger.error(response.status_code)
+
     def load_examinations(self):
         query_params = {
             "locationId": None,
@@ -110,6 +129,3 @@ class User:
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
-
-    def examinations_count(self):
-        return len(self.examinations)
