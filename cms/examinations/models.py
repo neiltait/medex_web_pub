@@ -1,6 +1,9 @@
-from . import request_handler
-
 from rest_framework import status
+from datetime import datetime
+
+from medexCms.utils import parse_datetime
+
+from . import request_handler
 
 
 class Examination():
@@ -48,3 +51,30 @@ class Examination():
             return Examination(response.json())
         else:
             return None
+
+
+class ExaminationOverview:
+    date_format = '%d.%m.%Y'
+
+    def __init__(self, obj_dict):
+        self.urgency_score = obj_dict.get("urgencyScore")
+        self.given_names = obj_dict.get("givenNames")
+        self.surname = obj_dict.get("surname")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.id = obj_dict.get("id")
+        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
+        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
+        self.appointment_date = obj_dict.get("appointmentDate")
+        self.appointment_time = obj_dict.get("appointmentTime")
+        self.last_admission = obj_dict.get("lastAdmission")
+        self.case_created_date = obj_dict.get("caseCreatedDate")
+
+    def display_dod(self):
+        return self.date_of_death.strftime(self.date_format)
+
+    def display_dob(self):
+        return self.date_of_birth.strftime(self.date_format)
+
+    def urgent(self):
+        return self.urgency_score > 0

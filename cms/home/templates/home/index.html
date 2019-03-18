@@ -1,18 +1,73 @@
 {% extends "medexCms/shared/base.html" %}
+{% load staticfiles %}
+{% load sass_tags %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/home/index.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
 
 {% block page %}
   <div class="case-index" style="margin-bottom: 350px;">
     <h1 class="page-title">
-      ME Service Dashboard
+      ME Dashboard
     </h1>
 
-    <h2>
-      {{case_list}}
-    </h2>
-    <div>
-      <a href="/cases/1">
-        Temp link to edit case
-      </a>
+    <div class="flex-row index-overview">
+      <div class="overview-block nhsuk-grid-column-one-third">
+        <p class="overview-heading">
+          Displaying cases at
+        </p>
+
+        <p class="overview-body location">
+          A Hospital
+        </p>
+      </div>
+
+      <div class="overview-block nhsuk-grid-column-one-third">
+        <p class="overview-heading">
+          Total number of cases
+        </p>
+
+        <p class="overview-body">
+          6
+        </p>
+      </div>
+
+      <div class="overview-block nhsuk-grid-column-one-third">
+        <p class="overview-heading">
+          Number of urgent cases
+        </p>
+
+        <p class="overview-body">
+          2
+        </p>
+      </div>
     </div>
+
+    <div class="filters-block">
+      <img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">
+    </div>
+
+    <div class="sort-block">
+      <div style="text-align:right;">
+        <p style="margin: 0; border: 1px solid #000000;display: inline-block;padding: 3px 10px;">
+          Urgency v
+        </p>
+      </div>
+    </div>
+
+    {% if session_user.examinations_count == 0 %}
+      <h2>
+        Currently there are no cases for these filters
+      </h2>
+
+      <p>
+        Try choosing another place, person or status
+      </p>
+    {% else %}
+      {% for examination in session_user.examinations %}
+        {% include 'examinations/partials/_case_card.html' with case=examination %}
+      {% endfor %}
+    {% endif %}
   </div>
 {% endblock %}
