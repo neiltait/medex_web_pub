@@ -265,6 +265,20 @@ def get_examination_response_object():
 USERS_EXAMINATION_LIST = {
     "examinations": [
         {
+            "urgencyScore": 1,
+            "givenNames": "John",
+            "surname": "Doe",
+            "nhsNumber": "123-456-78910",
+            "id": "1",
+            "timeOfDeath": "10:48",
+            "dateOfBirth": "2019-03-18T10:48:15.749Z",
+            "dateOfDeath": "2019-03-18T10:48:15.749Z",
+            "appointmentDate": "2019-03-18T10:48:15.749Z",
+            "appointmentTime": "15:48",
+            "lastAdmission": "2019-03-18T10:48:15.749Z",
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+        },
+        {
             "urgencyScore": 0,
             "givenNames": "John",
             "surname": "Doe",
