@@ -18,7 +18,6 @@ def index(request):
 
     context = {
         'session_user': user,
-        'case_list': 'All your current open cases',
     }
     return render(request, 'home/index.html', context)
 
