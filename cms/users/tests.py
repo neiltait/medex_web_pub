@@ -1,3 +1,5 @@
+from typing import List
+
 from medexCms.test.utils import MedExTestCase
 from medexCms.test import mocks
 
@@ -355,3 +357,9 @@ class UsersModelsTests(MedExTestCase):
   def test_User_load_by_id_returns_a_None_object_if_the_id_doesnt_have_an_account(self, mock_user_load):
     response = User.load_by_id(0)
     self.assertEqual(response, None)
+
+  @patch('examinations.request_handler.load_users_examinations', return_value=mocks.USERS_EXAMINATION_LIST)
+  def test_load_examinations_adds_a_list_of_cases_to_the_user(self, mock_examination_list):
+    user = User(mocks.user_dict)
+    user.load_examinations()
+    self.assertEquals(type(user.examinations), List)
