@@ -337,3 +337,11 @@ SUCCESSFUL_CASE_LOAD._content = json.dumps(get_examination_response_object()).en
 UNSUCCESSFUL_CASE_LOAD = Response()
 UNSUCCESSFUL_CASE_LOAD.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_CASE_LOAD._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_CASE_INDEX = Response()
+SUCCESSFUL_CASE_INDEX.status_code = status.HTTP_200_OK
+SUCCESSFUL_CASE_INDEX._content = json.dumps(USERS_EXAMINATION_LIST).encode('utf-8')
+
+UNSUCCESSFUL_CASE_INDEX = Response()
+UNSUCCESSFUL_CASE_INDEX.status_code = status.HTTP_404_NOT_FOUND
+UNSUCCESSFUL_CASE_INDEX._content = json.dumps(None).encode('utf-8')

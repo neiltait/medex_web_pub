@@ -1,5 +1,3 @@
-from typing import List
-
 from medexCms.test.utils import MedExTestCase
 from medexCms.test import mocks
 
@@ -358,8 +356,9 @@ class UsersModelsTests(MedExTestCase):
     response = User.load_by_id(0)
     self.assertEqual(response, None)
 
-  @patch('examinations.request_handler.load_users_examinations', return_value=mocks.USERS_EXAMINATION_LIST)
+  @patch('examinations.request_handler.load_users_examinations', return_value=mocks.SUCCESSFUL_CASE_INDEX)
   def test_load_examinations_adds_a_list_of_cases_to_the_user(self, mock_examination_list):
     user = User(mocks.user_dict)
+    user.auth_token = mocks.AUTH_TOKEN['access_token']
     user.load_examinations()
-    self.assertEquals(type(user.examinations), List)
+    self.assertEquals(type(user.examinations), list)
