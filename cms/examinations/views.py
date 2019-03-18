@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
 
 from alerts import messages
@@ -59,63 +59,7 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
 
 
 def edit_examination(request, examination_id):
-    user = User.initialise_with_token(request)
-
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    medical_examiners = people_request_handler.get_medical_examiners_list()
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
-    status_code = status.HTTP_200_OK
-    error_count = 0
-    primary_info_form = None
-    secondary_info_form = None
-    bereaved_info_form = None
-    urgency_info_form = None
-    medical_team_members_form = None
-    medical_team_assigned_team_form = None
-
-    if request.method == 'POST':
-        primary_info_form = PrimaryExaminationInformationForm(request.POST)
-        secondary_info_form = SecondaryExaminationInformationForm(request.POST)
-        bereaved_info_form = BereavedInformationForm(request.POST)
-        urgency_info_form = UrgencyInformationForm(request.POST)
-        medical_team_members_form = MedicalTeamMembersForm(request.POST)
-        medical_team_assigned_team_form = MedicalTeamAssignedTeamForm(request.POST)
-
-        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
-                                         medical_team_members_form)
-        if forms_valid:
-            print('forms valid')
-        else:
-            error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] + \
-                          bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
-            status_code = status.HTTP_400_BAD_REQUEST
-
-    modal_config = get_tab_change_modal_config()
-
-    locations = location_request_handler.get_locations_list()
-    me_offices = location_request_handler.get_me_offices_list()
-
-    context = {
-        'session_user': user,
-        'examination_id': examination_id,
-        'medical_examiners': medical_examiners,
-        'medical_examiners_officers': medical_examiners_officers,
-        'primary_info_form': primary_info_form,
-        'secondary_info_form': secondary_info_form,
-        'bereaved_info_form': bereaved_info_form,
-        'urgency_info_form': urgency_info_form,
-        'medical_team_form': medical_team_members_form,
-        'medical_team_assigned_form': medical_team_assigned_team_form,
-        'assigned_team_form': medical_team_members_form,
-        'error_count': error_count,
-        'tab_modal': modal_config,
-        "locations": locations,
-        "me_offices": me_offices,
-    }
-
-    return render(request, 'examinations/edit.html', context, status=status_code)
+    return redirect('/cases/' + examination_id + '/patient-details')
 
 
 def edit_examination_patient_details(request, examination_id):
