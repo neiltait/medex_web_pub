@@ -48,15 +48,18 @@ class HomeViewsTests(MedExTestCase):
     # Index tests
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation):
-        #TODO expand the test once the page is filled out
+    @patch('examinations.request_handler.load_users_examinations', return_value=mocks.SUCCESSFUL_CASE_INDEX)
+    def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation, mock_load_cases):
         self.set_auth_cookies()
         response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'home/index.html')
+        context_user = self.get_context_value(response.context, 'session_user')
+        self.assertIsNot(context_user.examinations,  None)
+        self.assertIs(type(context_user.examinations), list)
+        self.assertEqual(len(context_user.examinations), 1)
 
     def test_landing_on_the_landing_page_redirects_to_login_if_the_user_not_logged_in(self):
-        #TODO expand the test once the page is filled out
         response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
