@@ -92,7 +92,16 @@ class User:
             return None
 
     def load_examinations(self):
-        response = examination_request_handler.load_users_examinations(self.user_id, self.auth_token)
+        query_params = {
+            "locationId": None,
+            "userId": self.user_id,
+            "caseStatus": None,
+            "orderBy": "Urgency",
+            "pageSize": 20,
+            "pageNumber": 1
+        }
+
+        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
