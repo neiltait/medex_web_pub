@@ -75,3 +75,6 @@ class ExaminationOverview:
 
     def display_dob(self):
         return self.date_of_birth.strftime(self.date_format)
+
+    def urgent(self):
+        return self.urgency_score > 0
