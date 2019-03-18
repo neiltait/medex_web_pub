@@ -227,6 +227,41 @@ def get_assigned_medical_team_form_data():
     }
 
 
+def get_examination_response_object():
+    return {
+        "id": "1",
+        "timeOfDeath": "",
+        "givenNames": "John",
+        "surname": "Doe",
+        "nhsNumber": "123-456-78910",
+        "gender": "male",
+        "houseNameNumber": "",
+        "street": "",
+        "town": "",
+        "county": "",
+        "postcode": "",
+        "country": "",
+        "lastOccupation": "",
+        "organisationCareBeforeDeathLocationId": "",
+        "deathOccuredLocationId": "",
+        "modeOfDisposal": "",
+        "funeralDirectors": "",
+        "personalAffectsCollected": "",
+        "personalAffectsDetails": "",
+        "jewelleryCollected": "",
+        "jewelleryDetails": "",
+        "dateOfBirth": "",
+        "dateOfDeath": "",
+        "faithPriority": "False",
+        "childPriority": "False",
+        "coronerPriority": "False",
+        "otherPriority": "False",
+        "priorityDetails": "",
+        "completed": "False",
+        "coronerStatus": "False"
+    }
+
+
 # Responses
 
 #### Sessions
@@ -291,3 +326,11 @@ SUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')
 UNSUCCESSFUL_CASE_CREATE = Response()
 UNSUCCESSFUL_CASE_CREATE.status_code = status.HTTP_400_BAD_REQUEST
 UNSUCCESSFUL_CASE_CREATE._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_CASE_LOAD = Response()
+SUCCESSFUL_CASE_LOAD.status_code = status.HTTP_200_OK
+SUCCESSFUL_CASE_LOAD._content = json.dumps(get_examination_response_object()).encode('utf-8')
+
+UNSUCCESSFUL_CASE_LOAD = Response()
+UNSUCCESSFUL_CASE_LOAD.status_code = status.HTTP_404_NOT_FOUND
+UNSUCCESSFUL_CASE_LOAD._content = json.dumps(None).encode('utf-8')

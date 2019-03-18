@@ -6,10 +6,8 @@ from home import request_handler as home_request_handler
 
 from . import request_handler
 
-import json
 
-
-class User():
+class User:
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -58,7 +56,6 @@ class User():
         if self.auth_token and self.id_token:
             home_request_handler.end_session(self.id_token)
 
-
     @classmethod
     def load_by_email(cls, email_address):
         # r = requests.post(settings.API_URL + '/users/find_by_email', data = {'email_address': email_address})
@@ -73,7 +70,6 @@ class User():
             })
         else:
             return None
-
 
     @classmethod
     def load_by_id(cls, user_id):
