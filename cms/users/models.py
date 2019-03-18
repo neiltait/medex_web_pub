@@ -95,6 +95,6 @@ class User:
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            self.examinations = response.json()
+            self.examinations = response.json()['examinations']
         else:
             logger.error(response.status_code)

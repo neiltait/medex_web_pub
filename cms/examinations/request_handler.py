@@ -18,4 +18,4 @@ def load_by_id(examination_id, auth_token):
 
 
 def load_users_examinations(user_id, auth_token):
-    return MedexRequest.get(auth_token, '%s/examinations' % (settings.API_URL, user_id))
+    return MedexRequest.get(auth_token, '%s/examinations' % settings.API_URL)
