@@ -124,8 +124,6 @@ def edit_examination_patient_details(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    medical_examiners = people_request_handler.get_medical_examiners_list()
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = None
@@ -139,7 +137,7 @@ def edit_examination_patient_details(request, examination_id):
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
 
-        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form)
+        forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form)
         if forms_valid:
             print('forms valid')
         else:
@@ -155,8 +153,6 @@ def edit_examination_patient_details(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'medical_examiners': medical_examiners,
-        'medical_examiners_officers': medical_examiners_officers,
         'primary_info_form': primary_info_form,
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
@@ -210,15 +206,13 @@ def edit_examination_medical_team(request, examination_id):
     return render(request, 'examinations/edit_medical_team.html', context, status=status_code)
 
 
-def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
-        medical_team_members_form):
+def validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
     primary_valid = primary_info_form.is_valid()
     secondary_valid = secondary_info_form.is_valid()
     bereaved_valid = bereaved_info_form.is_valid()
     urgency_valid = urgency_info_form.is_valid()
-    medical_team_members_valid = medical_team_members_form.is_valid()
 
-    return primary_valid and secondary_valid and bereaved_valid and urgency_valid and medical_team_members_valid
+    return primary_valid and secondary_valid and bereaved_valid and urgency_valid
 
 
 def get_tab_change_modal_config():

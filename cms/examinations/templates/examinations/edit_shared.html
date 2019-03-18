@@ -22,17 +22,17 @@
 
   <div class="examination__edit">
     {% if error_count > 0 %}
-        <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
-             tabindex="-1">
-            <h2 class="nhsuk-error-summary__title" id="error-summary-title">
-                There is a problem
-            </h2>
-            <div class="nhsuk-error-summary__body">
-                <p>
-                    Please correct the errors in this form
-                </p>
-            </div>
+      <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
+           tabindex="-1">
+        <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+          There is a problem
+        </h2>
+        <div class="nhsuk-error-summary__body">
+          <p>
+            Please correct the errors in this form
+          </p>
         </div>
+      </div>
     {% endif %}
     <h1 class="page-title">
       {{ page_heading }}
@@ -42,7 +42,7 @@
       {{ sub_heading }}
     </h2>
 
-      <a name="details"></a>
+    <a name="details"></a>
     <div style="width:100%;height:150px;background-color:rgba(234, 207, 28, 0.6);padding:30px 50px;">
       <h1>Holding Space For Status Bar</h1>
     </div>
@@ -52,16 +52,16 @@
     {% endfor %}
 
 
-    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-          action="{% url 'edit_examination' examination_id=examination_id %}" method="post" data-error-count="{{error_count}}">
-      {% csrf_token %}
 
+    <div class="examination__tab-bar">
       <div class="form-tabs flex-row baseline">
-        <a class="tab-item {% if "patient-details" in request.path %}active{% endif %}" id="patient-details-tab" href="/cases/{{ examination_id }}/patient-details#details">
+        <a class="tab-item {% if "patient-details" in request.path %}active{% endif %}" id="patient-details-tab"
+           href="/cases/{{ examination_id }}/patient-details#details">
           Patient details
         </a>
 
-        <a class="tab-item {% if "medical-team" in request.path %}active{% endif %}" id="medical-team-tab" href="/cases/{{ examination_id }}/medical-team#details">
+        <a class="tab-item {% if "medical-team" in request.path %}active{% endif %}" id="medical-team-tab"
+           href="/cases/{{ examination_id }}/medical-team#details">
           Medical team
         </a>
 
@@ -73,16 +73,11 @@
           Case outcomes
         </a>
       </div>
+    </div>
 
-      {% block tab_content %}
-      {% endblock %}
+    {% block tab_content %}
+    {% endblock %}
 
-      <div class="sticky-save">
-        <div class="container">
-          <input class="submit-btn" type="submit" value="Save changes"/>
-        </div>
-      </div>
-    </form>
 
   </div>
 {% endblock %}

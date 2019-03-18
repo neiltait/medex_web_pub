@@ -3,59 +3,65 @@
 @import 'secondary-info.scss';
 @import 'bereaved-info.scss';
 
-.examination__edit {
-    #examination__edit--form {
-        .form-tabs {
-            justify-content: space-evenly;
+.examination__edit .form {
+  margin-top: 0
+}
+.examination__tab-bar {
+  .form-tabs {
+    justify-content: space-evenly;
 
-            .tab-item {
-                flex-grow: 1;
-                padding: 20px;
-                text-align: center;
+    .tab-item {
+      flex-grow: 1;
+      padding: 20px;
+      text-align: center;
 
-                background-color: $nhs-dark-blue;
-                color: $white;
+      background-color: $nhs-dark-blue;
+      color: $white;
 
-                border-radius: 5px 5px 0px 0px;
-                border-right: 2px solid $white;
+      border-radius: 5px 5px 0px 0px;
+      border-right: 2px solid $white;
 
-                cursor: pointer;
+      cursor: pointer;
 
-                &:last-of-type {
-                    border: none;
-                }
+      &:last-of-type {
+        border: none;
+      }
 
-                &.active {
-                    background-color: $white;
-                    color: $nhs-dark-blue;
-                    border-top: 7px solid $nhs-dark-blue;
-                    padding-top: 13px;
-                }
-            }
-        }
-
-        .form-section {
-            padding: 1rem 2rem;
-
-            &:nth-child(odd) {
-                background-color: $white;
-            }
-        }
-
-        .sticky-save {
-            position: fixed;
-            bottom:0;
-            left: 0;
-            z-index: 100;
-
-            width: 100%;
-            padding: 0.5rem;
-
-            text-align: right;
-
-            display: none;
-            background-color: $white;
-
-        }
+      &.active {
+        background-color: $white;
+        color: $nhs-dark-blue;
+        border-top: 7px solid $nhs-dark-blue;
+        padding-top: 13px;
+      }
     }
+  }
+}
+
+.examination__edit {
+  #examination__edit--form {
+
+    .form-section {
+      padding: 1rem 2rem;
+
+      &:nth-child(odd) {
+        background-color: $white;
+      }
+    }
+
+    .sticky-save {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+
+      width: 100%;
+      padding: 0.5rem;
+
+      text-align: right;
+
+      display: none;
+      background-color: $white;
+
+    }
+  }
 }
