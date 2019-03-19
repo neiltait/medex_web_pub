@@ -112,6 +112,15 @@
                                         No
                                     </label>
                                 </div>
+
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.informed_1 %}nhsuk-input--error{% endif %}"
+                                           id="informed_1-3" name="informed_1" type="radio" value="unknown"
+                                           {% if form.informed_1 == 'unknown' %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="informed_1-3">
+                                        Unknown
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -193,7 +202,7 @@
                         <span class="nhsuk-error-message medex-font-default-override">{{ errors.bereaved_name_2 }}</span>
                         {% endif %}
 
-                        <input id="bereaved_name_2" type="text" name="bereaved_name_2" value="{{form.bereaved_nam_2e}}"
+                        <input id="bereaved_name_2" type="text" name="bereaved_name_2" value="{{form.bereaved_name_2}}"
                                class="nhsuk-input nhsuk-input--width-10 {% if errors.bereaved_name_2 %}nhsuk-input--error{% endif %}">
                     </div>
                 </fieldset>
@@ -210,7 +219,7 @@
                         <span class="nhsuk-error-message medex-font-default-override">{{ errors.relationship_2 }}</span>
                         {% endif %}
 
-                        <input id="relationship_2" type="text" name="relationship_2" value="{{form.relationshi_2p}}"
+                        <input id="relationship_2" type="text" name="relationship_2" value="{{form.relationship_2}}"
                                class="nhsuk-input nhsuk-input--width-10 {% if errors.relationship_2 %}nhsuk-input--error{% endif %}">
                     </div>
                 </fieldset>
@@ -264,7 +273,7 @@
 
                         {% if errors.phone_number_2 %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.phone_number_2 }}</span>{% endif %}
 
-                        <input id="phone_number_2" type="text" name="phone_number_2" value="{{form.phone_numbe_2r}}"
+                        <input id="phone_number_2" type="text" name="phone_number_2" value="{{form.phone_number_2}}"
                                class="nhsuk-input nhsuk-input--width-10 {% if errors.phone_number_2 %}nhsuk-input--error{% endif %}">
                     </div>
                 </fieldset>
@@ -292,6 +301,15 @@
                                            {% if form.informed_2 == 'no' %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_2-2">
                                         No
+                                    </label>
+                                </div>
+
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.informed_2 %}nhsuk-input--error{% endif %}"
+                                           id="informed_2-3" name="informed_2" type="radio" value="unknown"
+                                           {% if form.informed_2 == 'unknown' %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="informed_2-3">
+                                        Unknown
                                     </label>
                                 </div>
                             </div>
@@ -384,7 +402,7 @@
 
 
                     {% if errors.appointment_additional_details %}
-                    <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details }}</span>
                     {% endif %}
 
                     <textarea id="appointment_additional_details"
