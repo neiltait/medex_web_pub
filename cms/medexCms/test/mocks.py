@@ -250,7 +250,7 @@ def get_examination_response_object():
         "deathOccuredLocationId": "",
         "modeOfDisposal": "Cremation",
         "funeralDirectors": "",
-        "personalAffectsCollected": "",
+        "personalAffectsCollected": "yes",
         "personalAffectsDetails": "",
         "dateOfBirth": "",
         "dateOfDeath": "",
