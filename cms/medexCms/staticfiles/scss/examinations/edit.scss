@@ -4,8 +4,33 @@
 @import 'bereaved-info.scss';
 
 .examination__edit .form {
-  margin-top: 0
+  margin-top: 0;
+
+  .form-section {
+    padding: 1rem 2rem;
+
+    &:nth-child(odd) {
+      background-color: $white;
+    }
+  }
+
+  .sticky-save {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+
+    width: 100%;
+    padding: 0.5rem;
+
+    text-align: right;
+
+    display: none;
+    background-color: $white;
+
+  }
 }
+
 .examination__tab-bar {
   .form-tabs {
     justify-content: space-evenly;
@@ -42,31 +67,31 @@
   }
 }
 
-.examination__edit {
-  #examination__edit--form {
-
-    .form-section {
-      padding: 1rem 2rem;
-
-      &:nth-child(odd) {
-        background-color: $white;
-      }
-    }
-
-    .sticky-save {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
-
-      width: 100%;
-      padding: 0.5rem;
-
-      text-align: right;
-
-      display: none;
-      background-color: $white;
-
-    }
-  }
-}
+//.examination__edit {
+//  #examination__edit--form {
+//
+//    .form-section {
+//      padding: 1rem 2rem;
+//
+//      &:nth-child(odd) {
+//        background-color: $white;
+//      }
+//    }
+//
+//    .sticky-save {
+//      position: fixed;
+//      bottom: 0;
+//      left: 0;
+//      z-index: 100;
+//
+//      width: 100%;
+//      padding: 0.5rem;
+//
+//      text-align: right;
+//
+//      display: none;
+//      background-color: $white;
+//
+//    }
+//  }
+//}
