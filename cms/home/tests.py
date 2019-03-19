@@ -48,7 +48,7 @@ class HomeViewsTests(MedExTestCase):
     # Index tests
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    @patch('examinations.request_handler.load_users_examinations', return_value=mocks.SUCCESSFUL_CASE_INDEX)
+    @patch('examinations.request_handler.load_examinations_index', return_value=mocks.SUCCESSFUL_CASE_INDEX)
     def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation, mock_load_cases):
         self.set_auth_cookies()
         response = self.client.get('/')
