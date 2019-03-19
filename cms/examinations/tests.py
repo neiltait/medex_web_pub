@@ -74,7 +74,7 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
     def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
-        response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
+        response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
@@ -85,12 +85,12 @@ class ExaminationsViewsTests(MedExTestCase):
            return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
-    def test_landing_on_edit_page_when_logged_in_loads_the_correct_template(self, mock_locations_list,
+    def test_landing_on_edit_page_redirects_to_edit_patient_details(self, mock_locations_list,
                                     mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTemplateUsed(response, 'examinations/edit.html')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
 
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
@@ -102,7 +102,7 @@ class ExaminationsViewsTests(MedExTestCase):
     def test_landing_on_edit_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self,
                  mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
         self.set_auth_cookies()
-        response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
+        response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
@@ -119,9 +119,9 @@ class ExaminationsViewsTests(MedExTestCase):
         form_data = mocks.get_minimal_create_form_data()
         form_data.update(mocks.get_bereaved_examination_data())
         form_data.pop('first_name', None)
-        response = self.client.post('/cases/%s' % mocks.CREATED_EXAMINATION_ID, form_data)
+        response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTemplateUsed(response, 'examinations/edit.html')
+        self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
 
 
 class ExaminationsFormsTests(MedExTestCase):

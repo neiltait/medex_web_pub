@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import status
 
 from alerts import messages
@@ -61,6 +61,10 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
 
 
 def edit_examination(request, examination_id):
+    return redirect('/cases/' + examination_id + '/patient-details')
+
+
+def edit_examination_patient_details(request, examination_id):
     user = User.initialise_with_token(request)
 
     if not user.check_logged_in():
@@ -75,27 +79,21 @@ def edit_examination(request, examination_id):
         }
         return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
 
-    medical_examiners = people_request_handler.get_medical_examiners_list()
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = None
     secondary_info_form = None
     bereaved_info_form = None
     urgency_info_form = None
-    medical_team_members_form = None
-    medical_team_assigned_team_form = None
 
     if request.method == 'POST':
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
-        medical_team_members_form = MedicalTeamMembersForm(request.POST)
-        medical_team_assigned_team_form = MedicalTeamAssignedTeamForm(request.POST)
 
-        forms_valid = validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
-                                         medical_team_members_form)
+        forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
+                                                     urgency_info_form)
         if forms_valid:
             print('forms valid')
         else:
@@ -105,43 +103,85 @@ def edit_examination(request, examination_id):
 
     modal_config = get_tab_change_modal_config()
 
-    locations = location_request_handler.get_locations_list()
-    me_offices = location_request_handler.get_me_offices_list()
+    locations = location_request_handler.get_locations_list(user.auth_token)
+    me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'medical_examiners': medical_examiners,
-        'medical_examiners_officers': medical_examiners_officers,
         'primary_info_form': primary_info_form,
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
         'urgency_info_form': urgency_info_form,
-        'medical_team_form': medical_team_members_form,
-        'medical_team_assigned_form': medical_team_assigned_team_form,
-        'assigned_team_form': medical_team_members_form,
         'error_count': error_count,
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
     }
 
-    return render(request, 'examinations/edit.html', context, status=status_code)
+    return render(request, 'examinations/edit_patient_details.html', context, status=status_code)
 
 
-def validate_all_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form,
-        medical_team_members_form):
+def edit_examination_medical_team(request, examination_id):
+    user = User.initialise_with_token(request)
+
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    examination = Examination.load_by_id(examination_id, user.auth_token)
+
+    if not examination:
+        context = {
+            'session_user': user,
+            'error': NotFoundError('case'),
+        }
+        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+
+    medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
+    status_code = status.HTTP_200_OK
+    error_count = 0
+    medical_team_members_form = None
+    medical_team_assigned_team_form = None
+
+    if request.method == 'POST':
+        medical_team_members_form = MedicalTeamMembersForm(request.POST)
+        medical_team_assigned_team_form = MedicalTeamAssignedTeamForm(request.POST)
+
+        forms_valid = medical_team_members_form.is_valid()
+        if forms_valid:
+            print('forms valid')
+        else:
+            error_count = medical_team_members_form.errors['count']
+            status_code = status.HTTP_400_BAD_REQUEST
+
+    modal_config = get_tab_change_modal_config()
+
+    context = {
+        'session_user': user,
+        'examination_id': examination_id,
+        'medical_team_form': medical_team_members_form,
+        'medical_team_assigned_form': medical_team_assigned_team_form,
+        'medical_examiners': medical_examiners,
+        'medical_examiners_officers': medical_examiners_officers,
+        'error_count': error_count,
+        'tab_modal': modal_config,
+    }
+
+    return render(request, 'examinations/edit_medical_team.html', context, status=status_code)
+
+
+def validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
     primary_valid = primary_info_form.is_valid()
     secondary_valid = secondary_info_form.is_valid()
     bereaved_valid = bereaved_info_form.is_valid()
     urgency_valid = urgency_info_form.is_valid()
-    medical_team_members_valid = medical_team_members_form.is_valid()
 
-    return primary_valid and secondary_valid and bereaved_valid and urgency_valid and medical_team_members_valid
+    return primary_valid and secondary_valid and bereaved_valid and urgency_valid
 
 
 def get_tab_change_modal_config():
-     return {
+    return {
         'id': 'tab-change-modal',
         'content': 'You have unsaved changes, do you want to save them before continuing?',
         'confirm_btn_id': 'save-continue',
