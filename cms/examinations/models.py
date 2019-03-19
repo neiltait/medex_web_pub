@@ -1,12 +1,11 @@
 from rest_framework import status
-from datetime import datetime
 
 from medexCms.utils import parse_datetime
 
 from . import request_handler
 
 
-class Examination():
+class Examination:
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -15,7 +14,11 @@ class Examination():
             self.given_names = obj_dict.get("givenNames")
             self.surname = obj_dict.get("surname")
             self.nhs_number = obj_dict.get("nhsNumber")
+            self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
+            self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
+            self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
             self.gender = obj_dict.get("gender")
+            self.gender_details = obj_dict.get("genderDetails")
             self.house_name_number = obj_dict.get("houseNameNumber")
             self.street = obj_dict.get("street")
             self.town = obj_dict.get("town")
@@ -29,17 +32,18 @@ class Examination():
             self.funeral_directors = obj_dict.get("funeralDirectors")
             self.personal_affects_collected = obj_dict.get("personalAffectsCollected")
             self.personal_affects_details = obj_dict.get("personalAffectsDetails")
-            self.jewellery_collected = obj_dict.get("jewelleryCollected")
-            self.jewellery_details = obj_dict.get("jewelleryDetails")
             self.date_of_birth = obj_dict.get("dateOfBirth")
             self.date_of_death = obj_dict.get("dateOfDeath")
             self.faith_priority = obj_dict.get("faithPriority")
             self.child_priority = obj_dict.get("childPriority")
             self.coroner_priority = obj_dict.get("coronerPriority")
+            self.cultural_priority = obj_dict.get("culturalPriority")
             self.other_priority = obj_dict.get("otherPriority")
             self.priority_details = obj_dict.get("priorityDetails")
             self.completed = obj_dict.get("completed")
             self.coroner_status = obj_dict.get("coronerStatus")
+            self.representatives = obj_dict.get("representatives")
+            self.out_of_hours = obj_dict.get('outOfHours')
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
