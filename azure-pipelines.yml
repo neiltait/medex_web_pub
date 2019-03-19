@@ -62,6 +62,7 @@ steps:
     docker build -f Dockerfile -t $(dockerId).azurecr.io/$(imageName) .
     docker login -u $(dockerId) -p $pswd $(dockerid).azurecr.io
     docker push $(dockerId).azurecr.io/$(imageName)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
     pswd: $(dockerPassword)
   displayName: 'Build and push Docker image'
