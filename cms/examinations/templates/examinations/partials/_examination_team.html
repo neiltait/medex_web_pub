@@ -8,6 +8,7 @@
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full">
                         <h3 class="nhsuk-heading-m">Medical examiner team</h3>
+                        <p class="nhs-body-s hint-text">The team assigned to work on this case</p>
                         <div class="nhsuk-grid-row">
                             <div class="nhsuk-grid-column-one-half">
                                 <div class="nhsuk-form-group {% if errors.medical_examiners_officer %}nhsuk-form-group--error{% endif %}">
@@ -46,6 +47,47 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div id="confirm-section" class="nhsuk-u-visually-hidden">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <p id="confirm-message" class="nhsuk-label">Are you sure you would like to assign Dr Tia Sanchez
+                            to this case?</p>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <div class="nhsuk-radios nhsuk-radios--inline">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input"
+                                       id="confirm-yes" name="confirm" type="radio" value="yes">
+                                <label class="nhsuk-label nhsuk-radios__label" for="confirm-1">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input"
+                                       id="confirm-no" name="confirm" type="radio" value="no">
+                                <label class="nhsuk-label nhsuk-radios__label" for="confirm-2">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <p class="nhs-body-s hint-text">They will receive a notification email informing them of this
+                            assignment.</p>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <button id="assign-team-btn" class="nhsuk-button nhsuk-button--disabled" type="submit">
+                            Continue
+                        </button>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

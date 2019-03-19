@@ -81,7 +81,7 @@ SUCCESSFUL_REGION_LOAD = [
 
 SUCCESSFUL_ME_OFFICES_LOAD = [
     {
-       'id': '1',
+        'id': '1',
         'name': 'Barnet Hospital ME Office',
     },
     {
@@ -94,19 +94,21 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
     }
 ]
 
-
-SUCCESSFUL_MEDICAL_EXAMINERS = [
-    {
+SUCCESSFUL_MEDICAL_EXAMINERS = [{
         'id': '1',
-        'name': 'Dr Susan Chang',
-    },
-    {
+        'name': 'Dr Alicia Anders',
+    }, {
         'id': '2',
-        'name': 'Dr Andrew McCloud',
-    },
-    {
+        'name': 'Dr Brandon Weatherby',
+    }, {
         'id': '3',
-        'name': 'Dr Anders Petersen',
+        'name': 'Dr Charles Lighterman',
+    }, {
+        'id': '4',
+        'name': 'Dr Subhashine Sanapala',
+    }, {
+        'id': '5',
+        'name': 'Dr Ore Thompson',
     }
 ]
 
@@ -184,6 +186,7 @@ def get_bereaved_examination_data():
         'appointment_additional_details': '',
     }
 
+
 URGENCY_EXAMINATION_DATA = {
     'faith_death': 'yes',
     'coroner_case': 'no',
@@ -222,8 +225,8 @@ def get_medical_team_form_data():
 
 def get_assigned_medical_team_form_data():
     return {
-        'medical_examiner':'Dr Charles Li',
-        'medical_examiners_officer':'Erica Barber',
+        'medical_examiner': 'Dr Charles Li',
+        'medical_examiners_officer': 'Erica Barber',
     }
 
 
@@ -306,7 +309,6 @@ USERS_EXAMINATION_LIST = {
     },
     "success": True
 }
-
 
 # Responses
 
