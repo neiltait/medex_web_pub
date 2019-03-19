@@ -6,24 +6,24 @@
 {% endblock %}
 
 {% block tab_js %}
-      <script src="{% static 'js/examinations/primary-information-form.js' %}"></script>
+    <script src="{% static 'js/examinations/primary-information-form.js' %}"></script>
 {% endblock %}
 
 {% block tab_content %}
-  <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-        action="{% url 'edit_examination' examination_id=examination_id %}/patient-details" method="post"
-        data-error-count="{{ error_count }}">
-    {% csrf_token %}
+    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'edit_examination' examination_id=examination_id %}/patient-details" method="post"
+          data-error-count="{{ error_count }}">
+        {% csrf_token %}
 
-    <div class="form-tab" id="patient-details-section">
-      {% include "examinations/partials/_patient_details.html" %}
-    </div>
+        <div class="form-tab" id="patient-details-section">
+            {% include "examinations/partials/_patient_details.html" %}
+        </div>
 
-    <div class="sticky-save">
-      <div class="container">
-        <input class="submit-btn" type="submit" value="Save changes"/>
-      </div>
-    </div>
-  </form>
+        <div class="sticky-save">
+            <div class="container">
+                <input class="submit-btn" type="submit" value="Save changes"/>
+            </div>
+        </div>
+    </form>
 {% endblock %}
 
