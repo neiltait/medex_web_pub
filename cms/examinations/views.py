@@ -103,8 +103,8 @@ def edit_examination_patient_details(request, examination_id):
 
     modal_config = get_tab_change_modal_config()
 
-    locations = location_request_handler.get_locations_list()
-    me_offices = location_request_handler.get_me_offices_list()
+    locations = location_request_handler.get_locations_list(user.auth_token)
+    me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
     context = {
         'session_user': user,
@@ -137,8 +137,8 @@ def edit_examination_medical_team(request, examination_id):
         }
         return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
 
-    medical_examiners = people_request_handler.get_medical_examiners_list()
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list()
+    medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
     status_code = status.HTTP_200_OK
     error_count = 0
     medical_team_members_form = None
