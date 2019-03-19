@@ -81,10 +81,14 @@ def edit_examination_patient_details(request, examination_id):
 
     status_code = status.HTTP_200_OK
     error_count = 0
-    primary_info_form = None
-    secondary_info_form = None
-    bereaved_info_form = None
-    urgency_info_form = None
+    primary_info_form = PrimaryExaminationInformationForm()
+    primary_info_form.set_values_from_instance(examination)
+    secondary_info_form = SecondaryExaminationInformationForm()
+    secondary_info_form.set_values_from_instance(examination)
+    bereaved_info_form = BereavedInformationForm()
+    bereaved_info_form.set_values_from_instance(examination)
+    urgency_info_form = UrgencyInformationForm()
+    urgency_info_form.set_values_from_instance(examination)
 
     if request.method == 'POST':
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
