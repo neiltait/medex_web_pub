@@ -1,0 +1,53 @@
+<form id="examination__examination-team--form" class="form"
+      action="{% url 'edit_examination' examination_id=examination_id %}/examination-team" method="post">
+    {% csrf_token %}
+
+    <div class="form-tab" id="medical-team-section">
+        <div>
+            <div class="form-section">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <h3 class="nhsuk-heading-m">Medical examiner team</h3>
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-one-half">
+                                <div class="nhsuk-form-group {% if errors.medical_examiners_officer %}nhsuk-form-group--error{% endif %}">
+                                    <label class="nhsuk-label" for="medical_examiners_officer">
+                                        Medical examiner's officer
+                                    </label>
+                                    {% if errors.medical_examiners_officer %}<span
+                                            class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiners_officer }}</span>{% endif %}
+                                    <select class="nhsuk-select" id="medical_examiners_officer"
+                                            name="medical_examiners_officer">
+                                        <option value="" disabled hidden selected>Please select</option>
+                                        {% for meo in medical_examiners_officers %}
+                                            <option
+                                                    value={{ meo.id }} {% if meo.id == form.medical_examiners_officer %}selected{% endif %}>{{ meo.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-half">
+                                <div class="nhsuk-form-group {% if errors.medical_examiner %}nhsuk-form-group--error{% endif %}">
+                                    <label class="nhsuk-label" for="medical_examiner">
+                                        Medical examiner
+                                    </label>
+                                    {% if errors.medical_examiner %}
+                                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiner }}</span>{% endif %}
+                                    <select class="nhsuk-select" id="medical_examiner" name="medical_examiner"
+                                            value="{{ form.medical_examiner }}">
+                                        <option value="" disabled hidden selected>Please select</option>
+                                        {% for me in medical_examiners %}
+                                            <option
+                                                    value={{ me.id }} {% if me.id == form.medical_examiner %}selected{% endif %}>{{ me.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

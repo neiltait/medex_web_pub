@@ -9,19 +9,20 @@
 {% endblock %}
 
 {% block tab_content %}
-  <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-        action="{% url 'edit_examination' examination_id=examination_id %}/medical-team" method="post"
-        data-error-count="{{ error_count }}">
-    {% csrf_token %}
+    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'edit_examination' examination_id=examination_id %}/medical-team" method="post"
+          data-error-count="{{ error_count }}">
+        {% csrf_token %}
 
-      <div class="form-tab" id="medical-team-section">
-        {% include "examinations/partials/_medical_team.html" %}
-      </div>
+        <div class="form-tab" id="medical-team-section">
+            {% include "examinations/partials/_medical_team.html" %}
+        </div>
 
-    <div class="sticky-save">
-      <div class="container">
-        <input class="submit-btn" type="submit" value="Save changes"/>
-      </div>
-    </div>
-  </form>
+        <div class="sticky-save">
+            <div class="container">
+                <input class="submit-btn" type="submit" value="Save changes"/>
+            </div>
+        </div>
+    </form>
+    {% include "examinations/partials/_examination_team.html" %}
 {% endblock %}
