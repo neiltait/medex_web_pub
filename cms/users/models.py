@@ -22,10 +22,10 @@ class User:
 
     def __init__(self, obj_dict=None):
         if obj_dict:
-            self.user_id = obj_dict['user_id']
-            self.first_name = obj_dict['first_name']
-            self.last_name = obj_dict['last_name']
-            self.email_address = obj_dict['email_address']
+            self.user_id = obj_dict['userId']
+            self.first_name = obj_dict['firstName']
+            self.last_name = obj_dict['lastName']
+            self.email_address = obj_dict['email']
         self.examinations = []
         self.permissions = []
 
@@ -89,8 +89,8 @@ class User:
             return None
 
     @classmethod
-    def load_by_id(cls, user_id):
-        response = request_handler.load_by_id(user_id)
+    def load_by_id(cls, user_id, auth_token):
+        response = request_handler.load_by_id(user_id, auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
