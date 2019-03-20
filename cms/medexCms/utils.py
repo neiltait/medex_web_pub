@@ -1,5 +1,7 @@
 import datetime
 
+API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
+
 
 def validate_date(year, month, day, hour='00', min='00'):
     try:
@@ -8,5 +10,6 @@ def validate_date(year, month, day, hour='00', min='00'):
     except (ValueError, TypeError, AttributeError) as ex:
         return False
 
+
 def parse_datetime(datetime_string):
-    return datetime.datetime.strptime(datetime_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
