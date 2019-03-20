@@ -71,10 +71,10 @@ class ExaminationOverview:
         self.case_created_date = obj_dict.get("caseCreatedDate")
 
     def display_dod(self):
-        return self.date_of_death.strftime(self.date_format)
+        return self.date_of_death.strftime(self.date_format) if self.date_of_death else 'D.O.D unknown'
 
     def display_dob(self):
-        return self.date_of_birth.strftime(self.date_format)
+        return self.date_of_birth.strftime(self.date_format) if self.date_of_birth else 'D.O.B unknown'
 
     def urgent(self):
-        return self.urgency_score > 0
+        return True if self.urgency_score and self.urgency_score > 0 else False

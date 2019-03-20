@@ -12,4 +12,7 @@ def validate_date(year, month, day, hour='00', min='00'):
 
 
 def parse_datetime(datetime_string):
-    return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
+    if datetime_string:
+        return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
+    else:
+        return datetime_string
