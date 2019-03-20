@@ -7,7 +7,7 @@
     Primary information
   </h4>
 
-  {% include 'examinations/partials/_primary_information.html' with form=primary_info_form errors=primary_info_form.errors %}
+  {% include 'examinations/partials/patient_details/_primary_information.html' with form=primary_info_form errors=primary_info_form.errors %}
 </div>
 
 
@@ -16,7 +16,7 @@
     Secondary information
   </h4>
 
-  {% include 'examinations/partials/_secondary_information.html' with form=secondary_info_form errors=secondary_info_form.errors %}
+  {% include 'examinations/partials/patient_details/_secondary_information.html' with form=secondary_info_form errors=secondary_info_form.errors %}
 </div>
 
 <div class="form-section">
@@ -24,7 +24,7 @@
     Bereaved or representative information
   </h4>
 
-  {% include 'examinations/partials/_bereaved_information.html' with form=bereaved_info_form errors=bereaved_info_form.errors %}
+  {% include 'examinations/partials/patient_details/_bereaved_information.html' with form=bereaved_info_form errors=bereaved_info_form.errors %}
 </div>
 
 <div class="form-section">
@@ -32,5 +32,5 @@
     Request for rapid release
   </h4>
 
-  {% include 'examinations/partials/_urgency_information.html' with form=urgency_info_form errors=urgency_info_form.errors %}
+  {% include 'examinations/partials/patient_details/_urgency_information.html' with form=urgency_info_form errors=urgency_info_form.errors %}
 </div>

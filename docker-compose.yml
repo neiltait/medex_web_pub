@@ -9,6 +9,7 @@ services:
       OP_ISSUER: ${OP_ISSUER}
       OP_ID: ${OP_ID}
       OP_SECRET: ${OP_SECRET}
+      LOCAL: ${LOCAL}
     build: ./cms
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
