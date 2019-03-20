@@ -81,7 +81,7 @@ SUCCESSFUL_REGION_LOAD = [
 
 SUCCESSFUL_ME_OFFICES_LOAD = [
     {
-       'id': '1',
+        'id': '1',
         'name': 'Barnet Hospital ME Office',
     },
     {
@@ -93,7 +93,6 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
         'name': 'Gloucester Hospital ME Office',
     }
 ]
-
 
 SUCCESSFUL_MEDICAL_EXAMINERS = [
     {
@@ -184,6 +183,7 @@ def get_bereaved_examination_data():
         'appointment_additional_details': '',
     }
 
+
 URGENCY_EXAMINATION_DATA = {
     'faith_death': 'yes',
     'coroner_case': 'no',
@@ -222,8 +222,8 @@ def get_medical_team_form_data():
 
 def get_assigned_medical_team_form_data():
     return {
-        'medical_examiner':'Dr Charles Li',
-        'medical_examiners_officer':'Erica Barber',
+        'medical_examiner': 'Dr Charles Li',
+        'medical_examiners_officer': 'Erica Barber',
     }
 
 
@@ -276,7 +276,10 @@ USERS_EXAMINATION_LIST = {
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "92",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "3"
         },
         {
             "urgencyScore": 0,
@@ -290,7 +293,10 @@ USERS_EXAMINATION_LIST = {
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "91",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "2"
         }
     ],
     "errors": {
@@ -306,7 +312,6 @@ USERS_EXAMINATION_LIST = {
     },
     "success": True
 }
-
 
 # Responses
 

@@ -65,16 +65,22 @@ class ExaminationOverview:
         self.time_of_death = obj_dict.get("timeOfDeath")
         self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
         self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
-        self.appointment_date = obj_dict.get("appointmentDate")
+        self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
         self.appointment_time = obj_dict.get("appointmentTime")
         self.last_admission = obj_dict.get("lastAdmission")
         self.case_created_date = obj_dict.get("caseCreatedDate")
+        self.case_created_days_ago = obj_dict.get("caseCreatedDaysAgo")
+        self.age = obj_dict.get("age")
+        self.last_admission_days_ago = obj_dict.get("lastAdmissionDaysAgo")
 
     def display_dod(self):
         return self.date_of_death.strftime(self.date_format)
 
     def display_dob(self):
         return self.date_of_birth.strftime(self.date_format)
+
+    def display_appointment_date(self):
+        return self.appointment_date.strftime(self.date_format)
 
     def urgent(self):
         return self.urgency_score > 0
