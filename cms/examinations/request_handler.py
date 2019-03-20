@@ -33,3 +33,8 @@ def load_patient_details_by_id(examination_id, auth_token):
         return mocks.SUCCESSFUL_CASE_LOAD
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/patientdetails' % (settings.API_URL, examination_id))
+
+
+def update_patient_details(examination_id, submission, auth_token):
+    return MedexRequest.put(auth_token, '%s/examinations/%s/patientdetails' % (settings.API_URL, examination_id),
+                            submission)
