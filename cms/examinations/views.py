@@ -7,7 +7,7 @@ from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
-from examinations.models import Examination
+from examinations.models import Examination, PatientDetails
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
@@ -70,7 +70,7 @@ def edit_examination_patient_details(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = Examination.load_by_id(examination_id, user.auth_token)
+    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
 
     if not examination:
         context = {

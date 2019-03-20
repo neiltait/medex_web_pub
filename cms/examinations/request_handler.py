@@ -3,6 +3,7 @@ import json
 from django.conf import settings
 
 from medexCms.models import MedexRequest
+from medexCms.test import mocks
 
 
 def get_coroner_statuses_list():
@@ -25,3 +26,10 @@ def load_examinations_index(params, auth_token):
         return mocks.SUCCESSFUL_CASE_INDEX
     else:
         return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, params)
+
+
+def load_patient_details_by_id(examination_id, auth_token):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_CASE_LOAD
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/patientdetails' % (settings.API_URL, examination_id))

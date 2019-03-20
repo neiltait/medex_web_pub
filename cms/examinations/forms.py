@@ -73,14 +73,19 @@ class PrimaryExaminationInformationForm:
         self.hospital_number_1 = examination.hospital_number_1
         self.hospital_number_2 = examination.hospital_number_2
         self.hospital_number_3 = examination.hospital_number_3
-        self.date_of_birth = examination.date_of_birth
+        self.day_of_birth = examination.day_of_birth
+        self.month_of_birth = examination.month_of_birth
+        self.year_of_birth = examination.year_of_birth
         self.date_of_birth_not_known = True if not examination.date_of_birth else False
-        self.date_of_death = examination.date_of_death
+        self.day_of_death = examination.day_of_death
+        self.month_of_death = examination.month_of_death
+        self.year_of_death = examination.year_of_death
         self.date_of_death_not_known = True if not examination.date_of_death else False
         self.time_of_death = examination.time_of_death
         self.time_of_death_not_known = True if not examination.time_of_death else False
         self.place_of_death = examination.death_occurred_location_id
         self.out_of_hours = examination.out_of_hours
+        self.me_office = examination.medical_examiner_office_responsible
 
     def set_hospital_numbers(self, request):
         # get numbers
@@ -283,13 +288,12 @@ class SecondaryExaminationInformationForm:
         self.address_county = examination.county
         self.address_postcode = examination.postcode
         self.relevant_occupation = examination.last_occupation
-        self.care_organisation = examination.organisation_care_before_death_locationId
-        self.funeral_arrangements = examination.mode_of_disposal.lower()
-        # TODO: implanted devices is not currently in the examinations model
-        self.implanted_devices = ''
-        self.implanted_devices_details = ''
+        self.care_organisation = examination.organisation_care_before_death_location_id
+        self.funeral_arrangements = examination.mode_of_disposal
+        self.implanted_devices = examination.any_implants
+        self.implanted_devices_details = examination.implant_details
         self.funeral_directors = examination.funeral_directors
-        self.personal_effects = examination.personal_affects_collected
+        self.personal_effects = examination.any_personal_effects
         self.personal_effects_details = examination.personal_affects_details
 
     def is_valid(self):
@@ -415,11 +419,11 @@ class UrgencyInformationForm:
             self.urgency_additional_details = ''
 
     def set_values_from_instance(self, examination):
-        self.faith_death = examination.faith_priority.lower()
-        self.coroner_case = examination.coroner_priority.lower()
-        self.child_death = examination.child_priority.lower()
-        self.cultural_death = examination.cultural_priority.lower()
-        self.other = examination.other_priority.lower()
+        self.faith_death = examination.faith_priority
+        self.coroner_case = examination.coroner_priority
+        self.child_death = examination.child_priority
+        self.cultural_death = examination.cultural_priority
+        self.other = examination.other_priority
         self.urgency_additional_details = examination.priority_details
 
     def is_valid(self):
