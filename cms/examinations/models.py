@@ -1,4 +1,5 @@
 from rest_framework import status
+from datetime import datetime
 
 from medexCms.utils import parse_datetime
 
@@ -71,11 +72,8 @@ class ExaminationOverview:
         self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
         self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
         self.appointment_time = obj_dict.get("appointmentTime")
-        self.last_admission = obj_dict.get("lastAdmission")
-        self.case_created_date = obj_dict.get("caseCreatedDate")
-        self.case_created_days_ago = obj_dict.get("caseCreatedDaysAgo")
-        self.age = obj_dict.get("age")
-        self.last_admission_days_ago = obj_dict.get("lastAdmissionDaysAgo")
+        self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
+        self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
 
     def display_dod(self):
         return self.date_of_death.strftime(self.date_format)
@@ -85,6 +83,18 @@ class ExaminationOverview:
 
     def display_appointment_date(self):
         return self.appointment_date.strftime(self.date_format)
+
+    def calc_age(self):
+        return self.date_of_death.year - self.date_of_birth.year - (
+                    (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+
+    def calc_last_admission_days_ago(self):
+        delta = datetime.now() - self.last_admission
+        return delta.days
+
+    def calc_created_days_ago(self):
+        delta = datetime.now() - self.case_created_date
+        return delta.days
 
     def urgent(self):
         return self.urgency_score > 0
