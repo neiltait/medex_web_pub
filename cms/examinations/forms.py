@@ -3,7 +3,7 @@ import datetime
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from alerts.messages import NAME_TOTAL_TOO_LONG
-from medexCms.utils import validate_date
+from medexCms.utils import validate_date, parse_datetime
 
 
 class PrimaryExaminationInformationForm:
@@ -32,6 +32,7 @@ class PrimaryExaminationInformationForm:
         self.time_of_death = ""
         self.time_of_death_not_known = ""
         self.place_of_death = ""
+        self.out_of_hours = ""
 
     def initialise_form_from_data(self, request):
         self.last_name = request.get("last_name")
@@ -62,6 +63,25 @@ class PrimaryExaminationInformationForm:
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
         self.out_of_hours = True if "out_of_hours" in request else False
+
+    def set_values_from_instance(self, examination):
+        self.first_name = examination.given_names
+        self.last_name = examination.surname
+        self.gender = examination.gender
+        self.gender_details = examination.gender_details
+        self.nhs_number = examination.nhs_number
+        self.nhs_number_not_known = True if not examination.nhs_number else False
+        self.hospital_number_1 = examination.hospital_number_1
+        self.hospital_number_2 = examination.hospital_number_2
+        self.hospital_number_3 = examination.hospital_number_3
+        self.date_of_birth = examination.date_of_birth
+        self.date_of_birth_not_known = True if not examination.date_of_birth else False
+        self.date_of_death = examination.date_of_death
+        self.date_of_death_not_known = True if not examination.date_of_death else False
+        self.time_of_death = examination.time_of_death
+        self.time_of_death_not_known = True if not examination.time_of_death else False
+        self.place_of_death = examination.death_occurred_location_id
+        self.out_of_hours = examination.out_of_hours
 
     def set_hospital_numbers(self, request):
         # get numbers
@@ -254,8 +274,26 @@ class SecondaryExaminationInformationForm:
             self.care_organisation = ''
             self.funeral_arrangements = ''
             self.implanted_devices = ''
+            self.implanted_devices_details = ''
             self.funeral_directors = ''
             self.personal_effects = ''
+            self.personal_effects_details = ''
+
+    def set_values_from_instance(self, examination):
+        self.address_line_1 = examination.house_name_number
+        self.address_line_2 = examination.street
+        self.address_town = examination.town
+        self.address_county = examination.county
+        self.address_postcode = examination.postcode
+        self.relevant_occupation = examination.last_occupation
+        self.care_organisation = examination.organisation_care_before_death_locationId
+        self.funeral_arrangements = examination.mode_of_disposal.lower()
+        # TODO: implanted devices is not currently in the examinations model
+        self.implanted_devices = ''
+        self.implanted_devices_details = ''
+        self.funeral_directors = examination.funeral_directors
+        self.personal_effects = examination.personal_affects_collected
+        self.personal_effects_details = examination.personal_affects_details
 
     def is_valid(self):
         return True
@@ -306,10 +344,27 @@ class BereavedInformationForm:
             self.time_of_appointment_2 = ''
             self.appointment_additional_details = ''
 
+    def set_values_from_instance(self, examination):
+        count = 1
+        for representative in examination.representatives:
+            setattr(self, 'bereaved_name_%s' % count, representative['full_name'])
+            setattr(self, 'relationship_%s' % count, representative['relationship'])
+            setattr(self, 'phone_number_%s' % count, representative['phone_number'])
+            setattr(self, 'present_death_%s' % count, representative['present_at_death'].lower())
+            setattr(self, 'informed_%s' % count, representative['informed'].lower())
+            appointment_date = parse_datetime(representative['appointment_date'])
+            setattr(self, 'day_of_appointment_%s' % count, appointment_date.day)
+            setattr(self, 'month_of_appointment_%s' % count, appointment_date.month)
+            setattr(self, 'year_of_appointment_%s' % count, appointment_date.year)
+            setattr(self, 'time_of_appointment_%s' % count, representative['appointment_time'])
+            count += 1
+        # TODO: appointment_additional_details is not currently in the examinations model
+        self.appointment_additional_details = ''
+
     def is_valid(self):
         valid_date_1 = True
         valid_date_2 = True
-    
+
         if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
                                                self.day_of_appointment_1, self.time_of_appointment_1]):
             hours = self.time_of_appointment_1.split(':')[0]
@@ -361,6 +416,14 @@ class UrgencyInformationForm:
             self.cultural_death = ''
             self.other = ''
             self.urgency_additional_details = ''
+
+    def set_values_from_instance(self, examination):
+        self.faith_death = examination.faith_priority.lower()
+        self.coroner_case = examination.coroner_priority.lower()
+        self.child_death = examination.child_priority.lower()
+        self.cultural_death = examination.cultural_priority.lower()
+        self.other = examination.other_priority.lower()
+        self.urgency_additional_details = examination.priority_details
 
     def is_valid(self):
         return True

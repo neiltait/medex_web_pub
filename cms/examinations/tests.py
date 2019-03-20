@@ -1,8 +1,5 @@
-import json
-
 from unittest.mock import patch
 
-from django.conf import settings
 from rest_framework import status
 
 from alerts import messages
