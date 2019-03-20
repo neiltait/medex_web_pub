@@ -149,7 +149,6 @@ class PatientDetails:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
-        print(response.__dict__)
 
         authenticated = response.status_code == status.HTTP_200_OK
 

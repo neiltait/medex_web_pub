@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT
+from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE
 
 
 class PrimaryExaminationInformationForm:
@@ -198,10 +198,11 @@ class PrimaryExaminationInformationForm:
         return self.errors["count"] == 0
 
     def to_object(self):
-        dob = ''
-        dod = ''
+        dob = NONE_DATE
+        dod = NONE_DATE
         if not self.date_of_birth_not_known:
             dob = datetime(self.year_of_birth, self.month_of_birth, self.day_of_birth).strftime(API_DATE_FORMAT)
+
         if not self.date_of_death_not_known:
             dod = datetime(self.year_of_death, self.month_of_death, self.day_of_death).strftime(API_DATE_FORMAT)
         return {
@@ -217,8 +218,8 @@ class PrimaryExaminationInformationForm:
             "hospitalNumber_3": self.hospital_number_3,
             "dateOfBirth": dob,
             "dateOfDeath": dod,
-            "timeOfDeath": self.time_of_death,
-            "outOfHours": self.out_of_hours,
+            "timeOfDeath": '00:00' if self.time_of_death_not_known else self.time_of_death,
+            "outOfHours": 'true' if self.out_of_hours else 'false',
         }
 
     def text_and_checkbox_group_is_valid(self, textboxes, checkbox):
@@ -298,6 +299,23 @@ class SecondaryExaminationInformationForm:
 
     def is_valid(self):
         return True
+
+    def for_request(self):
+        return {
+            'houseNameNumber': self.address_line_1,
+            'street': self.address_line_2,
+            'town': self.address_town,
+            'county': self.address_county,
+            'postCode': self.address_postcode,
+            'lastOccupation': self.relevant_occupation,
+            'organisationCareBeforeDeathLocationId': self.care_organisation,
+            'modeOfDisposal': self.funeral_arrangements,
+            'anyImplants': self.implanted_devices,
+            'implantDetails': self.implanted_devices_details,
+            'funeralDirectors': self.funeral_directors,
+            'anyPersonalEffects': self.personal_effects,
+            'personalEffectDetails': self.personal_effects_details,
+        }
 
 
 class BereavedInformationForm:
@@ -398,6 +416,11 @@ class BereavedInformationForm:
 
         return True if valid_date_1 and valid_date_2 else False
 
+    def for_request(self):
+        return {
+            'representatives': [],
+        }
+
 
 class UrgencyInformationForm:
 
@@ -428,6 +451,16 @@ class UrgencyInformationForm:
 
     def is_valid(self):
         return True
+
+    def for_request(self):
+        return {
+            'faithPriority': 'true' if self.faith_death else 'false',
+            'coronerPriority': 'true' if self.coroner_case else 'false',
+            'childPriority': 'true' if self.child_death else 'false',
+            'culturalPriority': 'true' if self.cultural_death else 'false',
+            'otherPriority': 'true' if self.other else 'false',
+            'priorityDetails': self.urgency_additional_details,
+        }
 
 
 class MedicalTeamMembersForm:
