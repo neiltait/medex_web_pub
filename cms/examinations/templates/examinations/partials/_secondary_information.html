@@ -37,9 +37,9 @@
         <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
           <label class="nhsuk-label" for="address_county">County</label>
 
-          {% if errors.address_town %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.address_town }}</span>{% endif %}
+          {% if errors.address_county %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.address_county }}</span>{% endif %}
 
-          <input id="address_county" type="text" name="address_town" value="{{form.address_county}}"
+          <input id="address_county" type="text" name="address_county" value="{{form.address_county}}"
                  class="nhsuk-input nhsuk-input--width-10 {% if errors.address_county %}nhsuk-input--error{% endif %}">
         </div>
       </fieldset>
@@ -48,9 +48,9 @@
         <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
           <label class="nhsuk-label" for="address_postcode">Postcode of residential address</label>
 
-          {% if errors.address_town %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.address_town }}</span>{% endif %}
+          {% if errors.address_postcode %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.address_postcode }}</span>{% endif %}
 
-          <input id="address_postcode" type="text" name="address_town" value="{{form.address_postcode}}"
+          <input id="address_postcode" type="text" name="address_postcode" value="{{form.address_postcode}}"
                  class="nhsuk-input nhsuk-input--width-10 {% if errors.address_postcode %}nhsuk-input--error{% endif %}">
         </div>
       </fieldset>

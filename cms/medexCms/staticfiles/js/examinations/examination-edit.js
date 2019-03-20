@@ -14,11 +14,11 @@
       this.initialiseTabs();
       this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
       this.setupAdditionalNotes();
-      this.setupAddRemoveItemSections();
+      this.setupAddRemovePanels();
       this.setInitialView();
     },
 
-    setInitialView: function() {
+    setInitialView: function () {
       if (location.search && this.hasErrors) {
         var paramsJSON = this.decodeQueryParams(location.search.substr(1));
         this.showTab(paramsObject['previousTab']);
@@ -30,10 +30,10 @@
       }
     },
 
-    decodeQueryParams: function(params) {
+    decodeQueryParams: function (params) {
       var pairs = params.split('&');
       paramsObject = {};
-      pairs.forEach(function(pair) {
+      pairs.forEach(function (pair) {
         var key = pair.split('=')[0];
         var value = pair.split('=')[1];
         paramsObject[key] = value;
@@ -46,10 +46,6 @@
       this.tab2 = this.form.find('#medical-team-tab');
       this.tab3 = this.form.find('#case-breakdown-tab');
       this.tab4 = this.form.find('#case-outcomes-tab');
-      this.section1 = this.form.find('#patient-details-section');
-      this.section2 = this.form.find('#medical-team-section');
-      this.section3 = this.form.find('#case-breakdown-section');
-      this.section4 = this.form.find('#case-outcomes-section');
       let that = this;
       this.tab1.click(function () {
         that.showTab("patient-details")
@@ -71,35 +67,14 @@
         new AdditionalNotesSection(additionalNotesFields[i]);
       }
     },
-
-    setupAddRemoveItemSections() {
-      var addRemoveItemSections = $('.add-remove-item-section')
-      for (var i = 0; i < addRemoveItemSections.length; i++) {
-        new AddRemoveItemSection(addRemoveItemSections[i]);
-      }
+    setupAddRemovePanels() {
+      var addRemovePanelSection = $('#add-remove-panel-section')
+      new AddRemovePanelList(addRemovePanelSection, 0)
     },
-
     showTab: function (tabId) {
       if (this.hasChanges) {
         var currentTab = this.form.find('.tab-item.active')[0].id.slice(0, -4);
         this.tabChangeModal.show(tabId, currentTab);
-
-      } else {
-        for (tab of [this.tab1, this.tab2, this.tab3, this.tab4]) {
-          if (tab[0].id === tabId + "-tab") {
-            tab.addClass("active");
-          } else {
-            tab.removeClass("active");
-          }
-        }
-
-        for (section of [this.section1, this.section2, this.section3, this.section4]) {
-          if (section[0].id === tabId + "-section") {
-            section.removeClass("medex-hidden");
-          } else {
-            section.addClass("medex-hidden");
-          }
-        }
       }
     },
 
@@ -120,7 +95,7 @@
       }
     },
 
-    forceSave: function(currentTab, nextTab) {
+    forceSave: function (currentTab, nextTab) {
       this.form[0].action += '?previousTab=' + currentTab + '#' + nextTab;
       this.form.submit();
     },
@@ -153,33 +128,33 @@
     }
   }
 
-  var ChangeTabModal = function(modal, saveCallBack) {
+  var ChangeTabModal = function (modal, saveCallBack) {
     this.modal = $(modal);
     this.saveCallBack = saveCallBack;
     this.setup();
   }
 
   ChangeTabModal.prototype = {
-    setup: function() {
+    setup: function () {
       this.saveButton = this.modal.find('#save-continue');
       this.discardButton = this.modal.find('#discard');
       this.startWatchers();
     },
 
-    startWatchers: function() {
+    startWatchers: function () {
       var that = this;
 
-      this.saveButton.click(function() {
+      this.saveButton.click(function () {
         that.saveCallBack(that.currentTab, that.nextTab);
       });
 
-      this.discardButton.click(function() {
+      this.discardButton.click(function () {
         window.location.hash = that.nextTab;
         location.reload();
       });
     },
 
-    show: function(nextTab, currentTab) {
+    show: function (nextTab, currentTab) {
       this.currentTab = currentTab;
       this.nextTab = nextTab;
       this.modal.show();
@@ -204,7 +179,63 @@
         that.button.addClass("medex-hidden")
       })
     },
-  }
+  };
+
+  var AddRemovePanelList = function (section, visibleCount) {
+    this.visibleCount = visibleCount;
+    this.panels = section.find('.add-remove-panel');
+    this.addButton = section.find('.add-panel-button');
+    this.removeButton = section.find('.remove-panel-button');
+    this.setup();
+  };
+
+  AddRemovePanelList.prototype = {
+    setup: function () {
+      let that = this;
+      this.addButton.on('click', function (event) {
+        event.preventDefault();
+        if (that.visibleCount < that.panels.length) {
+          that.visibleCount += 1;
+          that.refreshVisible();
+        }
+      });
+      this.removeButton.on('click', function (event) {
+        event.preventDefault();
+        if (that.visibleCount > 0) {
+          that.visibleCount -= 1;
+          that.refreshVisible();
+        }
+      });
+      this.refreshVisible();
+    },
+    refreshVisible() {
+      this.refreshVisiblePanels();
+      this.refreshVisibleButtons();
+    },
+    refreshVisiblePanels() {
+      for (i = 0; i < this.panels.length; i += 1) {
+        if (i < this.visibleCount) {
+          this.panels[i].classList.remove("medex-hidden");
+        } else {
+          this.panels[i].classList.add("medex-hidden");
+        }
+      }
+    },
+    refreshVisibleButtons() {
+      if (this.visibleCount === 0) {
+        this.removeButton.addClass("medex-hidden");
+      } else {
+        this.removeButton.removeClass("medex-hidden");
+      }
+
+      if (this.visibleCount === this.panels.length) {
+        this.addButton.addClass("medex-hidden");
+      } else {
+        this.addButton.removeClass("medex-hidden");
+      }
+    }
+  };
+
 
   var AddRemoveItemSection = function (section) {
     this.visible = false;
@@ -219,11 +250,11 @@
       this.removeButton = this.section.find('.remove-item-button');
 
       let that = this;
-      this.addButton.on('click', function(event) {
+      this.addButton.on('click', function (event) {
         event.preventDefault();
         that.show()
       });
-      this.removeButton.on('click', function(event) {
+      this.removeButton.on('click', function (event) {
         event.preventDefault();
         that.hide()
       });

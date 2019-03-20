@@ -4,7 +4,7 @@ from django.urls import path
 from .me_offices import get_me_offices_list
 from .locations import get_locations_list
 from .users import load_by_email
-from .examinations import create_case
+from .examinations import create_case, load_examination_by_id
 from .medical_examiners import get_medical_examiners_list
 from .medical_examiners_officers import get_medical_examiners_officers_list
 
@@ -23,6 +23,7 @@ urlpatterns = [
     path('locations/get_locations_list', get_locations_list, name='get_locations_list'),
     path('me_offices/get_me_offices_list', get_me_offices_list, name='get_me_offices_list'),
     path('cases/create', create_case, name='create_case'),
+    url(r'examinations/(?P<case_id>[\w\-]+)', load_examination_by_id, name='load_examination_by_id'),
     path('people/get_medical_examiners_list', get_medical_examiners_list, name='medical_examiners_list'),
     path('people/get_medical_examiners_officers_list', get_medical_examiners_officers_list, name='medical_examiners_officers_list'),
 ]
