@@ -103,8 +103,21 @@
       margin-right: 1em;
       margin-left: 1em;
 
+      &:hover {
+        background-color: $white;
+        box-shadow: none;
+        color: $nhs-blue;
+      }
       &:visited {
         color: $white;
+      }
+
+      &--urgent {
+        &:hover {
+          background-color: $white;
+          box-shadow: none;
+          color: $nhs-red;
+        }
       }
     }
 

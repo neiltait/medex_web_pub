@@ -52,7 +52,7 @@
                     </p>
                 {% endif %}
 
-                <a class="view-btn" href="/cases/{{ case.id }}">View Case</a>
+                <a class="view-btn {% if case.urgent %}view-btn--urgent{% endif %}" href="/cases/{{ case.id }}">View Case</a>
 
                 <div class="chevron-down">
                 </div>
