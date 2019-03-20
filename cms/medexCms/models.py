@@ -17,3 +17,11 @@ class MedexRequest:
             'content-type': 'application/json-patch+json'
         }
         return requests.post(url, data=data, headers=headers)
+
+    @classmethod
+    def put(cls, auth_token, url, data={}):
+        headers = {
+            'authorization': 'bearer ' + auth_token,
+            'content-type': 'application/json-patch+json'
+        }
+        return requests.put(url, data=data, headers=headers)
