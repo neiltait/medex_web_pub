@@ -1,5 +1,6 @@
 @import '../../variables';
 
+
 .case-card {
   border: 1px solid $nhs-light-grey;
   border-left: 4px solid $nhs-blue;
@@ -50,6 +51,65 @@
 
     .urgent-flag {
       color: $nhs-red;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.case-card-expanded {
+  background: $nhs-blue;
+  border: 1px solid $nhs-light-grey;
+  padding: 1.5rem 2rem;
+  box-shadow: 0px 5px $nhs-very-light-grey;
+  margin-bottom: 1rem;
+
+  &.urgent {
+    background: $nhs-red;
+  }
+
+  .patient-name {
+    margin: 0;
+    font-weight: bold;
+    color: $white;
+  }
+
+  .dates {
+    margin-bottom: 0;
+  }
+
+  .controls {
+    justify-content: flex-end;
+
+    .chevron-down {
+      background: url("/static/images/down_chevron.png") no-repeat;
+      height: 1rem;
+      width: 2rem;
+      display: none;
+    }
+
+    .chevron-up {
+      background: url("/static/images/up_chevron.png") no-repeat;
+      height: 1rem;
+      width: 2rem;
+      display: block;
+    }
+
+    .view-btn {
+      border: 1px solid $white;
+      text-decoration: none;
+      color: $white;
+      padding: 0.2em 0.5em;
+      margin-right: 1em;
+      margin-left: 1em;
+
+      &:visited {
+        color: $white;
+      }
+    }
+
+    .urgent-flag {
+      color: $white;
       font-weight: bold;
       margin-bottom: 0;
     }

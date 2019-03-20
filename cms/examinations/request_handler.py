@@ -20,4 +20,5 @@ def load_by_id(examination_id, auth_token):
 
 
 def load_examinations_index(params, auth_token):
-    return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, params)
+    # return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, params)
+    return mocks.SUCCESSFUL_CASE_INDEX
