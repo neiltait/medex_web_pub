@@ -23,6 +23,7 @@
             this.radios = this.group.find('input[type=radio]');
             this.additionalInfoArea = this.group.find('.additional-info');
             this.startWatcher();
+            this.setInitialView();
         },
 
         startWatcher: function () {
@@ -35,6 +36,14 @@
                 that.additionalInfoArea.hide();
               }
             });
+        },
+
+        setInitialView: function() {
+            for (var i = 0; i < this.radios.length; i++) {
+                if (this.radios[i].value === this.showValue && this.radios[i].checked) {
+                    this.additionalInfoArea.show();
+                }
+            }
         }
     }
 

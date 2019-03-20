@@ -39,7 +39,7 @@
                   action="{% url 'create_examination' %}" method="post">
                 {% csrf_token %}
 
-                {% include 'examinations/partials/_primary_information.html' %}
+                {% include 'examinations/partials/patient_details/_primary_information.html' %}
 
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full">

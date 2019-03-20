@@ -37,6 +37,7 @@ SECRET_KEY = '***REMOVED***'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOCAL = os.environ.get('LOCAL', False)
 
 ALLOWED_HOSTS = [
     'localhost',

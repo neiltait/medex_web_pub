@@ -1,15 +1,16 @@
 (function ($) {
 
-  var ExaminationEditForm = function (form) {
-    this.form = $(form);
+  var ExaminationEditForm = function (wrapper) {
+    this.wrapper = $(wrapper);
     this.setup();
   }
 
   ExaminationEditForm.prototype = {
     setup: function () {
-      this.saveBar = this.form.find('.sticky-save');
+      this.saveBar = this.wrapper.find('.sticky-save');
+      this.form = this.wrapper.find('form');
       this.hasChanges = false;
-      this.hasErrors = this.form[0].dataset.errorCount > 0;
+      this.hasErrors = this.wrapper[0].dataset.errorCount > 0;
       this.initialiseInputs();
       this.initialiseTabs();
       this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
@@ -42,22 +43,22 @@
     },
 
     initialiseTabs: function () {
-      this.tab1 = this.form.find('#patient-details-tab');
-      this.tab2 = this.form.find('#medical-team-tab');
-      this.tab3 = this.form.find('#case-breakdown-tab');
-      this.tab4 = this.form.find('#case-outcomes-tab');
+      this.tab1 = this.wrapper.find('#patient-details-tab');
+      this.tab2 = this.wrapper.find('#medical-team-tab');
+      this.tab3 = this.wrapper.find('#case-breakdown-tab');
+      this.tab4 = this.wrapper.find('#case-outcomes-tab');
       let that = this;
-      this.tab1.click(function () {
-        that.showTab("patient-details")
+      this.tab1.click(function(evt) {
+        that.showTab("patient-details", evt)
       });
-      this.tab2.click(function () {
-        that.showTab("medical-team")
+      this.tab2.click(function(evt) {
+        that.showTab("medical-team", evt)
       });
-      this.tab3.click(function () {
-        that.showTab("case-breakdown")
+      this.tab3.click(function(evt) {
+        that.showTab("case-breakdown", evt)
       });
-      this.tab4.click(function () {
-        that.showTab("case-outcomes")
+      this.tab4.click(function(evt) {
+        that.showTab("case-outcomes", evt)
       });
     },
 
@@ -67,36 +68,38 @@
         new AdditionalNotesSection(additionalNotesFields[i]);
       }
     },
+
     setupAddRemovePanels() {
       var addRemovePanelSection = $('#add-remove-panel-section')
       new AddRemovePanelList(addRemovePanelSection, 0)
     },
-    showTab: function (tabId) {
+
+    showTab: function (tabId, evt) {
       if (this.hasChanges) {
-        var currentTab = this.form.find('.tab-item.active')[0].id.slice(0, -4);
-        this.tabChangeModal.show(tabId, currentTab);
+        evt.preventDefault();
+        this.tabChangeModal.show(tabId);
       }
     },
 
     initialiseInputs: function () {
-      var inputs = this.form.find('input');
+      var inputs = this.wrapper.find('input');
       for (var i = 0; i < inputs.length; i++) {
         new Input(inputs[i], this.handleChange.bind(this));
       }
 
-      var selects = this.form.find('select');
+      var selects = this.wrapper.find('select');
       for (var i = 0; i < selects.length; i++) {
         new Input(selects[i], this.handleChange.bind(this));
       }
 
-      var textAreas = this.form.find('textarea');
+      var textAreas = this.wrapper.find('textarea');
       for (var i = 0; i < textAreas.length; i++) {
         new Input(textAreas[i], this.handleChange.bind(this));
       }
     },
 
-    forceSave: function (currentTab, nextTab) {
-      this.form[0].action += '?previousTab=' + currentTab + '#' + nextTab;
+    forceSave: function (nextTab) {
+      this.form[0].action += '?nextTab=' + nextTab;
       this.form.submit();
     },
 
@@ -145,17 +148,18 @@
       var that = this;
 
       this.saveButton.click(function () {
-        that.saveCallBack(that.currentTab, that.nextTab);
+        that.saveCallBack(that.nextTab);
       });
 
       this.discardButton.click(function () {
-        window.location.hash = that.nextTab;
-        location.reload();
+        var pathPieces = location.pathname.split('/');
+        pathPieces[pathPieces.length - 1] = that.nextTab;
+        newPath = pathPieces.join('/');
+        location.pathname = newPath;
       });
     },
 
-    show: function (nextTab, currentTab) {
-      this.currentTab = currentTab;
+    show: function (nextTab) {
       this.nextTab = nextTab;
       this.modal.show();
     }
@@ -274,7 +278,7 @@
   }
 
   function init() {
-    var examinationsForms = $('#examination__edit--form');
+    var examinationsForms = $('.examination__edit');
     for (var i = 0; i < examinationsForms.length; i++) {
       new ExaminationEditForm(examinationsForms[i]);
     }

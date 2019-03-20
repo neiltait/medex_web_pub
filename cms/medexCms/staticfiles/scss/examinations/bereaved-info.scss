@@ -5,6 +5,10 @@
     display: none;
     border-top: 1px solid $nhs-grey;
     padding-top: 1.5rem;
+
+    &:first-of-type {
+      border-top: none;
+    }
   }
 
   #add-another-btn {
