@@ -156,8 +156,8 @@
 
             <div class="nhsuk-radios__item">
               <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                     id="implant-devices-1" name="implanted_devices" type="radio" value="yes"
-                     {% if form.implanted_devices == 'yes' %}checked{% endif %}>
+                     id="implant-devices-1" name="implanted_devices" type="radio" value="true"
+                     {% if form.implanted_devices == 'true' %}checked{% endif %}>
               <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-1">
                   Yes
               </label>
@@ -165,8 +165,8 @@
 
             <div class="nhsuk-radios__item">
               <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                     id="implant-devices-2" name="implanted_devices" type="radio" value="no"
-                     {% if form.implanted_devices == 'no' %}checked{% endif %}>
+                     id="implant-devices-2" name="implanted_devices" type="radio" value="false"
+                     {% if form.implanted_devices == 'false' %}checked{% endif %}>
               <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-2">
                   No
               </label>
@@ -221,8 +221,8 @@
 
           <div class="nhsuk-radios__item">
             <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                   id="personal-effects-1" name="personal_effects" type="radio" value="yes"
-                   {% if form.personal_effects == 'yes' %}checked{% endif %}>
+                   id="personal-effects-1" name="personal_effects" type="radio" value="true"
+                   {% if form.personal_effects == 'true' %}checked{% endif %}>
             <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
                 Yes
             </label>
@@ -230,8 +230,8 @@
 
           <div class="nhsuk-radios__item">
             <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                   id="personal-effects-2" name="personal_effects" type="radio" value="no"
-                   {% if form.personal_effects == 'no' %}checked{% endif %}>
+                   id="personal-effects-2" name="personal_effects" type="radio" value="false"
+                   {% if form.personal_effects == 'false' %}checked{% endif %}>
             <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
                 No
             </label>
