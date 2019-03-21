@@ -258,6 +258,7 @@ class SecondaryExaminationInformationForm:
             self.address_line_2 = request.get('address_line_2')
             self.address_town = request.get('address_town')
             self.address_county = request.get('address_county')
+            self.address_country = request.get('address_country')
             self.address_postcode = request.get('address_postcode')
             self.relevant_occupation = request.get('relevant_occupation')
             self.care_organisation = request.get('care_organisation')
@@ -272,6 +273,7 @@ class SecondaryExaminationInformationForm:
             self.address_line_2 = ''
             self.address_town = ''
             self.address_county = ''
+            self.address_country = ''
             self.address_postcode = ''
             self.relevant_occupation = ''
             self.care_organisation = ''
@@ -287,6 +289,7 @@ class SecondaryExaminationInformationForm:
         self.address_line_2 = examination.street
         self.address_town = examination.town
         self.address_county = examination.county
+        self.address_country = examination.country
         self.address_postcode = examination.postcode
         self.relevant_occupation = examination.last_occupation
         self.care_organisation = examination.organisation_care_before_death_location_id
@@ -306,6 +309,7 @@ class SecondaryExaminationInformationForm:
             'street': self.address_line_2,
             'town': self.address_town,
             'county': self.address_county,
+            'country': self.address_country,
             'postCode': self.address_postcode,
             'lastOccupation': self.relevant_occupation,
             'organisationCareBeforeDeathLocationId': self.care_organisation,
