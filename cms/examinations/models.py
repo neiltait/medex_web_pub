@@ -88,41 +88,46 @@ class PatientDetails:
 
     def __init__(self, obj_dict):
         self.id = obj_dict.get("id")
-        self.cultural_priority = obj_dict.get("culturalPriority")
-        self.faith_priority = obj_dict.get("faithPriority")
-        self.child_priority = obj_dict.get("childPriority")
-        self.coroner_priority = obj_dict.get("coronerPriority")
-        self.other_priority = obj_dict.get("otherPriority")
-        self.priority_details = obj_dict.get("priorityDetails")
+
         self.completed = obj_dict.get("completed")
         self.coroner_status = obj_dict.get("coronerStatus")
+
+        self.given_names = obj_dict.get("givenNames")
+        self.surname = obj_dict.get("surname")
         self.gender = obj_dict.get("gender").lower()
         self.gender_details = obj_dict.get("genderDetails")
-        self.death_occurred_location_id = obj_dict.get("placeDeathOccured")
-        self.medical_examiner_office_responsible = obj_dict.get("medicalExaminerOfficeResponsible")
         self.nhs_number = obj_dict.get("nhsNumber")
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
         self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
         self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
         self.time_of_death = obj_dict.get("timeOfDeath")
-        self.given_names = obj_dict.get("givenNames")
-        self.surname = obj_dict.get("surname")
+        self.death_occurred_location_id = obj_dict.get("placeDeathOccured")
+        self.medical_examiner_office_responsible = obj_dict.get("medicalExaminerOfficeResponsible")
         self.out_of_hours = obj_dict.get("outOfHours")
-        self.postcode = obj_dict.get("postCode")
+
         self.house_name_number = obj_dict.get("houseNameNumber")
         self.street = obj_dict.get("street")
         self.town = obj_dict.get("town")
         self.county = obj_dict.get("county")
         self.country = obj_dict.get("country")
+        self.postcode = obj_dict.get("postCode")
         self.last_occupation = obj_dict.get("lastOccupation")
         self.organisation_care_before_death_location_id = obj_dict.get("organisationCareBeforeDeathLocationId")
         self.mode_of_disposal = obj_dict.get("modeOfDisposal")
-        self.any_implants = obj_dict.get("anyImplants")
+        self.any_implants = 'true' if obj_dict.get("anyImplants") else 'false'
         self.implant_details = obj_dict.get("implantDetails")
         self.funeral_directors = obj_dict.get("funeralDirectors")
-        self.any_personal_effects = obj_dict.get("anyPersonalEffects")
+        self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
         self.personal_affects_details = obj_dict.get("personalEffectDetails")
+
         self.representatives = obj_dict.get("representatives")
+
+        self.cultural_priority = 'true' if obj_dict.get("culturalPriority") else 'false'
+        self.faith_priority = 'true' if obj_dict.get("faithPriority") else 'false'
+        self.child_priority = 'true' if obj_dict.get("childPriority") else 'false'
+        self.coroner_priority = 'true' if obj_dict.get("coronerPriority") else 'false'
+        self.other_priority = 'true' if obj_dict.get("otherPriority") else 'false'
+        self.priority_details = obj_dict.get("priorityDetails")
 
         if not is_empty_date(obj_dict.get("dateOfBirth")):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
