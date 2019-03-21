@@ -12,6 +12,12 @@
     border-left: 4px solid $nhs-red;
 
     .controls {
+
+      .chevron-down {
+        &:hover {
+          background: url("/static/images/chevron-down-red.svg") no-repeat;
+        }
+      }
       .view-btn {
         border-color: $nhs-red;
 
@@ -49,6 +55,10 @@
       background: url("/static/images/down_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
+
+      &:hover {
+        background: url("/static/images/chevron-down-blue.svg") no-repeat;
+      }
     }
 
     .chevron-up {
@@ -90,15 +100,24 @@
 
   &.urgent {
     background: $nhs-red;
-
     .controls {
+
+      .chevron-up {
+        background: url("/static/images/hollow_red_chevron.svg") no-repeat;
+        &:hover {
+          background: url("/static/images/chevron_up.svg") no-repeat;
+        }
+      }
       .view-btn {
+        border-color: $white;
+
         &:visited {
           color: $white;
         }
 
         &:hover {
           color: $nhs-red;
+          background-color: $white;
         }
       }
     }
@@ -126,6 +145,10 @@
 
     .chevron-up {
       display: block;
+      background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
+        &:hover {
+          background: url("/static/images/chevron_up.svg") no-repeat;
+        }
     }
 
     .view-btn {
