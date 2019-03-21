@@ -81,7 +81,7 @@ SUCCESSFUL_REGION_LOAD = [
 
 SUCCESSFUL_ME_OFFICES_LOAD = [
     {
-       'id': '1',
+        'id': '1',
         'name': 'Barnet Hospital ME Office',
     },
     {
@@ -93,7 +93,6 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
         'name': 'Gloucester Hospital ME Office',
     }
 ]
-
 
 SUCCESSFUL_MEDICAL_EXAMINERS = [
     {
@@ -184,6 +183,7 @@ def get_bereaved_examination_data():
         'appointment_additional_details': '',
     }
 
+
 URGENCY_EXAMINATION_DATA = {
     'faith_death': 'yes',
     'coroner_case': 'no',
@@ -222,8 +222,8 @@ def get_medical_team_form_data():
 
 def get_assigned_medical_team_form_data():
     return {
-        'medical_examiner':'Dr Charles Li',
-        'medical_examiners_officer':'Erica Barber',
+        'medical_examiner': 'Dr Charles Li',
+        'medical_examiners_officer': 'Erica Barber',
     }
 
 
@@ -285,26 +285,49 @@ USERS_EXAMINATION_LIST = {
             "nhsNumber": "123-456-78910",
             "id": "1",
             "timeOfDeath": "10:48",
-            "dateOfBirth": "2019-03-18T10:48:15.749Z",
+            "dateOfBirth": "1935-09-18T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "92",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "3"
         },
         {
             "urgencyScore": 0,
-            "givenNames": "John",
+            "givenNames": "Jemima",
             "surname": "Doe",
             "nhsNumber": "123-456-78910",
-            "id": "1",
-            "timeOfDeath": "10:48",
-            "dateOfBirth": "2019-03-18T10:48:15.749Z",
+            "id": "2",
+            "timeOfDeath": "11:12",
+            "dateOfBirth": "1937-04-27T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "91",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "2"
+        },
+        {
+            "urgencyScore": 0,
+            "givenNames": "Deborah",
+            "surname": "Jones",
+            "nhsNumber": "123-456-78910",
+            "id": "3",
+            "timeOfDeath": "09:45",
+            "dateOfBirth": "1962-05-21T10:48:15.749Z",
+            "dateOfDeath": "2019-03-19T10:48:15.749Z",
+            "appointmentDate": "2019-03-18T10:48:15.749Z",
+            "appointmentTime": "15:48",
+            "lastAdmission": "2019-03-18T10:48:15.749Z",
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "91",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "2"
         }
     ],
     "errors": {
@@ -320,7 +343,6 @@ USERS_EXAMINATION_LIST = {
     },
     "success": True
 }
-
 
 # Responses
 

@@ -1,33 +1,81 @@
-<div id="case-{{case.id}}" class="case-card{% if case.urgent %} urgent{% endif %}">
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-third">
-      <p class="patient-name">
-        {{case.given_names}} {{case.surname}}
-      </p>
-    </div>
+<div id="case-{{ case.id }}" class="case-card">
+    <div class="case-card-header {% if case.urgent %}urgent{% endif %}">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
+                <p class="patient-name">
+                    {{ case.given_names }} {{ case.surname }}
+                </p>
+            </div>
 
-    <div class="nhsuk-grid-column-one-third">
-      <p class="dates">
-        {{case.display_dob}} - {{case.display_dod}}
-      </p>
-    </div>
+            <div class="nhsuk-grid-column-one-third">
+                <p class="dates">
+                    {{ case.display_dob }} - {{ case.display_dod }}
+                </p>
+                <p class="no-dates">&nbsp;</p>
+            </div>
 
-    <div class="nhsuk-grid-column-one-third">
-      <div class="controls flex-row">
-        {% if case.urgent %}
-          <p class="urgent-flag">
-            Urgent
-          </p>
-        {% endif %}
+            <div class="nhsuk-grid-column-one-third">
+                <div class="controls flex-row">
+                    {% if case.urgent %}
+                        <p class="urgent-flag">
+                            Urgent
+                        </p>
+                    {% endif %}
 
-        <a class="view-btn" href="/cases/{{case.id}}">View Case</a>
+                    <a class="view-btn" href="/cases/{{ case.id }}">View Case</a>
 
-        <div class="chevron-down">
+                    <div class="chevron-down">
+                    </div>
+
+                    <div class="chevron-up">
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="chevron-up">
-        </div>
-      </div>
     </div>
-  </div>
+
+
+    <div class="case-card-body">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full block-header">
+                        <p class="nhsuk-body {% if case.urgent %}urgent{% endif %}">Patient Information</p>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <div class="info-line">D.O.B. <span class="heavy-text">{{ case.display_dob }}</span></div>
+                        <div class="info-line">D.O.D. <span class="heavy-text">{{ case.display_dod }}</span></div>
+                        <div class="info-line">T.O.D. <span class="heavy-text">{{ case.time_of_death }}</span></div>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
+                        <div class="info-line">Last admission <span
+                                class="heavy-text">{{ case.calc_last_admission_days_ago }}</span> days
+                        </div>
+                        <div class="info-line">NHS no. <span class="heavy-text">{{ case.nhs_number }}</span></div>
+                        <div class="info-line">Age <span class="heavy-text">{{ case.calc_age }}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="nhsuk-grid-column-one-third">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full block-header">
+                        <p class="nhsuk-body {% if case.urgent %}urgent{% endif %}">Case Information</p>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full block-with-border">
+                        <div class="info-line">Appointment date <span
+                                class="heavy-text">{{ case.display_appointment_date }}</span></div>
+                        <div class="info-line">Appointment time <span
+                                class="heavy-text">{{ case.appointment_time }}</span></div>
+                        <div class="info-line">Case created <span
+                                class="heavy-text">{{ case.calc_created_days_ago }}</span> days ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
