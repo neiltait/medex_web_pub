@@ -75,15 +75,17 @@
       margin-right: 1em;
       margin-left: 1em;
 
+
+      &:visited {
+        color: $nhs-blue;
+      }
+
       &:hover {
         color: $white;
         box-shadow: none;
         background-color: $nhs-blue;
       }
 
-      &:visited {
-        color: $nhs-blue;
-      }
     }
 
     .urgent-flag {
@@ -197,6 +199,10 @@
 
   .heavy-text {
     font-weight: 600;
+  }
+
+  .block-with-border {
+    border-left: 1px solid $nhs-light-grey;
   }
 }
 
