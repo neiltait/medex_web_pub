@@ -19,16 +19,20 @@
         }
       }
       .view-btn {
-        border-color: $nhs-red;
+        color: $black;
+        border-color: $black;
+
 
         &:visited {
-          color: $nhs-red;
+          color: $black;
         }
 
         &:hover {
-          color: $white;
-          background-color: $nhs-red;
+          color: $nhs-red;
+          border-color: $nhs-red;
+          background-color: $white;
         }
+
       }
     }
   }
@@ -55,6 +59,7 @@
       background: url("/static/images/down_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
+      margin-top: .5rem;
 
       &:hover {
         background: url("/static/images/chevron-down-blue.svg") no-repeat;
@@ -65,11 +70,13 @@
       background: url("/static/images/up_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
+      margin-top: .5rem;
       display: none;
     }
 
     .view-btn {
-      border: 1px solid $nhs-blue;
+      border: 1px solid $black;
+      color: $black;
       text-decoration: none;
       padding: 0.2em 0.5em;
       margin-right: 1em;
@@ -77,13 +84,14 @@
 
 
       &:visited {
-        color: $nhs-blue;
+        color: $black;
       }
 
       &:hover {
-        color: $white;
+        color: $nhs-blue;
+        border: 1px solid $nhs-blue;
         box-shadow: none;
-        background-color: $nhs-blue;
+        background-color: $white;
       }
 
     }
