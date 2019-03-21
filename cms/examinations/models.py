@@ -1,6 +1,7 @@
 from rest_framework import status
 
 from medexCms.utils import parse_datetime, is_empty_date
+from people.models import BereavedRepresentative
 
 from . import request_handler
 
@@ -121,8 +122,6 @@ class PatientDetails:
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
         self.personal_affects_details = obj_dict.get("personalEffectDetails")
 
-        self.representatives = obj_dict.get("representatives")
-
         self.cultural_priority = 'true' if obj_dict.get("culturalPriority") else 'false'
         self.faith_priority = 'true' if obj_dict.get("faithPriority") else 'false'
         self.child_priority = 'true' if obj_dict.get("childPriority") else 'false'
@@ -155,6 +154,10 @@ class PatientDetails:
         for key, value in self.modes_of_disposal.items():
             if value == obj_dict.get("modeOfDisposal"):
                 self.mode_of_disposal = key.lower()
+
+        self.representatives = []
+        for representative in obj_dict.get("representatives"):
+            self.representatives.append(BereavedRepresentative(representative))
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
