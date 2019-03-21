@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 
@@ -24,4 +26,4 @@ class MedexRequest:
             'authorization': 'bearer ' + auth_token,
             'content-type': 'application/json-patch+json'
         }
-        return requests.put(url, data=data, headers=headers)
+        return requests.put(url, data=json.dumps(data), headers=headers)
