@@ -86,7 +86,9 @@ class ExaminationOverview:
 
 class PatientDetails:
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, modes_of_disposal={}):
+        self.modes_of_disposal = modes_of_disposal
+
         self.id = obj_dict.get("id")
 
         self.completed = obj_dict.get("completed")
@@ -113,7 +115,6 @@ class PatientDetails:
         self.postcode = obj_dict.get("postCode")
         self.last_occupation = obj_dict.get("lastOccupation")
         self.organisation_care_before_death_location_id = obj_dict.get("organisationCareBeforeDeathLocationId")
-        self.mode_of_disposal = obj_dict.get("modeOfDisposal")
         self.any_implants = 'true' if obj_dict.get("anyImplants") else 'false'
         self.implant_details = obj_dict.get("implantDetails")
         self.funeral_directors = obj_dict.get("funeralDirectors")
@@ -151,6 +152,10 @@ class PatientDetails:
             self.month_of_death = None
             self.year_of_death = None
 
+        for key, value in self.modes_of_disposal.items():
+            if value == obj_dict.get("modeOfDisposal"):
+                self.mode_of_disposal = key.lower()
+
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
@@ -158,6 +163,7 @@ class PatientDetails:
         authenticated = response.status_code == status.HTTP_200_OK
 
         if authenticated:
-            return PatientDetails(response.json())
+            modes_of_disposal = request_handler.load_modes_of_disposal(auth_token).json()
+            return PatientDetails(response.json(), modes_of_disposal)
         else:
             return None
