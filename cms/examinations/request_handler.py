@@ -38,3 +38,7 @@ def load_patient_details_by_id(examination_id, auth_token):
 def update_patient_details(examination_id, submission, auth_token):
     return MedexRequest.put(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id),
                             submission)
+
+
+def load_modes_of_disposal(auth_token):
+    return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL)
