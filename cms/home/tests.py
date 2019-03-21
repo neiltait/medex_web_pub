@@ -57,7 +57,9 @@ class HomeViewsTests(MedExTestCase):
         context_user = self.get_context_value(response.context, 'session_user')
         self.assertIsNot(context_user.examinations,  None)
         self.assertIs(type(context_user.examinations), list)
-        self.assertEqual(len(context_user.examinations), 2)
+
+        count = len(mocks.USERS_EXAMINATION_LIST)
+        self.assertEqual(len(context_user.examinations), count)
 
     def test_landing_on_the_landing_page_redirects_to_login_if_the_user_not_logged_in(self):
         response = self.client.get('/')

@@ -127,7 +127,7 @@ SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [
     }
 ]
 
-#### Examintations
+#### Examinations
 
 CREATED_EXAMINATION_ID = 1
 
@@ -237,31 +237,45 @@ def get_examination_response_object():
         "givenNames": "John",
         "surname": "Doe",
         "nhsNumber": "123-456-78910",
+        "hospitalNumber_1": "",
+        "hospitalNumber_2": "",
+        "hospitalNumber_3": "",
+        "genderDetails": '',
         "gender": "male",
-        "houseNameNumber": "",
-        "street": "",
-        "town": "",
-        "county": "",
-        "postcode": "",
+        "houseNameNumber": "2",
+        "street": "The Street",
+        "town": "Anyville",
+        "county": "London",
+        "postcode": "A1 1NY",
         "country": "",
         "lastOccupation": "",
         "organisationCareBeforeDeathLocationId": "",
         "deathOccuredLocationId": "",
-        "modeOfDisposal": "",
+        "modeOfDisposal": "Cremation",
         "funeralDirectors": "",
-        "personalAffectsCollected": "",
+        "personalAffectsCollected": "yes",
         "personalAffectsDetails": "",
-        "jewelleryCollected": "",
-        "jewelleryDetails": "",
         "dateOfBirth": "",
         "dateOfDeath": "",
-        "faithPriority": "False",
+        "faithPriority": "True",
         "childPriority": "False",
         "coronerPriority": "False",
+        "culturalPriority": "False",
         "otherPriority": "False",
         "priorityDetails": "",
         "completed": "False",
-        "coronerStatus": "False"
+        "coronerStatus": "False",
+        "representatives": [
+            {
+                "full_name": "Jane Doe",
+                "relationship": "Wife",
+                "phone_number": "020 12345678",
+                "present_at_death": "Yes",
+                "informed": "Yes",
+                "appointment_date": "2019-03-19T14:20:36.609Z",
+                "appointment_time": "14:20"
+            }
+        ]
     }
 
 
@@ -274,26 +288,49 @@ USERS_EXAMINATION_LIST = {
             "nhsNumber": "123-456-78910",
             "id": "1",
             "timeOfDeath": "10:48",
-            "dateOfBirth": "2019-03-18T10:48:15.749Z",
+            "dateOfBirth": "1935-09-18T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "92",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "3"
         },
         {
             "urgencyScore": 0,
-            "givenNames": "John",
+            "givenNames": "Jemima",
             "surname": "Doe",
             "nhsNumber": "123-456-78910",
-            "id": "1",
-            "timeOfDeath": "10:48",
-            "dateOfBirth": "2019-03-18T10:48:15.749Z",
+            "id": "2",
+            "timeOfDeath": "11:12",
+            "dateOfBirth": "1937-04-27T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
             "appointmentDate": "2019-03-18T10:48:15.749Z",
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
-            "caseCreatedDate": "2019-03-18T10:48:15.749Z"
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "91",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "2"
+        },
+        {
+            "urgencyScore": 0,
+            "givenNames": "Deborah",
+            "surname": "Jones",
+            "nhsNumber": "123-456-78910",
+            "id": "3",
+            "timeOfDeath": "09:45",
+            "dateOfBirth": "1962-05-21T10:48:15.749Z",
+            "dateOfDeath": "2019-03-19T10:48:15.749Z",
+            "appointmentDate": "2019-03-18T10:48:15.749Z",
+            "appointmentTime": "15:48",
+            "lastAdmission": "2019-03-18T10:48:15.749Z",
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+            "age": "91",
+            "caseCreatedDaysAgo": "4",
+            "lastAdmissionDaysAgo": "2"
         }
     ],
     "errors": {

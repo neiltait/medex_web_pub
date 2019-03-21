@@ -1,14 +1,40 @@
 @import '../../variables';
 
-.case-card {
+
+.case-card-header {
   border: 1px solid $nhs-light-grey;
   border-left: 4px solid $nhs-blue;
   padding: 1.5rem 2rem;
-  box-shadow: 0px 5px $nhs-very-light-grey;
+  box-shadow: 0 5px $nhs-very-light-grey;
   margin-bottom: 1rem;
 
   &.urgent {
     border-left: 4px solid $nhs-red;
+
+    .controls {
+
+      .chevron-down {
+        &:hover {
+          background: url("/static/images/chevron-down-red.svg") no-repeat;
+        }
+      }
+      .view-btn {
+        color: $black;
+        border-color: $black;
+
+
+        &:visited {
+          color: $black;
+        }
+
+        &:hover {
+          color: $nhs-red;
+          border-color: $nhs-red;
+          background-color: $white;
+        }
+
+      }
+    }
   }
 
   .patient-name {
@@ -18,6 +44,12 @@
 
   .dates {
     margin-bottom: 0;
+    display: block;
+  }
+
+  .no-dates {
+    margin-bottom: 0;
+    display: none;
   }
 
   .controls {
@@ -27,25 +59,41 @@
       background: url("/static/images/down_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
+      margin-top: .5rem;
+
+      &:hover {
+        background: url("/static/images/chevron-down-blue.svg") no-repeat;
+      }
     }
 
     .chevron-up {
       background: url("/static/images/up_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
+      margin-top: .5rem;
       display: none;
     }
 
     .view-btn {
       border: 1px solid $black;
+      color: $black;
       text-decoration: none;
       padding: 0.2em 0.5em;
       margin-right: 1em;
       margin-left: 1em;
 
+
       &:visited {
         color: $black;
       }
+
+      &:hover {
+        color: $nhs-blue;
+        border: 1px solid $nhs-blue;
+        box-shadow: none;
+        background-color: $white;
+      }
+
     }
 
     .urgent-flag {
@@ -54,4 +102,118 @@
       margin-bottom: 0;
     }
   }
+}
+
+.case-card-header--expanded {
+  background: $nhs-blue;
+  margin-bottom: 0;
+
+  &.urgent {
+    background: $nhs-red;
+    .controls {
+
+      .chevron-up {
+        background: url("/static/images/hollow_red_chevron.svg") no-repeat;
+        &:hover {
+          background: url("/static/images/chevron_up.svg") no-repeat;
+        }
+      }
+      .view-btn {
+        border-color: $white;
+
+        &:visited {
+          color: $white;
+        }
+
+        &:hover {
+          color: $nhs-red;
+          background-color: $white;
+        }
+      }
+    }
+  }
+
+  .patient-name {
+    margin: 0;
+    font-weight: bold;
+    color: $white;
+  }
+
+  .dates {
+    display: none;
+  }
+
+  .no-dates {
+    display: block;
+  }
+
+  .controls {
+
+    .chevron-down {
+      display: none;
+    }
+
+    .chevron-up {
+      display: block;
+      background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
+        &:hover {
+          background: url("/static/images/chevron_up.svg") no-repeat;
+        }
+    }
+
+    .view-btn {
+      border: 1px solid $white;
+      color: $white;
+
+      &:visited {
+        color: $white;
+      }
+
+      &:hover {
+        background-color: $white;
+        box-shadow: none;
+        color: $nhs-blue;
+      }
+    }
+
+    .urgent-flag {
+      color: $white;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.case-card-body {
+  display: none;
+  background: $white;
+  color: $black;
+  border: 1px solid $nhs-light-grey;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 5px $nhs-very-light-grey;
+  margin-bottom: 1rem;
+
+  .info-line {
+    margin-bottom: .5rem
+  }
+
+  .urgent {
+    color: $nhs-red;
+  }
+
+  .block-header {
+    color: $nhs-blue;
+  }
+
+  .heavy-text {
+    font-weight: 600;
+  }
+
+  .block-with-border {
+    border-left: 1px solid $nhs-light-grey;
+  }
+}
+
+.case-card-body--expanded {
+  display: block;
 }
