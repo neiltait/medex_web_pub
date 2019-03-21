@@ -370,16 +370,15 @@ class BereavedInformationForm:
     def set_values_from_instance(self, examination):
         count = 1
         for representative in examination.representatives:
-            setattr(self, 'bereaved_name_%s' % count, representative['full_name'])
-            setattr(self, 'relationship_%s' % count, representative['relationship'])
-            setattr(self, 'phone_number_%s' % count, representative['phone_number'])
-            setattr(self, 'present_death_%s' % count, representative['present_at_death'].lower())
-            setattr(self, 'informed_%s' % count, representative['informed'].lower())
-            appointment_date = parse_datetime(representative['appointment_date'])
-            setattr(self, 'day_of_appointment_%s' % count, appointment_date.day)
-            setattr(self, 'month_of_appointment_%s' % count, appointment_date.month)
-            setattr(self, 'year_of_appointment_%s' % count, appointment_date.year)
-            setattr(self, 'time_of_appointment_%s' % count, representative['appointment_time'])
+            setattr(self, 'bereaved_name_%s' % count, representative.full_name)
+            setattr(self, 'relationship_%s' % count, representative.relationship)
+            setattr(self, 'phone_number_%s' % count, representative.phone_number)
+            setattr(self, 'present_death_%s' % count, representative.present_at_death)
+            setattr(self, 'informed_%s' % count, representative.informed)
+            setattr(self, 'day_of_appointment_%s' % count, representative.appointment_day)
+            setattr(self, 'month_of_appointment_%s' % count, representative.appointment_month)
+            setattr(self, 'year_of_appointment_%s' % count, representative.appointment_year)
+            setattr(self, 'time_of_appointment_%s' % count, representative.appointment_time)
             count += 1
         # TODO: appointment_additional_details is not currently in the examinations model
         self.appointment_additional_details = ''
