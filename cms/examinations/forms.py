@@ -420,8 +420,37 @@ class BereavedInformationForm:
         return True if valid_date_1 and valid_date_2 else False
 
     def for_request(self):
+        representatives = []
+        if self.bereaved_name_1:
+            appointment_1_date = None
+            if self.day_of_appointment_1 and self.month_of_appointment_1 and self.year_of_appointment_1:
+                appointment_1_date = datetime(self.year_of_appointment_1, self.month_of_appointment_1,
+                                              self.day_of_appointment_1).strftime(API_DATE_FORMAT)
+            representatives.append({
+                    "fullName": self.bereaved_name_1,
+                    "relationship": self.relationship_1,
+                    "phoneNumber": self.phone_number_1,
+                    "presentAtDeath": self.present_death_1,
+                    "informed": self.informed_1,
+                    "appointmentDate": appointment_1_date,
+                    "appointmentTime": self.time_of_appointment_1
+                })
+        if self.bereaved_name_2:
+            appointment_2_date = None
+            if self.day_of_appointment_2 and self.month_of_appointment_2 and self.year_of_appointment_2:
+                appointment_2_date = datetime(self.year_of_appointment_2, self.month_of_appointment_2,
+                                              self.day_of_appointment_2).strftime(API_DATE_FORMAT)
+            representatives.append({
+                    "fullName": self.bereaved_name_2,
+                    "relationship": self.relationship_2,
+                    "phoneNumber": self.present_death_2,
+                    "presentAtDeath": self.phone_number_2,
+                    "informed": self.informed_2,
+                    "appointmentDate": appointment_2_date,
+                    "appointmentTime": self.time_of_appointment_2
+                })
         return {
-            'representatives': [],
+            'representatives': representatives,
         }
 
 

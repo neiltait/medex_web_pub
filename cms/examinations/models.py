@@ -153,7 +153,7 @@ class PatientDetails:
 
         for key, value in self.modes_of_disposal.items():
             if value == obj_dict.get("modeOfDisposal"):
-                self.mode_of_disposal = key.lower()
+                self.mode_of_disposal = key
 
         self.representatives = []
         for representative in obj_dict.get("representatives"):
