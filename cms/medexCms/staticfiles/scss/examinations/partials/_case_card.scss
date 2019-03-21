@@ -1,15 +1,30 @@
 @import '../../variables';
 
 
-.case-card {
+.case-card-header {
   border: 1px solid $nhs-light-grey;
   border-left: 4px solid $nhs-blue;
   padding: 1.5rem 2rem;
-  box-shadow: 0px 5px $nhs-very-light-grey;
+  box-shadow: 0 5px $nhs-very-light-grey;
   margin-bottom: 1rem;
 
   &.urgent {
     border-left: 4px solid $nhs-red;
+
+    .controls {
+      .view-btn {
+        border-color: $nhs-red;
+
+        &:visited {
+          color: $nhs-red;
+        }
+
+        &:hover {
+          color: $white;
+          background-color: $nhs-red;
+        }
+      }
+    }
   }
 
   .patient-name {
@@ -19,6 +34,12 @@
 
   .dates {
     margin-bottom: 0;
+    display: block;
+  }
+
+  .no-dates {
+    margin-bottom: 0;
+    display: none;
   }
 
   .controls {
@@ -38,14 +59,20 @@
     }
 
     .view-btn {
-      border: 1px solid $black;
+      border: 1px solid $nhs-blue;
       text-decoration: none;
       padding: 0.2em 0.5em;
       margin-right: 1em;
       margin-left: 1em;
 
+      &:hover {
+        color: $white;
+        box-shadow: none;
+        background-color: $nhs-blue;
+      }
+
       &:visited {
-        color: $black;
+        color: $nhs-blue;
       }
     }
 
@@ -57,15 +84,24 @@
   }
 }
 
-.case-card-expanded-header {
+.case-card-header--expanded {
   background: $nhs-blue;
-  border: 1px solid $nhs-light-grey;
-  padding: 1.5rem 2rem;
-  box-shadow: 0px 5px $nhs-very-light-grey;
   margin-bottom: 0;
 
   &.urgent {
     background: $nhs-red;
+
+    .controls {
+      .view-btn {
+        &:visited {
+          color: $white;
+        }
+
+        &:hover {
+          color: $nhs-red;
+        }
+      }
+    }
   }
 
   .patient-name {
@@ -75,49 +111,35 @@
   }
 
   .dates {
-    margin-bottom: 0;
+    display: none;
+  }
+
+  .no-dates {
+    display: block;
   }
 
   .controls {
-    justify-content: flex-end;
 
     .chevron-down {
-      background: url("/static/images/down_chevron.png") no-repeat;
-      height: 1rem;
-      width: 2rem;
       display: none;
     }
 
     .chevron-up {
-      background: url("/static/images/up_chevron.png") no-repeat;
-      height: 1rem;
-      width: 2rem;
       display: block;
     }
 
     .view-btn {
       border: 1px solid $white;
-      text-decoration: none;
       color: $white;
-      padding: 0.2em 0.5em;
-      margin-right: 1em;
-      margin-left: 1em;
+
+      &:visited {
+        color: $white;
+      }
 
       &:hover {
         background-color: $white;
         box-shadow: none;
         color: $nhs-blue;
-      }
-      &:visited {
-        color: $white;
-      }
-
-      &--urgent {
-        &:hover {
-          background-color: $white;
-          box-shadow: none;
-          color: $nhs-red;
-        }
       }
     }
 
@@ -129,12 +151,13 @@
   }
 }
 
-.case-card-expanded-body {
+.case-card-body {
+  display: none;
   background: $white;
   color: $black;
   border: 1px solid $nhs-light-grey;
   padding: 1.5rem 2rem;
-  box-shadow: 0px 5px $nhs-very-light-grey;
+  box-shadow: 0 5px $nhs-very-light-grey;
   margin-bottom: 1rem;
 
   .info-line {
@@ -152,45 +175,8 @@
   .heavy-text {
     font-weight: 600;
   }
+}
 
-  .dates {
-    margin-bottom: 0;
-  }
-
-  .controls {
-    justify-content: flex-end;
-
-    .chevron-down {
-      background: url("/static/images/down_chevron.png") no-repeat;
-      height: 1rem;
-      width: 2rem;
-      display: none;
-    }
-
-    .chevron-up {
-      background: url("/static/images/up_chevron.png") no-repeat;
-      height: 1rem;
-      width: 2rem;
-      display: block;
-    }
-
-    .view-btn {
-      border: 1px solid $white;
-      text-decoration: none;
-      color: $white;
-      padding: 0.2em 0.5em;
-      margin-right: 1em;
-      margin-left: 1em;
-
-      &:visited {
-        color: $white;
-      }
-    }
-
-    .urgent-flag {
-      color: $white;
-      font-weight: bold;
-      margin-bottom: 0;
-    }
-  }
+.case-card-body--expanded {
+  display: block;
 }
