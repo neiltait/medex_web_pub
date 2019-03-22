@@ -9,7 +9,6 @@
 
     AssignExaminationTeam.prototype = {
         setup: function () {
-            this.isOpen = false;
             this.meSelect = this.wrapper.find('#medical_examiner');
             this.meoSelect = this.wrapper.find('#medical_examiners_officer');
             this.confirmSection = this.wrapper.find('#confirm-section');
@@ -48,21 +47,32 @@
 
         onDropdownChange: function () {
             if (this.savedMe !== this.meSelect.val() || this.savedMeo !== this.meoSelect.val()) {
-                this.confirmSection.removeClass("nhsuk-u-visually-hidden")
-                this.confirmMessage.html(this.getConfirmationMessage());
-                this.clearConfirmation();
-                this.saveBtn.addClass("submit-btn--disabled")
-                this.modalSaveBtn.addClass("submit-btn--disabled")
+                this.openExaminationTeamEdit()
             } else {
                 this.closeExaminationTeamEdit()
             }
         },
 
+        openExaminationTeamEdit: function () {
+            this.confirmSection.removeClass("nhsuk-u-visually-hidden")
+            this.confirmMessage.html(this.getConfirmationMessage());
+            this.clearConfirmation();
+            this.disableSubmitButtons()
+        },
+
         closeExaminationTeamEdit: function () {
             this.savedMe = this.meSelect.val();
             this.savedMeo = this.meoSelect.val();
+            this.confirmSection.addClass("nhsuk-u-visually-hidden");
+            this.enableSubmitButtons();
+        },
 
-            this.confirmSection.addClass("nhsuk-u-visually-hidden")
+        disableSubmitButtons: function () {
+            this.saveBtn.addClass("submit-btn--disabled")
+            this.modalSaveBtn.addClass("submit-btn--disabled")
+        },
+
+        enableSubmitButtons: function () {
             this.saveBtn.removeClass("submit-btn--disabled")
             this.modalSaveBtn.removeClass("submit-btn--disabled")
         },
@@ -86,8 +96,8 @@
             this.continueBtn.addClass("nhsuk-button--disabled")
         },
 
-        getConfirmationMessage: function() {
-            if(this.savedMe === this.meSelect.val()) {
+        getConfirmationMessage: function () {
+            if (this.savedMe === this.meSelect.val()) {
                 return this.onePersonMessage(this.getMeoName())
             } else if (this.savedMeo === this.meoSelect.val()) {
                 return this.onePersonMessage(this.getMeName())
@@ -96,13 +106,13 @@
             }
         },
 
-        getMeName: function() {
+        getMeName: function () {
             return this.wrapper.find("#medical_examiner option:selected").html();
         },
-        getMeoName: function() {
+        getMeoName: function () {
             return this.wrapper.find("#medical_examiners_officer option:selected").html();
         },
-        onePersonMessage: function(person) {
+        onePersonMessage: function (person) {
             return "Are you sure you would like to assign <strong>" + person + "</strong> to this case?"
         },
         twoPeopleMessage: function (person1, person2) {
