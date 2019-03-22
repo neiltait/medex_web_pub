@@ -178,14 +178,25 @@
     setup: function () {
       this.button = this.section.find('.additional-notes-button');
       this.panel = this.section.find('.additional-notes-panel');
+      this.notes = this.section.find('textarea');
 
-      let that = this
+      this.setupWatchers();
+
+      if(this.notes.val() !== '') {
+        this.openPanel()
+      }
+    },
+    setupWatchers: function() {
+      let that = this;
       this.button.on('click', function (event) {
         event.preventDefault()
-        that.panel.removeClass("medex-hidden")
-        that.button.addClass("medex-hidden")
+        that.openPanel()
       })
     },
+    openPanel: function () {
+      this.panel.removeClass("medex-hidden")
+      this.button.addClass("medex-hidden")
+    }
   };
 
   var AddRemovePanelList = function (section, visibleCount) {
