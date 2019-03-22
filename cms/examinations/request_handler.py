@@ -10,6 +10,22 @@ def get_coroner_statuses_list():
     return [{'status': 'blocked'}]
 
 
+def post_examination_team(examination_id, medical_examiner, medical_examiners_officer, auth_token):
+    if settings.LOCAL:
+        if medical_examiner.user_id == 1:
+            return mocks.UNSUCCESSFUL_POST_EXAMINATION_TEAM
+        else:
+            return mocks.SUCCESSFUL_POST_EXAMINATION_TEAM
+    else:
+        payload = {
+            'medical_examiner': medical_examiner.user_id,
+            'medical_examiner_officer': medical_examiners_officer.user_id,
+        }
+        return MedexRequest.post(auth_token,
+                                 url='%s/examinations/%s/examination-team' % (settings.API_URL, examination_id),
+                                 data=payload)
+
+
 def post_new_examination(examination_object, auth_token):
     return MedexRequest.post(auth_token, '%s/cases/create' % settings.API_URL, json.dumps(examination_object))
 
