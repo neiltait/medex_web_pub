@@ -84,7 +84,7 @@
     };
 
     function init() {
-        var assignTeamForm = $('#examination__examination-team--form');
+        var assignTeamForm = $('#examination__examination-team-section');
         for (var i = 0; i < assignTeamForm.length; i++) {
             new AssignExaminationTeam(assignTeamForm[i]);
         }
