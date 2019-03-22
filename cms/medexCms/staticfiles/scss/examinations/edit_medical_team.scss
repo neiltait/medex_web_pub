@@ -6,6 +6,10 @@
   &--inverted-background {
     background-color: $white !important;
   }
+
+  &--first {
+    padding-top: 0;
+  }
 }
 
 .medex-tab-header {

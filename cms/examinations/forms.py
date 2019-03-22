@@ -236,8 +236,10 @@ class PrimaryExaminationInformationForm:
         valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
         valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
         if valid_date_of_death and valid_date_of_birth:
-            date_of_death = datetime.datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death), 0, 0)
-            date_of_birth = datetime.datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth), 0, 0)
+            date_of_death = datetime.datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death),
+                                              0, 0)
+            date_of_birth = datetime.datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth),
+                                              0, 0)
             if date_of_death >= date_of_birth:
                 return True
             else:
@@ -366,14 +368,14 @@ class BereavedInformationForm:
         valid_date_2 = True
 
         if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                               self.day_of_appointment_1, self.time_of_appointment_1]):
+                                     self.day_of_appointment_1, self.time_of_appointment_1]):
             hours = self.time_of_appointment_1.split(':')[0]
             mins = self.time_of_appointment_1.split(':')[1]
             valid_date_1 = validate_date(self.year_of_appointment_1, self.month_of_appointment_1,
-                                       self.day_of_appointment_1, hours, mins)
+                                         self.day_of_appointment_1, hours, mins)
 
         elif any(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                                 self.day_of_appointment_1, self.time_of_appointment_1]):
+                                       self.day_of_appointment_1, self.time_of_appointment_1]):
             valid_date_1 = False
 
         if not valid_date_1:
@@ -381,14 +383,14 @@ class BereavedInformationForm:
             self.errors['date_of_appointment_1'] = messages.INVALID_DATE
 
         if all(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                               self.day_of_appointment_2, self.time_of_appointment_2]):
+                                     self.day_of_appointment_2, self.time_of_appointment_2]):
             hours = self.time_of_appointment_2.split(':')[0]
             mins = self.time_of_appointment_2.split(':')[1]
             valid_date_2 = validate_date(self.year_of_appointment_2, self.month_of_appointment_2,
-                                       self.day_of_appointment_2, hours, mins)
+                                         self.day_of_appointment_2, hours, mins)
 
         elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                                 self.day_of_appointment_2, self.time_of_appointment_1]):
+                                       self.day_of_appointment_2, self.time_of_appointment_1]):
             valid_date_2 = False
 
         if not valid_date_2:
@@ -444,6 +446,9 @@ class MedicalTeamMembersForm:
         self.consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
         self.qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
         self.gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+        self.medical_examiner = ''
+        self.medical_examiners_officer = ''
+        self.consultant_count = 0
 
     def initialise_form_from_data(self, request):
         self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
@@ -467,9 +472,62 @@ class MedicalTeamMembersForm:
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'))
         self.nursing_team = request.get('nursing_team')
+        self.medical_examiner = request.get('medical_examiner')
+        self.medical_examiners_officer = request.get('medical_examiners_officer')
+        self.consultant_count = self.get_consultant_count()
+
+    def get_consultant_count(self):
+        if self.consultant_3.has_name():
+            return 3
+        elif self.consultant_2.has_name():
+            return 2
+        elif self.consultant_1.has_name():
+            return 1
+        else:
+            return 0
 
     def is_valid(self):
-        return True
+        if not self.consultant_1.has_valid_name():
+            self.errors["consultant_name_1"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.consultant_1.has_name_if_needed():
+            self.errors["consultant_name_1"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.consultant_2.has_valid_name():
+            self.errors["consultant_name_2"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.consultant_2.has_name_if_needed():
+            self.errors["consultant_name_2"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.consultant_3.has_valid_name():
+            self.errors["consultant_name_3"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.consultant_3.has_name_if_needed():
+            self.errors["consultant_name_3"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.qap.has_valid_name():
+            self.errors["qap_name"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.qap.has_name_if_needed():
+            self.errors["qap_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.gp.has_valid_name():
+            self.errors["gp_name"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.gp.has_name_if_needed():
+            self.errors["gp_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        return self.errors["count"] == 0
 
     def initialiseErrors(self):
         self.errors = {"count": 0}
@@ -489,26 +547,13 @@ class MedicalTeamMember:
     def has_valid_name(self):
         return len(self.name.strip()) < 250
 
-
-class MedicalTeamAssignedTeamForm:
-
-    def __init__(self, request=None):
-        self.initialiseErrors()
-        if request:
-            self.initialise_form_from_data(request)
+    def has_name_if_needed(self):
+        if text_field_is_not_null(self.role) or text_field_is_not_null(self.organisation) or text_field_is_not_null(
+                self.phone_number):
+            return text_field_is_not_null(self.name)
         else:
-            self.initialise_blank_form()
+            return True
 
-    def initialise_blank_form(self):
-        self.medical_examiner = ''
-        self.medical_examiners_officer = ''
 
-    def initialise_form_from_data(self, request):
-        self.medical_examiner = request.get('medical_examiner')
-        self.medical_examiners_officer = request.get('medical_examiners_officer')
-
-    def is_valid(self):
-        return True
-
-    def initialiseErrors(self):
-        self.errors = {"count": 0}
+def text_field_is_not_null(field):
+    return field and len(field.strip()) > 0

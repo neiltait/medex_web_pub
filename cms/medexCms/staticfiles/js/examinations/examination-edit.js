@@ -70,8 +70,11 @@
     },
 
     setupAddRemovePanels() {
-      var addRemovePanelSection = $('#add-remove-panel-section')
-      new AddRemovePanelList(addRemovePanelSection, 0)
+      var addRemovePanelSection = $('#add-remove-panel-section');
+      var consultantCount = $('#consultant-count').val();
+      var optionalConsultantCount = consultantCount && parseInt(consultantCount) > 1 ? parseInt(consultantCount) - 1 : 0;
+
+      new AddRemovePanelList(addRemovePanelSection, optionalConsultantCount)
     },
 
     showTab: function (tabId, evt) {

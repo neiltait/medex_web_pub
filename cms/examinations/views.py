@@ -6,7 +6,7 @@ from alerts.utils import generate_error_alert
 from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
 from examinations.models import Examination
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
@@ -147,19 +147,17 @@ def edit_examination_medical_team(request, examination_id):
     medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
     status_code = status.HTTP_200_OK
-    error_count = 0
+    errors = {'count': 0}
     medical_team_members_form = None
-    medical_team_assigned_team_form = None
 
     if request.method == 'POST':
         medical_team_members_form = MedicalTeamMembersForm(request.POST)
-        medical_team_assigned_team_form = MedicalTeamAssignedTeamForm(request.POST)
 
         forms_valid = medical_team_members_form.is_valid()
         if forms_valid:
             print('forms valid')
         else:
-            error_count = medical_team_members_form.errors['count']
+            errors = medical_team_members_form.errors
             status_code = status.HTTP_400_BAD_REQUEST
 
     modal_config = get_tab_change_modal_config()
@@ -167,11 +165,11 @@ def edit_examination_medical_team(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'medical_team_form': medical_team_members_form,
-        'medical_team_assigned_form': medical_team_assigned_team_form,
+        'form': medical_team_members_form,
         'medical_examiners': medical_examiners,
         'medical_examiners_officers': medical_examiners_officers,
-        'error_count': error_count,
+        'error_count': errors['count'],
+        'errors': errors,
         'tab_modal': modal_config,
     }
 
