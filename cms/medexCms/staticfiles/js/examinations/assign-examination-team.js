@@ -1,8 +1,9 @@
 (function ($) {
 
-    var AssignExaminationTeam = function (wrapper, saveBtn) {
+    var AssignExaminationTeam = function (wrapper, saveBtn, modalSaveBtn) {
         this.wrapper = $(wrapper);
         this.saveBtn = saveBtn;
+        this.modalSaveBtn = modalSaveBtn;
         this.setup();
     }
 
@@ -51,6 +52,7 @@
                 this.confirmMessage.html(this.getConfirmationMessage());
                 this.clearConfirmation();
                 this.saveBtn.addClass("submit-btn--disabled")
+                this.modalSaveBtn.addClass("submit-btn--disabled")
             } else {
                 this.closeExaminationTeamEdit()
             }
@@ -62,6 +64,7 @@
 
             this.confirmSection.addClass("nhsuk-u-visually-hidden")
             this.saveBtn.removeClass("submit-btn--disabled")
+            this.modalSaveBtn.removeClass("submit-btn--disabled")
         },
 
         onClickContinue: function () {
@@ -111,8 +114,9 @@
     function init() {
         var assignTeamForm = $('#examination__examination-team-section');
         var saveBtn = $('#save-btn');
+        var modalSaveBtn = $('#save-continue');
         for (var i = 0; i < assignTeamForm.length; i++) {
-            new AssignExaminationTeam(assignTeamForm[i], saveBtn);
+            new AssignExaminationTeam(assignTeamForm[i], saveBtn, modalSaveBtn);
         }
     }
 
