@@ -1,12 +1,14 @@
 (function ($) {
 
-    var AssignExaminationTeam = function (wrapper) {
+    var AssignExaminationTeam = function (wrapper, saveBtn) {
         this.wrapper = $(wrapper);
+        this.saveBtn = saveBtn;
         this.setup();
     }
 
     AssignExaminationTeam.prototype = {
         setup: function () {
+            this.isOpen = false;
             this.meSelect = this.wrapper.find('#medical_examiner');
             this.meoSelect = this.wrapper.find('#medical_examiners_officer');
             this.confirmSection = this.wrapper.find('#confirm-section');
@@ -17,7 +19,7 @@
             this.savedMe = this.meSelect.val();
             this.savedMeo = this.meoSelect.val();
 
-            this.assign_btn = this.wrapper.find('#assign-team-btn');
+            this.continueBtn = this.wrapper.find('#assign-team-btn');
             this.startWatchers();
         },
 
@@ -32,30 +34,53 @@
             });
 
             this.confirmYes.click(function () {
-                that.activateSubmitBtn()
+                that.activateConfirmBtn()
             });
             this.confirmNo.click(function () {
-                that.activateSubmitBtn()
+                that.activateConfirmBtn()
             });
+
+            this.continueBtn.click(function (event) {
+                that.onClickContinue()
+            })
         },
 
         onDropdownChange: function () {
             if (this.savedMe !== this.meSelect.val() || this.savedMeo !== this.meoSelect.val()) {
                 this.confirmSection.removeClass("nhsuk-u-visually-hidden")
                 this.confirmMessage.html(this.getConfirmationMessage());
-                this.clearConfirmation()
+                this.clearConfirmation();
+                this.saveBtn.addClass("submit-btn--disabled")
             } else {
-                this.confirmSection.addClass("nhsuk-u-visually-hidden")
+                this.closeExaminationTeamEdit()
             }
         },
 
-        activateSubmitBtn: function () {
-            this.assign_btn.removeClass("nhsuk-button--disabled")
+        closeExaminationTeamEdit: function () {
+            this.savedMe = this.meSelect.val();
+            this.savedMeo = this.meoSelect.val();
+
+            this.confirmSection.addClass("nhsuk-u-visually-hidden")
+            this.saveBtn.removeClass("submit-btn--disabled")
         },
+
+        onClickContinue: function () {
+            event.preventDefault();
+            if (this.confirmNo.is(":checked")) {
+                this.meSelect.val(this.savedMe);
+                this.meoSelect.val(this.savedMeo);
+            }
+            this.closeExaminationTeamEdit()
+        },
+
+        activateConfirmBtn: function () {
+            this.continueBtn.removeClass("nhsuk-button--disabled")
+        },
+
         clearConfirmation: function () {
             this.confirmYes.prop("checked", false);
             this.confirmNo.prop("checked", false);
-            this.assign_btn.addClass("nhsuk-button--disabled")
+            this.continueBtn.addClass("nhsuk-button--disabled")
         },
 
         getConfirmationMessage: function() {
@@ -85,8 +110,9 @@
 
     function init() {
         var assignTeamForm = $('#examination__examination-team-section');
+        var saveBtn = $('#save-btn');
         for (var i = 0; i < assignTeamForm.length; i++) {
-            new AssignExaminationTeam(assignTeamForm[i]);
+            new AssignExaminationTeam(assignTeamForm[i], saveBtn);
         }
     }
 
