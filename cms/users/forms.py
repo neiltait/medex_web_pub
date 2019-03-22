@@ -24,8 +24,7 @@ class CreateUserForm:
         return False if self.email_error else True
 
     def check_is_nhs_email(self):
-        return True
-        # return '@nhs.uk' in self.email_address
+        return '@nhs.uk' in self.email_address
 
     def response_to_dict(self):
         return {
@@ -78,18 +77,15 @@ class PermissionBuilderForm:
 
     def location_id(self):
         if self.region_present():
-            print('region')
             return self.region
         elif self.trust_present():
-            print('trust')
             return self.trust
         else:
-            print('national')
             return None
 
     def to_dict(self, user_id):
         return {
             'userId': user_id,
-            'userRole': 0,
+            'userRole': self.role,
             'locationId': self.location_id()
         }

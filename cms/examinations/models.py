@@ -151,6 +151,7 @@ class PatientDetails:
             self.month_of_death = None
             self.year_of_death = None
 
+        self.mode_of_disposal = ''
         for key, value in self.modes_of_disposal.items():
             if value == obj_dict.get("modeOfDisposal"):
                 self.mode_of_disposal = key
@@ -166,7 +167,7 @@ class PatientDetails:
         authenticated = response.status_code == status.HTTP_200_OK
 
         if authenticated:
-            modes_of_disposal = request_handler.load_modes_of_disposal(auth_token).json()
+            modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
             return PatientDetails(response.json(), modes_of_disposal)
         else:
             return None

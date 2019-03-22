@@ -41,4 +41,4 @@ def update_patient_details(examination_id, submission, auth_token):
 
 
 def load_modes_of_disposal(auth_token):
-    return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL)
+    return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()

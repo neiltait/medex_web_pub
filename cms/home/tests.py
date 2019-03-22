@@ -22,7 +22,8 @@ class HomeViewsTests(MedExTestCase):
             self.assertTrue('Test produced expected key error')
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_login_returns_redirect_to_landing_page_if_user_logged_in(self, mock_auth_validation):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_login_returns_redirect_to_landing_page_if_user_logged_in(self, mock_auth_validation, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/login')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -49,7 +50,9 @@ class HomeViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_examinations_index', return_value=mocks.SUCCESSFUL_CASE_INDEX)
-    def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation, mock_load_cases):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation, mock_load_cases,
+                                                                      mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -67,14 +70,18 @@ class HomeViewsTests(MedExTestCase):
     # Settings index tests
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_logged_in(self, mock_auth_validation):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_logged_in(self,
+                                                                   mock_auth_validation, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/settings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'home/settings_index.html')
 
     @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(self, mock_auth_validation):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(self,
+                                                                           mock_auth_validation, mock_permission_load):
         response = self.client.get('/settings')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')

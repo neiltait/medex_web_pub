@@ -77,8 +77,8 @@ def edit_examination_patient_details(request, examination_id):
             'session_user': user,
             'error': NotFoundError('case'),
         }
+        
         return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
-
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = PrimaryExaminationInformationForm()

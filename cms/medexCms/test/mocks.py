@@ -22,6 +22,13 @@ AUTH_TOKEN = {
     "scope": "openid profile email",
 }
 
+validate_user_dict = {
+    'user_id': '1',
+    'first_name': 'Test',
+    'last_name': 'User',
+    'email_address': 'test.user@email.com',
+}
+
 #### Users
 
 CREATED_USER_ID = 1
@@ -34,15 +41,38 @@ empty_user = {
 }
 
 user_dict = {
-    'user_id': '1',
-    'first_name': 'Test',
-    'last_name': 'User',
-    'email_address': 'test.user@email.com',
+    'userId': '1',
+    'firstName': 'Test',
+    'lastName': 'User',
+    'email': 'test.user@email.com',
 }
 
 #### Permissions
 
 CREATED_PERMISSION_ID = 1
+
+USER_PERMISSION = {
+  "permissions": [
+      {
+          "permissionId": "123-456-789",
+          "userId": "abc-def-ghi",
+          "locationId": "jkl-mno-pqr",
+          "userRole": 0,
+      }
+  ],
+  "errors": {
+    "additionalProp1": [
+      "string"
+    ],
+    "additionalProp2": [
+      "string"
+    ],
+    "additionalProp3": [
+      "string"
+    ]
+  },
+  "success": True
+}
 
 #### Locations
 SUCCESSFUL_TRUST_LOAD = [
@@ -275,6 +305,53 @@ def get_examination_response_object():
         ]
     }
 
+def get_patient_details_load_response_object():
+    return {
+        "id": "0123-456-789",
+        "culturalPriority": True,
+        "faithPriority": True,
+        "childPriority": True,
+        "coronerPriority": True,
+        "otherPriority": True,
+        "priorityDetails": "",
+        "completed": True,
+        "coronerStatus": "",
+        "gender": "Male",
+        "genderDetails": "",
+        "placeDeathOccured": "",
+        "medicalExaminerOfficeResponsible": "",
+        "dateOfBirth": "2019-03-22T13:41:07.449Z",
+        "dateOfDeath": "2019-03-22T13:41:07.449Z",
+        "nhsNumber": "0123-456-789",
+        "hospitalNumber_1": "",
+        "hospitalNumber_2": "",
+        "hospitalNumber_3": "",
+        "timeOfDeath": "",
+        "givenNames": "John",
+        "surname": "Doe",
+        "outOfHours": False,
+        "postCode": "",
+        "houseNameNumber": "",
+        "street": "",
+        "town": "",
+        "county": "",
+        "country": "",
+        "lastOccupation": "",
+        "organisationCareBeforeDeathLocationId": "",
+        "modeOfDisposal": "",
+        "anyImplants": True,
+        "implantDetails": "",
+        "funeralDirectors": "",
+        "anyPersonalEffects": True,
+        "personalEffectDetails": "",
+        "representatives": [
+        ],
+        "errors": {
+
+        },
+        "success": True
+    }
+
 
 USERS_EXAMINATION_LIST = {
     "examinations": [
@@ -322,6 +399,16 @@ USERS_EXAMINATION_LIST = {
 }
 
 
+#### Datatypes
+
+LOAD_MODES_OF_DISPOSAL = {
+  "Cremation": 0,
+  "Burial": 1,
+  "BuriedAtSea": 2,
+  "Repatriation": 3
+}
+
+
 # Responses
 
 #### Sessions
@@ -332,7 +419,7 @@ SUCCESSFUL_TOKEN_GENERATION._content = json.dumps(AUTH_TOKEN).encode('utf-8')
 
 SUCCESSFUL_VALIDATE_SESSION = Response()
 SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
-SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(user_dict).encode('utf-8')
+SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(validate_user_dict).encode('utf-8')
 
 UNSUCCESSFUL_VALIDATE_SESSION = Response()
 UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
@@ -377,6 +464,14 @@ UNSUCCESSFUL_PERMISSION_CREATION = Response()
 UNSUCCESSFUL_PERMISSION_CREATION.status_code = status.HTTP_400_BAD_REQUEST
 UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
 
+SUCCESSFUL_PERMISSION_LOAD = Response()
+SUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_200_OK
+SUCCESSFUL_PERMISSION_LOAD._content = json.dumps(USER_PERMISSION).encode('utf-8')
+
+UNSUCCESSFUL_PERMISSION_LOAD = Response()
+UNSUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_PERMISSION_LOAD._content = json.dumps(None).encode('utf-8')
+
 #### Examintations
 
 SUCCESSFUL_CASE_CREATE = Response()
@@ -402,3 +497,11 @@ SUCCESSFUL_CASE_INDEX._content = json.dumps(USERS_EXAMINATION_LIST).encode('utf-
 UNSUCCESSFUL_CASE_INDEX = Response()
 UNSUCCESSFUL_CASE_INDEX.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_CASE_INDEX._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
+SUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_200_OK
+SUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(get_patient_details_load_response_object()).encode('utf-8')
+
+UNSUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
+UNSUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_404_NOT_FOUND
+UNSUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(None).encode('utf-8')
