@@ -3,6 +3,8 @@
 trigger:
 - master
 - feature/*
+- refactor/*
+- bug/*
 
 pool:
   vmImage: 'Ubuntu 16.04'

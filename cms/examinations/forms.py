@@ -1,9 +1,8 @@
-import datetime
+from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from alerts.messages import NAME_TOTAL_TOO_LONG
-from medexCms.utils import validate_date, parse_datetime
+from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE
 
 
 class PrimaryExaminationInformationForm:
@@ -74,14 +73,19 @@ class PrimaryExaminationInformationForm:
         self.hospital_number_1 = examination.hospital_number_1
         self.hospital_number_2 = examination.hospital_number_2
         self.hospital_number_3 = examination.hospital_number_3
-        self.date_of_birth = examination.date_of_birth
+        self.day_of_birth = examination.day_of_birth
+        self.month_of_birth = examination.month_of_birth
+        self.year_of_birth = examination.year_of_birth
         self.date_of_birth_not_known = True if not examination.date_of_birth else False
-        self.date_of_death = examination.date_of_death
+        self.day_of_death = examination.day_of_death
+        self.month_of_death = examination.month_of_death
+        self.year_of_death = examination.year_of_death
         self.date_of_death_not_known = True if not examination.date_of_death else False
         self.time_of_death = examination.time_of_death
         self.time_of_death_not_known = True if not examination.time_of_death else False
         self.place_of_death = examination.death_occurred_location_id
         self.out_of_hours = examination.out_of_hours
+        self.me_office = examination.medical_examiner_office_responsible
 
     def set_hospital_numbers(self, request):
         # get numbers
@@ -194,29 +198,28 @@ class PrimaryExaminationInformationForm:
         return self.errors["count"] == 0
 
     def to_object(self):
+        dob = NONE_DATE
+        dod = NONE_DATE
+        if not self.date_of_birth_not_known:
+            dob = datetime(self.year_of_birth, self.month_of_birth, self.day_of_birth).strftime(API_DATE_FORMAT)
+
+        if not self.date_of_death_not_known:
+            dod = datetime(self.year_of_death, self.month_of_death, self.day_of_death).strftime(API_DATE_FORMAT)
         return {
-            "first_name": self.first_name,
-            "last_name": self.last_name,
+            "givenNames": self.first_name,
+            "surname": self.last_name,
             "gender": self.gender,
-            "gender_details": self.gender_details,
-            "nhs_number": self.nhs_number,
-            "nhs_number_not_known": self.nhs_number_not_known,
-            "hospital_number_1": self.hospital_number_1,
-            "hospital_number_2": self.hospital_number_2,
-            "hospital_number_3": self.hospital_number_3,
-            "day_of_birth": self.day_of_birth,
-            "month_of_birth": self.month_of_birth,
-            "year_of_birth": self.year_of_birth,
-            "date_of_birth_not_known": self.date_of_birth_not_known,
-            "day_of_death": self.day_of_death,
-            "month_of_death": self.month_of_death,
-            "year_of_death": self.year_of_death,
-            "date_of_death_not_known": self.date_of_death_not_known,
-            "time_of_death": self.time_of_death,
-            "time_of_death_not_known": self.time_of_death_not_known,
-            "place_of_death": self.place_of_death,
-            "me_office": self.me_office,
-            "out_of_hours": self.out_of_hours,
+            "genderDetails": self.gender_details,
+            "placeDeathOccured": self.place_of_death,
+            "medicalExaminerOfficeResponsible": self.me_office,
+            "nhsNumber": self.nhs_number,
+            "hospitalNumber_1": self.hospital_number_1,
+            "hospitalNumber_2": self.hospital_number_2,
+            "hospitalNumber_3": self.hospital_number_3,
+            "dateOfBirth": dob,
+            "dateOfDeath": dod,
+            "timeOfDeath": '00:00' if self.time_of_death_not_known else self.time_of_death,
+            "outOfHours": 'true' if self.out_of_hours else 'false',
         }
 
     def text_and_checkbox_group_is_valid(self, textboxes, checkbox):
@@ -236,10 +239,8 @@ class PrimaryExaminationInformationForm:
         valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
         valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
         if valid_date_of_death and valid_date_of_birth:
-            date_of_death = datetime.datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death),
-                                              0, 0)
-            date_of_birth = datetime.datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth),
-                                              0, 0)
+            date_of_death = datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death), 0, 0)
+            date_of_birth = datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth), 0, 0)
             if date_of_death >= date_of_birth:
                 return True
             else:
@@ -257,6 +258,7 @@ class SecondaryExaminationInformationForm:
             self.address_line_2 = request.get('address_line_2')
             self.address_town = request.get('address_town')
             self.address_county = request.get('address_county')
+            self.address_country = request.get('address_country')
             self.address_postcode = request.get('address_postcode')
             self.relevant_occupation = request.get('relevant_occupation')
             self.care_organisation = request.get('care_organisation')
@@ -271,6 +273,7 @@ class SecondaryExaminationInformationForm:
             self.address_line_2 = ''
             self.address_town = ''
             self.address_county = ''
+            self.address_country = ''
             self.address_postcode = ''
             self.relevant_occupation = ''
             self.care_organisation = ''
@@ -286,19 +289,37 @@ class SecondaryExaminationInformationForm:
         self.address_line_2 = examination.street
         self.address_town = examination.town
         self.address_county = examination.county
+        self.address_country = examination.country
         self.address_postcode = examination.postcode
         self.relevant_occupation = examination.last_occupation
-        self.care_organisation = examination.organisation_care_before_death_locationId
-        self.funeral_arrangements = examination.mode_of_disposal.lower()
-        # TODO: implanted devices is not currently in the examinations model
-        self.implanted_devices = ''
-        self.implanted_devices_details = ''
+        self.care_organisation = examination.organisation_care_before_death_location_id
+        self.funeral_arrangements = examination.mode_of_disposal
+        self.implanted_devices = examination.any_implants
+        self.implanted_devices_details = examination.implant_details
         self.funeral_directors = examination.funeral_directors
-        self.personal_effects = examination.personal_affects_collected
+        self.personal_effects = examination.any_personal_effects
         self.personal_effects_details = examination.personal_affects_details
 
     def is_valid(self):
         return True
+
+    def for_request(self):
+        return {
+            'houseNameNumber': self.address_line_1,
+            'street': self.address_line_2,
+            'town': self.address_town,
+            'county': self.address_county,
+            'country': self.address_country,
+            'postCode': self.address_postcode,
+            'lastOccupation': self.relevant_occupation,
+            'organisationCareBeforeDeathLocationId': self.care_organisation,
+            'modeOfDisposal': self.funeral_arrangements,
+            'anyImplants': self.implanted_devices,
+            'implantDetails': self.implanted_devices_details,
+            'funeralDirectors': self.funeral_directors,
+            'anyPersonalEffects': self.personal_effects,
+            'personalEffectDetails': self.personal_effects_details,
+        }
 
 
 class BereavedInformationForm:
@@ -349,16 +370,15 @@ class BereavedInformationForm:
     def set_values_from_instance(self, examination):
         count = 1
         for representative in examination.representatives:
-            setattr(self, 'bereaved_name_%s' % count, representative['full_name'])
-            setattr(self, 'relationship_%s' % count, representative['relationship'])
-            setattr(self, 'phone_number_%s' % count, representative['phone_number'])
-            setattr(self, 'present_death_%s' % count, representative['present_at_death'].lower())
-            setattr(self, 'informed_%s' % count, representative['informed'].lower())
-            appointment_date = parse_datetime(representative['appointment_date'])
-            setattr(self, 'day_of_appointment_%s' % count, appointment_date.day)
-            setattr(self, 'month_of_appointment_%s' % count, appointment_date.month)
-            setattr(self, 'year_of_appointment_%s' % count, appointment_date.year)
-            setattr(self, 'time_of_appointment_%s' % count, representative['appointment_time'])
+            setattr(self, 'bereaved_name_%s' % count, representative.full_name)
+            setattr(self, 'relationship_%s' % count, representative.relationship)
+            setattr(self, 'phone_number_%s' % count, representative.phone_number)
+            setattr(self, 'present_death_%s' % count, representative.present_at_death)
+            setattr(self, 'informed_%s' % count, representative.informed)
+            setattr(self, 'day_of_appointment_%s' % count, representative.appointment_day)
+            setattr(self, 'month_of_appointment_%s' % count, representative.appointment_month)
+            setattr(self, 'year_of_appointment_%s' % count, representative.appointment_year)
+            setattr(self, 'time_of_appointment_%s' % count, representative.appointment_time)
             count += 1
         # TODO: appointment_additional_details is not currently in the examinations model
         self.appointment_additional_details = ''
@@ -399,6 +419,40 @@ class BereavedInformationForm:
 
         return True if valid_date_1 and valid_date_2 else False
 
+    def for_request(self):
+        representatives = []
+        if self.bereaved_name_1:
+            appointment_1_date = None
+            if self.day_of_appointment_1 and self.month_of_appointment_1 and self.year_of_appointment_1:
+                appointment_1_date = datetime(self.year_of_appointment_1, self.month_of_appointment_1,
+                                              self.day_of_appointment_1).strftime(API_DATE_FORMAT)
+            representatives.append({
+                    "fullName": self.bereaved_name_1,
+                    "relationship": self.relationship_1,
+                    "phoneNumber": self.phone_number_1,
+                    "presentAtDeath": self.present_death_1,
+                    "informed": self.informed_1,
+                    "appointmentDate": appointment_1_date,
+                    "appointmentTime": self.time_of_appointment_1
+                })
+        if self.bereaved_name_2:
+            appointment_2_date = None
+            if self.day_of_appointment_2 and self.month_of_appointment_2 and self.year_of_appointment_2:
+                appointment_2_date = datetime(self.year_of_appointment_2, self.month_of_appointment_2,
+                                              self.day_of_appointment_2).strftime(API_DATE_FORMAT)
+            representatives.append({
+                    "fullName": self.bereaved_name_2,
+                    "relationship": self.relationship_2,
+                    "phoneNumber": self.present_death_2,
+                    "presentAtDeath": self.phone_number_2,
+                    "informed": self.informed_2,
+                    "appointmentDate": appointment_2_date,
+                    "appointmentTime": self.time_of_appointment_2
+                })
+        return {
+            'representatives': representatives,
+        }
+
 
 class UrgencyInformationForm:
 
@@ -420,15 +474,25 @@ class UrgencyInformationForm:
             self.urgency_additional_details = ''
 
     def set_values_from_instance(self, examination):
-        self.faith_death = examination.faith_priority.lower()
-        self.coroner_case = examination.coroner_priority.lower()
-        self.child_death = examination.child_priority.lower()
-        self.cultural_death = examination.cultural_priority.lower()
-        self.other = examination.other_priority.lower()
+        self.faith_death = examination.faith_priority
+        self.coroner_case = examination.coroner_priority
+        self.child_death = examination.child_priority
+        self.cultural_death = examination.cultural_priority
+        self.other = examination.other_priority
         self.urgency_additional_details = examination.priority_details
 
     def is_valid(self):
         return True
+
+    def for_request(self):
+        return {
+            'faithPriority': 'true' if self.faith_death else 'false',
+            'coronerPriority': 'true' if self.coroner_case else 'false',
+            'childPriority': 'true' if self.child_death else 'false',
+            'culturalPriority': 'true' if self.cultural_death else 'false',
+            'otherPriority': 'true' if self.other else 'false',
+            'priorityDetails': self.urgency_additional_details,
+        }
 
 
 class MedicalTeamMembersForm:
