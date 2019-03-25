@@ -136,15 +136,16 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
     @patch('examinations.request_handler.load_case_breakdown_by_id', return_value=mocks.SUCCESSFUL_LOAD_CASE_BREAKDOWN)
-    def test_loading_the_case_breakdown_screen_loads_the_correct_template(self, mock_validate, mock_permission_load,
-                                                                          mock_breakdown_load):
+    def test_loading_the_case_breakdown_screen_loads_the_correct_template(self, mock_modes_disposal, mock_validate,
+                                                                          mock_permission_load, mock_breakdown_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
     @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
-    def test_loading_the_case_breakdown_screen_when_not_logged_in_redirects_to_login(self, mock_validate):
+    def test_loading_the_case_breakdown_screen_when_not_logged_in_redirects_to_login(self, mock_modes_disposal,
+                                                                                     mock_validate):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -153,12 +154,12 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
     @patch('examinations.request_handler.load_case_breakdown_by_id', return_value=mocks.UNSUCCESSFUL_LOAD_CASE_BREAKDOWN)
-    def test_loading_the_case_breakdown_screen_returns_error_page_with_invalid_case_id(self, mock_validate,
-                                                       mock_permission_load, mock_breakdown_load):
+    def test_loading_the_case_breakdown_screen_returns_error_page_with_invalid_case_id(self, mock_modes_disposal,
+                                                       mock_validate, mock_permission_load, mock_breakdown_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
+        self.assertTemplateUsed(response, 'errors/base_error.html')
 
 
 class ExaminationsFormsTests(MedExTestCase):

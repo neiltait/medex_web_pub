@@ -49,6 +49,6 @@ def load_modes_of_disposal(auth_token):
 
 def load_case_breakdown_by_id(examination_id, auth_token):
     if settings.LOCAL:
-        return mocks.SUCCESSFUL_BREAKDOWN_LOAD
+        return mocks.SUCCESSFUL_LOAD_CASE_BREAKDOWN
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/case_breakdown' % (settings.API_URL, examination_id))

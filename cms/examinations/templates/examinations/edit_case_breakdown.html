@@ -1,0 +1,28 @@
+{% extends "examinations/edit_shared.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block tab_css %}
+{% endblock %}
+
+{% block tab_js %}
+{% endblock %}
+
+{% block tab_content %}
+    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}" method="post"
+          data-error-count="{{ error_count }}">
+        {% csrf_token %}
+
+        <div class="form-tab" id="case-breakdown-section">
+            {% include "examinations/partials/case_breakdown/_case_timeline.html" %}
+        </div>
+
+        <div class="sticky-save">
+            <div class="container">
+                <input class="submit-btn" type="submit" value="Save changes"/>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

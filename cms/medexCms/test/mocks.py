@@ -449,7 +449,7 @@ SUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
 SUCCESSFUL_VALIDATE_SESSION._content = json.dumps(validate_user_dict).encode('utf-8')
 
 UNSUCCESSFUL_VALIDATE_SESSION = Response()
-UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_200_OK
+UNSUCCESSFUL_VALIDATE_SESSION.status_code = status.HTTP_401_UNAUTHORIZED
 UNSUCCESSFUL_VALIDATE_SESSION._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_LOGOUT = Response()
@@ -534,7 +534,7 @@ UNSUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
-SUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_404_NOT_FOUND
+SUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_200_OK
 SUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(get_case_breakdown_response_object()).encode('utf-8')
 
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
