@@ -3,69 +3,89 @@ from alerts import messages
 from . import request_handler
 
 
-class CreateUserForm():
-  submit_btn_text = 'Save and add role/permission'
+class CreateUserForm:
+    submit_btn_text = 'Save and add role/permission'
 
-  def __init__(self, request=None):
-    if request:
-      self.email_address = request.get('email_address')
-    else:
-      self.email_address = ''
+    def __init__(self, request=None):
+        self.email_error = None
+        if request:
+            self.email_address = request.get('email_address')
+        else:
+            self.email_address = ''
+
+    def validate(self):
+        self.email_error = None
+
+        if self.email_address == '' or self.email_address is None:
+            self.email_error = messages.MISSING_EMAIL
+        elif not self.check_is_nhs_email():
+            self.email_error = messages.INVALID_EMAIL_DOMAIN
+
+        return False if self.email_error else True
+
+    def check_is_nhs_email(self):
+        return '@nhs.uk' in self.email_address
+
+    def response_to_dict(self):
+        return {
+            "email": self.email_address,
+        }
 
 
-  def validate(self):
-    self.email_error = None
+class PermissionBuilderForm:
+    submit_btn_text = 'Save'
 
-    if self.email_address == '' or self.email_address is None:
-      self.email_error = messages.MISSING_EMAIL
-    elif not self.check_is_nhs_email():
-      self.email_error = messages.INVALID_EMAIL_DOMAIN
-    
-    return False if self.email_error else True
+    def __init__(self, request=None):
+        self.role_error = None
+        self.permission_level_error = None
+        self.trust_error = None
+        self.region_error = None
 
-  def check_is_nhs_email(self):
-    return '@nhs.uk' in self.email_address
+        if request:
+            self.role = request.get('role')
+            self.permission_level = request.get('permission_level')
+            self.region = request.get('region')
+            self.trust = request.get('trust')
+        else:
+            self.role = None
+            self.permission_level = None
+            self.region = None
+            self.trust = None
 
+    def is_valid(self):
 
-class PermissionBuilderForm():
-  submit_btn_text = 'Save'
+        if self.role is None or self.role is '':
+            self.role_error = messages.FIELD_MISSING % "a role"
 
-  def __init__(self, request=None):
-    if request:
-      self.role = request.get('role')
-      self.permission_level = request.get('permission_level')
-      self.region = request.get('region')
-      self.trust = request.get('trust')
-    else:
-      self.role = None
-      self.permission_level = None
-      self.region = None
-      self.trust = None
+        if self.permission_level is None or self.permission_level is '':
+            self.permission_level_error = messages.FIELD_MISSING % "a level"
 
-  def is_valid(self):
-    self.role_error = None
-    self.permission_level_error = None
-    self.trust_error = None
-    self.region_error = None
+        if self.permission_level == 'trust' and not self.trust_present():
+            self.trust_error = messages.FIELD_MISSING % "a trust"
 
-    if self.role is None or self.role is '':
-      self.role_error = messages.FIELD_MISSING % "a role"
+        if self.permission_level == 'regional' and not self.region_present():
+            self.region_error = messages.FIELD_MISSING % "a region"
 
-    if self.permission_level is None or self.permission_level is '':
-      self.permission_level_error = messages.FIELD_MISSING % "a level"
+        return False if self.role_error or self.permission_level_error \
+                        or self.trust_error or self.region_error else True
 
-    if self.permission_level == 'trust' and (self.trust is None or self.trust is '' or self.trust == 'None'):
-      self.trust_error = messages.FIELD_MISSING % "a trust"
+    def trust_present(self):
+        return self.trust is not None and self.trust is not '' and self.trust != 'None'
 
-    if self.permission_level == 'regional' and (self.region is None or self.region is ''):
-      self.region_error = messages.FIELD_MISSING % "a region"
+    def region_present(self):
+        return self.region is not None and self.region is not '' and self.region != 'None'
 
-    return False if self.role_error or self.permission_level_error or self.trust_error or self.region_error else True
+    def location_id(self):
+        if self.region_present():
+            return self.region
+        elif self.trust_present():
+            return self.trust
+        else:
+            return None
 
-  def to_dict(self):
-    return {
-      'role': self.role,
-      'permission_level': self.permission_level,
-      'region': self.region,
-      'trust': self.trust
-    }
+    def to_dict(self, user_id):
+        return {
+            'userId': user_id,
+            'userRole': self.role,
+            'locationId': self.location_id()
+        }
