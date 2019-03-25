@@ -305,6 +305,7 @@ def get_examination_response_object():
         ]
     }
 
+
 def get_patient_details_load_response_object():
     return {
         "id": "0123-456-789",
@@ -421,6 +422,11 @@ USERS_EXAMINATION_LIST = {
     "success": True
 }
 
+
+def get_case_breakdown_response_object():
+    return {}
+
+
 #### Datatypes
 
 LOAD_MODES_OF_DISPOSAL = {
@@ -526,3 +532,11 @@ SUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(get_patient_details_load_r
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
+SUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_404_NOT_FOUND
+SUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(get_case_breakdown_response_object()).encode('utf-8')
+
+UNSUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
+UNSUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_404_NOT_FOUND
+UNSUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(None).encode('utf-8')
