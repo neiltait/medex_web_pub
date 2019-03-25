@@ -79,5 +79,5 @@ steps:
     docker push $(stagingDockerId).azurecr.io/$(imageName)
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release/*'))
   env:
-    pswd: $(dockerPassword)
+    pswd: $(stagingRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
