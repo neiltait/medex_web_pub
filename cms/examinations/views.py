@@ -28,7 +28,7 @@ def create_examination(request):
     if request.method == 'POST':
         form = PrimaryExaminationInformationForm(request.POST)
         if form.is_valid():
-            response = request_handler.post_new_examination(form.to_object())
+            response = request_handler.post_new_examination(form.to_object(), user.auth_token)
             if response.status_code == status.HTTP_200_OK:
                 return redirect_to_landing()
             else:
