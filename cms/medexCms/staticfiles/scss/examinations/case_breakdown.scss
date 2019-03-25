@@ -1,0 +1,23 @@
+@import '../variables';
+@import './partials/case_timeline';
+@import './partials/case_breakdown_forms';
+
+#case-breakdown-section {
+    margin: 4rem 2rem 300px;
+
+    .section-title {
+        margin-top: 0px;
+        margin-bottom: 0px;
+
+        font-size: $nhs-heading-xl-size;
+        line-height: $nhs-heading-xl-line-height;
+    }
+
+    .section-sub-heading {
+        margin-top: 0px;
+        margin-bottom: 0px;
+
+        font-size: $nhs-heading-l-size;
+        line-height: $nhs-heading-l-line-height;
+    }
+}

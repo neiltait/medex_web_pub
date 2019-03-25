@@ -1,0 +1,13 @@
+@import '../../variables';
+
+.case-timeline {
+    .controls {
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+
+        .controls-label {
+            display: block;
+            color: $nhs-grey;
+        }
+    }
+}

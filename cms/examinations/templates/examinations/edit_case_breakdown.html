@@ -3,6 +3,7 @@
 {% load staticfiles %}
 
 {% block tab_css %}
+    <link href="{% sass_src 'scss/examinations/case_breakdown.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block tab_js %}
@@ -15,6 +16,10 @@
         {% csrf_token %}
 
         <div class="form-tab" id="case-breakdown-section">
+            <h3 class="section-title">
+                Case breakdown
+            </h3>
+
             {% include "examinations/partials/case_breakdown/_case_timeline.html" %}
         </div>
 
