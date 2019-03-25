@@ -235,6 +235,24 @@ def edit_examination_case_breakdown(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'forms': [
+            {
+                'id': 'admin-notes',
+                'name': 'Latest admission notes'
+            },
+            {
+                'id': 'history-notes',
+                'name': 'Medical history notes'
+            },
+            {
+                'id': 'meo-summary',
+                'name': 'MEO summary'
+            },
+            {
+                'id': 'other',
+                'name': 'Other case info'
+            }
+        ]
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
