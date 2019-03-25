@@ -77,7 +77,7 @@ steps:
     docker build -f Dockerfile -t $(stagingDockerId).azurecr.io/$(imageName) .
     docker login -u $(stagingDockerId) -p $pswd $(stagingDockerId).azurecr.io
     docker push $(stagingDockerId).azurecr.io/$(imageName)
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release/*'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   env:
     pswd: $(stagingRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
