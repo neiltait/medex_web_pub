@@ -25,7 +25,7 @@ def create_examination(request):
     status_code = status.HTTP_200_OK
     form = None
 
-    if request.method == 'POST':
+    if 'create-and-continue' in request.POST:
         form = PrimaryExaminationInformationForm(request.POST)
         if form.is_valid():
             response = request_handler.post_new_examination(form.to_object(), user.auth_token)
@@ -38,6 +38,8 @@ def create_examination(request):
             errors = form.errors
             alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
             status_code = status.HTTP_400_BAD_REQUEST
+    else:
+        status_code = status.HTTP_400_BAD_REQUEST
 
     return render_create_examination_form(request, user, alerts, errors, status_code, form)
 

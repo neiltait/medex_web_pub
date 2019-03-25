@@ -52,6 +52,9 @@ Form.prototype = {
         this.submitButton = this.form.find("#submit-btn");
         this.setupSubmitButton();
 
+        this.addAnotherButton = this.form.find("#add-another-btn");
+        this.setupAddAnotherButton();
+
         this.errorAlert = this.form.find("#error_alert");
 
         this.initialiseFormWithData();
