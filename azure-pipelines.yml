@@ -5,6 +5,8 @@ trigger:
 - feature/*
 - refactor/*
 - bug/*
+- release/*
+
 
 pool:
   vmImage: 'Ubuntu 16.04'
