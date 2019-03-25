@@ -45,3 +45,10 @@ def load_modes_of_disposal(auth_token):
         return mocks.LOAD_MODES_OF_DISPOSAL
     else:
         return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()
+
+
+def load_case_breakdown_by_id(examination_id, auth_token):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_BREAKDOWN_LOAD
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_breakdown' % (settings.API_URL, examination_id))
