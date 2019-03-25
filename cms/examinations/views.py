@@ -6,7 +6,7 @@ from alerts.utils import generate_error_alert
 from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
 from examinations.models import Examination, PatientDetails
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
