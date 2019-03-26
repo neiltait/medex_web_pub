@@ -6,8 +6,10 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+from examinations.models import Examination, PatientDetails
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
+from medexCms.utils import NONE_DATE
 
 
 @patch('examinations.request_handler.load_modes_of_disposal', return_value=mocks.LOAD_MODES_OF_DISPOSAL)
@@ -134,7 +136,7 @@ class ExaminationsViewsTests(MedExTestCase):
                 mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.get_bereaved_examination_data())
+        form_data.update(mocks.get_bereaved_examination_form_data())
         form_data.pop('first_name', None)
         response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -151,7 +153,7 @@ class ExaminationsViewsTests(MedExTestCase):
                 mock_update):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.get_bereaved_examination_data())
+        form_data.update(mocks.get_bereaved_examination_form_data())
         response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, mocks.UNSUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
@@ -167,7 +169,7 @@ class ExaminationsViewsTests(MedExTestCase):
                                                                                          mock_update):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.get_bereaved_examination_data())
+        form_data.update(mocks.get_bereaved_examination_form_data())
         response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
@@ -183,7 +185,7 @@ class ExaminationsViewsTests(MedExTestCase):
                                                                                      mock_update):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.get_bereaved_examination_data())
+        form_data.update(mocks.get_bereaved_examination_form_data())
         response = self.client.post('/cases/%s/patient-details?nextTab=medical-team' % mocks.CREATED_EXAMINATION_ID,
                                     form_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -492,30 +494,30 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_content_returns_as_valid(self):
-        form = BereavedInformationForm(mocks.get_bereaved_examination_data())
+        form = BereavedInformationForm(mocks.get_bereaved_examination_form_data())
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_date1_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['year_of_appointment_1'] = ''
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date1_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['day_of_appointment_1'] = '31'
         form_data['month_of_appointment_1'] = '2'
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_date2_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['year_of_appointment_2'] = ''
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date2_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['day_of_appointment_2'] = '31'
         form_data['month_of_appointment_2'] = '2'
         form = BereavedInformationForm(form_data)
@@ -550,3 +552,53 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_medical_team_assigned_team_form_initialised_with_content_returns_as_valid(self):
         form = MedicalTeamAssignedTeamForm(mocks.get_assigned_medical_team_form_data())
         self.assertIsTrue(form.is_valid())
+
+
+class ExaminationsModelsTests(MedExTestCase):
+
+    #### Examination tests
+
+    @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
+    def test_load_by_id_returns_an_examination_instance_if_found(self, mock_case_load):
+        examination = Examination.load_by_id(mocks.CREATED_EXAMINATION_ID, mocks.ACCESS_TOKEN)
+        self.assertEqual(type(examination), Examination)
+
+    @patch('examinations.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_CASE_LOAD)
+    def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
+        examination = Examination.load_by_id(mocks.CREATED_EXAMINATION_ID, mocks.ACCESS_TOKEN)
+        self.assertIsNone(examination)
+
+    #### PatientDetails tests
+
+    def test_initialising_with_the_none_date_results_in_no_dob(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['dateOfBirth'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_birth)
+        self.assertIsNone(patient_details.day_of_birth)
+        self.assertIsNone(patient_details.month_of_birth)
+        self.assertIsNone(patient_details.year_of_birth)
+
+    def test_initialising_with_the_none_date_results_in_no_dod(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['dateOfDeath'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_death)
+        self.assertIsNone(patient_details.day_of_death)
+        self.assertIsNone(patient_details.month_of_death)
+        self.assertIsNone(patient_details.year_of_death)
+
+    def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        mode_of_disposal = list(mocks.LOAD_MODES_OF_DISPOSAL.keys())[0]
+        loaded_data['modeOfDisposal'] = mocks.LOAD_MODES_OF_DISPOSAL[mode_of_disposal]
+        patient_details = PatientDetails(loaded_data, mocks.LOAD_MODES_OF_DISPOSAL)
+        self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
+
+    def test_initialising_with_a_bereaved_sets_the_representatives(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        bereaved = mocks.get_bereaved_representative()
+        loaded_data['representatives'].append(bereaved)
+        patient_details = PatientDetails(loaded_data, mocks.LOAD_MODES_OF_DISPOSAL)
+        self.assertEqual(len(patient_details.representatives), 1)
+        self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])

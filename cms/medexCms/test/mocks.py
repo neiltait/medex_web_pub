@@ -16,8 +16,10 @@ AUTH_COOKIES = {
     settings.ID_TOKEN_NAME: "8a89be6d-70df-4b21-9d6e-82873d7ff1b0"
 }
 
+ACCESS_TOKEN = "c15be3d1-513f-49dc-94f9-47449c1cfeb8"
+
 AUTH_TOKEN = {
-    "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
+    "access_token": ACCESS_TOKEN,
     "id_token": "8a89be6d-70df-4b21-9d6e-82873d7ff1b0",
     "token_type": "Bearer",
     "expires_in": 3600,
@@ -194,7 +196,7 @@ SECONDARY_EXAMINATION_DATA = {
 }
 
 
-def get_bereaved_examination_data():
+def get_bereaved_examination_form_data():
     return {
         'bereaved_name_1': 'Anne Smith',
         'relationship_1': 'Wife',
