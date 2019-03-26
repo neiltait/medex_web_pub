@@ -50,7 +50,6 @@ class User:
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    @property
     def role_type(self):
         # TODO work out role type from permissions
         return self.MEO_ROLE_TYPE
@@ -123,7 +122,7 @@ class User:
             logger.error(response.status_code)
 
     def get_forms_for_role(self):
-        if self.role_type == self.MEO_ROLE_TYPE:
+        if self.role_type() == self.MEO_ROLE_TYPE:
             return [
                 {
                     'id': 'admin-notes',
@@ -142,7 +141,7 @@ class User:
                     'name': 'Other case info'
                 }
             ]
-        elif self.role_type == self.ME_ROLE_TYPE:
+        elif self.role_type() == self.ME_ROLE_TYPE:
             return [
                 {
                     'id': 'pre-scrutiny',
@@ -161,3 +160,5 @@ class User:
                     'name': 'Other case info'
                 }
             ]
+        else:
+            logger.error('Unknown role type')
