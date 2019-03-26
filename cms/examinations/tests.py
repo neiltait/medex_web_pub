@@ -36,11 +36,29 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
-    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create):
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create,
+                                                                         mock_locations_list, mock_me_offices_list):
         self.set_auth_cookies()
-        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
+        form_data = mocks.get_minimal_create_form_data()
+        form_data["create-and-continue"] = "Create case and continue"
+        response = self.client.post('/cases/create', form_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/')
+
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    def test_case_create_add_another_case_redirects_to_case_create(self, mock_auth_validation, mock_case_create,
+                                                                   mock_locations_list, mock_me_offices_list):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/create.html')
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.first_name, "")
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.UNSUCCESSFUL_CASE_CREATE)
