@@ -25,12 +25,16 @@ def create_examination(request):
     status_code = status.HTTP_200_OK
     form = None
 
-    if request.method == 'POST':
+    if request.POST:
         form = PrimaryExaminationInformationForm(request.POST)
         if form.is_valid():
             response = request_handler.post_new_examination(form.to_object(), user.auth_token)
             if response.status_code == status.HTTP_200_OK:
-                return redirect_to_landing()
+                if 'create-and-continue' in request.POST:
+                    return redirect_to_landing()
+                else:
+                    form = None
+                    status_code = status.HTTP_200_OK
             else:
                 alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
                 status_code = response.status_code
