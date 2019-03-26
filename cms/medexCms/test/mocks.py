@@ -51,14 +51,16 @@ user_dict = {
 
 CREATED_PERMISSION_ID = 1
 
-USER_PERMISSION = {
+PERMISSION_OBJECT = {
+      "permissionId": "123-456-789",
+      "userId": "abc-def-ghi",
+      "locationId": "jkl-mno-pqr",
+      "userRole": 0,
+  }
+
+USER_PERMISSION_RESPONSE = {
   "permissions": [
-      {
-          "permissionId": "123-456-789",
-          "userId": "abc-def-ghi",
-          "locationId": "jkl-mno-pqr",
-          "userRole": 0,
-      }
+      PERMISSION_OBJECT
   ],
   "errors": {
     "additionalProp1": [
@@ -493,7 +495,7 @@ UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_PERMISSION_LOAD = Response()
 SUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_200_OK
-SUCCESSFUL_PERMISSION_LOAD._content = json.dumps(USER_PERMISSION).encode('utf-8')
+SUCCESSFUL_PERMISSION_LOAD._content = json.dumps(USER_PERMISSION_RESPONSE).encode('utf-8')
 
 UNSUCCESSFUL_PERMISSION_LOAD = Response()
 UNSUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_400_BAD_REQUEST
