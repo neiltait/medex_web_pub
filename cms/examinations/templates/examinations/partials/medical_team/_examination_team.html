@@ -19,7 +19,7 @@
                                         <option value="" disabled hidden selected>Please select</option>
                                         {% for meo in medical_examiners_officers %}
                                             <option
-                                                    value={{ meo.id }} {% if meo.id == form.medical_examiners_officer %}selected{% endif %}>{{ meo.name }}</option>
+                                                    value={{ meo.user_id }} {% if meo.user_id == form.medical_examiners_officer %}selected{% endif %}>{{ meo.first_name }} {{ meo.last_name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -37,7 +37,7 @@
                                         <option value="" disabled hidden selected>Please select</option>
                                         {% for me in medical_examiners %}
                                             <option
-                                                    value={{ me.id }} {% if me.id == form.medical_examiner %}selected{% endif %}>{{ me.name }}</option>
+                                                    value={{ me.user_id }} {% if me.user_id == form.medical_examiner %}selected{% endif %}>{{ me.first_name }} {{ me.last_name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
