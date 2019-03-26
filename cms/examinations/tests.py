@@ -39,16 +39,10 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
-<<<<<<< HEAD
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create,
-                                                                         mock_locations_list, mock_me_offices_list):
-=======
-    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
     def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_modes_of_disposal, mock_auth_validation, mock_case_create,
-                                                                         mock_permission_load):
->>>>>>> master
+                                                                         mock_locations_list, mock_me_offices_list):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data["create-and-continue"] = "Create case and continue"
@@ -60,7 +54,7 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_case_create_add_another_case_redirects_to_case_create(self, mock_auth_validation, mock_case_create,
+    def test_case_create_add_another_case_redirects_to_case_create(self, mock_modes_of_disposal, mock_auth_validation, mock_case_create,
                                                                    mock_locations_list, mock_me_offices_list):
         self.set_auth_cookies()
         response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
