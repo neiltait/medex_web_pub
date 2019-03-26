@@ -41,8 +41,8 @@ LOCAL = os.environ.get('LOCAL', False)
 
 ALLOWED_HOSTS = [
     'localhost',
-    'medex-cms.azurewebsites.net',
-    'medex-cms-sandbox.azurewebsites.net'
+    'medex-cms-sandbox.azurewebsites.net',
+    'medical-examiners-cms-staging.azurewebsites.net',
 ]
 
 

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE
+from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
 
 
 class PrimaryExaminationInformationForm:
@@ -201,10 +201,10 @@ class PrimaryExaminationInformationForm:
         dob = NONE_DATE
         dod = NONE_DATE
         if not self.date_of_birth_not_known:
-            dob = datetime(self.year_of_birth, self.month_of_birth, self.day_of_birth).strftime(API_DATE_FORMAT)
+            dob = build_date(self.year_of_birth, self.month_of_birth, self.day_of_birth).strftime(API_DATE_FORMAT)
 
         if not self.date_of_death_not_known:
-            dod = datetime(self.year_of_death, self.month_of_death, self.day_of_death).strftime(API_DATE_FORMAT)
+            dod = build_date(self.year_of_death, self.month_of_death, self.day_of_death).strftime(API_DATE_FORMAT)
         return {
             "givenNames": self.first_name,
             "surname": self.last_name,
