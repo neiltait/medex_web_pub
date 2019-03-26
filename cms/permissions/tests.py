@@ -36,7 +36,7 @@ class PermissionModelsTests(MedExTestCase):
         self.assertEqual(permission.role_type(), permission.ROLES[role_key])
 
 
-class UsersFormsTests(MedExTestCase):
+class PermissionsFormsTests(MedExTestCase):
 
     #### PermissionBuilderForm tests
 
@@ -162,3 +162,101 @@ class UsersFormsTests(MedExTestCase):
         self.assertEqual(result['userRole'], role)
         self.assertEqual(result['locationId'], trust)
         self.assertEqual(result['userId'], user_id)
+
+    def test_trust_present_returns_false_when_a_trust_is_not_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'regional',
+            'region': '1',
+            'trust': None
+        }
+        form = PermissionBuilderForm(form_content)
+
+        self.assertIsNone(form.trust)
+        self.assertIsFalse(form.trust_present())
+
+        form.trust = ''
+        self.assertEqual(form.trust, '')
+        self.assertIsFalse(form.trust_present())
+
+        form.trust = 'None'
+        self.assertEqual(form.trust, 'None')
+        self.assertIsFalse(form.trust_present())
+
+    def test_trust_present_returns_true_when_a_trust_is_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'trust',
+            'region': None,
+            'trust': '1'
+        }
+        form = PermissionBuilderForm(form_content)
+
+        self.assertEqual(form.trust, form_content['trust'])
+        self.assertIsTrue(form.trust_present())
+
+    def test_region_present_returns_false_when_a_region_is_not_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'trust',
+            'region': None,
+            'trust': '1'
+        }
+        form = PermissionBuilderForm(form_content)
+
+        self.assertIsNone(form.region)
+        self.assertIsFalse(form.region_present())
+
+        form.region = ''
+        self.assertEqual(form.region, '')
+        self.assertIsFalse(form.region_present())
+
+        form.region = 'None'
+        self.assertEqual(form.region, 'None')
+        self.assertIsFalse(form.region_present())
+
+    def test_region_present_returns_true_when_a_region_is_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'regional',
+            'region': '1',
+            'trust': None
+        }
+        form = PermissionBuilderForm(form_content)
+
+        self.assertEqual(form.region, form_content['region'])
+        self.assertIsTrue(form.region_present())
+
+    def test_location_id_returns_the_region_id_if_its_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'regional',
+            'region': '1',
+            'trust': None
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.region, form_content['region'])
+        self.assertEqual(form.location_id(), form.region)
+
+    def test_location_id_returns_the_trust_id_if_its_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'trust',
+            'region': None,
+            'trust': '2'
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.trust, form_content['trust'])
+        self.assertEqual(form.location_id(), form.trust)
+
+    def test_location_id_returns_none_if_no_trust_or_region_present(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'national',
+            'region': None,
+            'trust': None
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertIsNone(form.region)
+        self.assertIsNone(form.trust)
+        self.assertIsNone(form.location_id())
