@@ -200,6 +200,7 @@ class PrimaryExaminationInformationForm:
     def to_object(self):
         dob = NONE_DATE
         dod = NONE_DATE
+
         if not self.date_of_birth_not_known:
             dob = build_date(self.year_of_birth, self.month_of_birth, self.day_of_birth).strftime(API_DATE_FORMAT)
 
@@ -239,8 +240,8 @@ class PrimaryExaminationInformationForm:
         valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
         valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
         if valid_date_of_death and valid_date_of_birth:
-            date_of_death = datetime(int(self.year_of_death), int(self.month_of_death), int(self.day_of_death), 0, 0)
-            date_of_birth = datetime(int(self.year_of_birth), int(self.month_of_birth), int(self.day_of_birth), 0, 0)
+            date_of_death = build_date(self.year_of_death, self.month_of_death, self.day_of_death)
+            date_of_birth = build_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
             if date_of_death >= date_of_birth:
                 return True
             else:

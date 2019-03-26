@@ -477,6 +477,65 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
         self.assertIs(form.out_of_hours, True)
 
+    def test_form_correctly_passes_dob_and_dod_for_request_if_known(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '2'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '20'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form_data.pop('date_of_birth_not_known', None)
+        form_data.pop('date_of_death_not_known', None)
+        form = PrimaryExaminationInformationForm(form_data)
+
+        result = form.to_object()
+        self.assertNotEqual(result['dateOfBirth'], NONE_DATE)
+        self.assertNotEqual(result['dateOfDeath'], NONE_DATE)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_true_if_no_dates_given(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsTrue(result)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_false_if_dod_is_before_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '20'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '2'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsFalse(result)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_true_if_dod_is_after_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '2'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '20'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsTrue(result)
+
+    def test_form_returns_is_invalid_if_dod_is_before_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '20'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '2'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.is_valid()
+        self.assertIsFalse(result)
+
+
     #### Secondary Info Form tests
 
     def test_secondary_form_initialised_empty_returns_as_valid(self):
@@ -522,6 +581,15 @@ class ExaminationsFormsTests(MedExTestCase):
         form_data['month_of_appointment_2'] = '2'
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
+
+    def test_form_initialised_from_db_correctly_sets_representatives(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['representatives'].append(mocks.get_bereaved_representative())
+        patient_details = PatientDetails(loaded_data)
+        form = BereavedInformationForm()
+        form.set_values_from_instance(patient_details)
+        self.assertEqual(form.bereaved_name_1, loaded_data['representatives'][0]['fullName'])
+        self.assertEqual(form.bereaved_name_2, '')
 
     #### Urgency Info Form tests
 
