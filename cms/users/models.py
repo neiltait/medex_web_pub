@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 class User:
+    ME_ROLE_TYPE = 'ME'
+    MEO_ROLE_TYPE = 'MEO'
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -47,6 +49,11 @@ class User:
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+
+    @property
+    def role_type(self):
+        # TODO work out role type from permissions
+        return self.MEO_ROLE_TYPE
 
     def check_logged_in(self):
         if self.auth_token:
@@ -114,3 +121,43 @@ class User:
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
+
+    def get_forms_for_role(self):
+        if self.role_type == self.MEO_ROLE_TYPE:
+            return [
+                {
+                    'id': 'admin-notes',
+                    'name': 'Latest admission notes'
+                },
+                {
+                    'id': 'history-notes',
+                    'name': 'Medical history notes'
+                },
+                {
+                    'id': 'meo-summary',
+                    'name': 'MEO summary'
+                },
+                {
+                    'id': 'other',
+                    'name': 'Other case info'
+                }
+            ]
+        elif self.role_type == self.ME_ROLE_TYPE:
+            return [
+                {
+                    'id': 'pre-scrutiny',
+                    'name': 'ME pre scrutiny'
+                },
+                {
+                    'id': 'qap-discussion',
+                    'name': 'QAP discussion'
+                },
+                {
+                    'id': 'bereaved-discussion',
+                    'name': 'Bereaved/representative discussion'
+                },
+                {
+                    'id': 'other',
+                    'name': 'Other case info'
+                }
+            ]

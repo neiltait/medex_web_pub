@@ -232,27 +232,12 @@ def edit_examination_case_breakdown(request, examination_id):
 
     status_code = status.HTTP_200_OK
 
+    forms = user.get_forms_for_role()
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'forms': [
-            {
-                'id': 'admin-notes',
-                'name': 'Latest admission notes'
-            },
-            {
-                'id': 'history-notes',
-                'name': 'Medical history notes'
-            },
-            {
-                'id': 'meo-summary',
-                'name': 'MEO summary'
-            },
-            {
-                'id': 'other',
-                'name': 'Other case info'
-            }
-        ]
+        'forms': forms
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
