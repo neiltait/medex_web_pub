@@ -8,5 +8,7 @@ urlpatterns = [
         name='edit_examination_patient_details'),
     url(r'(?P<examination_id>[\w\-]+)/medical-team', views.edit_examination_medical_team,
         name='edit_examination_medical_team'),
+    url(r'(?P<examination_id>[\w\-]+)/case-breakdown', views.edit_examination_case_breakdown,
+        name='edit_examination_case_breakdown'),
     url(r'(?P<examination_id>[\w\-]+)', views.edit_examination, name='edit_examination'),
 ]

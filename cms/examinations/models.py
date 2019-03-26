@@ -187,3 +187,18 @@ class PatientDetails:
             return PatientDetails(response.json(), modes_of_disposal)
         else:
             return None
+
+
+class CaseBreakdown:
+
+    def __init__(self, obj_dict):
+        self.timeline_items = obj_dict.get('timelineItems')
+
+    @classmethod
+    def load_by_id(cls, auth_token, examination_id):
+        response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
+
+        if response.status_code == status.HTTP_200_OK:
+            return CaseBreakdown(response.json())
+        else:
+            return None
