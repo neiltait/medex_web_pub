@@ -10,6 +10,7 @@ from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
 
 
+@patch('examinations.request_handler.load_modes_of_disposal', return_value=mocks.LOAD_MODES_OF_DISPOSAL)
 class ExaminationsViewsTests(MedExTestCase):
 
     #### Create case tests
@@ -17,8 +18,9 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_user_validation, mock_locations_list,
-            mock_me_offices_list):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_create_case_page_loads_the_correct_template(self, mock_modes_of_disposal, mock_user_validation, mock_locations_list,
+            mock_me_offices_list, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/create')
         self.assertTemplateUsed(response, 'examinations/create.html')
@@ -28,18 +30,25 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation,
-            mock_locations_list, mock_me_offices_list):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_modes_of_disposal, mock_user_validation,
+            mock_locations_list, mock_me_offices_list, mocks_permission_load):
         response = self.client.get('/cases/create')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.SUCCESSFUL_CASE_CREATE)
+<<<<<<< HEAD
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
     def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_auth_validation, mock_case_create,
                                                                          mock_locations_list, mock_me_offices_list):
+=======
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self, mock_modes_of_disposal, mock_auth_validation, mock_case_create,
+                                                                         mock_permission_load):
+>>>>>>> master
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data["create-and-continue"] = "Create case and continue"
@@ -64,8 +73,9 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('examinations.request_handler.post_new_examination', return_value=mocks.UNSUCCESSFUL_CASE_CREATE)
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_auth_validation,
-            mock_case_create, mock_locations_list, mock_me_offices_list):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_modes_of_disposal, mock_auth_validation,
+            mock_case_create, mock_locations_list, mock_me_offices_list, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.post('/cases/create', mocks.get_minimal_create_form_data())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -73,8 +83,9 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_user_validation,
-            mock_locations_list, mock_me_offices_list):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_creating_a_case_with_missing_required_fields_returns_bad_request(self, mock_modes_of_disposal, mock_user_validation,
+            mock_locations_list, mock_me_offices_list, mock_permission_load):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data.pop('first_name', None)
@@ -88,7 +99,7 @@ class ExaminationsViewsTests(MedExTestCase):
     #### Edit case tests
 
     @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
-    def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
+    def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_modes_of_disposal, mock_user_validation):
         response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
@@ -100,8 +111,10 @@ class ExaminationsViewsTests(MedExTestCase):
            return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
-    def test_landing_on_edit_page_redirects_to_edit_patient_details(self, mock_locations_list,
-                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_edit_page_redirects_to_edit_patient_details(self, mock_modes_of_disposal, mock_locations_list,
+                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
+                                    mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -113,9 +126,11 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('people.request_handler.get_medical_examiners_officers_list',
            return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    @patch('examinations.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_CASE_LOAD)
-    def test_landing_on_edit_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self,
-                 mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.UNSUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_landing_on_edit_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self, mock_modes_of_disposal,
+                 mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
+                 mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -127,9 +142,11 @@ class ExaminationsViewsTests(MedExTestCase):
     @patch('people.request_handler.get_medical_examiners_officers_list',
            return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
-    @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
-    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_locations_list,
-                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load):
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_modes_of_disposal, mock_locations_list,
+                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
+                                    mock_permission_load):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
         form_data.update(mocks.get_bereaved_examination_data())

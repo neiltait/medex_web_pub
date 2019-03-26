@@ -3,13 +3,18 @@
 trigger:
 - master
 - feature/*
+- refactor/*
+- bug/*
+- release/*
+
 
 pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
   imageName: 'medex-cms:$(Build.BuildId)'
-  dockerId: medexcmsSandbox
+  sandboxDockerId: medexcmsSandbox
+  stagingDockerId: medexFrontendStaging
 
 steps:
 - task: UsePythonVersion@0
@@ -59,10 +64,20 @@ steps:
 
 - script: |
     pushd '$(projectRoot)'
-    docker build -f Dockerfile -t $(dockerId).azurecr.io/$(imageName) .
-    docker login -u $(dockerId) -p $pswd $(dockerid).azurecr.io
-    docker push $(dockerId).azurecr.io/$(imageName)
+    docker build -f Dockerfile -t $(sandboxDockerId).azurecr.io/$(imageName) .
+    docker login -u $(sandboxDockerId) -p $pswd $(sandboxDockerId).azurecr.io
+    docker push $(sandboxDockerId).azurecr.io/$(imageName)
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   env:
     pswd: $(dockerPassword)
-  displayName: 'Build and push Docker image'
+  displayName: 'Build and push Docker image to Sandbox'
+
+- script: |
+    pushd '$(projectRoot)'
+    docker build -f Dockerfile -t $(stagingDockerId).azurecr.io/$(imageName) .
+    docker login -u $(stagingDockerId) -p $pswd $(stagingDockerId).azurecr.io
+    docker push $(stagingDockerId).azurecr.io/$(imageName)
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
+  env:
+    pswd: $(stagingRegistryPassword)
+  displayName: 'Build and push Docker image to Staging'

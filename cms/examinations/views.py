@@ -7,7 +7,7 @@ from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
-from examinations.models import Examination
+from examinations.models import Examination, PatientDetails
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
@@ -74,15 +74,15 @@ def edit_examination_patient_details(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = Examination.load_by_id(examination_id, user.auth_token)
+    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
 
     if not examination:
         context = {
             'session_user': user,
             'error': NotFoundError('case'),
         }
+        
         return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
-
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = PrimaryExaminationInformationForm()
@@ -104,9 +104,19 @@ def edit_examination_patient_details(request, examination_id):
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
         if forms_valid:
-            print('forms valid')
-            if request.GET.get('nextTab'):
+            submission = primary_info_form.to_object()
+            submission.update(secondary_info_form.for_request())
+            submission.update(bereaved_info_form.for_request())
+            submission.update(urgency_info_form.for_request())
+            submission['id'] = examination_id
+            submission['completed'] = 'true' if examination.completed else 'false'
+
+            response = request_handler.update_patient_details(examination_id, submission, user.auth_token)
+
+            if response.status_code == status.HTTP_200_OK and request.GET.get('nextTab'):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
+            else:
+                status_code = response.status_code
         else:
             error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] + \
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']

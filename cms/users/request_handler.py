@@ -8,7 +8,7 @@ def validate_session(auth_token):
     if settings.LOCAL:
         return mocks.SUCCESSFUL_LOAD_USER
     else:
-        return MedexRequest.post(auth_token, '%s/auth/validate-session' % settings.API_URL)
+        return MedexRequest.post(auth_token, '%s/auth/validate_session' % settings.API_URL)
 
 
 def create_user(user_object, auth_token):
