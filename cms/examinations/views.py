@@ -222,13 +222,12 @@ def edit_examination_case_breakdown(request, examination_id):
     examination = CaseBreakdown.load_by_id(examination_id, user.auth_token)
 
     if not examination:
-        if not examination:
-            context = {
-                'session_user': user,
-                'error': NotFoundError('case'),
-            }
+        context = {
+            'session_user': user,
+            'error': NotFoundError('case'),
+        }
 
-            return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
 
     status_code = status.HTTP_200_OK
 
