@@ -112,7 +112,7 @@ def edit_examination_patient_details(request, examination_id):
 
             if response.status_code == status.HTTP_200_OK and request.GET.get('nextTab'):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
-            else:
+            elif response.status_code != status.HTTP_200_OK:
                 status_code = response.status_code
         else:
             error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] + \

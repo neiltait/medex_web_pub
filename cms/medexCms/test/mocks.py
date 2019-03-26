@@ -551,6 +551,14 @@ UNSUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(None).encode('utf-8')
 
+SUCCESSFUL_PATIENT_DETAILS_UPDATE = Response()
+SUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code = status.HTTP_200_OK
+SUCCESSFUL_PATIENT_DETAILS_UPDATE._content = json.dumps(get_patient_details_load_response_object()).encode('utf-8')
+
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE = Response()
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE._content = json.dumps(None).encode('utf-8')
+
 SUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
 SUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_200_OK
 SUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(get_case_breakdown_response_object()).encode('utf-8')
