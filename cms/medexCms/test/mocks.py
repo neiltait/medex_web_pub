@@ -4,6 +4,8 @@ from requests.models import Response
 from rest_framework import status
 
 from medexCms import settings
+from medexCms.utils import NONE_DATE
+
 
 # Variables/Objects
 
@@ -427,6 +429,20 @@ USERS_EXAMINATION_LIST = {
 
 def get_case_breakdown_response_object():
     return {}
+
+
+#### People
+
+def get_bereaved_representative():
+    return {
+      "fullName": "Jane Doe",
+      "relationship": "Wife",
+      "phoneNumber": "020 12345678",
+      "presentAtDeath": "Yes",
+      "informed": "Yes",
+      "appointmentDate": NONE_DATE,
+      "appointmentTime": ""
+    }
 
 
 #### Datatypes
