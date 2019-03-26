@@ -1,6 +1,6 @@
 from .test.utils import MedExTestCase
 
-from .utils import validate_date
+from .utils import validate_date, parse_datetime
 
 
 class MedexTestUtilsTests(MedExTestCase):
@@ -109,3 +109,15 @@ class MedexUtilsTests(MedExTestCase):
 
     def test_validate_date_returns_false_for_a_invalid_date_with_valid_time_provided(self):
         self.assertIsFalse(validate_date('2019', '2', '31', '12', '00'))
+
+    def test_parse_datetime_returns_a_correct_date_object_when_passed_a_valid_date(self):
+        parsed_date = parse_datetime('2019-03-26T13:29:50.473Z')
+        self.assertEqual(parsed_date.day, 26)
+        self.assertEqual(parsed_date.month, 3)
+        self.assertEqual(parsed_date.year, 2019)
+        self.assertEqual(parsed_date.hour, 13)
+        self.assertEqual(parsed_date.minute, 29)
+
+    def test_parse_datetime_returns_what_it_was_passed_if_passed_a_falsey_argument(self):
+        parsed_date = parse_datetime('')
+        self.assertEqual(parsed_date, '')
