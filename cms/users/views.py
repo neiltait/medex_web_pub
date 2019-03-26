@@ -6,13 +6,12 @@ from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
-
-from locations import request_handler as locations_request_handler
-
 from home.utils import redirect_to_login
+from locations import request_handler as locations_request_handler
+from permissions.forms import PermissionBuilderForm
 
 from . import request_handler
-from .forms import CreateUserForm, PermissionBuilderForm
+from .forms import CreateUserForm
 from .models import User
 
 
