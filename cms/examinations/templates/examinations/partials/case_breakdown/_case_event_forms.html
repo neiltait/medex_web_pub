@@ -4,7 +4,7 @@
     </h3>
 
     <div class="form-picker">
-        <select class="nhsuk-select" id="event-form">
+        <select class="nhsuk-select" id="event-form-picker">
             <option value="" disabled hidden selected>Select an event</option>
             {% for form in forms %}
                 <option value={{ form.id }}>{{ form.name }}</option>
