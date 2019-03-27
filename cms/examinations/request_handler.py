@@ -11,7 +11,6 @@ def get_coroner_statuses_list():
 
 
 def post_new_examination(examination_object, auth_token):
-
     if settings.LOCAL:
         return mocks.SUCCESSFUL_CASE_CREATE
     else:
