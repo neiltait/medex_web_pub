@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block page %}
-  <div class="case-index" style="margin-bottom: 350px;">
+  <div class="case-index">
     <h1 class="page-title">
       ME Dashboard
     </h1>
@@ -19,7 +19,7 @@
         </p>
 
         <p class="overview-body location">
-          A Hospital
+          {{session_user.index_overview.view_location}}
         </p>
       </div>
 
@@ -29,7 +29,7 @@
         </p>
 
         <p class="overview-body">
-          6
+          {{session_user.index_overview.total_cases}}
         </p>
       </div>
 
@@ -39,7 +39,7 @@
         </p>
 
         <p class="overview-body">
-          2
+          {{session_user.index_overview.urgent_cases}}
         </p>
       </div>
     </div>
