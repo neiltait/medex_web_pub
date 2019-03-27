@@ -27,7 +27,11 @@ def post_examination_team(examination_id, medical_examiner, medical_examiners_of
 
 
 def post_new_examination(examination_object, auth_token):
-    return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
+
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_CASE_CREATE
+    else:
+        return MedexRequest.post(auth_token, '%s/cases/create' % settings.API_URL, json.dumps(examination_object))
 
 
 def load_by_id(examination_id, auth_token):
@@ -46,7 +50,7 @@ def load_examinations_index(params, auth_token):
 
 def load_patient_details_by_id(examination_id, auth_token):
     if settings.LOCAL:
-        return mocks.SUCCESSFUL_CASE_LOAD
+        return mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id))
 
@@ -57,4 +61,14 @@ def update_patient_details(examination_id, submission, auth_token):
 
 
 def load_modes_of_disposal(auth_token):
-    return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()
+    if settings.LOCAL:
+        return mocks.LOAD_MODES_OF_DISPOSAL
+    else:
+        return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()
+
+
+def load_case_breakdown_by_id(examination_id, auth_token):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_LOAD_CASE_BREAKDOWN
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_breakdown' % (settings.API_URL, examination_id))

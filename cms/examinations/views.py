@@ -7,7 +7,7 @@ from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails
+from examinations.models import Examination, PatientDetails, CaseBreakdown
 from home.utils import redirect_to_login, redirect_to_landing
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
@@ -25,12 +25,16 @@ def create_examination(request):
     status_code = status.HTTP_200_OK
     form = None
 
-    if request.method == 'POST':
+    if request.POST:
         form = PrimaryExaminationInformationForm(request.POST)
         if form.is_valid():
             response = request_handler.post_new_examination(form.to_object(), user.auth_token)
             if response.status_code == status.HTTP_200_OK:
-                return redirect_to_landing()
+                if 'create-and-continue' in request.POST:
+                    return redirect_to_landing()
+                else:
+                    form = None
+                    status_code = status.HTTP_200_OK
             else:
                 alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
                 status_code = response.status_code
@@ -79,6 +83,7 @@ def edit_examination_patient_details(request, examination_id):
         }
         
         return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+
     status_code = status.HTTP_200_OK
     error_count = 0
     primary_info_form = PrimaryExaminationInformationForm()
@@ -208,3 +213,32 @@ def get_tab_change_modal_config():
             }
         ],
     }
+
+
+def edit_examination_case_breakdown(request, examination_id):
+    user = User.initialise_with_token(request)
+
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    examination = CaseBreakdown.load_by_id(examination_id, user.auth_token)
+
+    if not examination:
+        context = {
+            'session_user': user,
+            'error': NotFoundError('case'),
+        }
+
+        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+
+    status_code = status.HTTP_200_OK
+
+    forms = user.get_forms_for_role()
+
+    context = {
+        'session_user': user,
+        'examination_id': examination_id,
+        'forms': forms
+    }
+
+    return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)

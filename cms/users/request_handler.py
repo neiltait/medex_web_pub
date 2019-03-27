@@ -6,7 +6,7 @@ from medexCms.test import mocks
 
 def validate_session(auth_token):
     if settings.LOCAL:
-        return mocks.SUCCESSFUL_LOAD_USER
+        return mocks.SUCCESSFUL_VALIDATE_SESSION
     else:
         return MedexRequest.post(auth_token, '%s/auth/validate_session' % settings.API_URL)
 
