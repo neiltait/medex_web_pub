@@ -37,3 +37,11 @@ def get_permitted_locations_list(auth_token):
         return mocks.SUCCESSFUL_TRUST_LOAD
     else:
         return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
+
+
+def get_permitted_users(auth_token, location_id):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_MEDICAL_EXAMINERS
+    else:
+        # TODO update to the right end point once we have it
+        return MedexRequest.get(auth_token, "%s/users/medical_examiners" % settings.API_URL).json()
