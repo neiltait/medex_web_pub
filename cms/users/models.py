@@ -11,6 +11,8 @@ from examinations import request_handler as examination_request_handler
 from home import request_handler as home_request_handler
 from home.models import IndexOverview
 
+from locations import request_handler as location_request_handler
+
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
 
@@ -30,6 +32,8 @@ class User:
             self.first_name = obj_dict['firstName']
             self.last_name = obj_dict['lastName']
             self.email_address = obj_dict['email']
+        self.auth_token = None
+        self.id_token = None
         self.index_overview = None
         self.examinations = []
         self.permissions = []
@@ -97,7 +101,7 @@ class User:
         response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
-        
+
         if success:
             for permission in response.json()['permissions']:
                 self.permissions.append(Permission(permission))
@@ -127,6 +131,9 @@ class User:
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
+
+    def get_permitted_locations(self):
+        return location_request_handler.get_permitted_locations_list(self.auth_token)
 
     def get_forms_for_role(self):
         if self.role_type() == self.MEO_ROLE_TYPE:

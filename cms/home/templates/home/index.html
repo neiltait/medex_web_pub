@@ -6,6 +6,11 @@
   <link href="{% sass_src 'scss/home/index.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}
 
+{% block extra_js %}
+  <script src="{% static 'js/shared/search-dropdown.js' %}"></script>
+  <script src="{% static 'js/home/home.js' %}"></script>
+{% endblock %}
+
 {% block page %}
   <div class="case-index">
     <h1 class="page-title">
@@ -118,8 +123,4 @@
       {% endfor %}
     {% endif %}
   </div>
-{% endblock %}
-
-{% block extra_js %}
-      <script src="{% static 'js/home/home.js' %}"></script>
 {% endblock %}

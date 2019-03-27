@@ -15,9 +15,12 @@ def index(request):
         return redirect_to_login()
 
     user.load_examinations()
+    locations = user.get_permitted_locations()
+
 
     context = {
         'session_user': user,
+        'filter_locations': locations,
     }
     return render(request, 'home/index.html', context)
 
