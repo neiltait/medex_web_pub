@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.conf import settings
@@ -8,6 +9,7 @@ from examinations.models import ExaminationOverview
 from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
+from home.models import IndexOverview
 
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
@@ -28,6 +30,7 @@ class User:
             self.first_name = obj_dict['firstName']
             self.last_name = obj_dict['lastName']
             self.email_address = obj_dict['email']
+        self.index_overview = None
         self.examinations = []
         self.permissions = []
 
@@ -102,8 +105,9 @@ class User:
             logger.error(response.status_code)
 
     def load_examinations(self):
+        location = None
         query_params = {
-            "locationId": None,
+            "locationId": location,
             "userId": self.user_id,
             "caseStatus": None,
             "orderBy": "Urgency",
@@ -111,11 +115,12 @@ class User:
             "pageNumber": 1
         }
 
-        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
+        response = examination_request_handler.load_examinations_index(json.dumps(query_params), self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
         if success:
+            self.index_overview = IndexOverview(location, response.json())
             for examination in response.json()['examinations']:
                 self.examinations.append(ExaminationOverview(examination))
         else:
