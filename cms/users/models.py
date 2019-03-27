@@ -12,6 +12,7 @@ from home import request_handler as home_request_handler
 from home.models import IndexOverview
 
 from locations import request_handler as location_request_handler
+from locations.models import Location
 
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
@@ -135,7 +136,11 @@ class User:
             logger.error(response.status_code)
 
     def get_permitted_locations(self):
-        return location_request_handler.get_permitted_locations_list(self.auth_token)
+        permitted_locations = []
+        location_data = location_request_handler.get_permitted_locations_list(self.auth_token)
+        for location in location_data:
+            permitted_locations.append(Location().set_values(location))
+        return permitted_locations
 
     def get_forms_for_role(self):
         if self.role_type == self.MEO_ROLE_TYPE:
