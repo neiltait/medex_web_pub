@@ -12,7 +12,7 @@
       this.selectionField = this.container.find('.selection-field')[0];
       this.searchField = $(this.container.find('input[name=searchField]'));
       this.optionList = $(this.container.find('.options-list'));
-      this.placeholder = $(this.optionList.find('#placeholder'));
+      this.placeholder = $(this.optionList.find('.placeholder'));
       console.info('Initialising search dropdown', this.container);
       this.initialiseOptions();
       this.watchForFocus();
