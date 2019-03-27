@@ -10,22 +10,6 @@ def get_coroner_statuses_list():
     return [{'status': 'blocked'}]
 
 
-def post_examination_team(examination_id, medical_examiner, medical_examiners_officer, auth_token):
-    if settings.LOCAL:
-        if medical_examiner.user_id == 1:
-            return mocks.UNSUCCESSFUL_POST_EXAMINATION_TEAM
-        else:
-            return mocks.SUCCESSFUL_POST_EXAMINATION_TEAM
-    else:
-        payload = {
-            'medical_examiner': medical_examiner.user_id,
-            'medical_examiner_officer': medical_examiners_officer.user_id,
-        }
-        return MedexRequest.post(auth_token,
-                                 url='%s/examinations/%s/examination-team' % (settings.API_URL, examination_id),
-                                 data=payload)
-
-
 def post_new_examination(examination_object, auth_token):
 
     if settings.LOCAL:
@@ -57,6 +41,18 @@ def load_patient_details_by_id(examination_id, auth_token):
 
 def update_patient_details(examination_id, submission, auth_token):
     return MedexRequest.put(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id),
+                            submission)
+
+
+def load_medical_team_by_id(examination_id, auth_token):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_MEDICAL_TEAM_LOAD
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id))
+
+
+def update_medical_team(examination_id, submission, auth_token):
+    return MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
                             submission)
 
 

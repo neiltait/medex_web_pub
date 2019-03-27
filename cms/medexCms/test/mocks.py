@@ -6,7 +6,6 @@ from rest_framework import status
 from medexCms import settings
 from medexCms.utils import NONE_DATE
 
-
 # Variables/Objects
 
 #### Sessions
@@ -56,28 +55,28 @@ user_dict = {
 CREATED_PERMISSION_ID = 1
 
 PERMISSION_OBJECT = {
-      "permissionId": "123-456-789",
-      "userId": "abc-def-ghi",
-      "locationId": "jkl-mno-pqr",
-      "userRole": 0,
-  }
+    "permissionId": "123-456-789",
+    "userId": "abc-def-ghi",
+    "locationId": "jkl-mno-pqr",
+    "userRole": 0,
+}
 
 USER_PERMISSION_RESPONSE = {
-  "permissions": [
-      PERMISSION_OBJECT
-  ],
-  "errors": {
-    "additionalProp1": [
-      "string"
+    "permissions": [
+        PERMISSION_OBJECT
     ],
-    "additionalProp2": [
-      "string"
-    ],
-    "additionalProp3": [
-      "string"
-    ]
-  },
-  "success": True
+    "errors": {
+        "additionalProp1": [
+            "string"
+        ],
+        "additionalProp2": [
+            "string"
+        ],
+        "additionalProp3": [
+            "string"
+        ]
+    },
+    "success": True
 }
 
 #### Locations
@@ -131,21 +130,21 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
 ]
 
 SUCCESSFUL_MEDICAL_EXAMINERS = [{
-        'id': '1',
-        'name': 'Dr Alicia Anders',
-    }, {
-        'id': '2',
-        'name': 'Dr Brandon Weatherby',
-    }, {
-        'id': '3',
-        'name': 'Dr Charles Lighterman',
-    }, {
-        'id': '4',
-        'name': 'Dr Subhashine Sanapala',
-    }, {
-        'id': '5',
-        'name': 'Dr Ore Thompson',
-    }
+    'id': '1',
+    'name': 'Dr Alicia Anders',
+}, {
+    'id': '2',
+    'name': 'Dr Brandon Weatherby',
+}, {
+    'id': '3',
+    'name': 'Dr Charles Lighterman',
+}, {
+    'id': '4',
+    'name': 'Dr Subhashine Sanapala',
+}, {
+    'id': '5',
+    'name': 'Dr Ore Thompson',
+}
 ]
 
 SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [
@@ -363,6 +362,60 @@ def get_patient_details_load_response_object():
     }
 
 
+def get_medical_team_load_response_object():
+    return {
+        "consultantResponsible": {
+            "name": "Peter Hipkiss",
+            "role": "Oncologist",
+            "organisation": "St Thomas's hospital",
+            "phone": "12345",
+            "notes": ""
+        },
+        "consultantsOther": [],
+        "generalPractitioner": {
+            "name": "",
+            "role": "",
+            "organisation": "",
+            "phone": "",
+            "notes": ""
+        },
+        "qap": {
+            "name": "",
+            "role": "",
+            "organisation": "",
+            "phone": "",
+            "notes": ""
+        },
+        "nursingTeamInformation": "",
+        "medicalExaminer": {
+            "userId": "string",
+            "firstName": "",
+            "lastName": "",
+            "email": "",
+            "userRole": "MedicalExaminerOfficer"
+        },
+        "medicalExaminerOfficer": {
+            "userId": "string",
+            "firstName": "",
+            "lastName": "",
+            "email": "",
+            "userRole": "MedicalExaminerOfficer"
+        },
+        "errors": {
+            "additionalProp1": [
+                ""
+            ],
+            "additionalProp2": [
+                ""
+            ],
+            "additionalProp3": [
+                ""
+            ]
+        },
+        "success": "true"
+    }
+
+
 USERS_EXAMINATION_LIST = {
     "examinations": [
         {
@@ -440,23 +493,23 @@ def get_case_breakdown_response_object():
 
 def get_bereaved_representative():
     return {
-      "fullName": "Jane Doe",
-      "relationship": "Wife",
-      "phoneNumber": "020 12345678",
-      "presentAtDeath": "Yes",
-      "informed": "Yes",
-      "appointmentDate": NONE_DATE,
-      "appointmentTime": ""
+        "fullName": "Jane Doe",
+        "relationship": "Wife",
+        "phoneNumber": "020 12345678",
+        "presentAtDeath": "Yes",
+        "informed": "Yes",
+        "appointmentDate": NONE_DATE,
+        "appointmentTime": ""
     }
 
 
 #### Datatypes
 
 LOAD_MODES_OF_DISPOSAL = {
-  "Cremation": 0,
-  "Burial": 1,
-  "BuriedAtSea": 2,
-  "Repatriation": 3
+    "Cremation": 0,
+    "Burial": 1,
+    "BuriedAtSea": 2,
+    "Repatriation": 3
 }
 
 # Responses
@@ -579,3 +632,7 @@ SUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(get_case_breakdown_response
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_MEDICAL_TEAM_LOAD = Response()
+SUCCESSFUL_MEDICAL_TEAM_LOAD.status_code = status.HTTP_200_OK
+SUCCESSFUL_MEDICAL_TEAM_LOAD._content = json.dumps(get_medical_team_load_response_object()).encode('utf-8')
