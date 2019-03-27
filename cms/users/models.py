@@ -97,7 +97,7 @@ class User:
         response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
-
+        
         if success:
             for permission in response.json()['permissions']:
                 self.permissions.append(Permission(permission))
@@ -105,12 +105,14 @@ class User:
             logger.error(response.status_code)
 
     def load_examinations(self):
-        location = None
+        location = ''
+        user = self.user_id if self.role_type() == self.ME_ROLE_TYPE else ''
         query_params = {
             "locationId": location,
-            "userId": self.user_id,
-            "caseStatus": None,
+            "userId": user,
+            "caseStatus": '',
             "orderBy": "Urgency",
+            "openCases": 'true',
             "pageSize": 20,
             "pageNumber": 1
         }
