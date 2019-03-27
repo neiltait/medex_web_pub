@@ -4,6 +4,8 @@ from requests.models import Response
 from rest_framework import status
 
 from medexCms import settings
+from medexCms.utils import NONE_DATE
+
 
 # Variables/Objects
 
@@ -14,8 +16,10 @@ AUTH_COOKIES = {
     settings.ID_TOKEN_NAME: "8a89be6d-70df-4b21-9d6e-82873d7ff1b0"
 }
 
+ACCESS_TOKEN = "c15be3d1-513f-49dc-94f9-47449c1cfeb8"
+
 AUTH_TOKEN = {
-    "access_token": "c15be3d1-513f-49dc-94f9-47449c1cfeb8",
+    "access_token": ACCESS_TOKEN,
     "id_token": "8a89be6d-70df-4b21-9d6e-82873d7ff1b0",
     "token_type": "Bearer",
     "expires_in": 3600,
@@ -51,14 +55,16 @@ user_dict = {
 
 CREATED_PERMISSION_ID = 1
 
-USER_PERMISSION = {
+PERMISSION_OBJECT = {
+      "permissionId": "123-456-789",
+      "userId": "abc-def-ghi",
+      "locationId": "jkl-mno-pqr",
+      "userRole": 0,
+  }
+
+USER_PERMISSION_RESPONSE = {
   "permissions": [
-      {
-          "permissionId": "123-456-789",
-          "userId": "abc-def-ghi",
-          "locationId": "jkl-mno-pqr",
-          "userRole": 0,
-      }
+      PERMISSION_OBJECT
   ],
   "errors": {
     "additionalProp1": [
@@ -190,7 +196,7 @@ SECONDARY_EXAMINATION_DATA = {
 }
 
 
-def get_bereaved_examination_data():
+def get_bereaved_examination_form_data():
     return {
         'bereaved_name_1': 'Anne Smith',
         'relationship_1': 'Wife',
@@ -427,6 +433,20 @@ def get_case_breakdown_response_object():
     return {}
 
 
+#### People
+
+def get_bereaved_representative():
+    return {
+      "fullName": "Jane Doe",
+      "relationship": "Wife",
+      "phoneNumber": "020 12345678",
+      "presentAtDeath": "Yes",
+      "informed": "Yes",
+      "appointmentDate": NONE_DATE,
+      "appointmentTime": ""
+    }
+
+
 #### Datatypes
 
 LOAD_MODES_OF_DISPOSAL = {
@@ -493,7 +513,7 @@ UNSUCCESSFUL_PERMISSION_CREATION._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_PERMISSION_LOAD = Response()
 SUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_200_OK
-SUCCESSFUL_PERMISSION_LOAD._content = json.dumps(USER_PERMISSION).encode('utf-8')
+SUCCESSFUL_PERMISSION_LOAD._content = json.dumps(USER_PERMISSION_RESPONSE).encode('utf-8')
 
 UNSUCCESSFUL_PERMISSION_LOAD = Response()
 UNSUCCESSFUL_PERMISSION_LOAD.status_code = status.HTTP_400_BAD_REQUEST
@@ -532,6 +552,14 @@ SUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(get_patient_details_load_r
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_PATIENT_DETAILS_UPDATE = Response()
+SUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code = status.HTTP_200_OK
+SUCCESSFUL_PATIENT_DETAILS_UPDATE._content = json.dumps(get_patient_details_load_response_object()).encode('utf-8')
+
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE = Response()
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+UNSUCCESSFUL_PATIENT_DETAILS_UPDATE._content = json.dumps(None).encode('utf-8')
 
 SUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
 SUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_200_OK

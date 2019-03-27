@@ -6,8 +6,10 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+from examinations.models import Examination, PatientDetails
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
+from medexCms.utils import NONE_DATE
 
 
 @patch('examinations.request_handler.load_modes_of_disposal', return_value=mocks.LOAD_MODES_OF_DISPOSAL)
@@ -102,54 +104,112 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
-    @patch('people.request_handler.get_medical_examiners_officers_list',
-           return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
     def test_landing_on_edit_page_redirects_to_edit_patient_details(self, mock_modes_of_disposal, mock_locations_list,
-                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
-                                    mock_permission_load):
+                                    mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
 
-    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
-    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
-    @patch('people.request_handler.get_medical_examiners_officers_list',
-           return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
+    #### Patient details tests
+
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.UNSUCCESSFUL_PATIENT_DETAILS_LOAD)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
-    def test_landing_on_edit_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self, mock_modes_of_disposal,
-                 mock_locations_list, mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
-                 mock_permission_load):
+    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code\
+                    (self,mock_modes_of_disposal, mock_user_validation, mock_case_load, mock_permission_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
+    @patch('users.request_handler.validate_session', return_value=mocks.UNSUCCESSFUL_VALIDATE_SESSION)
+    def test_landing_on_edit_patient_details_page_redirects_to_landing_when_logged_out(self, mock_modes_of_disposal,
+               mock_user_validation):
+        response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')
+
     @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
-    @patch('people.request_handler.get_medical_examiners_list', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS)
-    @patch('people.request_handler.get_medical_examiners_officers_list',
-           return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS)
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
-    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_modes_of_disposal, mock_locations_list,
-                                    mock_me_offices_list, mock_mes, mock_meos, mock_user_validation, mock_case_load,
-                                    mock_permission_load):
+    def test_landing_on_edit_patient_details_page_loads_the_correct_template(self, mock_modes_of_disposal,
+                mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load):
+        self.set_auth_cookies()
+        response = self.client.get('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    def test_submitting_a_form_with_missing_required_fields_returns_bad_request(self, mock_modes_of_disposal,
+                mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load):
         self.set_auth_cookies()
         form_data = mocks.get_minimal_create_form_data()
-        form_data.update(mocks.get_bereaved_examination_data())
+        form_data.update(mocks.get_bereaved_examination_form_data())
         form_data.pop('first_name', None)
         response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    @patch('examinations.request_handler.update_patient_details', return_value=mocks.UNSUCCESSFUL_PATIENT_DETAILS_UPDATE)
+    def test_submitting_a_valid_form_that_fails_on_the_api_returns_the_code_from_the_api(self, mock_modes_of_disposal,
+                mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load,
+                mock_update):
+        self.set_auth_cookies()
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.update(mocks.get_bereaved_examination_form_data())
+        response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code, mocks.UNSUCCESSFUL_PATIENT_DETAILS_UPDATE.status_code)
+        self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    @patch('examinations.request_handler.update_patient_details', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_UPDATE)
+    def test_submitting_a_valid_form_that_passes_on_the_api_returns_reloads_the_form(self, mock_modes_of_disposal,
+             mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load,
+                                                                                         mock_update):
+        self.set_auth_cookies()
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.update(mocks.get_bereaved_examination_form_data())
+        response = self.client.post('/cases/%s/patient-details' % mocks.CREATED_EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('locations.request_handler.get_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
+    @patch('locations.request_handler.get_me_offices_list', return_value=mocks.SUCCESSFUL_ME_OFFICES_LOAD)
+    @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_LOAD)
+    @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    @patch('examinations.request_handler.update_patient_details', return_value=mocks.SUCCESSFUL_PATIENT_DETAILS_UPDATE)
+    def test_submitting_a_valid_form_that_passes_on_the_api_returns_reloads_the_form(self, mock_modes_of_disposal,
+             mock_locations_list, mock_me_offices_list, mock_user_validation, mock_case_load, mock_permission_load,
+                                                                                     mock_update):
+        self.set_auth_cookies()
+        form_data = mocks.get_minimal_create_form_data()
+        form_data.update(mocks.get_bereaved_examination_form_data())
+        response = self.client.post('/cases/%s/patient-details?nextTab=medical-team' % mocks.CREATED_EXAMINATION_ID,
+                                    form_data)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/cases/%s/medical-team' % mocks.CREATED_EXAMINATION_ID)
+
+    #### Case breakdown tests
 
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
@@ -435,6 +495,65 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
         self.assertIs(form.out_of_hours, True)
 
+    def test_form_correctly_passes_dob_and_dod_for_request_if_known(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '2'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '20'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form_data.pop('date_of_birth_not_known', None)
+        form_data.pop('date_of_death_not_known', None)
+        form = PrimaryExaminationInformationForm(form_data)
+
+        result = form.to_object()
+        self.assertNotEqual(result['dateOfBirth'], NONE_DATE)
+        self.assertNotEqual(result['dateOfDeath'], NONE_DATE)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_true_if_no_dates_given(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsTrue(result)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_false_if_dod_is_before_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '20'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '2'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsFalse(result)
+
+    def test_dates_are_blank_or_death_is_after_birth_date_returns_true_if_dod_is_after_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '2'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '20'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.dates_are_blank_or_death_is_after_birth_date()
+        self.assertIsTrue(result)
+
+    def test_form_returns_is_invalid_if_dod_is_before_dob(self):
+        form_data = mocks.get_minimal_create_form_data()
+        form_data['day_of_birth'] = '20'
+        form_data['month_of_birth'] = '2'
+        form_data['year_of_birth'] = '2019'
+        form_data['day_of_death'] = '2'
+        form_data['month_of_death'] = '2'
+        form_data['year_of_death'] = '2019'
+        form = PrimaryExaminationInformationForm(form_data)
+        result = form.is_valid()
+        self.assertIsFalse(result)
+
+
     #### Secondary Info Form tests
 
     def test_secondary_form_initialised_empty_returns_as_valid(self):
@@ -452,34 +571,43 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_content_returns_as_valid(self):
-        form = BereavedInformationForm(mocks.get_bereaved_examination_data())
+        form = BereavedInformationForm(mocks.get_bereaved_examination_form_data())
         self.assertIsTrue(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_date1_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['year_of_appointment_1'] = ''
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date1_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['day_of_appointment_1'] = '31'
         form_data['month_of_appointment_1'] = '2'
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_incomplete_date2_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['year_of_appointment_2'] = ''
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
 
     def test_bereaved_form_initialised_with_invalid_date2_returns_as_invalid(self):
-        form_data = mocks.get_bereaved_examination_data()
+        form_data = mocks.get_bereaved_examination_form_data()
         form_data['day_of_appointment_2'] = '31'
         form_data['month_of_appointment_2'] = '2'
         form = BereavedInformationForm(form_data)
         self.assertIsFalse(form.is_valid())
+
+    def test_form_initialised_from_db_correctly_sets_representatives(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['representatives'].append(mocks.get_bereaved_representative())
+        patient_details = PatientDetails(loaded_data)
+        form = BereavedInformationForm()
+        form.set_values_from_instance(patient_details)
+        self.assertEqual(form.bereaved_name_1, loaded_data['representatives'][0]['fullName'])
+        self.assertEqual(form.bereaved_name_2, '')
 
     #### Urgency Info Form tests
 
@@ -510,3 +638,53 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_medical_team_assigned_team_form_initialised_with_content_returns_as_valid(self):
         form = MedicalTeamAssignedTeamForm(mocks.get_assigned_medical_team_form_data())
         self.assertIsTrue(form.is_valid())
+
+
+class ExaminationsModelsTests(MedExTestCase):
+
+    #### Examination tests
+
+    @patch('examinations.request_handler.load_by_id', return_value=mocks.SUCCESSFUL_CASE_LOAD)
+    def test_load_by_id_returns_an_examination_instance_if_found(self, mock_case_load):
+        examination = Examination.load_by_id(mocks.CREATED_EXAMINATION_ID, mocks.ACCESS_TOKEN)
+        self.assertEqual(type(examination), Examination)
+
+    @patch('examinations.request_handler.load_by_id', return_value=mocks.UNSUCCESSFUL_CASE_LOAD)
+    def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
+        examination = Examination.load_by_id(mocks.CREATED_EXAMINATION_ID, mocks.ACCESS_TOKEN)
+        self.assertIsNone(examination)
+
+    #### PatientDetails tests
+
+    def test_initialising_with_the_none_date_results_in_no_dob(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['dateOfBirth'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_birth)
+        self.assertIsNone(patient_details.day_of_birth)
+        self.assertIsNone(patient_details.month_of_birth)
+        self.assertIsNone(patient_details.year_of_birth)
+
+    def test_initialising_with_the_none_date_results_in_no_dod(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        loaded_data['dateOfDeath'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_death)
+        self.assertIsNone(patient_details.day_of_death)
+        self.assertIsNone(patient_details.month_of_death)
+        self.assertIsNone(patient_details.year_of_death)
+
+    def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        mode_of_disposal = list(mocks.LOAD_MODES_OF_DISPOSAL.keys())[0]
+        loaded_data['modeOfDisposal'] = mocks.LOAD_MODES_OF_DISPOSAL[mode_of_disposal]
+        patient_details = PatientDetails(loaded_data, mocks.LOAD_MODES_OF_DISPOSAL)
+        self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
+
+    def test_initialising_with_a_bereaved_sets_the_representatives(self):
+        loaded_data = mocks.get_patient_details_load_response_object()
+        bereaved = mocks.get_bereaved_representative()
+        loaded_data['representatives'].append(bereaved)
+        patient_details = PatientDetails(loaded_data, mocks.LOAD_MODES_OF_DISPOSAL)
+        self.assertEqual(len(patient_details.representatives), 1)
+        self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
