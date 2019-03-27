@@ -12,7 +12,7 @@ class BereavedRepresentative:
         self.appointment_time = obj_dict.get("appointmentTime")
 
         if not is_empty_date(obj_dict.get("appointmentDate")) and obj_dict.get("appointmentDate") is not None:
-            self.appointment_date = parse_datetime(obj_dict.get("dateOfBirth"))
+            self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
             self.appointment_day = self.appointment_date.day
             self.appointment_month = self.appointment_date.month
             self.appointment_year = self.appointment_date.year
