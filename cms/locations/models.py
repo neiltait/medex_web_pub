@@ -14,6 +14,12 @@ class Location:
         location.location_id = location_id
         return location
 
+    def set_values(self, obj_dict):
+        self.location_id = obj_dict.get('locationId')
+        self.name = obj_dict.get('name')
+        self.parent_id = obj_dict.get('parentId')
+        return self
+
     def load_permitted_users(self, auth_token):
         users = request_handler.get_permitted_users(auth_token, self.location_id)
         return users
