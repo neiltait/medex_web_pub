@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 
 
 class User:
-    ME_ROLE_TYPE = 'ME'
-    MEO_ROLE_TYPE = 'MEO'
+    ME_ROLE_TYPE = 'MedicalExaminer'
+    MEO_ROLE_TYPE = 'MedicalExaminerOfficer'
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -57,9 +57,9 @@ class User:
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    @property
     def role_type(self):
-        # TODO work out role type from permissions
-        return self.MEO_ROLE_TYPE
+        return self.permissions[0].role_type
 
     def check_logged_in(self):
         if self.auth_token:
