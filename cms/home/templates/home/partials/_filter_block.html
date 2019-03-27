@@ -25,7 +25,9 @@
           <option value="" disabled hidden selected>Select a person</option>
           {% if filter_people %}
             {% for person in filter_people %}
-              <option value={{ person.id }} {% if person.id == form.person %}selected{% endif %}>{{ person.name }}</option>
+              <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
+                {{ person.name }}
+              </option>
             {% endfor %}
           {% endif %}
         </select>
