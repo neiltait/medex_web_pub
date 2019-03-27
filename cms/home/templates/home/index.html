@@ -45,6 +45,54 @@
     </div>
 
     <div class="filters-block">
+      <form id="index-filters-form">
+        <p>
+          Filter cases by place and person
+        </p>
+
+        <div class="nhsuk-grid-row">
+          <div class="nhsuk-grid-column-one-half">
+            <div id='location-selector' class="nhsuk-form-group">
+              <div class="search-dropdown">
+                <input id="location" class='selection-field' type="text" name="location" value="{{form.location}}">
+
+                <div class='search-field'>
+                  <input type="text" name="searchField" placeholder="Search for a location">
+                </div>
+
+                <div class="options-list">
+                  <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
+
+                  {% for location in filter_locations %}
+                    <option value="{{location.id}}">{{location.name}}</option>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nhsuk-grid-column-one-half">
+            <div id='person-selector' class="nhsuk-form-group">
+              <div class="search-dropdown">
+                <input id="person" class='selection-field' type="text" name="person" value="{{form.person}}">
+
+                <div class='search-field'>
+                  <input type="text" name="searchField" placeholder="Search for a person">
+                </div>
+
+                <div class="options-list">
+                  <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
+
+                  {% for person in filter_people %}
+                    <option value="{{person.id}}">{{person.name}}</option>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
       <img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">
     </div>
 
