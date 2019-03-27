@@ -499,7 +499,7 @@ class UrgencyInformationForm:
 class MedicalTeamMembersForm:
 
     def __init__(self, request=None):
-        self.initialiseErrors()
+        self.initialise_errors()
         if request:
             self.initialise_form_from_data(request)
         else:
@@ -594,17 +594,39 @@ class MedicalTeamMembersForm:
 
         return self.errors["count"] == 0
 
-    def initialiseErrors(self):
+    def initialise_errors(self):
         self.errors = {"count": 0}
+
+    def to_object(self):
+        consultants_other = []
+        if self.consultant_2.has_valid_name():
+            consultants_other.append(self.consultant_2.to_object())
+        if self.consultant_3.has_valid_name():
+            consultants_other.append(self.consultant_3.to_object())
+
+        return {
+            "consultantResponsible": self.consultant_1.to_object(),
+            "consultantsOther": consultants_other,
+            "generalPractitioner": self.gp.to_object(),
+            "qap": self.qap.to_object(),
+            "nursingTeamInformation": self.nursing_team,
+            "medicalExaminer": {
+                "userId": self.medical_examiner,
+            },
+            "medicalExaminerOfficer": {
+                "userId": self.medical_examiners_officer,
+            }
+        }
 
 
 class MedicalTeamMember:
 
-    def __init__(self, name='', role='', organisation='', phone_number=''):
+    def __init__(self, name='', role='', organisation='', phone_number='', notes=''):
         self.name = name.strip() if name else ''
         self.role = role
         self.organisation = organisation
         self.phone_number = phone_number
+        self.notes = notes
 
     def has_name(self):
         return self.name and len(self.name.strip()) > 0
@@ -618,6 +640,15 @@ class MedicalTeamMember:
             return text_field_is_not_null(self.name)
         else:
             return True
+
+    def to_object(self):
+        return {
+            "name": self.name,
+            "role": self.role,
+            "organisation": self.organisation,
+            "phone": self.phone_number,
+            "notes": self.notes
+        }
 
 
 def text_field_is_not_null(field):

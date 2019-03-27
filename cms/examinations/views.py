@@ -8,7 +8,7 @@ from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
 from examinations.models import Examination, PatientDetails, CaseBreakdown
-from home.utils import redirect_to_login, redirect_to_landing
+from home.utils import redirect_to_login, redirect_to_landing, render_404
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -69,20 +69,14 @@ def edit_examination(request, examination_id):
 
 
 def edit_examination_patient_details(request, examination_id):
-    user = User.initialise_with_token(request)
 
+    user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
 
     examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-
     if not examination:
-        context = {
-            'session_user': user,
-            'error': NotFoundError('case'),
-        }
-        
-        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
+        return render_404(request, user, 'case')
 
     status_code = status.HTTP_200_OK
     error_count = 0
@@ -145,38 +139,52 @@ def edit_examination_patient_details(request, examination_id):
 
 
 def edit_examination_medical_team(request, examination_id):
-    user = User.initialise_with_token(request)
 
+    # get the current user
+    user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
 
+    # get the requested examination
     examination = Examination.load_by_id(examination_id, user.auth_token)
-
     if not examination:
-        context = {
-            'session_user': user,
-            'error': NotFoundError('case'),
-        }
-        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
-
-    medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
-    status_code = status.HTTP_200_OK
-    errors = {'count': 0}
-    medical_team_members_form = None
+        return render_404(request, user, 'case')
 
     if request.method == 'POST':
-        medical_team_members_form = MedicalTeamMembersForm(request.POST)
+        # attempt to post and get return form
+        medical_team_members_form, status_code, errors = __post_medical_team_form(request)
+    else:
+        # get a simple form
+        medical_team_members_form, status_code, errors = __get_medical_team_form()
 
-        forms_valid = medical_team_members_form.is_valid()
-        if forms_valid:
-            print('forms valid')
-        else:
-            errors = medical_team_members_form.errors
-            status_code = status.HTTP_400_BAD_REQUEST
+    # render the tab
+    return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user)
 
+
+def __get_medical_team_form():
+    medical_team_members_form = None
+    status_code = status.HTTP_200_OK
+    errors = {'count': 0}
+    return medical_team_members_form, status_code, errors
+
+
+def __post_medical_team_form(request):
+    medical_team_members_form = MedicalTeamMembersForm(request.POST)
+    forms_valid = medical_team_members_form.is_valid()
+    if forms_valid:
+        print('forms valid')
+        status_code = status.HTTP_200_OK
+        errors = {'count: 0'}
+    else:
+        errors = medical_team_members_form.errors
+        status_code = status.HTTP_400_BAD_REQUEST
+    return medical_team_members_form, status_code, errors
+
+
+def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user):
+    medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
     modal_config = get_tab_change_modal_config()
-
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -187,7 +195,6 @@ def edit_examination_medical_team(request, examination_id):
         'errors': errors,
         'tab_modal': modal_config,
     }
-
     return render(request, 'examinations/edit_medical_team.html', context, status=status_code)
 
 
