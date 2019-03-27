@@ -16,7 +16,7 @@ def index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    people = []
+    people = False
 
     if request.method == 'GET':
         user.load_examinations()
