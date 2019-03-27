@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
+from home.forms import IndexFilterForm
+from locations.models import Location
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
@@ -14,13 +16,23 @@ def index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    user.load_examinations()
-    locations = user.get_permitted_locations()
+    people = []
 
+    if request.method == 'GET':
+        user.load_examinations()
+        form = IndexFilterForm()
+    elif request.method == 'POST':
+        form = IndexFilterForm(request.POST)
+        user.load_examinations(location=form.location, person=form.person)
+        filter_location = Location.initialise_with_id(request.POST.get('location'))
+        people = filter_location.load_permitted_users(user.auth_token)
+    locations = user.get_permitted_locations()
 
     context = {
         'session_user': user,
         'filter_locations': locations,
+        'filter_people': people,
+        'form': form
     }
     return render(request, 'home/index.html', context)
 
