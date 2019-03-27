@@ -12,13 +12,22 @@ def validate_session(auth_token):
 
 
 def create_user(user_object, auth_token):
-    return MedexRequest.post(auth_token, '%s/users' % settings.API_URL, user_object)
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_USER_CREATION
+    else:
+        return MedexRequest.post(auth_token, '%s/users' % settings.API_URL, user_object)
 
 
 def load_by_id(user_id, auth_token):
-    return MedexRequest.get(auth_token, '%s/users/%s' % (settings.API_URL, user_id))
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_LOAD_USER
+    else:
+        return MedexRequest.get(auth_token, '%s/users/%s' % (settings.API_URL, user_id))
 
 
 def create_permission(permission, user_id, auth_token):
-    return MedexRequest.post(auth_token, '%s/users/%s/permissions' % (settings.API_URL, user_id), permission)
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_PERMISSION_CREATION
+    else:
+        return MedexRequest.post(auth_token, '%s/users/%s/permissions' % (settings.API_URL, user_id), permission)
 
