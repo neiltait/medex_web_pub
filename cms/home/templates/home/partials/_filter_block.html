@@ -1,48 +1,34 @@
+{% load staticfiles %}
+
 <div id="filter-block" class="filters-block">
-  <form id="index-filters-form">
+  <form id="index-filters-form" action="{% url 'index' %}" method="post">
+    {% csrf_token %}
     <p>
       Filter cases by place and person
     </p>
 
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-one-half">
-        <div id='location-selector' class="nhsuk-form-group">
-          <div class="search-dropdown">
-            <input id="location" class='selection-field' type="text" name="location" value="{{form.location}}">
-
-            <div class='search-field'>
-              <input type="text" name="searchField" placeholder="Search for a location">
-            </div>
-
-            <div class="options-list">
-              <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
-
-              {% for location in filter_locations %}
-                <option value="{{location.id}}">{{location.name}}</option>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
+        <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}">
+          <option value="" disabled hidden selected>Select a location</option>
+          {% for location in filter_locations %}
+            <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
+              {{ location.name }}
+            </option>
+          {% endfor %}
+        </select>
       </div>
 
       <div class="nhsuk-grid-column-one-half">
-        <div id='person-selector' class="nhsuk-form-group">
-          <div class="search-dropdown">
-            <input id="person" class='selection-field' type="text" name="person" value="{{form.person}}">
-
-            <div class='search-field'>
-              <input type="text" name="searchField" placeholder="Search for a person">
-            </div>
-
-            <div class="options-list">
-              <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
-
-              {% for person in filter_people %}
-                <option value="{{person.id}}">{{person.name}}</option>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
+        <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}"
+          {% if not filter_people %}disabled{% endif %}>
+          <option value="" disabled hidden selected>Select a person</option>
+          {% if filter_people %}
+            {% for person in filter_people %}
+              <option value={{ person.id }} {% if person.id == form.person %}selected{% endif %}>{{ person.name }}</option>
+            {% endfor %}
+          {% endif %}
+        </select>
       </div>
     </div>
   </form>
