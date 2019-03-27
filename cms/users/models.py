@@ -108,9 +108,11 @@ class User:
         else:
             logger.error(response.status_code)
 
-    def load_examinations(self):
-        location = ''
-        user = self.user_id if self.role_type() == self.ME_ROLE_TYPE else ''
+    def load_examinations(self, location='', person=''):
+        if person:
+            user = person
+        else:
+            user = self.user_id if self.role_type == self.ME_ROLE_TYPE else ''
         query_params = {
             "locationId": location,
             "userId": user,
