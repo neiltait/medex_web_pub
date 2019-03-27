@@ -87,7 +87,7 @@ class ExaminationOverview:
 
     def calc_age(self):
         return self.date_of_death.year - self.date_of_birth.year - (
-                    (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+                (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
 
     def calc_last_admission_days_ago(self):
         delta = datetime.now() - self.last_admission
@@ -202,3 +202,39 @@ class CaseBreakdown:
             return CaseBreakdown(response.json())
         else:
             return None
+
+
+class MedicalTeamMember:
+
+    def __init__(self, name='', role='', organisation='', phone_number='', notes=''):
+        self.name = name.strip() if name else ''
+        self.role = role
+        self.organisation = organisation
+        self.phone_number = phone_number
+        self.notes = notes
+
+    def has_name(self):
+        return self.name and len(self.name.strip()) > 0
+
+    def has_valid_name(self):
+        return len(self.name.strip()) < 250
+
+    def has_name_if_needed(self):
+        if text_field_is_not_null(self.role) or text_field_is_not_null(self.organisation) or text_field_is_not_null(
+                self.phone_number):
+            return text_field_is_not_null(self.name)
+        else:
+            return True
+
+    def to_object(self):
+        return {
+            "name": self.name,
+            "role": self.role,
+            "organisation": self.organisation,
+            "phone": self.phone_number,
+            "notes": self.notes
+        }
+
+
+def text_field_is_not_null(field):
+    return field and len(field.strip()) > 0

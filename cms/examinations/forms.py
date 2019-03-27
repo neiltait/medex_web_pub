@@ -2,6 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
+from examinations.models import MedicalTeamMember
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
 
 
@@ -617,39 +618,3 @@ class MedicalTeamMembersForm:
                 "userId": self.medical_examiners_officer,
             }
         }
-
-
-class MedicalTeamMember:
-
-    def __init__(self, name='', role='', organisation='', phone_number='', notes=''):
-        self.name = name.strip() if name else ''
-        self.role = role
-        self.organisation = organisation
-        self.phone_number = phone_number
-        self.notes = notes
-
-    def has_name(self):
-        return self.name and len(self.name.strip()) > 0
-
-    def has_valid_name(self):
-        return len(self.name.strip()) < 250
-
-    def has_name_if_needed(self):
-        if text_field_is_not_null(self.role) or text_field_is_not_null(self.organisation) or text_field_is_not_null(
-                self.phone_number):
-            return text_field_is_not_null(self.name)
-        else:
-            return True
-
-    def to_object(self):
-        return {
-            "name": self.name,
-            "role": self.role,
-            "organisation": self.organisation,
-            "phone": self.phone_number,
-            "notes": self.notes
-        }
-
-
-def text_field_is_not_null(field):
-    return field and len(field.strip()) > 0
