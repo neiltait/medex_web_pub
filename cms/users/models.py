@@ -118,7 +118,7 @@ class User:
             "locationId": location,
             "userId": user,
             "caseStatus": '',
-            "orderBy": "Urgency",
+            "orderBy": "CaseCreated",
             "openCases": 'true',
             "pageSize": 20,
             "pageNumber": 1
