@@ -59,7 +59,7 @@ PERMISSION_OBJECT = {
       "permissionId": "123-456-789",
       "userId": "abc-def-ghi",
       "locationId": "jkl-mno-pqr",
-      "userRole": 0,
+      "userRole": 1,
   }
 
 USER_PERMISSION_RESPONSE = {
