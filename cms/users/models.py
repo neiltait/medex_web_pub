@@ -60,7 +60,10 @@ class User:
 
     @property
     def role_type(self):
-        return self.permissions[0].role_type
+        # TODO This is changed to force the system into accepting us as an ME.
+        #  Remove after development of ME only features
+        return self.ME_ROLE_TYPE
+        # return self.permissions[0].role_type
 
     def check_logged_in(self):
         if self.auth_token:
