@@ -52,7 +52,7 @@ class User:
 
     def role_type(self):
         # TODO work out role type from permissions
-        return self.MEO_ROLE_TYPE
+        return self.ME_ROLE_TYPE
 
     def check_logged_in(self):
         if self.auth_token:
