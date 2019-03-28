@@ -65,11 +65,7 @@ ME_PERMISSION_OBJECT = {
       "permissionId": "123-456-789",
       "userId": "abc-def-ghi",
       "locationId": "jkl-mno-pqr",
-<<<<<<< HEAD
-      "userRole": 1,
-=======
       "userRole": '1',
->>>>>>> master
   }
 
 USER_PERMISSION_RESPONSE = {
