@@ -13,5 +13,6 @@ class Permission:
         self.location_id = obj_dict.get("locationId")
         self.user_role = obj_dict.get("userRole")
 
+    @property
     def role_type(self):
-        return self.ROLES[self.user_role]
+        return self.ROLES[str(self.user_role)]

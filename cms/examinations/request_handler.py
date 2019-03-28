@@ -11,11 +11,10 @@ def get_coroner_statuses_list():
 
 
 def post_new_examination(examination_object, auth_token):
-
     if settings.LOCAL:
         return mocks.SUCCESSFUL_CASE_CREATE
     else:
-        return MedexRequest.post(auth_token, '%s/cases/create' % settings.API_URL, json.dumps(examination_object))
+        return MedexRequest.post(auth_token, '%s/examinations/new' % settings.API_URL, json.dumps(examination_object))
 
 
 def load_by_id(examination_id, auth_token):
@@ -40,7 +39,22 @@ def load_patient_details_by_id(examination_id, auth_token):
 
 
 def update_patient_details(examination_id, submission, auth_token):
-    return MedexRequest.put(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id),
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_PATIENT_DETAILS_UPDATE
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id),
+                            submission)
+
+
+def load_medical_team_by_id(examination_id, auth_token):
+    if settings.LOCAL:
+        return mocks.SUCCESSFUL_MEDICAL_TEAM_LOAD
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id))
+
+
+def update_medical_team(examination_id, submission, auth_token):
+    return MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
                             submission)
 
 

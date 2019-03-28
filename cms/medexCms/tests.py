@@ -118,6 +118,6 @@ class MedexUtilsTests(MedExTestCase):
         self.assertEqual(parsed_date.hour, 13)
         self.assertEqual(parsed_date.minute, 29)
 
-    def test_parse_datetime_returns_what_it_was_passed_if_passed_a_falsey_argument(self):
+    def test_parse_datetime_returns_none_if_passed_a_falsey_argument(self):
         parsed_date = parse_datetime('')
-        self.assertEqual(parsed_date, '')
+        self.assertEqual(parsed_date, None)

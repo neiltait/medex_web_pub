@@ -2,6 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
+from examinations.models import MedicalTeamMember, MedicalTeam
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
 
 
@@ -497,20 +498,22 @@ class UrgencyInformationForm:
 
 
 class MedicalTeamMembersForm:
+    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    nursing_team = ''
+    medical_examiner = ''
+    medical_examiners_officer = ''
+    consultant_count = 0
 
-    def __init__(self, request=None):
-        self.initialiseErrors()
+    def __init__(self, request=None, medical_team=None):
+        self.initialise_errors()
         if request:
-            self.initialise_form_from_data(request)
-        else:
-            self.initialise_blank_form()
-
-    def initialise_blank_form(self):
-        self.consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+            self.initialise_form_from_data(request=request)
+        elif medical_team:
+            self.initialise_form_from_medical_team(medical_team=medical_team)
 
     def initialise_form_from_data(self, request):
         self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
@@ -534,48 +537,105 @@ class MedicalTeamMembersForm:
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'))
         self.nursing_team = request.get('nursing_team')
+        self.medical_examiner = request.get('medical_examiner') if request.get('medical_examiner') else ''
+        self.medical_examiners_officer = request.get('medical_examiners_officer') if request.get(
+            'medical_examiners_officer') else ''
+        self.consultant_count = self.get_consultant_count()
 
-    def is_valid(self):
-        return True
+    def initialise_form_from_medical_team(self, medical_team):
+        self.consultant_1 = medical_team.consultant_responsible
+        self.consultant_2 = medical_team.consultants_other[0] if len(
+            medical_team.consultants_other) > 0 else MedicalTeamMember()
+        self.consultant_3 = medical_team.consultants_other[1] if len(
+            medical_team.consultants_other) > 1 else MedicalTeamMember()
+        self.gp = medical_team.general_practitioner
+        self.qap = medical_team.qap
+        self.nursing_team = medical_team.nursing_team_information
+        self.medical_examiner = medical_team.medical_examiner.user_id
+        self.medical_examiners_officer = medical_team.medical_examiners_officer.user_id
+        self.consultant_count = self.get_consultant_count()
 
-    def initialiseErrors(self):
-        self.errors = {"count": 0}
-
-
-class MedicalTeamMember:
-
-    def __init__(self, name='', role='', organisation='', phone_number=''):
-        self.name = name.strip() if name else ''
-        self.role = role
-        self.organisation = organisation
-        self.phone_number = phone_number
-
-    def has_name(self):
-        return self.name and len(self.name.strip()) > 0
-
-    def has_valid_name(self):
-        return len(self.name.strip()) < 250
-
-
-class MedicalTeamAssignedTeamForm:
-
-    def __init__(self, request=None):
-        self.initialiseErrors()
-        if request:
-            self.initialise_form_from_data(request)
+    def get_consultant_count(self):
+        if self.consultant_3.has_name():
+            return 3
+        elif self.consultant_2.has_name():
+            return 2
+        elif self.consultant_1.has_name():
+            return 1
         else:
-            self.initialise_blank_form()
-
-    def initialise_blank_form(self):
-        self.medical_examiner = ''
-        self.medical_examiners_officer = ''
-
-    def initialise_form_from_data(self, request):
-        self.medical_examiner = request.get('medical_examiner')
-        self.medical_examiners_officer = request.get('medical_examiners_officer')
+            return 0
 
     def is_valid(self):
-        return True
+        if not self.consultant_1.has_valid_name():
+            self.errors["consultant_name_1"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
 
-    def initialiseErrors(self):
+        if not self.consultant_1.has_name_if_needed():
+            self.errors["consultant_name_1"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.consultant_2.has_valid_name():
+            self.errors["consultant_name_2"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.consultant_2.has_name_if_needed():
+            self.errors["consultant_name_2"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.consultant_3.has_valid_name():
+            self.errors["consultant_name_3"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.consultant_3.has_name_if_needed():
+            self.errors["consultant_name_3"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.qap.has_valid_name():
+            self.errors["qap_name"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.qap.has_name_if_needed():
+            self.errors["qap_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        if not self.gp.has_valid_name():
+            self.errors["gp_name"] = ErrorFieldTooLong(250)
+            self.errors["count"] += 1
+
+        if not self.gp.has_name_if_needed():
+            self.errors["gp_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["count"] += 1
+
+        return self.errors["count"] == 0
+
+    def initialise_errors(self):
         self.errors = {"count": 0}
+
+    def to_object(self):
+        consultants_other = []
+        if self.consultant_2.has_valid_name():
+            consultants_other.append(self.consultant_2.to_object())
+        if self.consultant_3.has_valid_name():
+            consultants_other.append(self.consultant_3.to_object())
+
+        return {
+            "consultantResponsible": self.consultant_1.to_object(),
+            "consultantsOther": consultants_other,
+            "generalPractitioner": self.gp.to_object(),
+            "qap": self.qap.to_object(),
+            "nursingTeamInformation": self.nursing_team,
+            "medicalExaminer": {
+                "userId": self.medical_examiner,
+                "firstName": "",
+                "lastName": "",
+                "email": "",
+                "userRole": "MedicalExaminer"
+            },
+            "medicalExaminerOfficer": {
+                "userId": self.medical_examiners_officer,
+                "firstName": "",
+                "lastName": "",
+                "email": "",
+                "userRole": "MedicalExaminerOfficer"
+            }
+        }

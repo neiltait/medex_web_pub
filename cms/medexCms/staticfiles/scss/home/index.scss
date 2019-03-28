@@ -37,6 +37,10 @@ body {
   .filters-block {
     margin-top: 2rem;
     margin-bottom: 3rem;
+
+    .nhsuk-select {
+        width: 100%
+    }
   }
 
   .sort-block {

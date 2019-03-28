@@ -21,3 +21,10 @@ class BereavedRepresentative:
             self.appointment_day = None
             self.appointment_month = None
             self.appointment_year = None
+
+
+class DropdownPerson:
+
+    def __init__(self, obj_dict):
+        self.person_id = obj_dict.get('userId')
+        self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')

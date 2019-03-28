@@ -70,8 +70,11 @@
     },
 
     setupAddRemovePanels() {
-      var addRemovePanelSection = $('#add-remove-panel-section')
-      new AddRemovePanelList(addRemovePanelSection, 0)
+      var addRemovePanelSection = $('#add-remove-panel-section');
+      var consultantCount = $('#consultant-count').val();
+      var optionalConsultantCount = consultantCount && parseInt(consultantCount) > 1 ? parseInt(consultantCount) - 1 : 0;
+
+      new AddRemovePanelList(addRemovePanelSection, optionalConsultantCount)
     },
 
     showTab: function (tabId, evt) {
@@ -175,14 +178,25 @@
     setup: function () {
       this.button = this.section.find('.additional-notes-button');
       this.panel = this.section.find('.additional-notes-panel');
+      this.notes = this.section.find('textarea');
 
-      let that = this
+      this.setupWatchers();
+
+      if(this.notes.val() !== '') {
+        this.openPanel()
+      }
+    },
+    setupWatchers: function() {
+      let that = this;
       this.button.on('click', function (event) {
         event.preventDefault()
-        that.panel.removeClass("medex-hidden")
-        that.button.addClass("medex-hidden")
+        that.openPanel()
       })
     },
+    openPanel: function () {
+      this.panel.removeClass("medex-hidden")
+      this.button.addClass("medex-hidden")
+    }
   };
 
   var AddRemovePanelList = function (section, visibleCount) {
