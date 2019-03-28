@@ -67,7 +67,7 @@ class ExaminationOverview:
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
         self.nhs_number = obj_dict.get("nhsNumber")
-        self.id = obj_dict.get("id")
+        self.id = obj_dict.get("examinationId")
         self.time_of_death = obj_dict.get("timeOfDeath")
         self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
         self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
@@ -83,19 +83,28 @@ class ExaminationOverview:
         return self.date_of_birth.strftime(self.date_format) if self.date_of_birth else 'D.O.B unknown'
 
     def display_appointment_date(self):
-        return self.appointment_date.strftime(self.date_format)
+        return self.appointment_date.strftime(self.date_format) if self.appointment_date else None
 
     def calc_age(self):
-        return self.date_of_death.year - self.date_of_birth.year - (
+        if self.date_of_birth and self.date_of_death:
+            return self.date_of_death.year - self.date_of_birth.year - (
                 (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+        else:
+            return 0
 
     def calc_last_admission_days_ago(self):
-        delta = datetime.now() - self.last_admission
-        return delta.days
+        if self.last_admission:
+            delta = datetime.now() - self.last_admission
+            return delta.days
+        else:
+            return 0
 
     def calc_created_days_ago(self):
-        delta = datetime.now() - self.case_created_date
-        return delta.days
+        if self.case_created_date:
+            delta = datetime.now() - self.case_created_date
+            return delta.days
+        else:
+            return 0
 
     def urgent(self):
         return True if self.urgency_score and self.urgency_score > 0 else False

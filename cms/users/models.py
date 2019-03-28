@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.conf import settings
@@ -8,6 +9,10 @@ from examinations.models import ExaminationOverview
 from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
+from home.models import IndexOverview
+
+from locations import request_handler as location_request_handler
+from locations.models import Location
 
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
@@ -19,8 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 class User:
-    ME_ROLE_TYPE = 'ME'
-    MEO_ROLE_TYPE = 'MEO'
+    ME_ROLE_TYPE = 'MedicalExaminer'
+    MEO_ROLE_TYPE = 'MedicalExaminerOfficer'
 
     def __init__(self, obj_dict=None):
         if obj_dict:
@@ -28,6 +33,9 @@ class User:
             self.first_name = obj_dict['firstName']
             self.last_name = obj_dict['lastName']
             self.email_address = obj_dict['email']
+        self.auth_token = None
+        self.id_token = None
+        self.index_overview = None
         self.examinations = []
         self.permissions = []
 
@@ -50,9 +58,9 @@ class User:
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    @property
     def role_type(self):
-        # TODO work out role type from permissions
-        return self.MEO_ROLE_TYPE
+        return self.permissions[0].role_type
 
     def check_logged_in(self):
         if self.auth_token:
@@ -101,28 +109,41 @@ class User:
         else:
             logger.error(response.status_code)
 
-    def load_examinations(self):
+    def load_examinations(self, location='', person=''):
+        if person:
+            user = person
+        else:
+            user = self.user_id if self.role_type == self.ME_ROLE_TYPE else ''
         query_params = {
-            "locationId": None,
-            "userId": self.user_id,
-            "caseStatus": None,
-            "orderBy": "Urgency",
+            "locationId": location,
+            "userId": user,
+            "caseStatus": '',
+            "orderBy": "CaseCreated",
+            "openCases": 'true',
             "pageSize": 20,
             "pageNumber": 1
         }
 
-        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
+        response = examination_request_handler.load_examinations_index(json.dumps(query_params), self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
         if success:
+            self.index_overview = IndexOverview(location, response.json())
             for examination in response.json()['examinations']:
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
 
+    def get_permitted_locations(self):
+        permitted_locations = []
+        location_data = location_request_handler.get_permitted_locations_list(self.auth_token)
+        for location in location_data:
+            permitted_locations.append(Location().set_values(location))
+        return permitted_locations
+
     def get_forms_for_role(self):
-        if self.role_type() == self.MEO_ROLE_TYPE:
+        if self.role_type == self.MEO_ROLE_TYPE:
             return [
                 {
                     'id': 'admin-notes',
@@ -141,7 +162,7 @@ class User:
                     'name': 'Other case info'
                 }
             ]
-        elif self.role_type() == self.ME_ROLE_TYPE:
+        elif self.role_type == self.ME_ROLE_TYPE:
             return [
                 {
                     'id': 'pre-scrutiny',

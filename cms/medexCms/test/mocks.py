@@ -54,16 +54,23 @@ user_dict = {
 
 CREATED_PERMISSION_ID = 1
 
-PERMISSION_OBJECT = {
-    "permissionId": "123-456-789",
-    "userId": "abc-def-ghi",
-    "locationId": "jkl-mno-pqr",
-    "userRole": 0,
-}
+MEO_PERMISSION_OBJECT = {
+      "permissionId": "123-456-789",
+      "userId": "abc-def-ghi",
+      "locationId": "jkl-mno-pqr",
+      "userRole": '0',
+  }
+
+ME_PERMISSION_OBJECT = {
+      "permissionId": "123-456-789",
+      "userId": "abc-def-ghi",
+      "locationId": "jkl-mno-pqr",
+      "userRole": '1',
+  }
 
 USER_PERMISSION_RESPONSE = {
     "permissions": [
-        PERMISSION_OBJECT
+      MEO_PERMISSION_OBJECT
     ],
     "errors": {
         "additionalProp1": [
@@ -129,22 +136,42 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
     }
 ]
 
-SUCCESSFUL_MEDICAL_EXAMINERS = [{
-    'id': '1',
-    'name': 'Dr Alicia Anders',
-}, {
-    'id': '2',
-    'name': 'Dr Brandon Weatherby',
-}, {
-    'id': '3',
-    'name': 'Dr Charles Lighterman',
-}, {
-    'id': '4',
-    'name': 'Dr Subhashine Sanapala',
-}, {
-    'id': '5',
-    'name': 'Dr Ore Thompson',
-}
+SUCCESSFUL_MEDICAL_EXAMINERS = [
+    {
+      "userId": "1",
+      "firstName": "Dr Susan",
+      "lastName": "Chang",
+      "email": "s.chang@nhs.uk",
+      "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "2",
+      "firstName": "Dr Andrew",
+      "lastName": "McCloud",
+      "email": "a.mccloud@nhs.uk",
+      "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "3",
+      "firstName": "Dr Anders",
+      "lastName": "Petersen",
+      "email": "a.petersen@nhs.uk",
+      "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "4",
+      "firstName": "Dr Subhashine",
+      "lastName": "Sanapala",
+      "email": "s.sanapala@nhs.uk",
+      "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "5",
+      "firstName": "Dr Ore",
+      "lastName": "Thompson",
+      "email": "o.thompson@nhs.uk",
+      "userRole": "MedicalExaminer"
+    }
 ]
 
 SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [
@@ -423,7 +450,7 @@ USERS_EXAMINATION_LIST = {
             "givenNames": "John",
             "surname": "Doe",
             "nhsNumber": "123-456-78910",
-            "id": "1",
+            "examinationId": "1",
             "timeOfDeath": "10:48",
             "dateOfBirth": "1935-09-18T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
@@ -440,7 +467,7 @@ USERS_EXAMINATION_LIST = {
             "givenNames": "Jemima",
             "surname": "Doe",
             "nhsNumber": "123-456-78910",
-            "id": "2",
+            "examinationId": "2",
             "timeOfDeath": "11:12",
             "dateOfBirth": "1937-04-27T10:48:15.749Z",
             "dateOfDeath": "2019-03-18T10:48:15.749Z",
@@ -457,7 +484,7 @@ USERS_EXAMINATION_LIST = {
             "givenNames": "Deborah",
             "surname": "Jones",
             "nhsNumber": "123-456-78910",
-            "id": "3",
+            "examinationId": "3",
             "timeOfDeath": "09:45",
             "dateOfBirth": "1962-05-21T10:48:15.749Z",
             "dateOfDeath": "2019-03-19T10:48:15.749Z",
@@ -556,6 +583,10 @@ SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 UNSUCCESSFUL_USER_LOOKUP = Response()
 UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_MEDICAL_EXAMINERS_LOAD = {
+    'users': SUCCESSFUL_MEDICAL_EXAMINERS
+}
 
 #### Permissions
 

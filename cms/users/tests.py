@@ -6,6 +6,7 @@ from rest_framework import status
 from unittest.mock import patch
 
 from alerts import utils, messages
+from permissions.models import Permission
 
 from .models import User
 from .forms import CreateUserForm
@@ -254,13 +255,13 @@ class UsersModelsTests(MedExTestCase):
     def test_load_examinations_adds_a_list_of_cases_to_the_user(self, mock_examination_list):
         user = User(mocks.user_dict)
         user.auth_token = mocks.AUTH_TOKEN['access_token']
+        user.permissions.append(Permission(mocks.ME_PERMISSION_OBJECT))
         user.load_examinations()
         self.assertEquals(type(user.examinations), list)
 
-    # TODO Temporary patch until permissions work complete
-    @patch('users.models.User.role_type', return_value='ME')
-    def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_me(self, mock_role_type):
+    def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_me(self):
         user = User(mocks.user_dict)
+        user.permissions.append(Permission(mocks.ME_PERMISSION_OBJECT))
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'pre-scrutiny')
@@ -268,10 +269,9 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(available_forms[2]['id'], 'bereaved-discussion')
         self.assertEquals(available_forms[3]['id'], 'other')
 
-    # TODO Temporary patch until permissions work complete
-    @patch('users.models.User.role_type', return_value='MEO')
-    def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_meo(self, mock_role_type):
+    def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_meo(self):
         user = User(mocks.user_dict)
+        user.permissions.append(Permission(mocks.MEO_PERMISSION_OBJECT))
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'admin-notes')
