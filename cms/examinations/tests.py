@@ -5,7 +5,7 @@ from rest_framework import status
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
 from examinations.models import Examination, PatientDetails
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
@@ -627,16 +627,6 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_medical_team_member_form_initialised_with_content_returns_as_valid(self):
         form = MedicalTeamMembersForm(mocks.get_medical_team_form_data())
-        self.assertIsTrue(form.is_valid())
-
-    #### Assigned Team Form tests
-
-    def test_medical_team_assigned_team_form_initialised_empty_returns_as_valid(self):
-        form = MedicalTeamAssignedTeamForm()
-        self.assertIsTrue(form.is_valid())
-
-    def test_medical_team_assigned_team_form_initialised_with_content_returns_as_valid(self):
-        form = MedicalTeamAssignedTeamForm(mocks.get_assigned_medical_team_form_data())
         self.assertIsTrue(form.is_valid())
 
 
