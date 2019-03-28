@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember
+from examinations.models import MedicalTeamMember, MedicalTeam
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
 
 
@@ -498,23 +498,22 @@ class UrgencyInformationForm:
 
 
 class MedicalTeamMembersForm:
+    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    nursing_team = ''
+    medical_examiner = ''
+    medical_examiners_officer = ''
+    consultant_count = 0
 
-    def __init__(self, request=None):
+    def __init__(self, request=None, medical_team=None):
         self.initialise_errors()
         if request:
-            self.initialise_form_from_data(request)
-        else:
-            self.initialise_blank_form()
-
-    def initialise_blank_form(self):
-        self.consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-        self.medical_examiner = ''
-        self.medical_examiners_officer = ''
-        self.consultant_count = 0
+            self.initialise_form_from_data(request=request)
+        elif medical_team:
+            self.initialise_form_from_medical_team(medical_team=medical_team)
 
     def initialise_form_from_data(self, request):
         self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
@@ -538,8 +537,22 @@ class MedicalTeamMembersForm:
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'))
         self.nursing_team = request.get('nursing_team')
-        self.medical_examiner = request.get('medical_examiner')
-        self.medical_examiners_officer = request.get('medical_examiners_officer')
+        self.medical_examiner = request.get('medical_examiner') if request.get('medical_examiner') else ''
+        self.medical_examiners_officer = request.get('medical_examiners_officer') if request.get(
+            'medical_examiners_officer') else ''
+        self.consultant_count = self.get_consultant_count()
+
+    def initialise_form_from_medical_team(self, medical_team):
+        self.consultant_1 = medical_team.consultant_responsible
+        self.consultant_2 = medical_team.consultants_other[0] if len(
+            medical_team.consultants_other) > 0 else MedicalTeamMember()
+        self.consultant_3 = medical_team.consultants_other[1] if len(
+            medical_team.consultants_other) > 1 else MedicalTeamMember()
+        self.gp = medical_team.general_practitioner
+        self.qap = medical_team.qap
+        self.nursing_team = medical_team.nursing_team_information
+        self.medical_examiner = medical_team.medical_examiner.user_id
+        self.medical_examiners_officer = medical_team.medical_examiners_officer.user_id
         self.consultant_count = self.get_consultant_count()
 
     def get_consultant_count(self):
@@ -613,8 +626,16 @@ class MedicalTeamMembersForm:
             "nursingTeamInformation": self.nursing_team,
             "medicalExaminer": {
                 "userId": self.medical_examiner,
+                "firstName": "",
+                "lastName": "",
+                "email": "",
+                "userRole": "MedicalExaminer"
             },
             "medicalExaminerOfficer": {
                 "userId": self.medical_examiners_officer,
+                "firstName": "",
+                "lastName": "",
+                "email": "",
+                "userRole": "MedicalExaminerOfficer"
             }
         }

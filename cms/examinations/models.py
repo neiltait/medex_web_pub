@@ -204,6 +204,43 @@ class CaseBreakdown:
             return None
 
 
+class MedicalTeam:
+
+    def __init__(self, obj_dict):
+        from users.models import User
+
+        self.consultant_responsible = MedicalTeamMember.from_dict(
+            obj_dict['consultantResponsible']) if 'consultantResponsible' in obj_dict else None
+        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if 'qap' in obj_dict else None
+        self.general_practitioner = MedicalTeamMember.from_dict(
+            obj_dict['generalPractitioner']) if 'generalPractitioner' in obj_dict else None
+
+        if "consultantsOther" in obj_dict:
+            self.consultants_other = [MedicalTeamMember.from_dict(consultant) for consultant in
+                                      obj_dict['consultantsOther']]
+        else:
+            self.consultants_other = []
+
+        self.nursing_team_information = obj_dict[
+            'nursingTeamInformation'] if 'nursingTeamInformation' in obj_dict else ''
+
+        self.medical_examiner = User(obj_dict['medicalExaminer']) if 'medicalExaminer' in obj_dict else None
+        self.medical_examiners_officer = User(
+            obj_dict['medicalExaminerOfficer']) if 'medicalExaminerOfficer' in obj_dict else None
+
+
+    @classmethod
+    def load_by_id(cls, examination_id, auth_token):
+        response = request_handler.load_medical_team_by_id(examination_id, auth_token)
+
+        authenticated = response.status_code == status.HTTP_200_OK
+
+        if authenticated:
+            return MedicalTeam(response.json())
+        else:
+            return None
+
+
 class MedicalTeamMember:
 
     def __init__(self, name='', role='', organisation='', phone_number='', notes=''):
@@ -212,6 +249,16 @@ class MedicalTeamMember:
         self.organisation = organisation
         self.phone_number = phone_number
         self.notes = notes
+
+    @staticmethod
+    def from_dict(obj_dict):
+        name = obj_dict['name'] if 'name' in obj_dict else ''
+        role = obj_dict['role'] if 'role' in obj_dict else ''
+        organisation = obj_dict['organisation'] if 'organisation' in obj_dict else ''
+        phone_number = obj_dict['phone'] if 'phone' in obj_dict else ''
+        notes = obj_dict['notes'] if 'notes' in obj_dict else ''
+        return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
+                                 notes=notes)
 
     def has_name(self):
         return self.name and len(self.name.strip()) > 0
