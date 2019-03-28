@@ -2,28 +2,35 @@
     <h3 class="section-sub-heading">
         Add a new timeline event or continue editing a draft
     </h3>
-        <div class="form-picker">
-            <select class="nhsuk-select" id="event-form-picker">
-                <option value="" disabled hidden selected>Select an event</option>
-                {% for form in forms %}
-                <option value={{ form.id }}>{{ form.name }}</option>
-                {% endfor %}
-            </select>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <div class="form-picker">
+                <select class="nhsuk-select" id="event-form-picker">
+                    <option value="" disabled hidden selected>Select an event</option>
+                    {% for form in forms %}
+                    <option value={{ form.id }}>{{ form.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
 
-        {% include "examinations/partials/case_breakdown/_event_admin_notes_form.html" %}
+        <div class="nhsuk-grid-column-one-half">
 
-        {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" %}
-
-        {% include "examinations/partials/case_breakdown/_event_meo_summary_form.html" %}
-
-        {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" %}
-
-        {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" %}
-
-        {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" %}
-
-        {% include "examinations/partials/case_breakdown/_event_other_form.html" %}
+        </div>
     </div>
-</div>
+
+            {% include "examinations/partials/case_breakdown/_event_admin_notes_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_meo_summary_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" %}
+
+            {% include "examinations/partials/case_breakdown/_event_other_form.html" %}
+        </div>
 

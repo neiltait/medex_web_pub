@@ -1,19 +1,24 @@
 <div id="other" class="event-form">
-    <div class="nhsuk-form-group" id="other-notes-section">
-        <div class="nhsuk-grid-column-full">
+    <div class="nhsuk-form-group">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <label class="nhsuk-heading-l">
-                    You are adding...
-                </label>
+            </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <div class="nhsuk-inset-text">
+                        <p> This case event should be used to add any other relevant information or context
+                        about the case that may be useful for the MEOs or ME.</p>
+                    </div>
+                </div>
             </div>
         </div>
+
         <label class="nhsuk-heading-l" for="more-detail">
             Other relevant information
         </label>
         <textarea class="nhsuk-textarea" id="more-detail" name="more-detail" rows="5"
                   aria-describedby="more-detail-hint"></textarea>
 
-        <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-row" id="other-notes-section">
             <div class="nhsuk-grid-column-full">
                 <input id="submit-btn" class="nhsuk-button" type="submit" value="Add event to timeline"
                        name="add-event-to-timeline"/>
@@ -23,4 +28,3 @@
             </div>
         </div>
     </div>
-</div>
