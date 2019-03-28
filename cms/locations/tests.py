@@ -14,8 +14,7 @@ class LocationModelTests(MedExTestCase):
         result = Location.initialise_with_id(location_id)
         self.assertEqual(result.location_id, location_id)
 
-    @patch('locations.request_handler.get_permitted_users', return_value=mocks.SUCCESSFUL_MEDICAL_EXAMINERS_LOAD)
-    def test_load_permitted_users_returns_a_list_of_users(self, mock_user_load):
+    def test_load_permitted_users_returns_a_list_of_users(self):
         location_id = 'afefwrgwr'
         location = Location.initialise_with_id(location_id)
         result = location.load_permitted_users(mocks.ACCESS_TOKEN)
