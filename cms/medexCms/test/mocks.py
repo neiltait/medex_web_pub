@@ -6,7 +6,6 @@ from rest_framework import status
 from medexCms import settings
 from medexCms.utils import NONE_DATE
 
-
 # Variables/Objects
 
 #### Sessions
@@ -70,21 +69,21 @@ ME_PERMISSION_OBJECT = {
   }
 
 USER_PERMISSION_RESPONSE = {
-  "permissions": [
+    "permissions": [
       MEO_PERMISSION_OBJECT
-  ],
-  "errors": {
-    "additionalProp1": [
-      "string"
     ],
-    "additionalProp2": [
-      "string"
-    ],
-    "additionalProp3": [
-      "string"
-    ]
-  },
-  "success": True
+    "errors": {
+        "additionalProp1": [
+            "string"
+        ],
+        "additionalProp2": [
+            "string"
+        ],
+        "additionalProp3": [
+            "string"
+        ]
+    },
+    "success": True
 }
 
 #### Locations
@@ -158,6 +157,20 @@ SUCCESSFUL_MEDICAL_EXAMINERS = [
       "lastName": "Petersen",
       "email": "a.petersen@nhs.uk",
       "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "4",
+      "firstName": "Dr Subhashine",
+      "lastName": "Sanapala",
+      "email": "s.sanapala@nhs.uk",
+      "userRole": "MedicalExaminer"
+    },
+    {
+      "userId": "5",
+      "firstName": "Dr Ore",
+      "lastName": "Thompson",
+      "email": "o.thompson@nhs.uk",
+      "userRole": "MedicalExaminer"
     }
 ]
 
@@ -176,7 +189,7 @@ SUCCESSFUL_MEDICAL_EXAMINERS_OFFICERS = [
     }
 ]
 
-#### Examintations
+#### Examinations
 
 CREATED_EXAMINATION_ID = 1
 
@@ -376,6 +389,60 @@ def get_patient_details_load_response_object():
     }
 
 
+def get_medical_team_load_response_object():
+    return {
+        "consultantResponsible": {
+            "name": "Peter Hipkiss",
+            "role": "Oncologist",
+            "organisation": "St Thomas's hospital",
+            "phone": "12345",
+            "notes": ""
+        },
+        "consultantsOther": [],
+        "generalPractitioner": {
+            "name": "",
+            "role": "",
+            "organisation": "",
+            "phone": "",
+            "notes": ""
+        },
+        "qap": {
+            "name": "",
+            "role": "",
+            "organisation": "",
+            "phone": "",
+            "notes": ""
+        },
+        "nursingTeamInformation": "",
+        "medicalExaminer": {
+            "userId": "string",
+            "firstName": "",
+            "lastName": "",
+            "email": "",
+            "userRole": "MedicalExaminerOfficer"
+        },
+        "medicalExaminerOfficer": {
+            "userId": "string",
+            "firstName": "",
+            "lastName": "",
+            "email": "",
+            "userRole": "MedicalExaminerOfficer"
+        },
+        "errors": {
+            "additionalProp1": [
+                ""
+            ],
+            "additionalProp2": [
+                ""
+            ],
+            "additionalProp3": [
+                ""
+            ]
+        },
+        "success": "true"
+    }
+
+
 USERS_EXAMINATION_LIST = {
     "examinations": [
         {
@@ -453,23 +520,23 @@ def get_case_breakdown_response_object():
 
 def get_bereaved_representative():
     return {
-      "fullName": "Jane Doe",
-      "relationship": "Wife",
-      "phoneNumber": "020 12345678",
-      "presentAtDeath": "Yes",
-      "informed": "Yes",
-      "appointmentDate": NONE_DATE,
-      "appointmentTime": ""
+        "fullName": "Jane Doe",
+        "relationship": "Wife",
+        "phoneNumber": "020 12345678",
+        "presentAtDeath": "Yes",
+        "informed": "Yes",
+        "appointmentDate": NONE_DATE,
+        "appointmentTime": ""
     }
 
 
 #### Datatypes
 
 LOAD_MODES_OF_DISPOSAL = {
-  "Cremation": 0,
-  "Burial": 1,
-  "BuriedAtSea": 2,
-  "Repatriation": 3
+    "Cremation": 0,
+    "Burial": 1,
+    "BuriedAtSea": 2,
+    "Repatriation": 3
 }
 
 # Responses
@@ -565,6 +632,14 @@ UNSUCCESSFUL_CASE_INDEX = Response()
 UNSUCCESSFUL_CASE_INDEX.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_CASE_INDEX._content = json.dumps(None).encode('utf-8')
 
+SUCCESSFUL_POST_EXAMINATION_TEAM = Response()
+SUCCESSFUL_POST_EXAMINATION_TEAM.status_code = status.HTTP_200_OK
+SUCCESSFUL_POST_EXAMINATION_TEAM._content = json.dumps(None).encode('utf-8')
+
+UNSUCCESSFUL_POST_EXAMINATION_TEAM = Response()
+UNSUCCESSFUL_POST_EXAMINATION_TEAM.status_code = status.HTTP_400_BAD_REQUEST
+UNSUCCESSFUL_POST_EXAMINATION_TEAM._content = json.dumps(None).encode('utf-8')
+
 SUCCESSFUL_PATIENT_DETAILS_LOAD = Response()
 SUCCESSFUL_PATIENT_DETAILS_LOAD.status_code = status.HTTP_200_OK
 SUCCESSFUL_PATIENT_DETAILS_LOAD._content = json.dumps(get_patient_details_load_response_object()).encode('utf-8')
@@ -588,3 +663,7 @@ SUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(get_case_breakdown_response
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN = Response()
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_LOAD_CASE_BREAKDOWN._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_MEDICAL_TEAM_LOAD = Response()
+SUCCESSFUL_MEDICAL_TEAM_LOAD.status_code = status.HTTP_200_OK
+SUCCESSFUL_MEDICAL_TEAM_LOAD._content = json.dumps(get_medical_team_load_response_object()).encode('utf-8')
