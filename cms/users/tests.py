@@ -272,7 +272,6 @@ class UsersModelsTests(MedExTestCase):
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_meo(self):
         user = User(mocks.user_dict)
         user.permissions.append(Permission(mocks.MEO_PERMISSION_OBJECT))
-        print(user.role_type)
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'admin-notes')

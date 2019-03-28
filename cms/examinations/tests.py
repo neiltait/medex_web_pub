@@ -1,15 +1,17 @@
-from unittest.mock import patch
+from datetime import datetime, timedelta
 
 from rest_framework import status
+
+from unittest.mock import patch
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, MedicalTeamAssignedTeamForm
-from examinations.models import Examination, PatientDetails
+from examinations.models import Examination, PatientDetails, ExaminationOverview
 from medexCms.test import mocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE
+from medexCms.utils import NONE_DATE, parse_datetime
 
 
 @patch('examinations.request_handler.load_modes_of_disposal', return_value=mocks.LOAD_MODES_OF_DISPOSAL)
@@ -688,3 +690,97 @@ class ExaminationsModelsTests(MedExTestCase):
         patient_details = PatientDetails(loaded_data, mocks.LOAD_MODES_OF_DISPOSAL)
         self.assertEqual(len(patient_details.representatives), 1)
         self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
+
+    #### ExaminationOverview tests
+
+    def test_display_dod_returns_a_correctly_formatted_string_if_date_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        given_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.date_of_death = parse_datetime(given_date)
+        result = examination_overview.display_dod()
+        expected_date = '02.02.2019'
+        self.assertEqual(result, expected_date)
+
+    def test_display_dob_returns_a_correctly_formatted_string_if_date_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        given_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.date_of_birth = parse_datetime(given_date)
+        result = examination_overview.display_dob()
+        expected_date = '02.02.2019'
+        self.assertEqual(result, expected_date)
+
+    def test_display_appointment_date_returns_a_correctly_formatted_string_if_date_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        given_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.appointment_date = parse_datetime(given_date)
+        result = examination_overview.display_appointment_date()
+        expected_date = '02.02.2019'
+        self.assertEqual(result, expected_date)
+
+    def test_calc_age_correctly_calculates_the_age_if_dates_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        birth_date = '2018-02-02T02:02:02.000Z'
+        death_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.date_of_birth = parse_datetime(birth_date)
+        examination_overview.date_of_death = parse_datetime(death_date)
+        result = examination_overview.calc_age()
+        expected_age = 1
+        self.assertEqual(result, expected_age)
+
+    def test_calc_age_returns_0_if_date_of_birth_missing(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        death_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.date_of_birth = None
+        examination_overview.date_of_death = parse_datetime(death_date)
+        result = examination_overview.calc_age()
+        expected_age = 0
+        self.assertEqual(result, expected_age)
+
+    def test_calc_age_returns_0_if_date_of_death_missing(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        birth_date = '2019-02-02T02:02:02.000Z'
+        examination_overview.date_of_birth = parse_datetime(birth_date)
+        examination_overview.date_of_death = None
+        result = examination_overview.calc_age()
+        expected_age = 0
+        self.assertEqual(result, expected_age)
+
+    def test_calc_age_returns_0_if__both_dates_missing(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        examination_overview.date_of_birth = None
+        examination_overview.date_of_death = None
+        result = examination_overview.calc_age()
+        expected_age = 0
+        self.assertEqual(result, expected_age)
+
+    def test_calc_last_admission_days_ago_returns_correct_number_of_days_if_date_of_admission_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        admission_date = datetime.today() - timedelta(days=1)
+        examination_overview.last_admission = admission_date
+        result = examination_overview.calc_last_admission_days_ago()
+        expected_days = 1
+        self.assertEqual(result, expected_days)
+
+    def test_calc_last_admission_days_ago_returns_0_if_date_of_admission_missing(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        admission_date = None
+        examination_overview.last_admission = parse_datetime(admission_date)
+        result = examination_overview.calc_last_admission_days_ago()
+        expected_days = 0
+        self.assertEqual(result, expected_days)
+
+    def test_calc_created_days_ago_returns_correct_number_of_days_if_case_created_date_present(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        case_created_date = datetime.today() - timedelta(days=1)
+        examination_overview.case_created_date = case_created_date
+        result = examination_overview.calc_created_days_ago()
+        expected_days = 1
+        self.assertEqual(result, expected_days)
+
+    def test_calc_created_days_ago_returns_0_if_case_created_date_missing(self):
+        examination_overview = ExaminationOverview(mocks.USERS_EXAMINATION_LIST['examinations'][0])
+        case_created_date = None
+        examination_overview.case_created_date = parse_datetime(case_created_date)
+        result = examination_overview.calc_created_days_ago()
+        expected_days = 0
+        self.assertEqual(result, expected_days)

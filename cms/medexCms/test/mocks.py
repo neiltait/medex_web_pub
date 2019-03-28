@@ -139,16 +139,25 @@ SUCCESSFUL_ME_OFFICES_LOAD = [
 
 SUCCESSFUL_MEDICAL_EXAMINERS = [
     {
-        'id': '1',
-        'name': 'Dr Susan Chang',
+      "userId": "1",
+      "firstName": "Dr Susan",
+      "lastName": "Chang",
+      "email": "s.chang@nhs.uk",
+      "userRole": "MedicalExaminer"
     },
     {
-        'id': '2',
-        'name': 'Dr Andrew McCloud',
+      "userId": "2",
+      "firstName": "Dr Andrew",
+      "lastName": "McCloud",
+      "email": "a.mccloud@nhs.uk",
+      "userRole": "MedicalExaminer"
     },
     {
-        'id': '3',
-        'name': 'Dr Anders Petersen',
+      "userId": "3",
+      "firstName": "Dr Anders",
+      "lastName": "Petersen",
+      "email": "a.petersen@nhs.uk",
+      "userRole": "MedicalExaminer"
     }
 ]
 
@@ -507,6 +516,10 @@ SUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
 UNSUCCESSFUL_USER_LOOKUP = Response()
 UNSUCCESSFUL_USER_LOOKUP.status_code = status.HTTP_404_NOT_FOUND
 UNSUCCESSFUL_USER_LOOKUP._content = json.dumps(None).encode('utf-8')
+
+SUCCESSFUL_MEDICAL_EXAMINERS_LOAD = {
+    'users': SUCCESSFUL_MEDICAL_EXAMINERS
+}
 
 #### Permissions
 
