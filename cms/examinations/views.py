@@ -143,9 +143,9 @@ def edit_examination_medical_team(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    # get the requested examination
-    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
-    if not medical_team:
+    # check the examination exists
+    examination = Examination.load_by_id(examination_id, user.auth_token)
+    if not examination:
         return render_404(request, user, 'case')
 
     if request.method == 'POST':
@@ -154,14 +154,19 @@ def edit_examination_medical_team(request, examination_id):
                                                                                   user.auth_token)
     else:
         # get a simple form
-        medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team)
+        medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
+        medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
     # render the tab
     return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user)
 
 
-def __get_medical_team_form(medical_team):
-    medical_team_members_form = MedicalTeamMembersForm()
+def __get_medical_team_form(medical_team = None):
+    if medical_team:
+        medical_team_members_form = MedicalTeamMembersForm(medical_team=medical_team)
+    else:
+        medical_team_members_form = MedicalTeamMembersForm()
+
     status_code = status.HTTP_200_OK
     errors = {'count': 0}
     return medical_team_members_form, status_code, errors
