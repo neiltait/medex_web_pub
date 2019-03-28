@@ -22,7 +22,7 @@
                         </p>
                     {% endif %}
 
-                    <a class="view-btn" href="/cases/{{ case.id }}">View Case</a>
+                    <a class="view-btn" href="{% url 'edit_examination' examination_id=case.id %}">View Case</a>
 
                     <div class="chevron-down">
                     </div>

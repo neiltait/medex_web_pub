@@ -67,7 +67,7 @@ class ExaminationOverview:
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
         self.nhs_number = obj_dict.get("nhsNumber")
-        self.id = obj_dict.get("id")
+        self.id = obj_dict.get("examinationId")
         self.time_of_death = obj_dict.get("timeOfDeath")
         self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
         self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
