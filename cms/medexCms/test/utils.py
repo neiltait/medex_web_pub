@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from http.cookies import SimpleCookie
@@ -6,6 +7,9 @@ from medexCms.test import mocks
 
 
 class MedExTestCase(TestCase):
+
+    def setUp(self):
+        settings.LOCAL = True
   
     def assertIsTrue(self, value):
         self.assertIs(value, True)
