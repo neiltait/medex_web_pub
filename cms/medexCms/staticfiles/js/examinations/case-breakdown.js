@@ -8,6 +8,7 @@
     EventEntryArea.prototype = {
         setup: function() {
             this.picker = this.wrapper.find('#event-form-picker');
+            this.text = this.wrapper.find('#hidden-text');
             this.forms = {};
             this.activeForm = null;
 
@@ -18,7 +19,9 @@
         initialiseForms: function() {
             var forms = this.wrapper.find('.event-form');
             for (var i = 0; i < forms.length; i++) {
-                this.forms[forms[i].id] = new EventForm(forms[i]);
+                var hintID = forms[i].id + '-hint';
+                var hint = this.wrapper.find('#' + hintID)
+                this.forms[forms[i].id] = new EventForm(forms[i], hint);
             }
         },
 
@@ -27,6 +30,7 @@
             this.picker.change(function(e) {
                 that.forms[that.picker[0].value].show();
                 that.hideOtherForms(that.picker[0].value);
+                that.text.show();
             });
         },
 
@@ -40,8 +44,9 @@
         }
     }
 
-    var EventForm = function(form) {
+    var EventForm = function(form, hint) {
         this.form = $(form);
+        this.hint = $(hint);
         this.setup();
     }
 
@@ -52,12 +57,17 @@
 
         show: function() {
             this.form.show();
+            this.hint.show();
         },
 
         hide: function() {
-            this.form.hide()
+            this.form.hide();
+            this.hint.hide();
         }
     }
+
+
+
 
     function init() {
         var eventEntry = $('.case-event-forms');
