@@ -15,4 +15,4 @@ class Permission:
 
     @property
     def role_type(self):
-        return self.ROLES[self.user_role]
+        return self.ROLES[str(self.user_role)]

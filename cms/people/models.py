@@ -27,4 +27,4 @@ class DropdownPerson:
 
     def __init__(self, obj_dict):
         self.person_id = obj_dict.get('userId')
-        self.name = "s% s%" % (obj_dict.get('firstName'), obj_dict.get('lastName'))
+        self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')
