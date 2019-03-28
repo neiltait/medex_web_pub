@@ -60,12 +60,7 @@ class User:
 
     @property
     def role_type(self):
-<<<<<<< HEAD
-        # TODO work out role type from permissions
-        return self.ME_ROLE_TYPE
-=======
         return self.permissions[0].role_type
->>>>>>> master
 
     def check_logged_in(self):
         if self.auth_token:
