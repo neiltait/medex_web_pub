@@ -55,16 +55,23 @@ user_dict = {
 
 CREATED_PERMISSION_ID = 1
 
-PERMISSION_OBJECT = {
+MEO_PERMISSION_OBJECT = {
       "permissionId": "123-456-789",
       "userId": "abc-def-ghi",
       "locationId": "jkl-mno-pqr",
-      "userRole": 0,
+      "userRole": '0',
+  }
+
+ME_PERMISSION_OBJECT = {
+      "permissionId": "123-456-789",
+      "userId": "abc-def-ghi",
+      "locationId": "jkl-mno-pqr",
+      "userRole": '1',
   }
 
 USER_PERMISSION_RESPONSE = {
   "permissions": [
-      PERMISSION_OBJECT
+      MEO_PERMISSION_OBJECT
   ],
   "errors": {
     "additionalProp1": [

@@ -51,8 +51,9 @@ class HomeViewsTests(MedExTestCase):
     @patch('users.request_handler.validate_session', return_value=mocks.SUCCESSFUL_VALIDATE_SESSION)
     @patch('examinations.request_handler.load_examinations_index', return_value=mocks.SUCCESSFUL_CASE_INDEX)
     @patch('permissions.request_handler.load_permissions_for_user', return_value=mocks.SUCCESSFUL_PERMISSION_LOAD)
+    @patch('locations.request_handler.get_permitted_locations_list', return_value=mocks.SUCCESSFUL_TRUST_LOAD)
     def test_landing_on_the_landing_page_returns_the_correct_template(self, mock_auth_validation, mock_load_cases,
-                                                                      mock_permission_load):
+                                                                      mock_permission_load, mock_location_load):
         self.set_auth_cookies()
         response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
