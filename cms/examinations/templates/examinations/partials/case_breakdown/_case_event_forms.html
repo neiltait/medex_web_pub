@@ -5,6 +5,7 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
             <div class="form-picker">
+                <div class="nhsuk-heading-l" id="hidden-text">You are adding...</div>
                 <select class="nhsuk-select" id="event-form-picker">
                     <option value="" disabled hidden selected>Select an event</option>
                     {% for form in forms %}
@@ -15,22 +16,34 @@
         </div>
 
         <div class="nhsuk-grid-column-one-half">
+            {% include "examinations/partials/case_breakdown/hints/_event_admin_notes_hint.html" %}
 
+            {% include "examinations/partials/case_breakdown/hints/_event_bereaved_discussion_hint.html" %}
+
+            {% include "examinations/partials/case_breakdown/hints/_event_history_notes_hint.html" %}
+
+            {% include "examinations/partials/case_breakdown/hints/_event_meo_summary_hint.html" %}
+
+            {% include "examinations/partials/case_breakdown/hints/_event_pre_scrutiny_hint.html" %}
+
+            {% include "examinations/partials/case_breakdown/hints/_event_qap_discussion_hint.html" %}
+
+            {% include "examinations/partials/case_breakdown/hints/_event_other_hint.html" %}
         </div>
     </div>
 
-            {% include "examinations/partials/case_breakdown/_event_admin_notes_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_admin_notes_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_meo_summary_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_meo_summary_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" %}
 
-            {% include "examinations/partials/case_breakdown/_event_other_form.html" %}
-        </div>
+    {% include "examinations/partials/case_breakdown/_event_other_form.html" %}
+</div>
 
