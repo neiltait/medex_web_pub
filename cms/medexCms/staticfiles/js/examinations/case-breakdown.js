@@ -25,13 +25,6 @@
             }
         },
 
-        initialiseHintSections: function() {
-            var hints = this.wrapper.find('.event-hints');
-            for (var i = 0; i < forms.length; i++) {
-                this.forms[forms[i].id] = new EventForm(forms[i]);
-            }
-        },
-
         startWatcher: function() {
             var that = this;
             this.picker.change(function(e) {
