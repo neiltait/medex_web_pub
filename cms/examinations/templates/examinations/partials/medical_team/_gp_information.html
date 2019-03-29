@@ -1,78 +1,76 @@
-<div class="medex-form-section medex-form-section--inverted-background">
-      <div class="nhsuk-width-container">
-          <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full ">
-      <h3 class="nhsuk-heading-m">GP Information</h3>
+<div class="form-section">
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full ">
+            <h3 class="nhsuk-heading-m">GP Information</h3>
 
-      <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-one-half">
-          <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.gp_information %}nhsuk-form-group--error{% endif %}">
-              <label class="nhsuk-label" for="gp_information">
-                Full name
-              </label>
-              {% if errors.gp_information %}
-                <span
-                    class="nhsuk-error-message medex-font-default-override">{{ errors.gp_information }}</span>{% endif %}
-              <input
-                  class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_information %}nhsuk-input--error{% endif %}"
-                  id="gp_information" name="gp_information"
-                  value="{{ form.gp_information }}" type="text">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.gp_information %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="gp_information">
+                                Full name
+                            </label>
+                            {% if errors.gp_information %}
+                                <span
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_information }}</span>{% endif %}
+                            <input
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_information %}nhsuk-input--error{% endif %}"
+                                    id="gp_information" name="gp_information"
+                                    value="{{ form.gp_information }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.gp_role %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="gp_role">
+                                Role
+                            </label>
+                            {% if errors.gp_role %}
+                                <span
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_role }}</span>{% endif %}
+                            <input
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_role %}nhsuk-input--error{% endif %}"
+                                    id="gp_role" name="gp_role"
+                                    value="{{ form.gp_role }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
             </div>
-          </fieldset>
-        </div>
-        <div class="nhsuk-grid-column-one-half">
-          <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.gp_role %}nhsuk-form-group--error{% endif %}">
-              <label class="nhsuk-label" for="gp_role">
-                Role
-              </label>
-              {% if errors.gp_role %}
-                <span
-                    class="nhsuk-error-message medex-font-default-override">{{ errors.gp_role }}</span>{% endif %}
-              <input
-                  class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_role %}nhsuk-input--error{% endif %}"
-                  id="gp_role" name="gp_role"
-                  value="{{ form.gp_role }}" type="text">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.gp_organisation %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="gp_organisation">
+                                Organisation
+                            </label>
+                            {% if errors.gp_organisation %}
+                                <span
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_organisation }}</span>{% endif %}
+                            <input
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_organisation %}nhsuk-input--error{% endif %}"
+                                    id="gp_information" name="gp_organisation"
+                                    value="{{ form.gp_organisation }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.gp_phone_number %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="gp_phone_number">
+                                Personal phone / bleep number
+                            </label>
+                            {% if errors.gp_phone_number %}
+                                <span
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_phone_number }}</span>{% endif %}
+                            <input
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_phone_number %}nhsuk-input--error{% endif %}"
+                                    id="gp_phone_number" name="gp_phone_number"
+                                    value="{{ form.gp_phone_number }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
             </div>
-          </fieldset>
         </div>
-      </div>
-      <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-one-half">
-          <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.gp_organisation %}nhsuk-form-group--error{% endif %}">
-              <label class="nhsuk-label" for="gp_organisation">
-                Organisation
-              </label>
-              {% if errors.gp_organisation %}
-                <span
-                    class="nhsuk-error-message medex-font-default-override">{{ errors.gp_organisation }}</span>{% endif %}
-              <input
-                  class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_organisation %}nhsuk-input--error{% endif %}"
-                  id="gp_information" name="gp_organisation"
-                  value="{{ form.gp_organisation }}" type="text">
-            </div>
-          </fieldset>
-        </div>
-        <div class="nhsuk-grid-column-one-half">
-          <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.gp_phone_number %}nhsuk-form-group--error{% endif %}">
-              <label class="nhsuk-label" for="gp_phone_number">
-                Personal phone / bleep number
-              </label>
-              {% if errors.gp_phone_number %}
-                <span
-                    class="nhsuk-error-message medex-font-default-override">{{ errors.gp_phone_number }}</span>{% endif %}
-              <input
-                  class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_phone_number %}nhsuk-input--error{% endif %}"
-                  id="gp_phone_number" name="gp_phone_number"
-                  value="{{ form.gp_phone_number }}" type="text">
-            </div>
-          </fieldset>
-        </div>
-      </div>
     </div>
-  </div>
-</div>
 </div>

@@ -8,6 +8,7 @@ from alerts import messages
 from alerts.utils import generate_error_alert
 from home.utils import redirect_to_login
 from locations import request_handler as locations_request_handler
+from permissions import request_handler as permissions_request_handler
 from permissions.forms import PermissionBuilderForm
 
 from . import request_handler
@@ -71,7 +72,7 @@ def add_permission(request, user_id):
         add_another = True if request.POST.get('add_another') == "true" else False
 
         if form.is_valid():
-            response = request_handler.create_permission(json.dumps(form.to_dict(user_id)), user_id, user.auth_token)
+            response = permissions_request_handler.create_permission(json.dumps(form.to_dict(user_id)), user_id, user.auth_token)
 
             if response.status_code == status.HTTP_200_OK:
                 if add_another:

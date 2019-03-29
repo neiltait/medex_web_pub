@@ -6,8 +6,13 @@
   <link href="{% sass_src 'scss/home/index.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}
 
+{% block extra_js %}
+  <script src="{% static 'js/shared/search-dropdown.js' %}"></script>
+  <script src="{% static 'js/home/home.js' %}"></script>
+{% endblock %}
+
 {% block page %}
-  <div class="case-index" style="margin-bottom: 350px;">
+  <div class="case-index">
     <h1 class="page-title">
       ME Dashboard
     </h1>
@@ -19,7 +24,7 @@
         </p>
 
         <p class="overview-body location">
-          A Hospital
+          {{session_user.index_overview.view_location}}
         </p>
       </div>
 
@@ -29,7 +34,7 @@
         </p>
 
         <p class="overview-body">
-          6
+          {{session_user.index_overview.total_cases}}
         </p>
       </div>
 
@@ -39,14 +44,12 @@
         </p>
 
         <p class="overview-body">
-          2
+          {{session_user.index_overview.urgent_cases}}
         </p>
       </div>
     </div>
 
-    <div class="filters-block">
-      <img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">
-    </div>
+    {% include 'home/partials/_filter_block.html' %}
 
     <div class="sort-block">
       <div style="text-align:right;">
@@ -70,8 +73,4 @@
       {% endfor %}
     {% endif %}
   </div>
-{% endblock %}
-
-{% block extra_js %}
-      <script src="{% static 'js/home/home.js' %}"></script>
 {% endblock %}

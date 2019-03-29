@@ -1,5 +1,5 @@
 from alerts import messages
-from medexCms.test import mocks
+from medexCms.test.mocks import PermissionMocks
 from medexCms.test.utils import MedExTestCase
 
 from permissions.forms import PermissionBuilderForm
@@ -10,30 +10,30 @@ class PermissionModelsTests(MedExTestCase):
 
     #### Permission tests
     def test_correctly_sets_values_on_init(self):
-        permission = Permission(mocks.PERMISSION_OBJECT)
-        self.assertEqual(permission.user_id, mocks.PERMISSION_OBJECT['userId'])
-        self.assertEqual(permission.permission_id, mocks.PERMISSION_OBJECT['permissionId'])
-        self.assertEqual(permission.location_id, mocks.PERMISSION_OBJECT['locationId'])
-        self.assertEqual(permission.user_role, mocks.PERMISSION_OBJECT['userRole'])
+        permission = Permission(PermissionMocks.get_meo_permission_dict())
+        self.assertEqual(permission.user_id, PermissionMocks.get_meo_permission_dict()['userId'])
+        self.assertEqual(permission.permission_id, PermissionMocks.get_meo_permission_dict()['permissionId'])
+        self.assertEqual(permission.location_id, PermissionMocks.get_meo_permission_dict()['locationId'])
+        self.assertEqual(permission.user_role, PermissionMocks.get_meo_permission_dict()['userRole'])
 
     def test_role_type_returns_the_correct_value_from_the_enum(self):
-        permission = Permission(mocks.PERMISSION_OBJECT)
+        permission = Permission(PermissionMocks.get_meo_permission_dict())
 
         role_key = '0'
         permission.user_role = role_key
-        self.assertEqual(permission.role_type(), permission.ROLES[role_key])
+        self.assertEqual(permission.role_type, permission.ROLES[role_key])
 
         role_key = '1'
         permission.user_role = role_key
-        self.assertEqual(permission.role_type(), permission.ROLES[role_key])
+        self.assertEqual(permission.role_type, permission.ROLES[role_key])
 
         role_key = '2'
         permission.user_role = role_key
-        self.assertEqual(permission.role_type(), permission.ROLES[role_key])
+        self.assertEqual(permission.role_type, permission.ROLES[role_key])
 
         role_key = '3'
         permission.user_role = role_key
-        self.assertEqual(permission.role_type(), permission.ROLES[role_key])
+        self.assertEqual(permission.role_type, permission.ROLES[role_key])
 
 
 class PermissionsFormsTests(MedExTestCase):
