@@ -1,3 +1,133 @@
 <div id="qap-discussion" class="event-form">
-    Add QAP discussion notes
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <p class="nhsuk-heading-s">
+                Who is the discussion with?
+            </p>
+        </div>
+    </div>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="qap-discussion-with-qap" name="qap-discussion-doctor"
+                                   type="radio" value="qap">
+                            <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-qap">
+                                QAP
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="qap-discussion-with-other"
+                                   name="qap-discussion-doctor" type="radio" value="other">
+                            <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-other">
+                                Another doctor
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div id="qap-discussion-with-qap__panel" class="inset-text-panel">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap-other__full-name-input">
+                            Role
+                        </label>
+                        <p class="nhsuk-body-m">QAP name</p>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_role">
+                            Organisation
+                        </label>
+                        <p class="nhsuk-body-m">Hospital name</p>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_phone_number">
+                            Personal phone/ bleep number
+                        </label>
+                        <p class="nhsuk-body-m">07812 345 678</p>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div id="qap-discussion-with-other__panel" class="nhsuk-u-visually-hidden">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group {% if errors.qap_discussion_full_name %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="qap-other__full-name-input">
+                            Full name
+                        </label>
+                        {% if errors.qap_discussion_full_name %}
+                            <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_other_full_name }}</span>{% endif %}
+                        <input class="nhsuk-input nhsuk-input--width-10 {% if errors.full_name %}nhsuk-input--error{% endif %}"
+                               id="qap-other__full-name-input" name="qap-other__full-name-input"
+                               value="{{ form.qap_discussion_full_name }}" type="text">
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" for="qap_discussion_role">
+                            Role
+                        </label>
+                        <input class="nhsuk-input nhsuk-input--width-10"
+                               id="qap_discussion_role" name="qap_discussion_role"
+                               value="{{ form.qap_discussion_role }}" type="text">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" for="qap_discussion_organisation">
+                            Organisation
+                        </label>
+                        <input class="nhsuk-input nhsuk-input--width-10"
+                               id="qap_discussion_organisation" name="qap_discussion_organisation"
+                               value="{{ form.qap_discussion_organisation }}" type="text">
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="nhsuk-grid-column-one-half">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" for="qap_discussion_phone_number">
+                            Personal phone/ bleep number
+                        </label>
+                        <input class="nhsuk-input nhsuk-input--width-10"
+                               id="qap_discussion_phone_number" name="qap_discussion_phone_number"
+                               value="{{ form.qap_discussion_phone_number }}" type="text">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 </div>
+
+{% endwith %}
