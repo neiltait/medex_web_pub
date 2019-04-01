@@ -132,13 +132,13 @@
         </div>
     </div>
 
-    <div id="qap-date-time-of-conversation">
+    <div id="qap-discussion__date-time">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group {% if errors.qap_date_of_conversation %}nhsuk-form-group--error{% endif %}">
                     <div class="medex-text-checkbox-group__textbox">
                         <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
-                            <legend class="nhsuk-fieldset__legend">
+                            <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                                 Date of conversation
                             </legend>
                             {% if errors.qap_date_of_conversation %}
@@ -162,7 +162,8 @@
                                             Month
                                         </label>
                                         <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                               id="qap_month_of_conversation" name="qap_month_of_conversation" type="number"
+                                               id="qap_month_of_conversation" name="qap_month_of_conversation"
+                                               type="number"
                                                pattern="[0-9]*"
                                                value="{{ qap_form.month_of_conversation }}">
                                     </div>
@@ -174,7 +175,8 @@
                                             Year
                                         </label>
                                         <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                               id="qap_year_of_conversation" name="qap_year_of_conversation" type="number"
+                                               id="qap_year_of_conversation" name="qap_year_of_conversation"
+                                               type="number"
                                                pattern="[0-9]*"
                                                value="{{ qap_form.year_of_conversation }}">
                                     </div>
@@ -185,10 +187,11 @@
                 </div>
                 <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_death %}nhsuk-form-group--error{% endif %}">
                     <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
-                        <label class="nhsuk-label" for="time_of_conversation">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="time_of_conversation">
                             Time of conversation
                         </label>
-                        {% if errors.qap_time_of_conversation %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_time_of_conversation }}</span>{% endif %}
+                        {% if errors.qap_time_of_conversation %}
+                            <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_time_of_conversation }}</span>{% endif %}
                         <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="qap_time_of_conversation"
                                name="qap_time_of_conversation"
                                type="time"
@@ -200,7 +203,56 @@
 
     </div>
 
-    {%  include "examinations/partials/case_breakdown/_cause_of_death.html" %}
+    {% include "examinations/partials/case_breakdown/_cause_of_death.html" %}
+
+    <div id="qap-discussion__details">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_details">
+                    Details of the discussion?
+                </label>
+                <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_details"
+                          rows="6">{{ qap_form.details }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="qap-discussion__outcome">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+
+                    <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                            Outcomes of discussion
+                        </legend>
+
+                        <span class="nhsuk-hint" id="example-hint">
+                          What was officially decided by the ME and QAP?
+                    </span>
+                        <div class="nhsuk-radios nhsuk-radios--inline">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-mccd"
+                                       name="qap-discussion-outcome"
+                                       type="radio" value="mccd" {% if qap_form.outcome == "mccd" %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-mccd">
+                                    MCCD to be issued
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-coroner"
+                                       name="qap-discussion-outcome" type="radio" value="coroner"
+                                       {% if qap_form.outcome == "coroner" %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-coroner">
+                                    Refer to coroner
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
