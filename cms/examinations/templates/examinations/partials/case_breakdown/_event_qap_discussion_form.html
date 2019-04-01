@@ -7,21 +7,21 @@
         </div>
     </div>
 
-    <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-row {% if not qap_form.default_qap %}nhsuk-u-visually-hidden{% endif %}">
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="qap-discussion-with-qap" name="qap-discussion-doctor"
-                                   type="radio" value="qap">
+                                   type="radio" value="qap" {% if qap_form.use_default_qap %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-qap">
                                 QAP
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="qap-discussion-with-other"
-                                   name="qap-discussion-doctor" type="radio" value="other">
+                                   name="qap-discussion-doctor" type="radio" value="other" {% if qap_form.use_default_qap == False %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-other">
                                 Another doctor
                             </label>
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div id="qap-discussion-with-qap__panel" class="inset-text-panel">
+    <div id="qap-discussion-with-qap__panel" class="inset-text-panel {% if qap_form.use_default_qap == False %}nhsuk-u-visually-hidden{% endif %}">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <fieldset class="nhsuk-fieldset">
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div id="qap-discussion-with-other__panel" class="nhsuk-u-visually-hidden">
+    <div id="qap-discussion-with-other__panel" class="{% if qap_form.use_default_qap == True %}nhsuk-u-visually-hidden{% endif %}">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <fieldset class="nhsuk-fieldset">
@@ -129,5 +129,3 @@
         </div>
     </div>
 </div>
-
-{% endwith %}

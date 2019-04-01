@@ -250,7 +250,8 @@ def edit_examination_case_breakdown(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'forms': forms
+        'forms': forms,
+        'qap_form': examination.qap_discussion
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
