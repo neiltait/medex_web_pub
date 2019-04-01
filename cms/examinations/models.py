@@ -201,7 +201,14 @@ class PatientDetails:
 class CaseBreakdown:
 
     def __init__(self, obj_dict):
-        self.timeline_items = obj_dict.get('timelineItems')
+        self.timeline_items = obj_dict.get('events')
+        self.patient_name = obj_dict.get("patientName")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.date_of_death = obj_dict.get("dateOfDeath")
+        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.events = []
+        for item in self.timeline_items:
+            self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
