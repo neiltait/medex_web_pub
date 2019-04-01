@@ -26,6 +26,7 @@
         },
 
         startWatcher: function() {
+        console.log(this.picker);
             var that = this;
             this.picker.change(function(e) {
                 that.forms[that.picker[0].value].show();
