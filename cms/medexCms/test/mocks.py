@@ -600,7 +600,50 @@ class ExaminationMocks:
 
     @classmethod
     def get_case_breakdown_response_content(cls):
-        return {}
+        return {
+            "patientName": 'John Doe',
+            "nhsNumber": '0123-456-789',
+            "dateOfDeath": "2019-03-12T00:00:00.000Z",
+            "timeOfDeath": "13:00",
+            "events": [
+                {
+                    "latest": {
+                        "type": "Admission Notes",
+                        "user": {
+                            "id": '1',
+                            "name": 'John Smith',
+                            'role': 'MEO'
+                        },
+                        "createdDate": "2019-03-31T10:48:15.749Z",
+                        "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
+                    },
+                    "history": [
+                        {
+                            "type": "Admission Notes",
+                            "user": {
+                                "id": '1',
+                                "name": 'John Smith',
+                                'role': 'MEO'
+                            },
+                            "createdDate": "2019-03-18T10:48:15.749Z",
+                            "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
+                        }
+                    ]
+                }
+            ],
+            "errors": {
+                "additionalProp1": [
+                    "string"
+                ],
+                "additionalProp2": [
+                    "string"
+                ],
+                "additionalProp3": [
+                    "string"
+                ]
+            },
+            "success": True
+        }
 
     @classmethod
     def get_successful_case_creation_response(cls):
