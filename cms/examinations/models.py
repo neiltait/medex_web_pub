@@ -275,7 +275,7 @@ class CaseBreakdownQAPDiscussion:
         return {
             'default_qap': self.default_qap.to_object(),
             'alternate_qap': self.alternate_qap.to_object(),
-            'case_of_death': self.cause_of_death.to_object(),
+            'cause_of_death': self.cause_of_death.to_object(),
             'day_of_conversation': self.day_of_conversation,
             'month_of_conversation': self.month_of_conversation,
             'year_of_conversation': self.year_of_conversation,
@@ -300,7 +300,7 @@ class CauseOfDeathProposal:
     def to_object(self):
         return {
             'medical_examiner': get_user_presenter(self.medical_examiner),
-            'creation)_date': self.creation_date,
+            'creation_date': self.creation_date,
             'section_1a': self.section_1a,
             'section_1b': self.section_1b,
             'section_1c': self.section_1c,

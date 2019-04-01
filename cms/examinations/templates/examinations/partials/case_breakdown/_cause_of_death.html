@@ -1,3 +1,68 @@
-<div style="width:100%;height:150px;background-color:rgba(234, 207, 28, 0.6);padding:30px 50px;">
-    <h1>Holding Space For Cause of Death</h1>
+<div class="cause-of-death-panel">
+    <div class="cause-of-death-header">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+                <h3 class="nhsuk-heading-s">
+                    Proposed cause of death
+                </h3>
+            </div>
+
+            <div class="nhsuk-grid-column-one-third">
+                <div class="controls flex-row">
+                    <div class="chevron-down"></div>
+                    <div class="chevron-up"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cause-of-death-body">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div>
+                    <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
+                    <p class="nhsuk-body"><span
+                            class="nhsuk-u-font-weight-bold">{{ qap_form.cause_of_death.medical_examiner.first_name }} {{ qap_form.cause_of_death.medical_examiner.last_name }}</span>
+                        on <span class="nhsuk-u-font-weight-bold">{{ qap_form.cause_of_death.creation_date }}</span></p>
+                </div>
+
+                <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
+                    It is proposed that {{ qap_form.patient.first_name }} {{ qap_form.patient.last_name }} died from
+                </p>
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
+                        1a
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
+                              rows="2" disabled>{{ qap_form.cause_of_death.section_1a }}</textarea>
+                </div>
+
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
+                        1b
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
+                              rows="2" disabled>{{ qap_form.cause_of_death.section_1b }}</textarea>
+                </div>
+
+
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
+                        1c
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
+                              rows="2" disabled>{{ qap_form.cause_of_death.section_1c }}</textarea>
+                </div>
+
+
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
+                        2
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
+                              rows="2" disabled>{{ qap_form.cause_of_death.section_2 }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
