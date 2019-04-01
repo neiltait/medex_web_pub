@@ -61,7 +61,7 @@
                     <div class="nhsuk-grid-column-one-half">
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                            id="role-1" name="role" type="radio" value="me" {% if form.role == 'me' %}checked{% endif %}>
+                            id="role-1" name="role" type="radio" value="1" {% if form.role == '1' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-1">
                           ME
                         </label>
@@ -69,7 +69,7 @@
 
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                             id="role-2" name="role" type="radio" value="meo" {% if form.role == 'meo' %}checked{% endif %}>
+                             id="role-2" name="role" type="radio" value="0" {% if form.role == '0' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-2">
                           MEO
                         </label>
@@ -79,7 +79,7 @@
                     <div class="nhsuk-grid-column-one-half">
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                             id="role-3" name="role" type="radio" value="other" {% if form.role == 'sa' %}checked{% endif %}>
+                             id="role-3" name="role" type="radio" value="2" {% if form.role == '2' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-3">
                           System admin only
                         </label>
