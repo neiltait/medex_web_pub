@@ -127,7 +127,7 @@ class User:
             "pageNumber": 1
         }
 
-        response = examination_request_handler.load_examinations_index(json.dumps(query_params), self.auth_token)
+        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
