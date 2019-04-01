@@ -28,7 +28,7 @@ def load_examinations_index(params, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_index_response()
     else:
-        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, params)
+        return MedexRequest.get(auth_token, '%s/examinations' % settings.API_URL, params)
 
 
 def load_patient_details_by_id(examination_id, auth_token):
