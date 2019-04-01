@@ -254,5 +254,44 @@
         </div>
     </div>
 
+    <div id="qap-discussion__outcome-decision">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
 
+                    <fieldset class="nhsuk-fieldset">
+                        <span class="nhsuk-hint" id="example-hint">
+                          What was officially decided by the ME and QAP?
+                    </span>
+                        <div class="nhsuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-1"
+                                       name="qap-discussion-outcome-decision"
+                                       type="radio" value="mccd" {% if qap_form.outcome_decision == "outcome-decision-1" %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-1">
+                                    Cause of death provided by the QAP before scrutiny accepted without change
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-2"
+                                       name="qap-discussion-outcome-decision" type="radio" value="coroner"
+                                       {% if qap_form.outcome_decision == "outcome-decision-2" %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-2">
+                                    Cause of death established by ME accepted by QAP
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-3"
+                                       name="qap-discussion-outcome-decision" type="radio" value="coroner"
+                                       {% if qap_form.outcome_decision == "outcome-decision-3" %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-3">
+                                    ME and QAP have agreed a new cause of death
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
