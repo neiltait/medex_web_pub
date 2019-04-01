@@ -608,6 +608,30 @@ class ExaminationMocks:
             "events": [
                 {
                     "latest": {
+                        "type": "John Doe died",
+                        "user": {
+                            "id": '1',
+                            "name": 'John Smith',
+                            'role': 'MEO'
+                        },
+                        "createdDate": "2019-03-29T10:48:15.749Z",
+                        "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
+                    },
+                    "history": [
+                        {
+                            "type": "John Doe died",
+                            "user": {
+                                "id": '1',
+                                "name": 'John Smith',
+                                'role': 'MEO'
+                            },
+                            "createdDate": "2019-03-29T10:48:15.749Z",
+                            "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
+                        }
+                    ]
+                },
+                {
+                    "latest": {
                         "type": "Admission Notes",
                         "user": {
                             "id": '1',
@@ -627,6 +651,30 @@ class ExaminationMocks:
                             },
                             "createdDate": "2019-03-18T10:48:15.749Z",
                             "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
+                        }
+                    ]
+                },
+                {
+                    "latest": {
+                        "type": "Medical history",
+                        "user": {
+                            "id": '1',
+                            "name": 'John Smith',
+                            'role': 'MEO'
+                        },
+                        "createdDate": "2019-03-31T10:48:15.749Z",
+                        "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
+                    },
+                    "history": [
+                        {
+                            "type": "Medical history",
+                            "user": {
+                                "id": '1',
+                                "name": 'John Smith',
+                                'role': 'MEO'
+                            },
+                            "createdDate": "2019-03-18T10:48:15.749Z",
+                            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
                         }
                     ]
                 }
