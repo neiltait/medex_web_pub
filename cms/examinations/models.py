@@ -1,5 +1,5 @@
 from rest_framework import status
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from medexCms.utils import parse_datetime, is_empty_date
 from people.models import BereavedRepresentative
@@ -218,6 +218,30 @@ class CaseBreakdown:
             return CaseBreakdown(response.json())
         else:
             return None
+
+
+class CaseEvent:
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+
+    def __init__(self, number, obj_dict):
+        self.number = number
+        self.type = obj_dict.get('type')
+        self.user_name = obj_dict.get('user').get('name')
+        self.user_role = obj_dict.get('user').get('role')
+        self.created_date = obj_dict.get('createdDate')
+        self.body = obj_dict.get('body')
+
+    def display_date(self):
+        date = parse_datetime(self.created_date)
+        if date.date() == datetime.today().date():
+            return 'Today at %s' % date.strftime(self.time_format)
+        elif date.date() == datetime.today().date() - timedelta(days=1):
+            return 'Yesterday at %s' % date.strftime(self.time_format)
+        else:
+            time = date.strftime(self.time_format)
+            date = date.strftime(self.date_format)
+            return "%s at %s" % (date, time)
 
 
 class MedicalTeam:
