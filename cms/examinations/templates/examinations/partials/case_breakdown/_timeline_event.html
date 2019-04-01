@@ -1,0 +1,27 @@
+<div class="timeline-event-row flex-row vertical-center">
+    <div class="timeline-branch">
+        <hr />
+    </div>
+
+    <div class="timeline-event flex-row">
+        <div class="flex-row vertical-center event-number-space">
+            <div class="event-number">
+                {{event.number}}
+            </div>
+        </div>
+
+        <div class="event-content">
+            <div class="event-type">
+                {{event.type}}
+            </div>
+
+            <div class="event-reporter">
+                {{event.user_name}}, {{event.user_role}}, {{event.display_date}}
+            </div>
+
+            <div class="event-body">
+                {{event.body}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+@import '../../variables';
+
+.timeline-event-row {
+
+    .timeline-branch {
+        width: 10%;
+
+        hr {
+            border-bottom: 3px solid $nhs-grey;
+            margin: 0px;
+        }
+    }
+
+    .timeline-event {
+        width: 90%;
+        align-items: stretch;
+
+        border-left: 2px solid $nhs-grey-2;
+        background-color: $white;
+
+        .event-number-space {
+            width: 100px;
+            border-right: 2px solid $nhs-pale-grey;
+
+            .event-number {
+                width: 100%;
+                text-align: center;
+            }
+
+            font-size: $nhs-heading-xl-size;
+        }
+
+        .event-content {
+            padding: 1rem;
+
+            .event-type, .event-reporter {
+                font-weight: bold;
+            }
+        }
+    }
+}
