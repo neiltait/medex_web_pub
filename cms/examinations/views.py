@@ -93,6 +93,9 @@ def edit_examination_patient_details(request, examination_id):
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
+        examination = PatientDetails().set_primary_info_values(primary_info_form)\
+            .set_secondary_info_values(secondary_info_form).set_bereaved_info_values(bereaved_info_form)\
+            .set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
