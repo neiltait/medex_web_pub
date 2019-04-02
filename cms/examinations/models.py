@@ -273,6 +273,10 @@ class PatientDetails:
         else:
             return None
 
+    @classmethod
+    def update(cls, examination_id, submission, auth_token):
+        return request_handler.update_patient_details(examination_id, submission, auth_token)
+
 
 class CaseBreakdown:
 

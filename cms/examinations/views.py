@@ -105,9 +105,8 @@ def edit_examination_patient_details(request, examination_id):
             submission.update(bereaved_info_form.for_request())
             submission.update(urgency_info_form.for_request())
             submission['id'] = examination_id
-            submission['completed'] = 'true' if examination.completed else 'false'
 
-            response = request_handler.update_patient_details(examination_id, submission, user.auth_token)
+            response = PatientDetails.update(examination_id, submission, user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and request.GET.get('nextTab'):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
