@@ -13,7 +13,7 @@
                     <label class="nhsuk-label" for="full-name">
                         Full name
                     </label>
-                    <input class="nhsuk-input nhsuk-input--width-10" id="full-name" name="test-width-10"
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name" name="test-width-10"
                            type="text">
                 </div>
                 <div class="nhsuk-form-group">
@@ -57,7 +57,7 @@
                     <label class="nhsuk-label" for="full-name">
                         Relationship
                     </label>
-                    <input class="nhsuk-input nhsuk-input--width-10" id="full-name" name="test-width-10"
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name" name="test-width-10"
                            type="text">
                 </div>
                 <div class="nhsuk-form-group">
@@ -93,6 +93,7 @@
                         </fieldset>
                     </div>
                 </div>
+
             </div>
             <div class="nhsuk-form-group">
                 <div class="nhsuk-grid-row margin-top">
@@ -100,8 +101,137 @@
                         <label class="nhsuk-label" for="full-name">
                             Phone number
                         </label>
-                        <input class="nhsuk-input nhsuk-input--width-10" id="full-name" name="test-width-10"
+                        <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name"
+                               name="test-width-10"
                                type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                        Date of conversation
+                    </legend>
+
+                    <div class="nhsuk-date-input margin-top" id="dob">
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-day">
+                                    Day
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="dob-day"
+                                       name="dob-day" type="number" pattern="[0-9]*">
+                            </div>
+                        </div>
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-month">
+                                    Month
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="dob-month"
+                                       name="dob-month" type="number" pattern="[0-9]*">
+                            </div>
+                        </div>
+                        <div class="nhsuk-date-input__item">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-year">
+                                    Year
+                                </label>
+                                <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" id="dob-year"
+                                       name="dob-year" type="number" pattern="[0-9]*">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+            <div class="nhsuk-form-group">
+                <label class="nhsuk-label" for="input-width-4">
+                    Time
+                </label>
+                <input class="nhsuk-input nhsuk-input--width-4 margin-bottom" id="input-width-4" name="test-width-4"
+                       type="time">
+            </div>
+
+            <div class="nhsuk-form-group">
+
+                <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
+                    <legend class="nhsuk-fieldset__legend">
+                        Tick if this dicussion with a representative was unable to happen at all
+                    </legend>
+                    <div class="nhsuk-checkboxes">
+                        <div class="nhsuk-checkboxes__item">
+                            <input class="nhsuk-checkboxes__input" id="nationality-1" name="nationality" type="checkbox"
+                                   value="email">
+                            <label class="nhsuk-label nhsuk-checkboxes__label" for="nationality-1">
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+
+            <div id="bereavement-discussion__details">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="bereavement_discussion_details"
+                               id="bereavement_discussion_details"">
+                        Details of the discussion?
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="bereavement_discussion_details"
+                                  rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div id="qap-discussion__outcome">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <div class="nhsuk-form-group">
+
+                            <fieldset class="nhsuk-fieldset">
+                                <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                                    Outcome
+                                </legend>
+
+                                <span class="nhsuk-hint" id="example-hint">
+                          What was the ultimate outcome of the conversation with the family member or representative?
+                    </span>
+                                <div class="nhsuk-radios nhsuk-radios--inline">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input qap-discussion-outcome-radio"
+                                               id="qap-discussion-outcome-mccd"
+                                               name="qap-discussion-outcome"
+                                               type="radio" value="mccd">
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="qap-discussion-outcome-mccd">
+                                            Cause of death accepted without concerns
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item margin-save-button">
+                                        <input class="nhsuk-radios__input qap-discussion-outcome-radio"
+                                               id="qap-discussion-outcome-coroner"
+                                               name="qap-discussion-outcome" type="radio" value="coroner">
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="qap-discussion-outcome-coroner">
+                                            Concerns raised
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="qap-discussion__save-buttons" class="nhsuk-form-group">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <input id="submit-btn" class="nhsuk-button" type="submit" value="Add event to timeline"
+                               name="add-event-to-timeline"/>
+                        <input id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                               value="Save as draft"
+                               name="save-as-draft"/>
                     </div>
                 </div>
             </div>
