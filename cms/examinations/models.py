@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from medexCms.utils import parse_datetime, is_empty_date
 from people.models import BereavedRepresentative
+from users.utils import get_user_presenter
 
 from . import request_handler
 
@@ -88,7 +89,8 @@ class ExaminationOverview:
     def calc_age(self):
         if self.date_of_birth and self.date_of_death:
             return self.date_of_death.year - self.date_of_birth.year - (
-                (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+                    (self.date_of_death.month, self.date_of_death.day) < (
+                self.date_of_birth.month, self.date_of_birth.day))
         else:
             return 0
 
@@ -200,24 +202,120 @@ class PatientDetails:
 
 class CaseBreakdown:
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, medical_team):
+
         self.timeline_items = obj_dict.get('events')
         self.patient_name = obj_dict.get("patientName")
         self.nhs_number = obj_dict.get("nhsNumber")
         self.date_of_death = obj_dict.get("dateOfDeath")
         self.time_of_death = obj_dict.get("timeOfDeath")
         self.events = []
+
+        self.medical_team = medical_team
+        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, None, None)
+
         for item in self.timeline_items:
             self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
+        medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseBreakdown(response.json())
+            return CaseBreakdown(response.json(), medical_team)
         else:
             return None
+
+
+class CaseBreakdownQAPDiscussion:
+
+    def __init__(self):
+        self.default_qap = None
+        self.use_default_qap = False
+
+        self.alternate_qap = MedicalTeamMember()
+        self.cause_of_death = None
+
+        self.day_of_conversation = ''
+        self.month_of_conversation = ''
+        self.year_of_conversation = ''
+        self.time_of_conversation = ''
+
+        self.details = ''
+        self.outcome = ''
+
+    @classmethod
+    def from_data(cls, medical_team=None, cause_of_death=None, qap_draft=None):
+        qap_discussion = CaseBreakdownQAPDiscussion()
+
+        cls.__set_default_qap(medical_team, qap_discussion, qap_draft)
+
+        qap_discussion.cause_of_death = cause_of_death
+
+        cls.__load_qap_draft(qap_discussion, qap_draft)
+
+        return qap_discussion
+
+    @classmethod
+    def __load_qap_draft(cls, qap_discussion, qap_draft):
+        if qap_draft is not None:
+            try:
+                qap_discussion.use_default_qap = qap_draft['use_default_qap']
+                qap_discussion.alternate_qap = MedicalTeamMember.from_dict(qap_draft['alternate_qap'])
+                qap_discussion.day_of_conversation = qap_draft['day_of_conversation']
+                qap_discussion.month_of_conversation = qap_draft['month_of_conversation']
+                qap_discussion.year_of_conversation = qap_draft['year_of_conversation']
+                qap_discussion.time_of_conversation = qap_draft['time_of_conversation']
+                qap_discussion.details = qap_draft['details']
+                qap_discussion.outcome = qap_draft['outcome']
+
+            except KeyError:
+                print('Could not parse qap draft object')
+
+    @classmethod
+    def __set_default_qap(cls, medical_team, qap_discussion, qap_draft):
+        if medical_team is not None and medical_team.qap is not None and medical_team.qap.name != '':
+            qap_discussion.default_qap = medical_team.qap
+
+            if qap_draft is None:
+                qap_discussion.use_default_qap = True
+
+    def to_object(self):
+        return {
+            'default_qap': self.default_qap.to_object(),
+            'alternate_qap': self.alternate_qap.to_object(),
+            'cause_of_death': self.cause_of_death.to_object(),
+            'day_of_conversation': self.day_of_conversation,
+            'month_of_conversation': self.month_of_conversation,
+            'year_of_conversation': self.year_of_conversation,
+            'time_of_conversation': self.time_of_conversation,
+            'details': self.details,
+            'outcome': self.outcome
+        }
+
+
+class CauseOfDeathProposal:
+
+    def __init__(self):
+        from users.models import User
+
+        self.medical_examiner = User()
+        self.creation_date = ''
+        self.section_1a = ''
+        self.section_1b = ''
+        self.section_1c = ''
+        self.section_2 = ''
+
+    def to_object(self):
+        return {
+            'medical_examiner': get_user_presenter(self.medical_examiner),
+            'creation_date': self.creation_date,
+            'section_1a': self.section_1a,
+            'section_1b': self.section_1b,
+            'section_1c': self.section_1c,
+            'section_2': self.section_2
+        }
 
 
 class CaseEvent:
@@ -267,7 +365,6 @@ class MedicalTeam:
         self.medical_examiner = User(obj_dict['medicalExaminer']) if 'medicalExaminer' in obj_dict else None
         self.medical_examiners_officer = User(
             obj_dict['medicalExaminerOfficer']) if 'medicalExaminerOfficer' in obj_dict else None
-
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
