@@ -212,7 +212,8 @@ class CaseBreakdown:
         self.events = []
 
         self.medical_team = medical_team
-        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, None, None)
+        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, self.get_latest_cause_of_death(),
+                                                                   self.get_qap_discussion_draft())
 
         for item in self.timeline_items:
             self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
@@ -227,6 +228,11 @@ class CaseBreakdown:
         else:
             return None
 
+    def get_latest_cause_of_death(self):
+        return None
+
+    def get_qap_discussion_draft(self):
+        return None
 
 class CaseBreakdownQAPDiscussion:
 
