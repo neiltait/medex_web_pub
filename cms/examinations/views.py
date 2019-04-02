@@ -70,25 +70,24 @@ def edit_examination(request, examination_id):
 
 def edit_examination_patient_details(request, examination_id):
     user = User.initialise_with_token(request)
+
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-    if not examination:
-        return render_404(request, user, 'case')
-
     status_code = status.HTTP_200_OK
     error_count = 0
-    primary_info_form = PrimaryExaminationInformationForm()
-    primary_info_form.set_values_from_instance(examination)
-    secondary_info_form = SecondaryExaminationInformationForm()
-    secondary_info_form.set_values_from_instance(examination)
-    bereaved_info_form = BereavedInformationForm()
-    bereaved_info_form.set_values_from_instance(examination)
-    urgency_info_form = UrgencyInformationForm()
-    urgency_info_form.set_values_from_instance(examination)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        examination = PatientDetails.load_by_id(examination_id, user.auth_token)
+        if not examination:
+            return render_404(request, user, 'case')
+
+        primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
+        secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
+        bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
+        urgency_info_form = UrgencyInformationForm().set_values_from_instance(examination)
+
+    elif request.method == 'POST':
 
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
