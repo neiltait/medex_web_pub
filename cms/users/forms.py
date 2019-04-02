@@ -1,7 +1,5 @@
 from alerts import messages
 
-from . import request_handler
-
 
 class CreateUserForm:
     submit_btn_text = 'Save and add role/permission'
@@ -24,7 +22,8 @@ class CreateUserForm:
         return False if self.email_error else True
 
     def check_is_nhs_email(self):
-        return '@nhs.uk' in self.email_address
+        return '@nhs.uk' in self.email_address or '@nhs.net' in self.email_address\
+               or '@methods.co.uk' in self.email_address
 
     def response_to_dict(self):
         return {
