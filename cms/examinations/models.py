@@ -1,7 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
-from medexCms.utils import parse_datetime, is_empty_date
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string
 from people.models import BereavedRepresentative
 
 from . import request_handler
@@ -147,11 +147,11 @@ class PatientDetails:
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
         self.personal_affects_details = obj_dict.get("personalEffectDetails")
 
-        self.cultural_priority = 'true' if obj_dict.get("culturalPriority") else 'false'
-        self.faith_priority = 'true' if obj_dict.get("faithPriority") else 'false'
-        self.child_priority = 'true' if obj_dict.get("childPriority") else 'false'
-        self.coroner_priority = 'true' if obj_dict.get("coronerPriority") else 'false'
-        self.other_priority = 'true' if obj_dict.get("otherPriority") else 'false'
+        self.cultural_priority = bool_to_string(obj_dict.get("culturalPriority"))
+        self.faith_priority = bool_to_string("faithPriority")
+        self.child_priority = bool_to_string("childPriority")
+        self.coroner_priority = bool_to_string("coronerPriority")
+        self.other_priority = bool_to_string("otherPriority")
         self.priority_details = obj_dict.get("priorityDetails")
 
         if not is_empty_date(obj_dict.get("dateOfBirth")):
