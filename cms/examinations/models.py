@@ -1,5 +1,5 @@
 from rest_framework import status
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from medexCms.utils import parse_datetime, is_empty_date
 from people.models import BereavedRepresentative
@@ -203,9 +203,19 @@ class PatientDetails:
 class CaseBreakdown:
 
     def __init__(self, obj_dict, medical_team):
-        self.timeline_items = obj_dict.get('timelineItems')
+
+        self.timeline_items = obj_dict.get('events')
+        self.patient_name = obj_dict.get("patientName")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.date_of_death = obj_dict.get("dateOfDeath")
+        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.events = []
+
         self.medical_team = medical_team
         self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, None, None)
+
+        for item in self.timeline_items:
+            self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
@@ -306,6 +316,30 @@ class CauseOfDeathProposal:
             'section_1c': self.section_1c,
             'section_2': self.section_2
         }
+
+
+class CaseEvent:
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+
+    def __init__(self, number, obj_dict):
+        self.number = number
+        self.type = obj_dict.get('type')
+        self.user_name = obj_dict.get('user').get('name')
+        self.user_role = obj_dict.get('user').get('role')
+        self.created_date = obj_dict.get('createdDate')
+        self.body = obj_dict.get('body')
+
+    def display_date(self):
+        date = parse_datetime(self.created_date)
+        if date.date() == datetime.today().date():
+            return 'Today at %s' % date.strftime(self.time_format)
+        elif date.date() == datetime.today().date() - timedelta(days=1):
+            return 'Yesterday at %s' % date.strftime(self.time_format)
+        else:
+            time = date.strftime(self.time_format)
+            date = date.strftime(self.date_format)
+            return "%s at %s" % (date, time)
 
 
 class MedicalTeam:

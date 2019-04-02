@@ -19,7 +19,6 @@ from permissions.models import Permission
 
 from . import request_handler
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -60,9 +59,10 @@ class User:
 
     @property
     def role_type(self):
-        # TODO work out role type from permissions
-        return self.ME_ROLE_TYPE
-        # return self.permissions[0].role_type
+        # TODO This is changed to force the system into accepting us as an ME.
+        #  Remove after development of ME only features
+        # return self.ME_ROLE_TYPE
+        return self.permissions[0].role_type
 
     def check_logged_in(self):
         if self.auth_token:
@@ -117,16 +117,16 @@ class User:
         else:
             user = self.user_id if self.role_type == self.ME_ROLE_TYPE else ''
         query_params = {
-            "locationId": location,
-            "userId": user,
-            "caseStatus": '',
-            "orderBy": "CaseCreated",
-            "openCases": 'true',
-            "pageSize": 20,
-            "pageNumber": 1
+            "LocationId": location,
+            "UserId": user,
+            "CaseStatus": '',
+            "OrderBy": "CaseCreated",
+            "OpenCases": True,
+            "PageSize": 20,
+            "PageNumber": 1
         }
 
-        response = examination_request_handler.load_examinations_index(json.dumps(query_params), self.auth_token)
+        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
@@ -168,7 +168,7 @@ class User:
             return [
                 {
                     'id': 'pre-scrutiny',
-                    'name': 'ME pre scrutiny'
+                    'name': 'ME pre-scrutiny'
                 },
                 {
                     'id': 'qap-discussion',
