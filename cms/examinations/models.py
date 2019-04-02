@@ -112,7 +112,7 @@ class ExaminationOverview:
 
 class PatientDetails:
 
-    def __init__(self, obj_dict, modes_of_disposal={}):
+    def __init__(self, obj_dict={}, modes_of_disposal={}):
         self.modes_of_disposal = modes_of_disposal
 
         self.id = obj_dict.get("id")
@@ -122,7 +122,7 @@ class PatientDetails:
 
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
-        self.gender = obj_dict.get("gender").lower()
+        self.gender = obj_dict.get("gender")
         self.gender_details = obj_dict.get("genderDetails")
         self.nhs_number = obj_dict.get("nhsNumber")
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
@@ -154,7 +154,7 @@ class PatientDetails:
         self.other_priority = bool_to_string("otherPriority")
         self.priority_details = obj_dict.get("priorityDetails")
 
-        if not is_empty_date(obj_dict.get("dateOfBirth")):
+        if not (is_empty_date(obj_dict.get("dateOfBirth")) or obj_dict.get("dateOfBirth") is None):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
             self.day_of_birth = self.date_of_birth.day
             self.month_of_birth = self.date_of_birth.month
@@ -165,7 +165,7 @@ class PatientDetails:
             self.month_of_birth = None
             self.year_of_birth = None
 
-        if not is_empty_date(obj_dict.get("dateOfDeath")):
+        if not (is_empty_date(obj_dict.get("dateOfDeath")) or obj_dict.get("dateOfDeath") is None):
             self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
             self.day_of_death = self.date_of_death.day
             self.month_of_death = self.date_of_death.month
@@ -182,8 +182,9 @@ class PatientDetails:
                 self.mode_of_disposal = key
 
         self.representatives = []
-        for representative in obj_dict.get("representatives"):
-            self.representatives.append(BereavedRepresentative(representative))
+        if obj_dict.get('representatives'):
+            for representative in obj_dict.get("representatives"):
+                self.representatives.append(BereavedRepresentative(representative))
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
