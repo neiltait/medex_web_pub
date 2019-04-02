@@ -14,7 +14,7 @@ def post_new_examination(examination_object, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_creation_response()
     else:
-        return MedexRequest.post(auth_token, '%s/examinations/new' % settings.API_URL, json.dumps(examination_object))
+        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
 
 
 def load_by_id(examination_id, auth_token):
@@ -28,7 +28,7 @@ def load_examinations_index(params, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_index_response()
     else:
-        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, params)
+        return MedexRequest.get(auth_token, '%s/examinations' % settings.API_URL, params)
 
 
 def load_patient_details_by_id(examination_id, auth_token):

@@ -118,16 +118,16 @@ class User:
         else:
             user = self.user_id if self.role_type == self.ME_ROLE_TYPE else ''
         query_params = {
-            "locationId": location,
-            "userId": user,
-            "caseStatus": '',
-            "orderBy": "CaseCreated",
-            "openCases": 'true',
-            "pageSize": 20,
-            "pageNumber": 1
+            "LocationId": location,
+            "UserId": user,
+            "CaseStatus": '',
+            "OrderBy": "CaseCreated",
+            "OpenCases": True,
+            "PageSize": 20,
+            "PageNumber": 1
         }
 
-        response = examination_request_handler.load_examinations_index(json.dumps(query_params), self.auth_token)
+        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
