@@ -214,6 +214,7 @@ class CaseBreakdown:
         self.medical_team = medical_team
         self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, self.get_latest_cause_of_death(),
                                                                    self.get_qap_discussion_draft())
+        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.get_latest_admission_draft())
 
         for item in self.timeline_items:
             self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
@@ -233,6 +234,55 @@ class CaseBreakdown:
 
     def get_qap_discussion_draft(self):
         return None
+
+    def get_latest_admission_draft(self):
+        return None
+
+
+class CaseBreakdownLatestAdmission:
+    def __init__(self):
+        self.day_of_last_admission = ''
+        self.month_of_last_admission = ''
+        self.year_of_last_admission = ''
+        self.date_of_last_admission_unknown = False
+
+        self.time_of_last_admission = ''
+        self.time_of_last_admission_unknown = False
+
+        self.latest_admission_notes = ''
+        self.suspect_referral = ''
+
+    @classmethod
+    def from_data(cls, draft=None):
+        latest_admission = CaseBreakdownLatestAdmission()
+        if draft is not None:
+            try:
+                latest_admission.day_of_last_admission = draft['day_of_last_admission']
+                latest_admission.month_of_last_admission = draft['month_of_last_admission']
+                latest_admission.year_of_last_admission = draft['year_of_last_admission']
+                latest_admission.date_of_last_admission_unknown = draft['date_of_last_admission_unknown']
+                latest_admission.time_of_last_admission = draft['time_of_last_admission']
+                latest_admission.time_of_last_admission_unknown = draft['time_of_last_admission_unknown']
+                latest_admission.latest_admission_notes = draft['latest_admission_notes']
+                latest_admission.suspect_referral = draft['suspect_referral']
+
+            except KeyError:
+                print('Could not parse latest admission object')
+
+        return latest_admission
+
+    def to_object(self):
+        return {
+            'day_of_last_admission': self.day_of_last_admission,
+            'month_of_last_admission': self.month_of_last_admission,
+            'year_of_last_admission': self.year_of_last_admission,
+            'date_of_last_admission_unknown': self.date_of_last_admission_unknown,
+            'time_of_last_admission': self.time_of_last_admission,
+            'time_of_last_admission_unknown': self.time_of_last_admission_unknown,
+            'latest_admission_notes': self.latest_admission_notes,
+            'suspect_referral': self.suspect_referral,
+        }
+
 
 class CaseBreakdownQAPDiscussion:
 
