@@ -186,6 +186,81 @@ class PatientDetails:
             for representative in obj_dict.get("representatives"):
                 self.representatives.append(BereavedRepresentative(representative))
 
+    def set_primary_info_values(self, form):
+        self.given_names = form.first_name
+        self.surname = form.last_name
+        self.gender = form.gender
+        self.gender_details = form.gender_details
+        self.nhs_number = form.nhs_number
+        self.hospital_number_1 = form.hospital_number_1
+        self.hospital_number_2 = form.hospital_number_2
+        self.hospital_number_3 = form.hospital_number_3
+        self.day_of_birth = form.day_of_birth
+        self.month_of_birth = form.month_of_birth
+        self.year_of_birth = form.year_of_birth
+        self.day_of_death = form.day_of_death
+        self.month_of_death = form.month_of_death
+        self.year_of_death = form.year_of_death
+        self.time_of_death = form.time_of_death
+        self.death_occurred_location_id = form.place_of_death
+        self.out_of_hours = form.out_of_hours
+        return self
+
+    def set_secondary_info_values(self, form):
+        self.house_name_number = form.address_line_1
+        self.street = form.address_line_2
+        self.town = form.address_town
+        self.county = form.address_county
+        self.country = form.address_country
+        self.postcode = form.address_postcode
+        self.last_occupation = form.relevant_occupation
+        self.organisation_care_before_death_location_id = form.care_organisation
+        self.mode_of_disposal = form.funeral_arrangements
+        self.any_implants = form.implanted_devices
+        self.implant_details = form.implanted_devices_details
+        self.funeral_directors = form.funeral_directors
+        self.any_personal_effects = form.personal_effects
+        self.personal_affects_details = form.personal_effects_details
+        return self
+
+    def set_bereaved_info_values(self, form):
+        self.representatives = []
+        representative1 = {
+            'bereaved_name': form.bereaved_name_1,
+            'relationship': form.relationship_1,
+            'present_death': form.present_death_1,
+            'phone_number': form.phone_number_1,
+            'informed': form.informed_1,
+            'day_of_appointment': form.day_of_appointment_1,
+            'month_of_appointment': form.month_of_appointment_1,
+            'year_of_appointment': form.year_of_appointment_1,
+            'time_of_appointment': form.time_of_appointment_1,
+        }
+        representative2 = {
+            'bereaved_name': form.bereaved_name_2,
+            'relationship': form.relationship_2,
+            'present_death': form.present_death_2,
+            'phone_number': form.phone_number_2,
+            'informed': form.informed_2,
+            'day_of_appointment': form.day_of_appointment_2,
+            'month_of_appointment': form.month_of_appointment_2,
+            'year_of_appointment': form.year_of_appointment_2,
+            'time_of_appointment': form.time_of_appointment_2,
+        }
+        self.representatives.append(BereavedRepresentative().set_values_from_form(representative1))
+        self.representatives.append(BereavedRepresentative().set_values_from_form(representative2))
+        self.appointment_additional_details = form.appointment_additional_details
+        return self
+
+    def set_urgency_info_values(self, form):
+        self.faith_priority = form.faith_death
+        self.coroner_priority = form.coroner_case
+        self.child_priority = form.child_death
+        self.cultural_priority = form.cultural_death
+        self.other_priority = form.other
+        self.priority_details = form.urgency_additional_details
+        return self
+
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
