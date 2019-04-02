@@ -277,6 +277,12 @@ class PatientDetails:
     def update(cls, examination_id, submission, auth_token):
         return request_handler.update_patient_details(examination_id, submission, auth_token)
 
+    def full_name(self):
+        return "%s %s" % (self.given_names, self.surname)
+
+    def get_nhs_number(self):
+        return self.nhs_number if self.nhs_number else 'Unknown'
+
 
 class CaseBreakdown:
 
