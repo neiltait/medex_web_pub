@@ -232,7 +232,8 @@
                     </span>
                         <div class="nhsuk-radios nhsuk-radios--inline">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-mccd"
+                                <input class="nhsuk-radios__input qap-discussion-outcome-radio"
+                                       id="qap-discussion-outcome-mccd"
                                        name="qap-discussion-outcome"
                                        type="radio" value="mccd" {% if qap_form.outcome == "mccd" %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-mccd">
@@ -240,7 +241,8 @@
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-coroner"
+                                <input class="nhsuk-radios__input qap-discussion-outcome-radio"
+                                       id="qap-discussion-outcome-coroner"
                                        name="qap-discussion-outcome" type="radio" value="coroner"
                                        {% if qap_form.outcome == "coroner" %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-coroner">
@@ -257,7 +259,7 @@
     <div id="qap-discussion__outcome-decision">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-form-group">
+                <div class="inset-text-panel nhsuk-form-group">
 
                     <fieldset class="nhsuk-fieldset">
                         <span class="nhsuk-hint" id="example-hint">
@@ -265,25 +267,28 @@
                     </span>
                         <div class="nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-1"
+                                <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                       id="qap-discussion-outcome-decision-1"
                                        name="qap-discussion-outcome-decision"
-                                       type="radio" value="mccd"
+                                       type="radio" value="outcome-decision-1"
                                        {% if qap_form.outcome_decision == "outcome-decision-1" %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-1">
                                     Cause of death provided by the QAP before scrutiny accepted without change
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-2"
-                                       name="qap-discussion-outcome-decision" type="radio" value="coroner"
+                                <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                       id="qap-discussion-outcome-decision-2"
+                                       name="qap-discussion-outcome-decision" type="radio" value="outcome-decision-2"
                                        {% if qap_form.outcome_decision == "outcome-decision-2" %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-2">
                                     Cause of death established by ME accepted by QAP
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="qap-discussion-outcome-decision-3"
-                                       name="qap-discussion-outcome-decision" type="radio" value="coroner"
+                                <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                       id="qap-discussion-outcome-decision-3"
+                                       name="qap-discussion-outcome-decision" type="radio" value="outcome-decision-3"
                                        {% if qap_form.outcome_decision == "outcome-decision-3" %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-3">
                                     ME and QAP have agreed a new cause of death
@@ -294,47 +299,47 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="qap-discussion__outcome-revised">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <label class="nhsuk-label nhsuk-u-font-weight-bold">
-                    Details of the discussion?
-                </label>
-
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1a">
-                        1a
+        <div id="qap-discussion__outcome-revised">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <label class="nhsuk-label nhsuk-u-font-weight-bold">
+                        Details of the discussion?
                     </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
-                              rows="2">{{ qap_form.revised_1a }}</textarea>
-                </div>
 
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1b">
-                        1b
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
-                              rows="2">{{ qap_form.revised_1b }}</textarea>
-                </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1a">
+                            1a
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
+                                  rows="2">{{ qap_form.revised_1a }}</textarea>
+                    </div>
 
-
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1c">
-                        1c
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
-                              rows="2">{{ qap_form.revised_1c }}</textarea>
-                </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1b">
+                            1b
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
+                                  rows="2">{{ qap_form.revised_1b }}</textarea>
+                    </div>
 
 
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_2">
-                        2
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
-                              rows="2">{{ qap_form.revised_2 }}</textarea>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1c">
+                            1c
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
+                                  rows="2">{{ qap_form.revised_1c }}</textarea>
+                    </div>
+
+
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_2">
+                            2
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
+                                  rows="2">{{ qap_form.revised_2 }}</textarea>
+                    </div>
                 </div>
             </div>
         </div>

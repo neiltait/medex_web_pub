@@ -1,64 +1,74 @@
 @import '../../variables';
 
+.cause-of-death-expandable {
 
-.cause-of-death-header {
-  padding: 1.5rem 2rem .5rem 2rem;
-  margin-bottom: 1rem;
-  color: $white;
-  background-color: $nhs-blue;
+  .expandable-header {
+    padding: 1.5rem 2rem .5rem 2rem;
+    margin-bottom: 1rem;
+    color: $white;
+    background-color: $nhs-blue;
 
-  .controls {
-    justify-content: flex-end;
+    .controls {
+      justify-content: flex-end;
 
-    .chevron-down {
-      background: url("/static/images/chevron_down_white.svg") no-repeat;
-      height: 1rem;
-      width: 2rem;
-      margin-top: .5rem;
+      .chevron-down {
+        display: block;
+        background: url("/static/images/chevron_down_white.svg") no-repeat;
+        height: 1rem;
+        width: 2rem;
+        margin-top: .5rem;
 
-      &:hover {
-        background: url("/static/images/hollow_blue_chevron_down.svg") no-repeat;
+        &:hover {
+          background: url("/static/images/hollow_blue_chevron_down.svg") no-repeat;
+        }
+      }
+
+      .chevron-up {
+        display: none;
+        background: url("/static/images/chevron_up.svg") no-repeat;
+        height: 1rem;
+        width: 2rem;
+        margin-top: .5rem;
+
+        &:hover {
+          background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
+        }
       }
     }
 
-    .chevron-up {
-      display: none;
-    }
-  }
-}
+    &.expanded {
+      margin-bottom: 0;
 
-.cause-of-death-header--expanded {
-  margin-bottom: 0;
+      .controls {
 
-  .controls {
-
-    .chevron-down {
-      display: none;
-    }
-
-    .chevron-up {
-      display: block;
-      background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
-        &:hover {
-          background: url("/static/images/chevron_up.svg") no-repeat;
+        .chevron-down {
+          display: none;
         }
+
+        .chevron-up {
+          display: block;
+        }
+      }
     }
   }
-}
 
-.cause-of-death-body {
-  display: none;
-  background: $nhs-pale-grey;
-  color: $black;
-  padding: 1.5rem 2rem;
-  margin-bottom: 1rem;
 
-  textarea {
-    background: $nhs-very-light-grey;
-    color: $nhs-grey;
+  .expandable-body {
+    display: none;
+    background: $nhs-pale-grey;
+    color: $black;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+
+    textarea {
+      background: $nhs-very-light-grey;
+      color: $nhs-grey;
+    }
+
+    &.expanded {
+      display: block;
+    }
   }
+
 }
 
-.cause-of-death-body--expanded {
-  display: block;
-}
