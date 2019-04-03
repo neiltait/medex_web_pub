@@ -161,7 +161,7 @@ def edit_examination_medical_team(request, examination_id):
     return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user)
 
 
-def __get_medical_team_form(medical_team = None):
+def __get_medical_team_form(medical_team=None):
     if medical_team:
         medical_team_members_form = MedicalTeamMembersForm(medical_team=medical_team)
     else:
@@ -250,7 +250,9 @@ def edit_examination_case_breakdown(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
-        'forms': forms
+        'forms': forms,
+        'qap_form': examination.qap_discussion,
+        "case_breakdown": examination,
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
