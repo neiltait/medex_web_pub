@@ -70,30 +70,32 @@ def edit_examination(request, examination_id):
 
 def edit_examination_patient_details(request, examination_id):
     user = User.initialise_with_token(request)
+
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-    if not examination:
-        return render_404(request, user, 'case')
-
     status_code = status.HTTP_200_OK
     error_count = 0
-    primary_info_form = PrimaryExaminationInformationForm()
-    primary_info_form.set_values_from_instance(examination)
-    secondary_info_form = SecondaryExaminationInformationForm()
-    secondary_info_form.set_values_from_instance(examination)
-    bereaved_info_form = BereavedInformationForm()
-    bereaved_info_form.set_values_from_instance(examination)
-    urgency_info_form = UrgencyInformationForm()
-    urgency_info_form.set_values_from_instance(examination)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        examination = PatientDetails.load_by_id(examination_id, user.auth_token)
+        if not examination:
+            return render_404(request, user, 'case')
+
+        primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
+        secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
+        bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
+        urgency_info_form = UrgencyInformationForm().set_values_from_instance(examination)
+
+    elif request.method == 'POST':
 
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
+        examination = PatientDetails().set_primary_info_values(primary_info_form)\
+            .set_secondary_info_values(secondary_info_form).set_bereaved_info_values(bereaved_info_form)\
+            .set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
@@ -103,9 +105,8 @@ def edit_examination_patient_details(request, examination_id):
             submission.update(bereaved_info_form.for_request())
             submission.update(urgency_info_form.for_request())
             submission['id'] = examination_id
-            submission['completed'] = 'true' if examination.completed else 'false'
 
-            response = request_handler.update_patient_details(examination_id, submission, user.auth_token)
+            response = PatientDetails.update(examination_id, submission, user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and request.GET.get('nextTab'):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
@@ -121,6 +122,11 @@ def edit_examination_patient_details(request, examination_id):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
+    patient = {
+        "name": examination.full_name(),
+        "nhs_number": examination.get_nhs_number()
+    }
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -132,6 +138,7 @@ def edit_examination_patient_details(request, examination_id):
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
+        "patient": patient
     }
 
     return render(request, 'examinations/edit_patient_details.html', context, status=status_code)
@@ -247,12 +254,18 @@ def edit_examination_case_breakdown(request, examination_id):
 
     forms = user.get_forms_for_role()
 
+    patient = {
+        "name": examination.patient_name,
+        "nhs_number": examination.nhs_number
+    }
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
         'forms': forms,
         'qap_form': examination.qap_discussion,
-        "case_breakdown": examination,
+        'case_breakdown': examination,
+        'patient': patient
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
