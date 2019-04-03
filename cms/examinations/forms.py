@@ -570,7 +570,7 @@ class MedicalTeamMembersForm:
             self.errors["consultant_name_1"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
-        if not self.consultant_1.has_name_if_needed():
+        if not self.consultant_1.has_name():
             self.errors["consultant_name_1"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 

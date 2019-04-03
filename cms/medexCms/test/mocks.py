@@ -406,10 +406,34 @@ class ExaminationMocks:
         }
 
     @classmethod
-    def get_assigned_medical_team_form_data(cls):
+    def get_medical_team_content(cls):
         return {
-            'medical_examiner': 'Dr Charles Li',
-            'medical_examiners_officer': 'Erica Barber',
+            'consultantResponsible': {
+                'name': 'Dr Arthur Gunz'
+            },
+            'consultantsOther': [
+                {
+                    'name': 'Dr Yolanda Anders'
+                }
+            ],
+            'qap': {
+                'name': 'Dr Kiran Kandukuri'
+            },
+            'generalPractitioner': {
+                'name': ''
+            },
+            'medicalExaminer': {
+                'userId': '1',
+                'firstName': 'Simon',
+                'lastName': 'Li',
+                'email': 's.li@methods.co.uk'
+            },
+            'medicalExaminerOfficer': {
+                'userId': '2',
+                'firstName': 'Janet',
+                'lastName': 'Matthews',
+                'email': 'j.matthews@methods.co.uk'
+            }
         }
 
     @classmethod
@@ -831,4 +855,3 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
-
