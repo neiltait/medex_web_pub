@@ -7,14 +7,19 @@
                 </label>
             </div>
         </div>
-        <div class="nhsuk-form-group">
+
+        <div class="nhsuk-form-group {% if errors.bereavement_discussion_full_name %} nhsuk-form-group--error {% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <label class="nhsuk-label" for="full-name">
+                    <label class="nhsuk-label" for="bereavement-full-name-input">
                         Full name
                     </label>
-                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name" name="test-width-10"
-                           type="text">
+                    {% if errors.bereavement_discussion_full_name %}
+                    <span class="nhsuk-error-message medex-font-default-override">{{ errors.bereavement_other_full_name }}</span>{% endif %}
+
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="bereavement-full-name-input"
+                           name="bereavement-full-name-input"
+                           type="text" value="{{ form.bereavement_discussion_full_name }}">
                 </div>
                 <div class="nhsuk-form-group">
                     <div class="nhsuk-grid-column-one-half nhsuk-radios">
@@ -177,7 +182,8 @@
                 </div>
             </div>
 
-            <div class="margin-save-button"> {% include "examinations/partials/case_breakdown/_cause_of_death.html" %} </div>
+            <div class="margin-save-button"> {% include "examinations/partials/case_breakdown/_cause_of_death.html" %}
+            </div>
 
             <div id="bereavement-discussion__details">
                 <div class="nhsuk-grid-row">
@@ -186,7 +192,8 @@
                                id="bereavement-discussion-details">
                             Details of the discussion?
                         </label>
-                        <textarea class="nhsuk-textarea medex-textarea margin-save-button" name="bereavement-discussion-details"
+                        <textarea class="nhsuk-textarea medex-textarea margin-save-button"
+                                  name="bereavement-discussion-details"
                                   rows="6"></textarea>
                     </div>
                 </div>

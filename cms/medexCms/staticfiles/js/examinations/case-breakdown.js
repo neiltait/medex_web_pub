@@ -157,10 +157,68 @@
         }
 
         initQAPDiscussion();
+        initBereavementDiscussion();
     }
 
     function initQAPDiscussion() {
         new QAPDiscussionForm($('#qap-discussion'));
+        var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
+        causeOfDeath.expand();
+    }
+
+    var BereavementDiscussionForm = function (form) {
+        this.form = form;
+        this.setup();
+    };
+
+    BereavementDiscussionForm.prototype = {
+        setup: function () {
+            this.outcomeDecisionPanel = this.form.find("#bereavement-discussion__outcome-decision");
+            this.revisedCauseOfDeathPanel = this.form.find("#qap-discussion__outcome-revised");
+            this.showHideOutcome();
+            this.showHideOutcomeDecision();
+
+            this.startWatchers();
+        },
+        showHideOutcome() {
+            let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
+            if(selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
+                this.outcomeDecisionPanel.show();
+            } else {
+                this.outcomeDecisionPanel.hide();
+            }
+        },
+        showHideOutcomeDecision() {
+            let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
+            if(selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
+                this.revisedCauseOfDeathPanel.show();
+            } else {
+                this.revisedCauseOfDeathPanel.hide();
+            }
+        },
+        startWatchers() {
+            let that = this;
+            $('input[type=radio][name=qap-discussion-outcome]').change(function () {
+                if (this.value === 'mccd') {
+                    that.outcomeDecisionPanel.show();
+                } else {
+                    that.outcomeDecisionPanel.hide();
+                }
+            });
+
+            $('input[type=radio][name=qap-discussion-outcome-decision]').change(function () {
+                if (this.value === 'outcome-decision-2') {
+                    that.revisedCauseOfDeathPanel.hide();
+                } else {
+                    that.revisedCauseOfDeathPanel.show();
+                }
+            });
+        }
+    };
+
+
+    function initBereavementDiscussionDiscussion() {
+        new BereavementDiscussionForm($('#bereavement-discussion'));
         var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
         causeOfDeath.expand();
     }
