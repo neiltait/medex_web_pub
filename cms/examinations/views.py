@@ -264,6 +264,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'examination_id': examination_id,
         'forms': forms,
         'qap_form': examination.qap_discussion,
+        'latest_admission_form': examination.latest_admission,
         'case_breakdown': examination,
         'patient': patient
     }
