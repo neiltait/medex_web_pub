@@ -290,20 +290,23 @@ class CaseBreakdown:
 
     def __init__(self, obj_dict, medical_team):
 
-        self.timeline_items = obj_dict.get('events')
         self.patient_name = obj_dict.get("patientName")
         self.nhs_number = obj_dict.get("nhsNumber")
         self.date_of_death = obj_dict.get("dateOfDeath")
         self.time_of_death = obj_dict.get("timeOfDeath")
-        self.events = []
 
+        ## parse data
+        self.event_list = ExaminationEventList(obj_dict.get('events'))
         self.medical_team = medical_team
-        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, self.get_latest_cause_of_death(),
-                                                                   self.get_qap_discussion_draft())
-        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.get_latest_admission_draft())
 
-        for item in self.timeline_items:
-            self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
+        ## build form objects
+        self.__build_case_breakdown_forms()
+
+    def __build_case_breakdown_forms(self):
+        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
+                                                                   self.event_list.get_latest_me_scrutiny_cause_of_death(),
+                                                                   self.event_list.get_qap_discussion_draft())
+        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.event_list.get_latest_admission_draft())
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
@@ -315,13 +318,39 @@ class CaseBreakdown:
         else:
             return None
 
-    def get_latest_cause_of_death(self):
-        return None
+
+class ExaminationEventList:
+
+    def __init__(self, timeline_items):
+        self.events = []
+        for item in timeline_items:
+            self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
 
     def get_qap_discussion_draft(self):
         return None
 
+    def get_other_notes_draft(self):
+        return None
+
     def get_latest_admission_draft(self):
+        return None
+
+    def get_meo_summary_draft(self):
+        return None
+
+    def get_medical_history_draft(self):
+        return None
+
+    def get_bereaved_discussion_draft(self):
+        return None
+
+    def get_me_scrutiny_draft(self):
+        return None
+
+    def get_latest_me_scrutiny_cause_of_death(self):
+        return None
+
+    def get_latest_agreed_cause_of_death(self):
         return None
 
 
