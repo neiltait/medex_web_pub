@@ -34,18 +34,9 @@
             </div>
         {% endif %}
 
-        <h1 class="page-title">
-            {{ page_heading }}
-        </h1>
-
-        <h2 class="page-subheading">
-            {{ sub_heading }}
-        </h2>
+        {% include 'examinations/partials/_case_header.html' %}
 
         <a name="details"></a>
-        <div style="width:100%;height:150px;background-color:rgba(234, 207, 28, 0.6);padding:30px 50px;">
-            <h1>Holding Space For Status Bar</h1>
-        </div>
 
         {% for alert in alerts %}
             {% include 'alerts/partials/_alert.html' %}

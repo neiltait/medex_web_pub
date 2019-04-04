@@ -1,7 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
-from medexCms.utils import parse_datetime, is_empty_date
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
 
@@ -114,7 +114,7 @@ class ExaminationOverview:
 
 class PatientDetails:
 
-    def __init__(self, obj_dict, modes_of_disposal={}):
+    def __init__(self, obj_dict={}, modes_of_disposal={}):
         self.modes_of_disposal = modes_of_disposal
 
         self.id = obj_dict.get("id")
@@ -124,7 +124,7 @@ class PatientDetails:
 
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
-        self.gender = obj_dict.get("gender").lower()
+        self.gender = obj_dict.get("gender")
         self.gender_details = obj_dict.get("genderDetails")
         self.nhs_number = obj_dict.get("nhsNumber")
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
@@ -149,14 +149,14 @@ class PatientDetails:
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
         self.personal_affects_details = obj_dict.get("personalEffectDetails")
 
-        self.cultural_priority = 'true' if obj_dict.get("culturalPriority") else 'false'
-        self.faith_priority = 'true' if obj_dict.get("faithPriority") else 'false'
-        self.child_priority = 'true' if obj_dict.get("childPriority") else 'false'
-        self.coroner_priority = 'true' if obj_dict.get("coronerPriority") else 'false'
-        self.other_priority = 'true' if obj_dict.get("otherPriority") else 'false'
+        self.cultural_priority = bool_to_string(obj_dict.get("culturalPriority"))
+        self.faith_priority = bool_to_string("faithPriority")
+        self.child_priority = bool_to_string("childPriority")
+        self.coroner_priority = bool_to_string("coronerPriority")
+        self.other_priority = bool_to_string("otherPriority")
         self.priority_details = obj_dict.get("priorityDetails")
 
-        if not is_empty_date(obj_dict.get("dateOfBirth")):
+        if not (is_empty_date(obj_dict.get("dateOfBirth")) or obj_dict.get("dateOfBirth") is None):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
             self.day_of_birth = self.date_of_birth.day
             self.month_of_birth = self.date_of_birth.month
@@ -167,7 +167,7 @@ class PatientDetails:
             self.month_of_birth = None
             self.year_of_birth = None
 
-        if not is_empty_date(obj_dict.get("dateOfDeath")):
+        if not (is_empty_date(obj_dict.get("dateOfDeath")) or obj_dict.get("dateOfDeath") is None):
             self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
             self.day_of_death = self.date_of_death.day
             self.month_of_death = self.date_of_death.month
@@ -184,8 +184,84 @@ class PatientDetails:
                 self.mode_of_disposal = key
 
         self.representatives = []
-        for representative in obj_dict.get("representatives"):
-            self.representatives.append(BereavedRepresentative(representative))
+        if obj_dict.get('representatives'):
+            for representative in obj_dict.get("representatives"):
+                self.representatives.append(BereavedRepresentative(representative))
+
+    def set_primary_info_values(self, form):
+        self.given_names = form.first_name
+        self.surname = form.last_name
+        self.gender = form.gender
+        self.gender_details = form.gender_details
+        self.nhs_number = form.nhs_number
+        self.hospital_number_1 = form.hospital_number_1
+        self.hospital_number_2 = form.hospital_number_2
+        self.hospital_number_3 = form.hospital_number_3
+        self.day_of_birth = form.day_of_birth
+        self.month_of_birth = form.month_of_birth
+        self.year_of_birth = form.year_of_birth
+        self.day_of_death = form.day_of_death
+        self.month_of_death = form.month_of_death
+        self.year_of_death = form.year_of_death
+        self.time_of_death = form.time_of_death
+        self.death_occurred_location_id = form.place_of_death
+        self.out_of_hours = form.out_of_hours
+        return self
+
+    def set_secondary_info_values(self, form):
+        self.house_name_number = form.address_line_1
+        self.street = form.address_line_2
+        self.town = form.address_town
+        self.county = form.address_county
+        self.country = form.address_country
+        self.postcode = form.address_postcode
+        self.last_occupation = form.relevant_occupation
+        self.organisation_care_before_death_location_id = form.care_organisation
+        self.mode_of_disposal = form.funeral_arrangements
+        self.any_implants = form.implanted_devices
+        self.implant_details = form.implanted_devices_details
+        self.funeral_directors = form.funeral_directors
+        self.any_personal_effects = form.personal_effects
+        self.personal_affects_details = form.personal_effects_details
+        return self
+
+    def set_bereaved_info_values(self, form):
+        self.representatives = []
+        representative1 = {
+            'bereaved_name': form.bereaved_name_1,
+            'relationship': form.relationship_1,
+            'present_death': form.present_death_1,
+            'phone_number': form.phone_number_1,
+            'informed': form.informed_1,
+            'day_of_appointment': form.day_of_appointment_1,
+            'month_of_appointment': form.month_of_appointment_1,
+            'year_of_appointment': form.year_of_appointment_1,
+            'time_of_appointment': form.time_of_appointment_1,
+        }
+        representative2 = {
+            'bereaved_name': form.bereaved_name_2,
+            'relationship': form.relationship_2,
+            'present_death': form.present_death_2,
+            'phone_number': form.phone_number_2,
+            'informed': form.informed_2,
+            'day_of_appointment': form.day_of_appointment_2,
+            'month_of_appointment': form.month_of_appointment_2,
+            'year_of_appointment': form.year_of_appointment_2,
+            'time_of_appointment': form.time_of_appointment_2,
+        }
+        self.representatives.append(BereavedRepresentative().set_values_from_form(representative1))
+        self.representatives.append(BereavedRepresentative().set_values_from_form(representative2))
+        self.appointment_additional_details = form.appointment_additional_details
+        return self
+
+    def set_urgency_info_values(self, form):
+        self.faith_priority = form.faith_death
+        self.coroner_priority = form.coroner_case
+        self.child_priority = form.child_death
+        self.cultural_priority = form.cultural_death
+        self.other_priority = form.other
+        self.priority_details = form.urgency_additional_details
+        return self
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
@@ -198,6 +274,16 @@ class PatientDetails:
             return PatientDetails(response.json(), modes_of_disposal)
         else:
             return None
+
+    @classmethod
+    def update(cls, examination_id, submission, auth_token):
+        return request_handler.update_patient_details(examination_id, submission, auth_token)
+
+    def full_name(self):
+        return "%s %s" % (self.given_names, self.surname)
+
+    def get_nhs_number(self):
+        return self.nhs_number if self.nhs_number else 'Unknown'
 
 
 class CaseBreakdown:
@@ -212,7 +298,9 @@ class CaseBreakdown:
         self.events = []
 
         self.medical_team = medical_team
-        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, None, None)
+        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(medical_team, self.get_latest_cause_of_death(),
+                                                                   self.get_qap_discussion_draft())
+        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.get_latest_admission_draft())
 
         for item in self.timeline_items:
             self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
@@ -226,6 +314,60 @@ class CaseBreakdown:
             return CaseBreakdown(response.json(), medical_team)
         else:
             return None
+
+    def get_latest_cause_of_death(self):
+        return None
+
+    def get_qap_discussion_draft(self):
+        return None
+
+    def get_latest_admission_draft(self):
+        return None
+
+
+class CaseBreakdownLatestAdmission:
+    def __init__(self):
+        self.day_of_last_admission = ''
+        self.month_of_last_admission = ''
+        self.year_of_last_admission = ''
+        self.date_of_last_admission_unknown = False
+
+        self.time_of_last_admission = ''
+        self.time_of_last_admission_unknown = False
+
+        self.latest_admission_notes = ''
+        self.suspect_referral = ''
+
+    @classmethod
+    def from_data(cls, draft=None):
+        latest_admission = CaseBreakdownLatestAdmission()
+        if draft is not None:
+            try:
+                latest_admission.day_of_last_admission = draft['day_of_last_admission']
+                latest_admission.month_of_last_admission = draft['month_of_last_admission']
+                latest_admission.year_of_last_admission = draft['year_of_last_admission']
+                latest_admission.date_of_last_admission_unknown = draft['date_of_last_admission_unknown']
+                latest_admission.time_of_last_admission = draft['time_of_last_admission']
+                latest_admission.time_of_last_admission_unknown = draft['time_of_last_admission_unknown']
+                latest_admission.latest_admission_notes = draft['latest_admission_notes']
+                latest_admission.suspect_referral = draft['suspect_referral']
+
+            except KeyError:
+                print('Could not parse latest admission object')
+
+        return latest_admission
+
+    def to_object(self):
+        return {
+            'day_of_last_admission': self.day_of_last_admission,
+            'month_of_last_admission': self.month_of_last_admission,
+            'year_of_last_admission': self.year_of_last_admission,
+            'date_of_last_admission_unknown': self.date_of_last_admission_unknown,
+            'time_of_last_admission': self.time_of_last_admission,
+            'time_of_last_admission_unknown': self.time_of_last_admission_unknown,
+            'latest_admission_notes': self.latest_admission_notes,
+            'suspect_referral': self.suspect_referral,
+        }
 
 
 class CaseBreakdownQAPDiscussion:

@@ -27,3 +27,7 @@ def parse_datetime(datetime_string):
 
 def is_empty_date(datetime_string):
     return NONE_DATE == datetime_string or NONE_DATE_WITH_TIME_ZONE == datetime_string
+
+
+def bool_to_string(bool_value):
+    return 'true' if bool_value else 'false'

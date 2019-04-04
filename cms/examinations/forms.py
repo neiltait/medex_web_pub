@@ -87,6 +87,7 @@ class PrimaryExaminationInformationForm:
         self.place_of_death = examination.death_occurred_location_id
         self.out_of_hours = examination.out_of_hours
         self.me_office = examination.medical_examiner_office_responsible
+        return self
 
     def set_hospital_numbers(self, request):
         # get numbers
@@ -301,6 +302,7 @@ class SecondaryExaminationInformationForm:
         self.funeral_directors = examination.funeral_directors
         self.personal_effects = examination.any_personal_effects
         self.personal_effects_details = examination.personal_affects_details
+        return self
 
     def is_valid(self):
         return True
@@ -384,6 +386,7 @@ class BereavedInformationForm:
             count += 1
         # TODO: appointment_additional_details is not currently in the examinations model
         self.appointment_additional_details = ''
+        return self
 
     def is_valid(self):
         valid_date_1 = True
@@ -482,6 +485,7 @@ class UrgencyInformationForm:
         self.cultural_death = examination.cultural_priority
         self.other = examination.other_priority
         self.urgency_additional_details = examination.priority_details
+        return self
 
     def is_valid(self):
         return True
