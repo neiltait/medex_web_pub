@@ -173,12 +173,11 @@
 
     BereavementDiscussionForm.prototype = {
         setup: function () {
-            this.outcomeDecisionPanel = this.form.find("#bereavement-discussion__outcome-decision");
-            this.revisedCauseOfDeathPanel = this.form.find("#qap-discussion__outcome-revised");
-            this.showHideOutcome();
-            this.showHideOutcomeDecision();
-
-            this.startWatchers();
+//            this.outcomeDecisionPanel = this.form.find("#bereavement-discussion__outcome-decision");
+//            this.showHideOutcome();
+//            this.showHideOutcomeDecision();
+//
+//            this.startWatchers();
         },
         showHideOutcome() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
@@ -217,9 +216,9 @@
     };
 
 
-    function initBereavementDiscussionDiscussion() {
+    function initBereavementDiscussion() {
         new BereavementDiscussionForm($('#bereavement-discussion'));
-        var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
+        var causeOfDeath = new ChevronExpandable($('#bereavement-cause-of-death-panel'))
         causeOfDeath.expand();
     }
 
