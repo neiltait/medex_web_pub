@@ -240,7 +240,7 @@ def edit_examination_case_breakdown(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = CaseBreakdown.load_by_id(examination_id, user.auth_token)
+    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
 
     if not examination:
         context = {
