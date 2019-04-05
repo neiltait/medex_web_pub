@@ -48,7 +48,7 @@ def update_patient_details(examination_id, submission, auth_token):
 
 def load_medical_team_by_id(examination_id, auth_token):
     if settings.LOCAL:
-        return ExaminationMocks.get_successful_medical_team_load_response()
+        return ExaminationMocks.get_successful_medical_team_load_response(examination_id)
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id))
 
