@@ -6,15 +6,15 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.gp_information %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group {% if errors.gp %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="gp_name">
                                 Full name
                             </label>
-                            {% if errors.gp_information %}
+                            {% if errors.gp %}
                                 <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_name }}</span>{% endif %}
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp }}</span>{% endif %}
                             <input
-                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_name %}nhsuk-input--error{% endif %}"
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp %}nhsuk-input--error{% endif %}"
                                     id="gp_name" name="gp_name"
                                     value="{{ form.gp.name }}" type="text">
                         </div>
@@ -22,16 +22,11 @@
                 </div>
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.gp_role %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gp_role">
                                 Role
                             </label>
-                            {% if errors.gp_role %}
-                                <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_role }}</span>{% endif %}
-                            <input
-                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_role %}nhsuk-input--error{% endif %}"
-                                    id="gp_role" name="gp_role"
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_role" name="gp_role"
                                     value="{{ form.gp.role }}" type="text">
                         </div>
                     </fieldset>
@@ -40,32 +35,22 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.gp_organisation %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gp_organisation">
                                 Organisation
                             </label>
-                            {% if errors.gp_organisation %}
-                                <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_organisation }}</span>{% endif %}
-                            <input
-                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_organisation %}nhsuk-input--error{% endif %}"
-                                    id="gp_information" name="gp_organisation"
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_information" name="gp_organisation"
                                     value="{{ form.gp.organisation }}" type="text">
                         </div>
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.gp_phone_number %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gp_phone_number">
                                 Personal phone / bleep number
                             </label>
-                            {% if errors.gp_phone_number %}
-                                <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.gp_phone_number }}</span>{% endif %}
-                            <input
-                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_phone_number %}nhsuk-input--error{% endif %}"
-                                    id="gp_phone_number" name="gp_phone_number"
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_phone_number" name="gp_phone_number"
                                     value="{{ form.gp.phone_number }}" type="text">
                         </div>
                     </fieldset>
