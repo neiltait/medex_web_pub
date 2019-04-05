@@ -507,7 +507,7 @@ class MedicalTeamMembersForm:
     consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
     qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
     gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-    nursing_team = ''
+    nursing_team_information = ''
     medical_examiner = ''
     medical_examiners_officer = ''
     consultant_count = 0
@@ -540,7 +540,7 @@ class MedicalTeamMembersForm:
                                     role=request.get('gp_role'),
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'))
-        self.nursing_team = request.get('nursing_team')
+        self.nursing_team_information = request.get('nursing_team_information')
         self.medical_examiner = request.get('medical_examiner') if request.get('medical_examiner') else ''
         self.medical_examiners_officer = request.get('medical_examiners_officer') if request.get(
             'medical_examiners_officer') else ''
@@ -554,7 +554,7 @@ class MedicalTeamMembersForm:
             medical_team.consultants_other) > 1 else MedicalTeamMember()
         self.gp = medical_team.general_practitioner
         self.qap = medical_team.qap
-        self.nursing_team = medical_team.nursing_team_information
+        self.nursing_team_information = medical_team.nursing_team_information
         self.medical_examiner = medical_team.medical_examiner_id
         self.medical_examiners_officer = medical_team.medical_examiners_officer_id
         self.consultant_count = self.get_consultant_count()
@@ -571,43 +571,43 @@ class MedicalTeamMembersForm:
 
     def is_valid(self):
         if not self.consultant_1.has_valid_name():
-            self.errors["consultant_name_1"] = ErrorFieldTooLong(250)
+            self.errors["consultant_1"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if not self.consultant_1.has_name():
-            self.errors["consultant_name_1"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_1"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 
         if not self.consultant_2.has_valid_name():
-            self.errors["consultant_name_2"] = ErrorFieldTooLong(250)
+            self.errors["consultant_2"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if not self.consultant_2.has_name_if_needed():
-            self.errors["consultant_name_2"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_2"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 
         if not self.consultant_3.has_valid_name():
-            self.errors["consultant_name_3"] = ErrorFieldTooLong(250)
+            self.errors["consultant_3"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if not self.consultant_3.has_name_if_needed():
-            self.errors["consultant_name_3"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_3"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 
         if not self.qap.has_valid_name():
-            self.errors["qap_name"] = ErrorFieldTooLong(250)
+            self.errors["qap"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if not self.qap.has_name_if_needed():
-            self.errors["qap_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["qap"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 
         if not self.gp.has_valid_name():
-            self.errors["gp_name"] = ErrorFieldTooLong(250)
+            self.errors["gp"] = ErrorFieldTooLong(250)
             self.errors["count"] += 1
 
         if not self.gp.has_name_if_needed():
-            self.errors["gp_name"] = ErrorFieldRequiredMessage("name")
+            self.errors["gp"] = ErrorFieldRequiredMessage("name")
             self.errors["count"] += 1
 
         return self.errors["count"] == 0
@@ -625,7 +625,7 @@ class MedicalTeamMembersForm:
         obj = {
             "consultantResponsible": self.consultant_1.to_object(),
             "consultantsOther": consultants_other,
-            "nursingTeamInformation": self.nursing_team,
+            "nursingTeamInformation": self.nursing_team_information,
             "medicalExaminerUserId": self.medical_examiner,
             "medicalExaminerOfficerUserId": self.medical_examiners_officer,
         }

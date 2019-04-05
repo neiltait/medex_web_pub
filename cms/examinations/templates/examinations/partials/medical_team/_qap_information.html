@@ -7,15 +7,15 @@
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.qap_information %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-label" for="qap_information">
+                            <label class="nhsuk-label" for="qap_name">
                                 Full name
                             </label>
-                            {% if errors.qap_information %}
+                            {% if errors.qap_name %}
                                 <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.qap_information }}</span>{% endif %}
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.qap_name }}</span>{% endif %}
                             <input
-                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.qap_information %}nhsuk-input--error{% endif %}"
-                                    id="qap_information" name="qap_information"
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.qap_name %}nhsuk-input--error{% endif %}"
+                                    id="qap_name" name="qap_name"
                                     value="{{ form.qap.name }}" type="text">
                         </div>
                     </fieldset>
