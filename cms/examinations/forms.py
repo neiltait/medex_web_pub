@@ -555,16 +555,16 @@ class MedicalTeamMembersForm:
         self.gp = medical_team.general_practitioner
         self.qap = medical_team.qap
         self.nursing_team = medical_team.nursing_team_information
-        self.medical_examiner = medical_team.medical_examiner.user_id
-        self.medical_examiners_officer = medical_team.medical_examiners_officer.user_id
+        self.medical_examiner = medical_team.medical_examiner_id
+        self.medical_examiners_officer = medical_team.medical_examiners_officer_id
         self.consultant_count = self.get_consultant_count()
 
     def get_consultant_count(self):
-        if self.consultant_3.has_name():
+        if self.consultant_3 is not None and self.consultant_3.has_name():
             return 3
-        elif self.consultant_2.has_name():
+        elif self.consultant_2 is not None and self.consultant_2.has_name():
             return 2
-        elif self.consultant_1.has_name():
+        elif self.consultant_1 is not None and self.consultant_1.has_name():
             return 1
         else:
             return 0
@@ -617,29 +617,23 @@ class MedicalTeamMembersForm:
 
     def to_object(self):
         consultants_other = []
-        if self.consultant_2.has_valid_name():
+        if self.consultant_2.has_name():
             consultants_other.append(self.consultant_2.to_object())
-        if self.consultant_3.has_valid_name():
+        if self.consultant_3.has_name():
             consultants_other.append(self.consultant_3.to_object())
 
-        return {
+        obj = {
             "consultantResponsible": self.consultant_1.to_object(),
             "consultantsOther": consultants_other,
-            "generalPractitioner": self.gp.to_object(),
-            "qap": self.qap.to_object(),
             "nursingTeamInformation": self.nursing_team,
-            "medicalExaminer": {
-                "userId": self.medical_examiner,
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminer"
-            },
-            "medicalExaminerOfficer": {
-                "userId": self.medical_examiners_officer,
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminerOfficer"
-            }
+            "medicalExaminerUserId": self.medical_examiner,
+            "medicalExaminerOfficerUserId": self.medical_examiners_officer,
         }
+
+        if self.qap.has_name():
+            obj['qap'] = self.qap.to_object()
+
+        if self.gp.has_name():
+            obj['generalPractitioner'] = self.gp.to_object()
+
+        return obj

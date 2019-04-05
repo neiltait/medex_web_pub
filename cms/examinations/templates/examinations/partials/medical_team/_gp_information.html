@@ -16,7 +16,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_information %}nhsuk-input--error{% endif %}"
                                     id="gp_information" name="gp_information"
-                                    value="{{ form.gp_information }}" type="text">
+                                    value="{{ form.gp.name }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -32,7 +32,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_role %}nhsuk-input--error{% endif %}"
                                     id="gp_role" name="gp_role"
-                                    value="{{ form.gp_role }}" type="text">
+                                    value="{{ form.gp.role }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -50,7 +50,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_organisation %}nhsuk-input--error{% endif %}"
                                     id="gp_information" name="gp_organisation"
-                                    value="{{ form.gp_organisation }}" type="text">
+                                    value="{{ form.gp.organisation }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -66,7 +66,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.gp_phone_number %}nhsuk-input--error{% endif %}"
                                     id="gp_phone_number" name="gp_phone_number"
-                                    value="{{ form.gp_phone_number }}" type="text">
+                                    value="{{ form.gp.phone_number }}" type="text">
                         </div>
                     </fieldset>
                 </div>

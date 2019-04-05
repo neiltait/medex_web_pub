@@ -24,7 +24,7 @@
                         <input
                                 class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_1 %}nhsuk-input--error{% endif %}"
                                 id="consultant_name_1" name="consultant_name_1"
-                                value="{{ form.consultant_name_1 }}" type="text">
+                                value="{{ form.consultant_1.name }}" type="text">
                     </div>
                 </fieldset>
             </div>
@@ -40,7 +40,7 @@
                         <input
                                 class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_1 %}nhsuk-input--error{% endif %}"
                                 id="consultant_role_1" name="consultant_role_1"
-                                value="{{ form.consultant_role_1 }}" type="text">
+                                value="{{ form.consultant_1.role }}" type="text">
                     </div>
                 </fieldset>
             </div>
@@ -58,7 +58,7 @@
                         <input
                                 class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_1 %}nhsuk-input--error{% endif %}"
                                 id="consultant_organisation_1" name="consultant_organisation_1"
-                                value="{{ form.consultant_organisation_1 }}" type="text">
+                                value="{{ form.consultant_1.organisation }}" type="text">
                     </div>
                 </fieldset>
             </div>
@@ -74,7 +74,7 @@
                         <input
                                 class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_1 %}nhsuk-input--error{% endif %}"
                                 id="consultant_phone_number_1" name="consultant_phone_number_1"
-                                value="{{ form.consultant_phone_number_1 }}" type="text">
+                                value="{{ form.consultant_1.phone_number }}" type="text">
                     </div>
                 </fieldset>
             </div>
@@ -86,7 +86,8 @@
                         Additional notes
                     </label>
                     <textarea class="nhsuk-textarea medex-textarea"
-                              id="consultant-note-1" name="consultant-note-1" rows="3"></textarea>
+                              id="consultant-note-1" name="consultant-note-1"
+                              rows="3">{{ form.consultant_1.notes }}</textarea>
                 </div>
             </div>
         </div>
@@ -107,7 +108,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_2 %}nhsuk-input--error{% endif %}"
                                     id="consultant_name_2" name="consultant_name_2"
-                                    value="{{ form.consultant_name_2 }}" type="text">
+                                    value="{{ form.consultant_2.name }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -123,7 +124,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_2 %}nhsuk-input--error{% endif %}"
                                     id="consultant_role_2" name="consultant_role_2"
-                                    value="{{ form.consultant_role_2 }}" type="text">
+                                    value="{{ form.consultant_2.role }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -141,7 +142,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_2 %}nhsuk-input--error{% endif %}"
                                     id="consultant_organisation_2" name="consultant_organisation_2"
-                                    value="{{ form.consultant_organisation_2 }}" type="text">
+                                    value="{{ form.consultant_2.organisation}}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -157,7 +158,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_2 %}nhsuk-input--error{% endif %}"
                                     id="consultant_phone_number_2" name="consultant_phone_number_2"
-                                    value="{{ form.consultant_phone_number_2 }}" type="text">
+                                    value="{{ form.consultant_2.phone_number }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -168,7 +169,7 @@
                             Additional notes
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea"
-                                  id="consultant-note_2" name="consultant-note_2" rows="3"></textarea>
+                                  id="consultant-note_2" name="consultant-note_2" rows="3">form.consultant_2.notes</textarea>
                     </div>
                 </div>
             </div>
@@ -188,7 +189,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_name_3 %}nhsuk-input--error{% endif %}"
                                     id="consultant_name_3" name="consultant_name_3"
-                                    value="{{ form.consultant_name_3 }}" type="text">
+                                    value="{{ form.consultant_3.name }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -204,7 +205,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_role_3 %}nhsuk-input--error{% endif %}"
                                     id="consultant_role_3" name="consultant_role_3"
-                                    value="{{ form.consultant_role_3 }}" type="text">
+                                    value="{{ form.consultant_3.role }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -222,7 +223,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_organisation_3 %}nhsuk-input--error{% endif %}"
                                     id="consultant_organisation_3" name="consultant_organisation_3"
-                                    value="{{ form.consultant_organisation_3 }}" type="text">
+                                    value="{{ form.consultant_3.organisation }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -238,7 +239,7 @@
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_3 %}nhsuk-input--error{% endif %}"
                                     id="consultant_phone_number_3" name="consultant_phone_number_3"
-                                    value="{{ form.consultant_phone_number_3 }}" type="text">
+                                    value="{{ form.consultant_3.phone_number }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -249,7 +250,7 @@
                             Additional notes
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea"
-                                  id="consultant-note_3" name="consultant-note_3" rows="3"></textarea>
+                                  id="consultant-note_3" name="consultant-note_3" rows="3">form.consultant_3.notes</textarea>
                     </div>
                 </div>
             </div>
