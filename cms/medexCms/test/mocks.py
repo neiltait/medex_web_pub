@@ -31,10 +31,10 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'user_id': '1',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email_address': 'test.user@email.com',
+            'userId': '1',
+            'firstName': 'Test',
+            'lastName': 'User',
+            'emailAddress': 'test.user@email.com',
         }
 
     @classmethod
