@@ -158,7 +158,7 @@ def edit_examination_medical_team(request, examination_id):
         medical_team_members_form, status_code, errors = __post_medical_team_form(request, examination_id,
                                                                                   user.auth_token)
     else:
-        # get a simple form
+        # the GET medical team form
         medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
         medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
