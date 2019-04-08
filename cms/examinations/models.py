@@ -296,7 +296,7 @@ class CaseBreakdown:
         self.time_of_death = obj_dict.get("timeOfDeath")
 
         ## parse data
-        self.event_list = ExaminationEventList(obj_dict.get('events'))
+        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'))
         self.medical_team = medical_team
 
         ## build form objects
