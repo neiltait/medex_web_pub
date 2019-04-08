@@ -527,10 +527,10 @@ class MedicalTeam:
         from users.models import User
 
         self.consultant_responsible = MedicalTeamMember.from_dict(
-            obj_dict['consultantResponsible']) if 'consultantResponsible' in obj_dict else None
-        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if 'qap' in obj_dict else None
+            obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
+        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if obj_dict['qap'] else None
         self.general_practitioner = MedicalTeamMember.from_dict(
-            obj_dict['generalPractitioner']) if 'generalPractitioner' in obj_dict else None
+            obj_dict['generalPractitioner']) if obj_dict['generalPractitioner'] else None
 
         if "consultantsOther" in obj_dict:
             self.consultants_other = [MedicalTeamMember.from_dict(consultant) for consultant in
