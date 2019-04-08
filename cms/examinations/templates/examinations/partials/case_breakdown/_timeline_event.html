@@ -26,9 +26,7 @@
             </div>
 
             <div class="event-body">
-                <p class="content">
-                    {{event.body}}
-                </p>
+                {% include event.type_template with card_content=event %}
             </div>
         </div>
     </div>
