@@ -335,25 +335,25 @@ class ExaminationEventList:
         self.me_scrutiny_draft = None
 
     def get_qap_discussion_draft(self):
-        return None
+        return self.qap_discussion_draft
 
     def get_other_notes_draft(self):
-        return None
+        return self.other_notes_draft
 
     def get_latest_admission_draft(self):
-        return None
+        return self.latest_admission_draft
 
     def get_meo_summary_draft(self):
-        return None
+        return self.meo_summary_draft
 
     def get_medical_history_draft(self):
-        return None
+        return self.medical_history_draft
 
     def get_bereaved_discussion_draft(self):
-        return None
+        return self.bereaved_discussion_draft
 
     def get_me_scrutiny_draft(self):
-        return None
+        return self.me_scrutiny_draft
 
     def get_latest_me_scrutiny_cause_of_death(self):
         return None
