@@ -325,6 +325,14 @@ class ExaminationEventList:
         self.events = []
         for item in timeline_items:
             self.events.append(CaseEvent(len(self.events) + 1, item.get('latest')))
+        self.drafts = []
+        self.qap_discussion_draft = None
+        self.other_notes_draft = None
+        self.latest_admission_draft = None
+        self.meo_summary_draft = None
+        self.medical_history_draft = None
+        self.bereaved_discussion_draft = None
+        self.me_scrutiny_draft = None
 
     def get_qap_discussion_draft(self):
         return None
