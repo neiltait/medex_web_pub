@@ -362,7 +362,211 @@ class ExaminationEventList:
         return None
 
 
+class CaseEvent:
+    OTHER_EVENT_TYPE = 'Other'
+    PRE_SCRUTINY_EVENT_TYPE = 'PreScrutiny'
+    BEREAVED_DISCUSSION_EVENT_TYPE = 'BereavedDiscussion'
+    MEO_SUMMARY_EVENT_TYPE = 'MeoSummary'
+    QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
+    MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
+    ADMISSION_NOTES_EVENT_TYPE = 'AdmissionNotes'
+    INITIAL_EVENT_TYPE = 'Initial'
+
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+
+    @classmethod
+    def parse_event(cls, event_data, latest_id):
+        if event_data['event_type'] == cls.OTHER_EVENT_TYPE:
+            return CaseOtherEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
+            return CasePreScrutinyEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
+            return CaseBereavedDiscussionEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.MEO_SUMMARY_EVENT_TYPE:
+            return CaseMeoSummaryEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.QAP_DISCUSSION_EVENT_TYPE:
+            return CaseQapDiscussionEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.MEDICAL_HISTORY_EVENT_TYPE:
+            return CaseMedicalHistoryEvent(event_data, latest_id)
+        elif event_data['event_type'] == cls.ADMISSION_NOTES_EVENT_TYPE:
+            return CaseAdmissionNotesEvent(event_data, latest_id)
+
+    def display_date(self):
+        if self.created_date:
+            date = parse_datetime(self.created_date)
+            if date.date() == datetime.today().date():
+                return 'Today at %s' % date.strftime(self.time_format)
+            elif date.date() == datetime.today().date() - timedelta(days=1):
+                return 'Yesterday at %s' % date.strftime(self.time_format)
+            else:
+                time = date.strftime(self.time_format)
+                date = date.strftime(self.date_format)
+                return "%s at %s" % (date, time)
+        else:
+            return None
+
+
+class CaseInitialEvent(CaseEvent):
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
+    event_type = CaseEvent().INITIAL_EVENT_TYPE
+
+    def __init__(self, patient_name, user_id, user_role, created_date, dod, tod):
+        self.patient_name = patient_name
+        self.user_id = user_id
+        self.user_role = user_role
+        self.created_date = created_date
+        self.dod = dod
+        self.tod = tod
+        self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
+
+    @property
+    def display_type(self):
+        return '%s died' % self.patient_name
+
+
+class CaseOtherEvent(CaseEvent):
+    event_type = CaseEvent().OTHER_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_other_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.body = obj_dict.get('other_event_text')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'Other case info'
+
+
+class CasePreScrutinyEvent(CaseEvent):
+    event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_pre_scrutiny_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.body = obj_dict.get('pre_scrutiny_event_text')
+        self.circumstances_of_death = obj_dict.get('circumstances_of_death')
+        self.cause_of_death = obj_dict.get('cause_of_death')
+        self.outcome_of_pre_scrutiny = obj_dict.get('outcome_of_pre_scrutiny')
+        self.clinical_governance_review = obj_dict.get('clinical_governance_review')
+        self.clinical_governance_review_text = obj_dict.get('clinical_governance_review_text')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'ME pre-scrutiny'
+
+
+class CaseBereavedDiscussionEvent(CaseEvent):
+    event_type = CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_bereaved_discussion_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.participant_full_name = obj_dict.get('participant_full_name')
+        self.participant_relationship = obj_dict.get('participant_relationship')
+        self.participant_phone_number = obj_dict.get('participant_phone_number')
+        self.present_at_death = obj_dict.get('present_at_death')
+        self.informed_at_death = obj_dict.get('informed_at_death')
+        self.date_of_conversation = obj_dict.get('date_of_conversation')
+        self.discussion_unable_happen = obj_dict.get('discussion_unable_happen')
+        self.discussion_details = obj_dict.get('discussion_details')
+        self.bereaved_discussion_outcome = obj_dict.get('bereaved_discussion_outcome')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'Bereaved/representative discussion'
+
+
+class CaseMeoSummaryEvent(CaseEvent):
+    event_type = CaseEvent().MEO_SUMMARY_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_meo_summary_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.body = obj_dict.get('summary_details')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'MEO summary'
+
+
+class CaseQapDiscussionEvent(CaseEvent):
+    event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.participant_roll = obj_dict.get('participant_roll')
+        self.participant_organisation = obj_dict.get('participant_organisation')
+        self.participant_phone_number = obj_dict.get('participant_phone_number')
+        self.date_of_conversation = obj_dict.get('date_of_conversation')
+        self.discussion_unable_happen = obj_dict.get('discussion_unable_happen')
+        self.discussion_details = obj_dict.get('discussion_details')
+        self.qap_discussion_outcome = obj_dict.get('qap_discussion_outcome')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'QAP discussion'
+
+
+class CaseMedicalHistoryEvent(CaseEvent):
+    event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_medical_history_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.medical_history_event_text = obj_dict.get('medical_history_event_text')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'Medical history'
+
+
+class CaseAdmissionNotesEvent(CaseEvent):
+    event_type = CaseEvent().ADMISSION_NOTES_EVENT_TYPE
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_admission_notes_event_body.html'
+
+    def __init__(self, obj_dict, latest_id):
+        self.event_id = obj_dict.get('event_id')
+        self.user_id = obj_dict.get('user_id')
+        self.created_date = obj_dict.get('created_date')
+        self.admission_event_notes = obj_dict.get('admission_event_notes')
+        self.admitted_date_time = obj_dict.get('admitted_date_time')
+        self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
+        self.published = obj_dict.get('is_final')
+        self.is_latest = self.event_id == latest_id
+
+    @property
+    def display_type(self):
+        return 'Admission notes'
+
+
 class CaseBreakdownLatestAdmission:
+
     def __init__(self):
         self.day_of_last_admission = ''
         self.month_of_last_admission = ''
@@ -495,30 +699,6 @@ class CauseOfDeathProposal:
             'section_1c': self.section_1c,
             'section_2': self.section_2
         }
-
-
-class CaseEvent:
-    date_format = '%d.%m.%Y'
-    time_format = "%H:%M"
-
-    def __init__(self, number, obj_dict):
-        self.number = number
-        self.type = obj_dict.get('type')
-        self.user_name = obj_dict.get('user').get('name')
-        self.user_role = obj_dict.get('user').get('role')
-        self.created_date = obj_dict.get('createdDate')
-        self.body = obj_dict.get('body')
-
-    def display_date(self):
-        date = parse_datetime(self.created_date)
-        if date.date() == datetime.today().date():
-            return 'Today at %s' % date.strftime(self.time_format)
-        elif date.date() == datetime.today().date() - timedelta(days=1):
-            return 'Yesterday at %s' % date.strftime(self.time_format)
-        else:
-            time = date.strftime(self.time_format)
-            date = date.strftime(self.date_format)
-            return "%s at %s" % (date, time)
 
 
 class MedicalTeam:
