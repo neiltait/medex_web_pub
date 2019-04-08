@@ -297,6 +297,8 @@ class CaseBreakdown:
 
         ## parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'))
+        self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
+                                             self.time_of_death)
         self.medical_team = medical_team
 
         ## build form objects
@@ -340,6 +342,9 @@ class ExaminationEventList:
                     self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
                 else:
                     self.drafts.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
+
+    def create_initial_event(self, patient_name, user_id, user_role, created_date, dod, tod):
+        self.events.insert(0, CaseInitialEvent(patient_name, user_id, user_role, created_date, dod, tod))
 
     def get_qap_discussion_draft(self):
         return self.qap_discussion_draft
