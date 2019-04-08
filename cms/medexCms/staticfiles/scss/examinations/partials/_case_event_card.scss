@@ -82,6 +82,10 @@
                     &.collapsed {
                         @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
                     }
+
+                    p {
+                        margin-bottom: 0;
+                    }
                 }
             }
         }
