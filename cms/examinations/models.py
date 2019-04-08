@@ -333,6 +333,14 @@ class ExaminationEventList:
         self.me_scrutiny_draft = None
         self.parse_events(timeline_items)
 
+    def parse_events(self, timeline_items):
+        for key, event_type in timeline_items.items():
+            for event in event_type['history']:
+                if event['is_final']:
+                    self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
+                else:
+                    self.drafts.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
+
     def get_qap_discussion_draft(self):
         return self.qap_discussion_draft
 
