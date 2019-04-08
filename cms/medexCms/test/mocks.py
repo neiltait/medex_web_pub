@@ -31,10 +31,10 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'user_id': '1',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email_address': 'test.user@email.com',
+            'userId': '1',
+            'firstName': 'Test',
+            'lastName': 'User',
+            'emailAddress': 'test.user@email.com',
         }
 
     @classmethod
@@ -605,80 +605,248 @@ class ExaminationMocks:
             "nhsNumber": '0123-456-789',
             "dateOfDeath": "2019-03-12T00:00:00.000Z",
             "timeOfDeath": "13:00",
-            "events": [
-                {
-                    "latest": {
-                        "type": "John Doe died",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-29T10:48:15.749Z",
-                        "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
-                    },
+            "caseBreakdown": {
+                "otherEvents": {
                     "history": [
                         {
-                            "type": "John Doe died",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-29T10:48:15.749Z",
-                            "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "is_final": True,
+                            "event_type": "Other"
                         }
-                    ]
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                            "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                            "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                            "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                            "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                            "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": True,
+                        "event_type": "Other"
+                    }
                 },
-                {
-                    "latest": {
-                        "type": "Admission Notes",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-31T10:48:15.749Z",
-                        "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
-                    },
+                "preScrutiny": {
                     "history": [
                         {
-                            "type": "Admission Notes",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-18T10:48:15.749Z",
-                            "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                       "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                       "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                       "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                       "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                       "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "is_final": True,
+                            "event_type": "PreScrutiny",
+                            "circumstances_of_death": "Expected",
+                            "cause_of_death": [
+                            ],
+                            "outcome_of_pre_scrutiny": "IssueAnMccd",
+                            "clinical_governance_review": "Yes",
+                            "clinical_governance_review_text": "Yes"
                         }
-                    ]
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                   "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                   "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                   "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                   "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                   "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": True,
+                        "event_type": "PreScrutiny",
+                        "circumstances_of_death": "Expected",
+                        "cause_of_death": [
+                        ],
+                        "outcome_of_pre_scrutiny": "IssueAnMccd",
+                        "clinical_governance_review": "Yes",
+                        "clinical_governance_review_text": "Yes"
+                    }
                 },
-                {
-                    "latest": {
-                        "type": "Medical history",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-31T10:48:15.749Z",
-                        "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
-                    },
+                "bereavedDiscussion": {
                     "history": [
                         {
-                            "type": "Medical history",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-18T10:48:15.749Z",
-                            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "BereavedDiscussion",
+                            "participant_full_name": "Jane Doe",
+                            "participant_relationship": "Wife",
+                            "participant_phone_number": "01234 567890",
+                            "present_at_death": "Yes",
+                            "informed_at_death": "Yes",
+                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                            "discussion_unable_happen": False,
+                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "bereaved_discussion_outcome": "CouseOfDeathAccepted"
                         }
-                    ]
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "BereavedDiscussion",
+                        "participant_full_name": "Jane Doe",
+                        "participant_relationship": "Wife",
+                        "participant_phone_number": "01234 567890",
+                        "present_at_death": "Yes",
+                        "informed_at_death": "Yes",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                    }
+                },
+                "meoSummary": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "MeoSummary",
+                            "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                               "consectetur adipiscing elit, sed do eiusmod tempor"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "MeoSummary",
+                        "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                           "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                           "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                           "consectetur adipiscing elit, sed do eiusmod tempor"
+                    }
+                },
+                "qapDiscussion": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "QapDiscussion",
+                            "participant_roll": "Consultant",
+                            "participant_organisation": "A Hospital",
+                            "participant_phone_number": "01234 567890",
+                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                            "discussion_unable_happen": False,
+                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "qap_discussion_outcome": "MccdToBeIssued"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "QapDiscussion",
+                        "participant_roll": "Consultant",
+                        "participant_organisation": "A Hospital",
+                        "participant_phone_number": "01234 567890",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "qap_discussion_outcome": "MccdToBeIssued"
+                    }
+                },
+                "medicalHistory": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "event_type": "MedicalHistory",
+                            "is_final": True,
+                            "created_date": "2019-03-12T10:30:43.019Z",
+                            "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                          "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                          "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                          "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                          "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                          "consectetur adipiscing elit, sed do eiusmod tempor "
+                                                          "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                                          "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                                          "goes here"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "event_type": "MedicalHistory",
+                        "is_final": True,
+                        "created_date": "2019-03-12T10:30:43.019Z",
+                        "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                      "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                      "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                      "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                      "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                      "consectetur adipiscing elit, sed do eiusmod tempor "
+                                                      "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                                      "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                                      "goes here"
+                    }
+                },
+                "admissionNotes": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "admission_event_notes": "The length of their last admission was 5 days",
+                            "is_final": True,
+                            "event_type": "AdmissionNotes",
+                            "admitted_date_time": "2019-03-10T08:31:43.019Z",
+                            "immediate_coroner_referral": False,
+                            "created_date": "2019-03-12T10:30:43.019Z",
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "admission_event_notes": "The length of their last admission was 5 days",
+                        "is_final": True,
+                        "event_type": "AdmissionNotes",
+                        "admitted_date_time": "2019-03-10T08:31:43.019Z",
+                        "immediate_coroner_referral": False,
+                        "created_date": "2019-03-12T10:30:43.019Z",
+                    }
                 }
-            ],
+            },
             "errors": {
                 "additionalProp1": [
                     "string"
@@ -831,4 +999,3 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
-
