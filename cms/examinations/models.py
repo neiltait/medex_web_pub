@@ -448,7 +448,7 @@ class CaseOtherEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('other_event_text')
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
@@ -463,7 +463,7 @@ class CasePreScrutinyEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('pre_scrutiny_event_text')
         self.circumstances_of_death = obj_dict.get('circumstances_of_death')
         self.cause_of_death = obj_dict.get('cause_of_death')
@@ -483,7 +483,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.participant_full_name = obj_dict.get('participant_full_name')
         self.participant_relationship = obj_dict.get('participant_relationship')
         self.participant_phone_number = obj_dict.get('participant_phone_number')
@@ -506,7 +506,7 @@ class CaseMeoSummaryEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('summary_details')
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
@@ -521,7 +521,7 @@ class CaseQapDiscussionEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.participant_roll = obj_dict.get('participant_roll')
         self.participant_organisation = obj_dict.get('participant_organisation')
         self.participant_phone_number = obj_dict.get('participant_phone_number')
@@ -542,7 +542,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.medical_history_event_text = obj_dict.get('medical_history_event_text')
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
@@ -557,7 +557,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
     def __init__(self, obj_dict, latest_id, dod):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
-        self.created_date = obj_dict.get('created_date')
+        self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('admission_event_notes')
         self.admitted_date_time = parse_datetime(obj_dict.get('admitted_date_time'))
         self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
