@@ -118,4 +118,24 @@
             font-size: $default-font-size;
         }
     }
+
+    &.pre-scrutiny {
+        .event-body {
+            .content {
+                .collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.qap-discussion {
+        .qap-details {
+            margin-bottom: 1rem;
+
+            p {
+                margin-bottom: 0px;
+            }
+        }
+    }
 }

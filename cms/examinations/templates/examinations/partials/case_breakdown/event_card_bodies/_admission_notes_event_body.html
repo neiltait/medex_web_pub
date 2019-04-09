@@ -1,7 +1,9 @@
 <div class="content">
     <p>Patient admitted to hospital - Length of last admission: {{card_content.admission_length}} days at unknown.</p>
 
-    <p>{{card_content.body}}</p>
+    <div class="hideable-content">
+        <p>{{card_content.body}}</p>
 
-    <p>Immediate coroner referral? - {{card_content.display_coroner_referral}}</p>
+        <p>Immediate coroner referral? - {{card_content.display_coroner_referral}}</p>
+    </div>
 </div>
