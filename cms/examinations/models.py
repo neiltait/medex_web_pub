@@ -422,6 +422,7 @@ class CaseEvent:
 class CaseInitialEvent(CaseEvent):
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
     event_type = CaseEvent().INITIAL_EVENT_TYPE
+    css_type = 'initial'
 
     def __init__(self, patient_name, user_id, user_role, created_date, dod, tod):
         self.patient_name = patient_name
@@ -440,6 +441,8 @@ class CaseInitialEvent(CaseEvent):
 class CaseOtherEvent(CaseEvent):
     event_type = CaseEvent().OTHER_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_other_event_body.html'
+    display_type = 'Other case info'
+    css_type = 'other'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -449,14 +452,12 @@ class CaseOtherEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'Other case info'
-
 
 class CasePreScrutinyEvent(CaseEvent):
     event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_pre_scrutiny_event_body.html'
+    display_type = 'ME pre-scrutiny'
+    css_type = 'pre-scrutiny'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -471,14 +472,12 @@ class CasePreScrutinyEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'ME pre-scrutiny'
-
 
 class CaseBereavedDiscussionEvent(CaseEvent):
     event_type = CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_bereaved_discussion_event_body.html'
+    display_type = 'Bereaved/representative discussion'
+    css_type = 'bereaved-discussion'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -496,14 +495,12 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'Bereaved/representative discussion'
-
 
 class CaseMeoSummaryEvent(CaseEvent):
     event_type = CaseEvent().MEO_SUMMARY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_meo_summary_event_body.html'
+    display_type = 'MEO summary'
+    css_type = 'meo-summary'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -513,14 +510,12 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'MEO summary'
-
 
 class CaseQapDiscussionEvent(CaseEvent):
     event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
+    display_type = 'QAP discussion'
+    css_type = 'qap-discussion'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -536,14 +531,12 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'QAP discussion'
-
 
 class CaseMedicalHistoryEvent(CaseEvent):
     event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_medical_history_event_body.html'
+    display_type = 'Medical history'
+    css_type = 'medical-history'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -553,14 +546,12 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'Medical history'
-
 
 class CaseAdmissionNotesEvent(CaseEvent):
     event_type = CaseEvent().ADMISSION_NOTES_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_admission_notes_event_body.html'
+    display_type = 'Admission notes'
+    css_type = 'admission-notes'
 
     def __init__(self, obj_dict, latest_id):
         self.event_id = obj_dict.get('event_id')
@@ -572,9 +563,6 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
-    @property
-    def display_type(self):
-        return 'Admission notes'
 
 
 class CaseBreakdownLatestAdmission:
