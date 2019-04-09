@@ -325,7 +325,7 @@ class ExaminationEventList:
 
     def __init__(self, timeline_items, dod):
         self.events = []
-        self.drafts = []
+        self.drafts = {}
         self.qap_discussion_draft = None
         self.other_notes_draft = None
         self.latest_admission_draft = None
@@ -341,32 +341,31 @@ class ExaminationEventList:
             for event in event_type['history']:
                 if event['is_final']:
                     self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
-                else:
-                    self.drafts.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
+            self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'])
 
     def create_initial_event(self, patient_name, user_id, user_role, created_date, dod, tod):
         self.events.insert(0, CaseInitialEvent(patient_name, user_id, user_role, created_date, dod, tod))
 
     def get_qap_discussion_draft(self):
-        return self.qap_discussion_draft
+        return self.drafts[CaseEvent().QAP_DISCUSSION_EVENT_TYPE]
 
     def get_other_notes_draft(self):
-        return self.other_notes_draft
+        return self.drafts[CaseEvent().OTHER_EVENT_TYPE]
 
     def get_latest_admission_draft(self):
-        return self.latest_admission_draft
+        return self.drafts[CaseEvent().ADMISSION_NOTES_EVENT_TYPE]
 
     def get_meo_summary_draft(self):
-        return self.meo_summary_draft
+        return self.drafts[CaseEvent().MEO_SUMMARY_EVENT_TYPE]
 
     def get_medical_history_draft(self):
-        return self.medical_history_draft
+        return self.drafts[CaseEvent().MEDICAL_HISTORY_EVENT_TYPE]
 
     def get_bereaved_discussion_draft(self):
-        return self.bereaved_discussion_draft
+        return self.drafts[CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE]
 
     def get_me_scrutiny_draft(self):
-        return self.me_scrutiny_draft
+        return self.drafts[CaseEvent().PRE_SCRUTINY_EVENT_TYPE]
 
     def get_latest_me_scrutiny_cause_of_death(self):
         return None
