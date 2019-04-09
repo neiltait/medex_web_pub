@@ -299,6 +299,8 @@ class CaseBreakdown:
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death)
         self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
                                              self.time_of_death)
+        self.event_list.sort_events_oldest_to_newest()
+        self.event_list.add_event_numbers()
         self.medical_team = medical_team
 
         ## build form objects
@@ -341,31 +343,40 @@ class ExaminationEventList:
             for event in event_type['history']:
                 if event['is_final']:
                     self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
-            self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'])
+            self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'], None)
+
+    def sort_events_oldest_to_newest(self):
+        self.events.sort(key=lambda event: event.created_date, reverse=False)
+
+    def add_event_numbers(self):
+        count = 1
+        for event in self.events:
+            event.number = count
+            count += 1
 
     def create_initial_event(self, patient_name, user_id, user_role, created_date, dod, tod):
         self.events.insert(0, CaseInitialEvent(patient_name, user_id, user_role, created_date, dod, tod))
 
     def get_qap_discussion_draft(self):
-        return self.drafts[CaseEvent().QAP_DISCUSSION_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().QAP_DISCUSSION_EVENT_TYPE)
 
     def get_other_notes_draft(self):
-        return self.drafts[CaseEvent().OTHER_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().OTHER_EVENT_TYPE)
 
     def get_latest_admission_draft(self):
-        return self.drafts[CaseEvent().ADMISSION_NOTES_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().ADMISSION_NOTES_EVENT_TYPE)
 
     def get_meo_summary_draft(self):
-        return self.drafts[CaseEvent().MEO_SUMMARY_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().MEO_SUMMARY_EVENT_TYPE)
 
     def get_medical_history_draft(self):
-        return self.drafts[CaseEvent().MEDICAL_HISTORY_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().MEDICAL_HISTORY_EVENT_TYPE)
 
     def get_bereaved_discussion_draft(self):
-        return self.drafts[CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE)
 
     def get_me_scrutiny_draft(self):
-        return self.drafts[CaseEvent().PRE_SCRUTINY_EVENT_TYPE]
+        return self.drafts.get(CaseEvent().PRE_SCRUTINY_EVENT_TYPE)
 
     def get_latest_me_scrutiny_cause_of_death(self):
         return None
@@ -425,6 +436,7 @@ class CaseInitialEvent(CaseEvent):
     css_type = 'initial'
 
     def __init__(self, patient_name, user_id, user_role, created_date, dod, tod):
+        self.number = None
         self.patient_name = patient_name
         self.user_id = user_id
         self.user_role = user_role
@@ -445,6 +457,7 @@ class CaseOtherEvent(CaseEvent):
     css_type = 'other'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -460,6 +473,7 @@ class CasePreScrutinyEvent(CaseEvent):
     css_type = 'pre-scrutiny'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -480,6 +494,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
     css_type = 'bereaved-discussion'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -503,6 +518,7 @@ class CaseMeoSummaryEvent(CaseEvent):
     css_type = 'meo-summary'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -518,6 +534,7 @@ class CaseQapDiscussionEvent(CaseEvent):
     css_type = 'qap-discussion'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -545,6 +562,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
     css_type = 'medical-history'
 
     def __init__(self, obj_dict, latest_id):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
@@ -560,6 +578,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
     css_type = 'admission-notes'
 
     def __init__(self, obj_dict, latest_id, dod):
+        self.number = None
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')

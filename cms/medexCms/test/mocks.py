@@ -603,7 +603,7 @@ class ExaminationMocks:
         return {
             "patientName": 'John Doe',
             "nhsNumber": '0123-456-789',
-            "dateOfDeath": "2019-03-12T13:00:00.000Z",
+            "dateOfDeath": "2019-03-11T13:00:00.000Z",
             "timeOfDeath": "13:00",
             "caseBreakdown": {
                 "otherEvents": {
@@ -827,7 +827,7 @@ class ExaminationMocks:
                             "user_id": "WERGT-243TRGS-WE4TG-WERGT",
                             "is_final": True,
                             "event_type": "QapDiscussion",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-13T10:30:43.019Z",
                             "participant_roll": "Consultant",
                             "participant_organisation": "A Hospital",
                             "participant_phone_number": "01234 567890",
