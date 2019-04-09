@@ -26,6 +26,8 @@ def parse_datetime(datetime_string):
     else:
         return None
 
+def fallback_to(value ,default_value):
+    return value if value is not None else default_value
 
 def is_empty_date(datetime_string):
     return NONE_DATE == datetime_string or NONE_DATE_WITH_TIME_ZONE == datetime_string
