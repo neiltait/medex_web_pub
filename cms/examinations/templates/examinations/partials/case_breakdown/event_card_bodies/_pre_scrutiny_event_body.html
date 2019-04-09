@@ -1,0 +1,39 @@
+<div class="content">
+    <p>
+        {{card_content.body}}
+    </p>
+
+    <label>
+        Overall circumstances of death
+    </label>
+    <p>
+        {{card_content.circumstances_of_death}}
+    </p>
+
+    <label>
+        Possible cause of death established during pre scrutiny
+    </label>
+    <ul>
+        {% for cause in card_content.cause_of_death %}
+            <li>{{cause}}</li>
+        {% endfor %}
+    </ul>
+
+
+    <label>
+        Overall outcome of pre-scrutiny
+    </label>
+    <p>
+        {{ card_content.outcome_of_pre_scrutiny }}
+    </p>
+
+    <label>
+        Clinical governance review or learning opportunity
+    </label>
+    <p>
+        {{ card_content.clinical_governance_review }}
+    </p>
+    <p>
+        {{ card_content.clinical_governance_review_text }}
+    </p>
+</div>

@@ -655,7 +655,7 @@ class ExaminationMocks:
                             ],
                             "outcome_of_pre_scrutiny": "IssueAnMccd",
                             "clinical_governance_review": "Yes",
-                            "clinical_governance_review_text": "Yes"
+                            "clinical_governance_review_text": "Palliative care were called too late."
                         }
                     ],
                     "latest": {
