@@ -78,15 +78,35 @@
             .event-body {
                 .content {
                     margin-bottom: 0;
-
-                    &.collapsed {
-                        @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
-                    }
-
-                    p {
-                        margin-bottom: 0;
-                    }
                 }
+            }
+        }
+    }
+
+    &.other {
+        .event-body {
+            .content {
+                &.collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.initial {
+        .event-body {
+            .content {
+                p {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &.admission-notes {
+        .event-body {
+            .content {
+
             }
         }
     }
