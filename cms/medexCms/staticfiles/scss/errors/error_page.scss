@@ -32,3 +32,17 @@ html, body {
     width: 100%;
   }
 }
+
+.error-stack {
+    background-color: lightgoldenrodyellow;
+    padding: 2rem;
+    word-wrap: break-word;
+
+    .debug-message {
+        font-style: italic;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+}

@@ -24,6 +24,8 @@ NAME_TOTAL_TOO_LONG = 'Please enter fewer than 250 characters in total'
 
 DEATH_IS_NOT_AFTER_BIRTH = 'Death date must be after birth date'
 
+GENERAL_ERROR = 'There was an error whilst %s the %s'
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 
