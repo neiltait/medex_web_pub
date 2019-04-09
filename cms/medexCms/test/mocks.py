@@ -606,6 +606,15 @@ class ExaminationMocks:
             "dateOfDeath": "2019-03-11T13:00:00.000Z",
             "timeOfDeath": "13:00",
             "caseBreakdown": {
+                "patientDeathEvent": {
+                    "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                    "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                    "isFinal": True,
+                    "eventType": "PatientDied",
+                    "dateOfDeath": "2019-03-10T10:01:34.257Z",
+                    "timeOfDeath": "11:11:00",
+                    "created": "2019-03-10T18:01:34.257Z"
+                },
                 "otherEvents": {
                     "history": [
                         {

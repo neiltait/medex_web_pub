@@ -296,9 +296,10 @@ class CaseBreakdown:
         self.time_of_death = obj_dict.get("timeOfDeath")
 
         ## parse data
-        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death)
-        self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
-                                             self.time_of_death)
+        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death, self.patient_name,
+                                               "MEO")
+        # self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
+        #                                      self.time_of_death)
         self.event_list.sort_events_oldest_to_newest()
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
@@ -325,7 +326,7 @@ class CaseBreakdown:
 
 class ExaminationEventList:
 
-    def __init__(self, timeline_items, dod):
+    def __init__(self, timeline_items, dod, patient_name, user_role):
         self.events = []
         self.drafts = {}
         self.qap_discussion_draft = None
@@ -336,14 +337,19 @@ class ExaminationEventList:
         self.bereaved_discussion_draft = None
         self.me_scrutiny_draft = None
         self.dod = dod
-        self.parse_events(timeline_items)
+        self.parse_events(timeline_items, patient_name, user_role)
 
-    def parse_events(self, timeline_items):
+    def parse_events(self, timeline_items, patient_name, user_role):
         for key, event_type in timeline_items.items():
-            for event in event_type['history']:
-                if event['is_final']:
-                    self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
-            self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'], None)
+            if key == CaseEvent().INITIAL_EVENT_TYPE and event_type:
+                self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
+            elif key != CaseEvent().INITIAL_EVENT_TYPE:
+                for event in event_type['history']:
+                    if event['is_final']:
+                        self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
+                if event_type['usersDraft']:
+                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'],
+                                                             None)
 
     def sort_events_oldest_to_newest(self):
         self.events.sort(key=lambda event: event.created_date, reverse=False)
@@ -353,9 +359,6 @@ class ExaminationEventList:
         for event in self.events:
             event.number = count
             count += 1
-
-    def create_initial_event(self, patient_name, user_id, user_role, created_date, dod, tod):
-        self.events.insert(0, CaseInitialEvent(patient_name, user_id, user_role, created_date, dod, tod))
 
     def get_qap_discussion_draft(self):
         return self.drafts.get(CaseEvent().QAP_DISCUSSION_EVENT_TYPE)
@@ -393,14 +396,16 @@ class CaseEvent:
     QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
     MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
     ADMISSION_NOTES_EVENT_TYPE = 'AdmissionNotes'
-    INITIAL_EVENT_TYPE = 'Initial'
+    INITIAL_EVENT_TYPE = 'patientDeathEvent'
 
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
 
     @classmethod
     def parse_event(cls, event_data, latest_id, dod):
-        if event_data['event_type'] == cls.OTHER_EVENT_TYPE:
+        if event_data['event_type'] == cls.INITIAL_EVENT_TYPE:
+            return CaseInitialEvent(event_data)
+        elif event_data['event_type'] == cls.OTHER_EVENT_TYPE:
             return CaseOtherEvent(event_data, latest_id)
         elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
             return CasePreScrutinyEvent(event_data, latest_id)
@@ -435,14 +440,14 @@ class CaseInitialEvent(CaseEvent):
     event_type = CaseEvent().INITIAL_EVENT_TYPE
     css_type = 'initial'
 
-    def __init__(self, patient_name, user_id, user_role, created_date, dod, tod):
+    def __init__(self, obj_dict, patient_name, user_role):
         self.number = None
         self.patient_name = patient_name
-        self.user_id = user_id
+        self.user_id = obj_dict.get('userId')
         self.user_role = user_role
-        self.created_date = created_date.strftime(API_DATE_FORMAT)
-        self.dod = dod.strftime(self.date_format)
-        self.tod = tod
+        self.created_date = obj_dict.get('created')
+        self.dod = obj_dict.get('dateOfDeath')
+        self.tod = obj_dict.get('timeOfDeath')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
 
     @property
