@@ -482,6 +482,16 @@ class ExaminationsFormsTests(MedExTestCase):
         result = form.is_valid()
         self.assertIsFalse(result)
 
+    def test_api_response_transformed_to_not_known_if_TOD_at_midnight(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        loaded_data['timeOfDeath'] = '00:00:00'
+
+        patient_details = PatientDetails(loaded_data)
+        form = PrimaryExaminationInformationForm()
+        form.set_values_from_instance(patient_details)
+
+        self.assertIsTrue(form.time_of_death_not_known)
+
     #### Secondary Info Form tests
 
     def test_secondary_form_initialised_empty_returns_as_valid(self):
