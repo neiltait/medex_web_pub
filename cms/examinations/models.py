@@ -543,7 +543,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
-        self.medical_history_event_text = obj_dict.get('medical_history_event_text')
+        self.body = obj_dict.get('medical_history_event_text')
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
 
