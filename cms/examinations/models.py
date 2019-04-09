@@ -525,12 +525,18 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.participant_roll = obj_dict.get('participant_roll')
         self.participant_organisation = obj_dict.get('participant_organisation')
         self.participant_phone_number = obj_dict.get('participant_phone_number')
-        self.date_of_conversation = obj_dict.get('date_of_conversation')
+        self.date_of_conversation = parse_datetime(obj_dict.get('date_of_conversation'))
         self.discussion_unable_happen = obj_dict.get('discussion_unable_happen')
         self.discussion_details = obj_dict.get('discussion_details')
         self.qap_discussion_outcome = obj_dict.get('qap_discussion_outcome')
         self.published = obj_dict.get('is_final')
         self.is_latest = self.event_id == latest_id
+
+    def conversation_display_date(self):
+        return self.date_of_conversation.strftime(self.date_format)
+
+    def conversation_display_time(self):
+        return self.date_of_conversation.strftime(self.time_format)
 
 
 class CaseMedicalHistoryEvent(CaseEvent):

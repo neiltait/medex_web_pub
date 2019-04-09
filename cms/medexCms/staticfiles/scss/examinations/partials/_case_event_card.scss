@@ -112,9 +112,10 @@
         }
     }
 
-    &.pre-scrutiny {
+    &.pre-scrutiny, &.qap-discussion {
         label {
             font-weight: bold;
+            font-size: $default-font-size;
         }
     }
 }
