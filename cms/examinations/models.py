@@ -1,7 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, API_DATE_FORMAT
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
 
@@ -292,11 +292,11 @@ class CaseBreakdown:
 
         self.patient_name = obj_dict.get("patientName")
         self.nhs_number = obj_dict.get("nhsNumber")
-        self.date_of_death = obj_dict.get("dateOfDeath")
+        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
         self.time_of_death = obj_dict.get("timeOfDeath")
 
         ## parse data
-        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'))
+        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death)
         self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
                                              self.time_of_death)
         self.medical_team = medical_team
@@ -323,7 +323,7 @@ class CaseBreakdown:
 
 class ExaminationEventList:
 
-    def __init__(self, timeline_items):
+    def __init__(self, timeline_items, dod):
         self.events = []
         self.drafts = []
         self.qap_discussion_draft = None
@@ -333,13 +333,14 @@ class ExaminationEventList:
         self.medical_history_draft = None
         self.bereaved_discussion_draft = None
         self.me_scrutiny_draft = None
+        self.dod = dod
         self.parse_events(timeline_items)
 
     def parse_events(self, timeline_items):
         for key, event_type in timeline_items.items():
             for event in event_type['history']:
                 if event['is_final']:
-                    self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
+                    self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
                 else:
                     self.drafts.append(CaseEvent.parse_event(event, event_type['latest']['event_id']))
 
@@ -388,7 +389,7 @@ class CaseEvent:
     time_format = "%H:%M"
 
     @classmethod
-    def parse_event(cls, event_data, latest_id):
+    def parse_event(cls, event_data, latest_id, dod):
         if event_data['event_type'] == cls.OTHER_EVENT_TYPE:
             return CaseOtherEvent(event_data, latest_id)
         elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
@@ -402,7 +403,7 @@ class CaseEvent:
         elif event_data['event_type'] == cls.MEDICAL_HISTORY_EVENT_TYPE:
             return CaseMedicalHistoryEvent(event_data, latest_id)
         elif event_data['event_type'] == cls.ADMISSION_NOTES_EVENT_TYPE:
-            return CaseAdmissionNotesEvent(event_data, latest_id)
+            return CaseAdmissionNotesEvent(event_data, latest_id, dod)
 
     def display_date(self):
         if self.created_date:
@@ -428,8 +429,8 @@ class CaseInitialEvent(CaseEvent):
         self.patient_name = patient_name
         self.user_id = user_id
         self.user_role = user_role
-        self.created_date = created_date
-        self.dod = dod
+        self.created_date = created_date.strftime(API_DATE_FORMAT)
+        self.dod = dod.strftime(self.date_format)
         self.tod = tod
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
 
@@ -553,16 +554,23 @@ class CaseAdmissionNotesEvent(CaseEvent):
     display_type = 'Admission notes'
     css_type = 'admission-notes'
 
-    def __init__(self, obj_dict, latest_id):
+    def __init__(self, obj_dict, latest_id, dod):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created_date')
-        self.admission_event_notes = obj_dict.get('admission_event_notes')
-        self.admitted_date_time = obj_dict.get('admitted_date_time')
+        self.body = obj_dict.get('admission_event_notes')
+        self.admitted_date_time = parse_datetime(obj_dict.get('admitted_date_time'))
         self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
         self.published = obj_dict.get('is_final')
+        self.dod = dod
         self.is_latest = self.event_id == latest_id
 
+    def admission_length(self):
+        delta = self.dod - self.admitted_date_time
+        return delta.days
+
+    def display_coroner_referral(self):
+        return 'Yes' if self.immediate_coroner_referral else 'No'
 
 
 class CaseBreakdownLatestAdmission:
