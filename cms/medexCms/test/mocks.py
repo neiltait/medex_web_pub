@@ -31,10 +31,10 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'user_id': '1',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email_address': 'test.user@email.com',
+            'userId': '1',
+            'firstName': 'Test',
+            'lastName': 'User',
+            'emailAddress': 'test.user@email.com',
         }
 
     @classmethod
@@ -71,10 +71,10 @@ class UserMocks:
     @classmethod
     def get_empty_user_dict(cls):
         return {
-            'user_id': None,
-            'first_name': None,
-            'last_name': None,
-            'email_address': None,
+            'userId': None,
+            'firstName': None,
+            'lastName': None,
+            'email': None,
         }
 
     @classmethod
