@@ -697,7 +697,14 @@ class ExaminationMocks:
     def get_successful_case_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(None).encode('utf-8')
+        response._content = json.dumps({"examinationId": "example"}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_case_creation_response_with_id_1(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({"examinationId": "1"}).encode('utf-8')
         return response
 
     @classmethod
@@ -831,4 +838,3 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
-

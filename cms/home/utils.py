@@ -9,6 +9,10 @@ def redirect_to_landing():
     return redirect('/')
 
 
+def redirect_to_examination(examination_id):
+    return redirect('/cases/%s/patient-details' % examination_id)
+
+
 def redirect_to_login():
     return redirect('/login')
 
