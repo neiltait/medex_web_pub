@@ -647,7 +647,7 @@ class MedicalTeamMembersForm:
 class PreScrutinyEventForm:
 
     def __init__(self, form_data):
-        self.me_thoughts = form_data.get('more_detail')
+        self.me_thoughts = form_data.get('me-thoughts')
         self.circumstances_of_death = form_data.get('cod')
         self.possible_cod_1a = form_data.get('possible-cod-1a')
         self.possible_cod_1b = form_data.get('possible-cod-1b')
