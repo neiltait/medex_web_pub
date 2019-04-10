@@ -154,7 +154,7 @@
               </div>
             </div>
 
-            <div class="nhsuk-grid-column-one-third">
+            <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
               <div class="nhsuk-radios__item">
                 <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
                        id="arrangements-5" name="funeral_arrangements" type="radio" value="Unknown"
@@ -200,7 +200,7 @@
               </label>
             </div>
             </div>
-              <div class="nhsuk-grid-column-one-third">
+              <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
               <div class="nhsuk-radios__item">
                   <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
                          id="implant-devices-3" name="implanted_devices" type="radio" value="unknown"
@@ -280,8 +280,8 @@
             </label>
           </div>
         </div>
-        <div class="nhsuk-grid-column-one-third">
-          <div class="nhsuk-radios__item">
+        <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
+          <div class="nhsuk-radios__item ">
             <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
                    id="personal-effects-3" name="personal_effects" type="radio" value="unknown"
                    {% if form.personal_effects == 'unknown' %}checked{% endif %}>
