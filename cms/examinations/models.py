@@ -546,7 +546,7 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.event_id = obj_dict.get('event_id')
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
-        self.participant_roll = obj_dict.get('participant_roll')
+        self.participant_role = obj_dict.get('participant_roll')
         self.participant_organisation = obj_dict.get('participant_organisation')
         self.participant_phone_number = obj_dict.get('participant_phone_number')
         self.date_of_conversation = parse_datetime(obj_dict.get('date_of_conversation'))
