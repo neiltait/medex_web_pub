@@ -202,6 +202,35 @@
     }
   };
 
+  var RadioTogglePanelGroup = function (section) {
+    this.section = section;
+    this.setup()
+  };
+
+  RadioTogglePanelGroup.prototype = {
+    setup: function () {
+      this.radios = this.section.find(".radio-toggle-group__radio");
+      this.panels = this.section.find(".radio-toggle-group__panel");
+      this.setupWatchers();
+      this.showHidePanels();
+    },
+    setupWatchers: function () {
+      var that = this;
+      this.radios.change(function () {
+        that.showHidePanels()
+      })
+    },
+    showHidePanels: function () {
+      for(var i = 0; i < this.radios.length; i++) {
+        if(this.radios[i].checked) {
+          this.panels[i].classList.remove('nhsuk-u-visually-hidden')
+        } else {
+          this.panels[i].classList.add('nhsuk-u-visually-hidden')
+        }
+      }
+    }
+  };
+
   var AddRemovePanelList = function (section, visibleCount) {
     this.visibleCount = visibleCount;
     this.panels = section.find('.add-remove-panel');
@@ -298,6 +327,11 @@
     var examinationsForms = $('.examination__edit');
     for (var i = 0; i < examinationsForms.length; i++) {
       new ExaminationEditForm(examinationsForms[i]);
+    }
+
+    var radioToggleGroups = $('.radio-toggle-group');
+    for (var i = 0; i < radioToggleGroups.length; i++) {
+      new RadioTogglePanelGroup(radioToggleGroups)
     }
   }
 
