@@ -674,3 +674,19 @@ class PreScrutinyEventForm:
           "clinicalGovernanceReview": self.governance_review,
           "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+
+class MeoSummaryEventForm:
+
+    def __init__(self, form_data):
+        self.meo_summary_notes = form_data.get('meo_summary_notes')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+          "isFinal": self.is_final,
+          "summaryDetails": self.meo_summary_notes
+        }
