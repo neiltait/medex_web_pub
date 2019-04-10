@@ -73,3 +73,8 @@ def load_case_breakdown_by_id(examination_id, auth_token):
         return ExaminationMocks.get_successful_case_breakdown_load_response()
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/casebreakdown' % (settings.API_URL, examination_id))
+
+
+def create_pre_scrutiny_event(auth_token, examination_id, submission):
+    return MedexRequest.put(auth_token, '%s/examinations/%s/prescrutiny' % (settings.API_URL, examination_id),
+                            submission)
