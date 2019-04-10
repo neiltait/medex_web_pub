@@ -182,9 +182,7 @@
 
       this.setupWatchers();
 
-      if(this.notes.val() !== '') {
-        this.openPanel()
-      }
+      this.openPopulatedPanelOnStartup()
     },
     setupWatchers: function() {
       let that = this;
@@ -196,6 +194,11 @@
     openPanel: function () {
       this.panel.removeClass("medex-hidden")
       this.button.addClass("medex-hidden")
+    },
+    openPopulatedPanelOnStartup: function () {
+      if(this.notes.val() !== '') {
+        this.openPanel()
+      }
     }
   };
 
