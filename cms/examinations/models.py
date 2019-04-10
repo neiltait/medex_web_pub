@@ -406,21 +406,19 @@ class CaseEvent:
 
     @classmethod
     def parse_event(cls, event_data, latest_id, dod):
-        if event_data['event_type'] == cls.INITIAL_EVENT_TYPE:
-            return CaseInitialEvent(event_data)
-        elif event_data['event_type'] == cls.OTHER_EVENT_TYPE:
+        if event_data.get('event_type') == cls.OTHER_EVENT_TYPE:
             return CaseOtherEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.PRE_SCRUTINY_EVENT_TYPE:
             return CasePreScrutinyEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
             return CaseBereavedDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEO_SUMMARY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.MEO_SUMMARY_EVENT_TYPE:
             return CaseMeoSummaryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.QAP_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.QAP_DISCUSSION_EVENT_TYPE:
             return CaseQapDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEDICAL_HISTORY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.MEDICAL_HISTORY_EVENT_TYPE:
             return CaseMedicalHistoryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.ADMISSION_NOTES_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.ADMISSION_NOTES_EVENT_TYPE:
             return CaseAdmissionNotesEvent(event_data, latest_id, dod)
 
     def display_date(self):
