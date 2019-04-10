@@ -642,3 +642,35 @@ class MedicalTeamMembersForm:
             obj['generalPractitioner'] = self.gp.to_object()
 
         return obj
+
+
+class PreScrutinyEventForm:
+
+    def __init__(self, form_data):
+        self.me_thoughts = form_data.get('me-thoughts')
+        self.circumstances_of_death = form_data.get('cod')
+        self.possible_cod_1a = form_data.get('possible-cod-1a')
+        self.possible_cod_1b = form_data.get('possible-cod-1b')
+        self.possible_cod_1c = form_data.get('possible-cod-1c')
+        self.possible_cod_2 = form_data.get('possible-cod-2')
+        self.overall_outcome = form_data.get('ops')
+        self.governance_review = form_data.get('gr')
+        self.governance_review_text = form_data.get('grt')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+          "medicalExaminerThoughts": self.me_thoughts,
+          "isFinal": self.is_final,
+          "circumstancesOfDeath": self.circumstances_of_death,
+          "causeOfDeath1a": self.possible_cod_1a,
+          "causeOfDeath1b": self.possible_cod_1b,
+          "causeOfDeath1c": self.possible_cod_1c,
+          "causeOfDeath2": self.possible_cod_2,
+          "outcomeOfPreScrutiny": self.overall_outcome,
+          "clinicalGovernanceReview": self.governance_review,
+          "clinicalGovernanceReviewText": self.governance_review_text
+        }
