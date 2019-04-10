@@ -398,7 +398,7 @@ class CaseEvent:
     MEO_SUMMARY_EVENT_TYPE = 'MeoSummary'
     QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
     MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
-    ADMISSION_NOTES_EVENT_TYPE = 'AdmissionNotes'
+    ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
 
     date_format = '%d.%m.%Y'
@@ -594,15 +594,19 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('admission_event_notes')
-        self.admitted_date_time = parse_datetime(obj_dict.get('admitted_date_time'))
+        self.admitted_date = parse_datetime(obj_dict.get('admitted_date'))
+        self.admitted_time = obj_dict.get('admitted_time')
         self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
         self.published = obj_dict.get('is_final')
         self.dod = dod
         self.is_latest = self.event_id == latest_id
 
     def admission_length(self):
-        delta = self.dod - self.admitted_date_time
-        return delta.days
+        if self.dod and self.admitted_date:
+            delta = self.dod - self.admitted_date
+            return delta.days
+        else:
+            return 'Unknown'
 
     def display_coroner_referral(self):
         return 'Yes' if self.immediate_coroner_referral else 'No'
