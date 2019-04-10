@@ -20,7 +20,7 @@ def validate_date(year, month, day, hour='00', min='00'):
 
 def parse_datetime(datetime_string):
     if datetime_string and not is_empty_date(datetime_string):
-        return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
+        return datetime.datetime.fromisoformat(datetime_string)
     else:
         return None
 
