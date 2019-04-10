@@ -3,12 +3,12 @@ from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
-from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails, CaseBreakdown, MedicalTeam
-from home.utils import redirect_to_login, redirect_to_landing, render_404, redirect_to_examination
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
+from home.utils import redirect_to_login, render_404, redirect_to_examination
+from examinations.utils import event_form_parser, event_form_submitter
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -237,11 +237,15 @@ def get_tab_change_modal_config():
 
 def edit_examination_case_breakdown(request, examination_id):
     user = User.initialise_with_token(request)
+    status_code = status.HTTP_200_OK
+
+    if request.method == 'POST':
+        form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
 
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = CaseBreakdown.load_by_id(examination_id, user.auth_token)
+    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
 
     if not type(examination) == CaseBreakdown:
         context = {
@@ -250,8 +254,6 @@ def edit_examination_case_breakdown(request, examination_id):
         }
 
         return render(request, 'errors/base_error.html', context, status=examination.status_code)
-
-    status_code = status.HTTP_200_OK
 
     forms = user.get_forms_for_role()
 
@@ -271,3 +273,15 @@ def edit_examination_case_breakdown(request, examination_id):
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
+
+
+def __post_case_breakdown_event(request, user, examination_id):
+    form = event_form_parser(request.POST)
+    if form.is_valid():
+        response = event_form_submitter(user.auth_token, examination_id, form)
+        status_code = response.status_code
+        errors = {'count': 0}
+    else:
+        errors = form.errors
+        status_code = status.HTTP_400_BAD_REQUEST
+    return form, status_code, errors
