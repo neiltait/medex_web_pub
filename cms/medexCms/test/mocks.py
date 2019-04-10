@@ -31,10 +31,10 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'user_id': '1',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email_address': 'test.user@email.com',
+            'userId': '1',
+            'firstName': 'Test',
+            'lastName': 'User',
+            'emailAddress': 'test.user@email.com',
         }
 
     @classmethod
@@ -130,16 +130,22 @@ class UserMocks:
     def get_meo_user_list(cls):
         return [
             {
-                'id': '1',
-                'name': 'Sofia Skouros',
+                'userId': '6',
+                'firstName': 'Sofia',
+                'lastName': 'Skouros',
+                "userRole": "MedicalExaminerOfficer"
             },
             {
-                'id': '2',
-                'name': 'Alex McPherson',
+                'userId': '7',
+                'firstName': 'Alex',
+                'lastName': 'McPherson',
+                "userRole": "MedicalExaminerOfficer"
             },
             {
-                'id': '3',
-                'name': 'Suchi Kandukuri',
+                'userId': '8',
+                'firstName': 'Suchi',
+                'lastName': 'Kandukuri',
+                "userRole": "MedicalExaminerOfficer"
             }
         ]
 
@@ -406,10 +412,34 @@ class ExaminationMocks:
         }
 
     @classmethod
-    def get_assigned_medical_team_form_data(cls):
+    def get_medical_team_content(cls):
         return {
-            'medical_examiner': 'Dr Charles Li',
-            'medical_examiners_officer': 'Erica Barber',
+            'consultantResponsible': {
+                'name': 'Dr Arthur Gunz'
+            },
+            'consultantsOther': [
+                {
+                    'name': 'Dr Yolanda Anders'
+                }
+            ],
+            'qap': {
+                'name': 'Dr Kiran Kandukuri'
+            },
+            'generalPractitioner': {
+                'name': ''
+            },
+            'medicalExaminer': {
+                'userId': '1',
+                'firstName': 'Simon',
+                'lastName': 'Li',
+                'email': 's.li@methods.co.uk'
+            },
+            'medicalExaminerOfficer': {
+                'userId': '2',
+                'firstName': 'Janet',
+                'lastName': 'Matthews',
+                'email': 'j.matthews@methods.co.uk'
+            }
         }
 
     @classmethod
@@ -475,58 +505,103 @@ class ExaminationMocks:
         }
 
     @classmethod
-    def get_medical_team_load_response_content(cls):
-        return {
-            "consultantResponsible": {
-                "name": "Peter Hipkiss",
-                "role": "Oncologist",
-                "organisation": "St Thomas's hospital",
-                "phone": "12345",
-                "notes": ""
-            },
-            "consultantsOther": [],
-            "generalPractitioner": {
-                "name": "",
-                "role": "",
-                "organisation": "",
-                "phone": "",
-                "notes": ""
-            },
-            "qap": {
-                "name": "",
-                "role": "",
-                "organisation": "",
-                "phone": "",
-                "notes": ""
-            },
-            "nursingTeamInformation": "",
-            "medicalExaminer": {
-                "userId": "string",
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminerOfficer"
-            },
-            "medicalExaminerOfficer": {
-                "userId": "string",
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminerOfficer"
-            },
-            "errors": {
-                "additionalProp1": [
-                    ""
-                ],
-                "additionalProp2": [
-                    ""
-                ],
-                "additionalProp3": [
-                    ""
-                ]
-            },
-            "success": "true"
-        }
+    def get_medical_team_load_response_content(cls, examination_id=1):
+        if examination_id == 1:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "",
+                "medicalExaminerOfficerUserId": "",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
+        elif examination_id == 2:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "qap": {
+                    "name": "Alessandro da Silva",
+                    "role": "General Practitioner",
+                    "organisation": "The Heathside Medical Center",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "",
+                "medicalExaminerOfficerUserId": "",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
+        else:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "generalPractitioner": {
+                    "name": "Patricia van Helden",
+                    "role": "General Practitioner",
+                    "organisation": "Cotton Street General Surgery",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "qap": {
+                    "name": "Alessandro da Silva",
+                    "role": "General Practitioner",
+                    "organisation": "The Heathside Medical Center",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "4",
+                "medicalExaminerOfficerUserId": "2",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
 
     @classmethod
     def get_case_index_response_content(cls):
@@ -792,10 +867,10 @@ class ExaminationMocks:
         return response
 
     @classmethod
-    def get_successful_medical_team_load_response(cls):
+    def get_successful_medical_team_load_response(cls, examination_id):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        response._content = json.dumps(cls.get_medical_team_load_response_content(examination_id=examination_id)).encode('utf-8')
         return response
 
     @classmethod
@@ -831,4 +906,3 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
-

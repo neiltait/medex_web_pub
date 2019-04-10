@@ -8,7 +8,7 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails, ExaminationOverview
+from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime
@@ -540,13 +540,30 @@ class ExaminationsFormsTests(MedExTestCase):
 
     #### Medical Team Form tests
 
-    def test_medical_team_member_form_initialised_empty_returns_as_valid(self):
+    def test_medical_team_member_form_initialised_empty_returns_as_not_valid(self):
         form = MedicalTeamMembersForm()
-        self.assertIsTrue(form.is_valid())
+        self.assertIsFalse(form.is_valid())
+        self.assertEqual(form.errors['count'], 1)
 
     def test_medical_team_member_form_initialised_with_content_returns_as_valid(self):
         form = MedicalTeamMembersForm(ExaminationMocks.get_medical_team_tab_form_data())
         self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_initialised_with_valid_medical_team_returns_as_valid(self):
+        medical_team = MedicalTeam(obj_dict=ExaminationMocks.get_medical_team_content())
+        form = MedicalTeamMembersForm(medical_team=medical_team)
+
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_without_consultant_1_is_not_valid(self):
+        mock_data = ExaminationMocks.get_medical_team_tab_form_data()
+        mock_data['consultant_name_1'] = ""
+        mock_data['consultant_role_1'] = ""
+        mock_data['consultant_organisation_1'] = ""
+        mock_data['consultant_phone_number_1'] = ""
+        form = MedicalTeamMembersForm(mock_data)
+
+        self.assertIsFalse(form.is_valid())
 
 
 class ExaminationsModelsTests(MedExTestCase):
@@ -701,3 +718,5 @@ class ExaminationsModelsTests(MedExTestCase):
         result = examination_overview.calc_created_days_ago()
         expected_days = 0
         self.assertEqual(result, expected_days)
+
+
