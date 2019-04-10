@@ -7,7 +7,8 @@ from unittest.mock import patch
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
+    AdmissionNotesEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
@@ -564,6 +565,115 @@ class ExaminationsFormsTests(MedExTestCase):
         form = MedicalTeamMembersForm(mock_data)
 
         self.assertIsFalse(form.is_valid())
+
+    # PreScrutinyEventForm
+
+    def test_is_valid_returns_true_if_the_pre_scrutiny_form_is_valid(self):
+        form = PreScrutinyEventForm({})
+        self.assertIsTrue(form.is_valid())
+
+    def test_for_request_correctly_maps_the_pre_scrutiny_form_for_the_api(self):
+        me_thoughts = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        cod = 'Expected'
+        possible_cod_1a = 'Cause of death'
+        possible_cod_1b = ''
+        possible_cod_1c = ''
+        possible_cod_2 = ''
+        ops = 'IssueAnMccd'
+        gr = 'Yes'
+        grt = 'Palliative care were called too late.'
+        add_event_to_timeline = 'pre-scrutiny'
+
+        form_data = {
+            'me-thoughts': me_thoughts,
+            'cod': cod,
+            'possible-cod-1a': possible_cod_1a,
+            'possible-cod-1b': possible_cod_1b,
+            'possible-cod-1c': possible_cod_1c,
+            'possible-cod-2': possible_cod_2,
+            'ops': ops,
+            'gr': gr,
+            'grt': grt,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+        form = PreScrutinyEventForm(form_data)
+        result = form.for_request()
+        self.assertEqual(result.get('medicalExaminerThoughts'), me_thoughts)
+        self.assertEqual(result.get('circumstancesOfDeath'), cod)
+        self.assertEqual(result.get('causeOfDeath1a'), possible_cod_1a)
+        self.assertEqual(result.get('causeOfDeath1b'), possible_cod_1b)
+        self.assertEqual(result.get('causeOfDeath1c'), possible_cod_1c)
+        self.assertEqual(result.get('causeOfDeath2'), possible_cod_2)
+        self.assertEqual(result.get('outcomeOfPreScrutiny'), ops)
+        self.assertEqual(result.get('clinicalGovernanceReview'), gr)
+        self.assertEqual(result.get('clinicalGovernanceReviewText'), grt)
+        self.assertEqual(result.get('isFinal'), True)
+
+    # AdmissionNotesEventForm
+
+    def test_is_valid_returns_true_if_the_admission_notes_form_is_valid(self):
+        form = AdmissionNotesEventForm({})
+        self.assertIsTrue(form.is_valid())
+
+    def test_for_request_correctly_maps_the_admission_notes_form_for_the_api(self):
+        admission_day = 2
+        admission_month = 2
+        admission_year = 2019
+        admission_date_unknown = False
+        admission_time = '10:00'
+        admission_time_unknown = False
+        admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        coroner_referral = 'no'
+        add_event_to_timeline = 'admission-notes'
+
+        form_data = {
+            'day_of_last_admission': admission_day,
+            'month_of_last_admission': admission_month,
+            'year_of_last_admission': admission_year,
+            'date_of_last_admission_not_known': admission_date_unknown,
+            'time_of_last_admission': admission_time,
+            'time_of_last_admission_not_known': admission_time_unknown,
+            'latest_admission_notes': admission_notes,
+            'latest-admission-suspect-referral': coroner_referral,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+
+        form = AdmissionNotesEventForm(form_data)
+        result = form.for_request()
+
+        self.assertEqual(result.get("notes"), admission_notes)
+        self.assertEqual(result.get("admittedDate"), form.admission_date())
+        self.assertEqual(result.get("admittedTime"), admission_time)
+        self.assertEqual(result.get("immediateCoronerReferral"), False)
+        self.assertEqual(result.get("isFinal"), True)
+
+    def test_admission_date_returns_none_if_admission_date_unknown(self):
+        admission_day = ''
+        admission_month = ''
+        admission_year = ''
+        admission_date_unknown = True
+        admission_time = '10:00'
+        admission_time_unknown = False
+        admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        coroner_referral = 'no'
+        add_event_to_timeline = 'admission-notes'
+
+        form_data = {
+            'day_of_last_admission': admission_day,
+            'month_of_last_admission': admission_month,
+            'year_of_last_admission': admission_year,
+            'date_of_last_admission_not_known': admission_date_unknown,
+            'time_of_last_admission': admission_time,
+            'time_of_last_admission_not_known': admission_time_unknown,
+            'latest_admission_notes': admission_notes,
+            'latest-admission-suspect-referral': coroner_referral,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+
+        form = AdmissionNotesEventForm(form_data)
+        result = form.admission_date()
+
+        self.assertIsNone(result)
 
 
 class ExaminationsModelsTests(MedExTestCase):
