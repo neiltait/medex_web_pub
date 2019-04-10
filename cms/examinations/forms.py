@@ -674,3 +674,19 @@ class PreScrutinyEventForm:
           "clinicalGovernanceReview": self.governance_review,
           "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+
+class OtherEventForm:
+
+    def __init__(self, form_data):
+        self.more_detail = form_data.get('more-detail')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+          "text": self.more_detail,
+          "isFinal": self.is_final
+        }
