@@ -1,6 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
+from errors.utils import handle_error
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
@@ -308,12 +309,13 @@ class CaseBreakdown:
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
+
         medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
 
         if response.status_code == status.HTTP_200_OK:
             return CaseBreakdown(response.json(), medical_team)
         else:
-            return None
+            return handle_error(response, {'type': 'case', 'action': 'loading'})
 
     def get_latest_cause_of_death(self):
         return None
@@ -539,6 +541,7 @@ class MedicalTeamMember:
         notes = obj_dict['notes'] if 'notes' in obj_dict else ''
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
                                  notes=notes)
+
 
     def has_name(self):
         return self.name and len(self.name.strip()) > 0
