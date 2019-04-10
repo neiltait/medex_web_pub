@@ -78,11 +78,63 @@
             .event-body {
                 .content {
                     margin-bottom: 0;
-
-                    &.collapsed {
-                        @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
-                    }
+                    color: $nhs-grey;
                 }
+            }
+        }
+    }
+
+    &.other, &.medical-history, &.meo-summary {
+        .event-body {
+            .content {
+                &.collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.initial {
+        .event-body {
+            .content {
+                p {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &.admission-notes {
+        .event-body {
+            .content {
+
+            }
+        }
+    }
+
+    &.pre-scrutiny, &.qap-discussion, &.bereaved-discussion {
+        label {
+            font-weight: bold;
+            font-size: $default-font-size;
+        }
+    }
+
+    &.pre-scrutiny {
+        .event-body {
+            .content {
+                .collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.qap-discussion {
+        .qap-details {
+            margin-bottom: 1rem;
+
+            p {
+                margin-bottom: 0px;
             }
         }
     }

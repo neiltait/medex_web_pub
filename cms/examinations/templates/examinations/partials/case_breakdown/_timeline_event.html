@@ -1,4 +1,4 @@
-<div class="timeline-event-row flex-row vertical-center">
+<div class="timeline-event-row flex-row vertical-center {{event.css_type}}">
     <div class="timeline-branch">
         <hr />
     </div>
@@ -13,7 +13,7 @@
         <div class="event-content">
             <div class="event-header-row flex-row">
                 <div class="event-header">
-                    {{event.type}}
+                    {{event.display_type}}
                 </div>
 
                 <div class="event-toggle">
@@ -22,13 +22,11 @@
             </div>
 
             <div class="event-reporter">
-                {{event.user_name}}, {{event.user_role}}, {{event.display_date}}
+                {{event.user_id}}, {{event.user_role}}, {{event.display_date}}
             </div>
 
             <div class="event-body">
-                <p class="content">
-                    {{event.body}}
-                </p>
+                {% include event.type_template with card_content=event %}
             </div>
         </div>
     </div>
