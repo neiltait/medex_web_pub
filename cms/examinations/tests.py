@@ -25,19 +25,22 @@ class ExaminationsViewsTests(MedExTestCase):
         alerts_list = self.get_context_value(response.context, 'alerts')
         self.assertEqual(len(alerts_list), 0)
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
         response = self.client.get('/cases/create')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self):
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_successful_case_creation_response_with_id_1())
+    def test_create_case_endpoint_redirects_to_examination_page_if_creation_succeeds(self, post_response):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
         form_data["create-and-continue"] = "Create case and continue"
         response = self.client.post('/cases/create', form_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/cases/1/patient-details')
 
     def test_case_create_add_another_case_redirects_to_case_create(self):
         self.set_auth_cookies()
@@ -47,7 +50,8 @@ class ExaminationsViewsTests(MedExTestCase):
         form = self.get_context_value(response.context, "form")
         self.assertEqual(form.first_name, "")
 
-    @patch('examinations.request_handler.post_new_examination', return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
     def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_case_create):
         self.set_auth_cookies()
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
@@ -66,7 +70,8 @@ class ExaminationsViewsTests(MedExTestCase):
 
     #### Edit case tests
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -80,15 +85,17 @@ class ExaminationsViewsTests(MedExTestCase):
 
     #### Patient details tests
 
-    @patch('examinations.request_handler.load_patient_details_by_id', return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
-    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code\
+    @patch('examinations.request_handler.load_patient_details_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
+    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code \
                     (self, mock_case_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_edit_patient_details_page_redirects_to_landing_when_logged_out(self, mock_user_validation):
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -109,7 +116,8 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
 
-    @patch('examinations.request_handler.update_patient_details', return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
     def test_submitting_a_valid_form_that_fails_on_the_api_returns_the_code_from_the_api(self, mock_update):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
@@ -144,14 +152,16 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_loading_the_case_breakdown_screen_when_not_logged_in_redirects_to_login(self, mock_validate):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    @patch('examinations.request_handler.load_case_breakdown_by_id', return_value=ExaminationMocks.get_unsuccessful_case_load_response())
+    @patch('examinations.request_handler.load_case_breakdown_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
     def test_loading_the_case_breakdown_screen_returns_error_page_with_invalid_case_id(self, mock_breakdown_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID)
@@ -472,6 +482,15 @@ class ExaminationsFormsTests(MedExTestCase):
         result = form.is_valid()
         self.assertIsFalse(result)
 
+    def test_api_response_transformed_to_not_known_if_TOD_at_midnight(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        loaded_data['timeOfDeath'] = '00:00:00'
+
+        patient_details = PatientDetails(loaded_data)
+        form = PrimaryExaminationInformationForm()
+        form.set_values_from_instance(patient_details)
+
+        self.assertIsTrue(form.time_of_death_not_known)
 
     #### Secondary Info Form tests
 
@@ -574,7 +593,8 @@ class ExaminationsModelsTests(MedExTestCase):
         examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertEqual(type(examination), Examination)
 
-    @patch('examinations.request_handler.load_by_id', return_value=ExaminationMocks.get_unsuccessful_case_load_response())
+    @patch('examinations.request_handler.load_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
     def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
         examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(examination)

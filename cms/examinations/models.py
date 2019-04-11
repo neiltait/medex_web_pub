@@ -1,8 +1,8 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
 from errors.utils import handle_error
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, API_DATE_FORMAT
 
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
@@ -132,31 +132,36 @@ class PatientDetails:
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
         self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
         self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
-        self.time_of_death = obj_dict.get("timeOfDeath")
         self.death_occurred_location_id = obj_dict.get("placeDeathOccured")
         self.medical_examiner_office_responsible = obj_dict.get("medicalExaminerOfficeResponsible")
         self.out_of_hours = obj_dict.get("outOfHours")
 
-        self.house_name_number = obj_dict.get("houseNameNumber")
-        self.street = obj_dict.get("street")
-        self.town = obj_dict.get("town")
-        self.county = obj_dict.get("county")
-        self.country = obj_dict.get("country")
-        self.postcode = obj_dict.get("postCode")
-        self.last_occupation = obj_dict.get("lastOccupation")
-        self.organisation_care_before_death_location_id = obj_dict.get("organisationCareBeforeDeathLocationId")
+        self.house_name_number = fallback_to(obj_dict.get("houseNameNumber"), '')
+        self.street = fallback_to(obj_dict.get("street"), '')
+        self.town = fallback_to(obj_dict.get("town"), '')
+        self.county = fallback_to(obj_dict.get("county"), '')
+        self.country = fallback_to(obj_dict.get("country"), '')
+        self.postcode = fallback_to(obj_dict.get("postCode"), '')
+        self.last_occupation = fallback_to(obj_dict.get("lastOccupation"), '')
+        self.organisation_care_before_death_location_id = fallback_to(
+            obj_dict.get("organisationCareBeforeDeathLocationId"), '')
         self.any_implants = 'true' if obj_dict.get("anyImplants") else 'false'
-        self.implant_details = obj_dict.get("implantDetails")
-        self.funeral_directors = obj_dict.get("funeralDirectors")
+        self.implant_details = fallback_to(obj_dict.get("implantDetails"), '')
+        self.funeral_directors = fallback_to(obj_dict.get("funeralDirectors"), '')
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
-        self.personal_affects_details = obj_dict.get("personalEffectDetails")
+        self.personal_affects_details = fallback_to(obj_dict.get("personalEffectDetails"), '')
 
         self.cultural_priority = bool_to_string(obj_dict.get("culturalPriority"))
-        self.faith_priority = bool_to_string("faithPriority")
-        self.child_priority = bool_to_string("childPriority")
-        self.coroner_priority = bool_to_string("coronerPriority")
-        self.other_priority = bool_to_string("otherPriority")
-        self.priority_details = obj_dict.get("priorityDetails")
+        self.faith_priority = bool_to_string(obj_dict.get("faithPriority"))
+        self.child_priority = bool_to_string(obj_dict.get("childPriority"))
+        self.coroner_priority = bool_to_string(obj_dict.get("coronerPriority"))
+        self.other_priority = bool_to_string(obj_dict.get("otherPriority"))
+        self.priority_details = fallback_to(obj_dict.get("priorityDetails"), '')
+
+        if is_empty_time(obj_dict.get("timeOfDeath")):
+            self.time_of_death = None
+        else:
+            self.time_of_death = obj_dict.get("timeOfDeath")
 
         if not (is_empty_date(obj_dict.get("dateOfBirth")) or obj_dict.get("dateOfBirth") is None):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))

@@ -71,10 +71,10 @@ class UserMocks:
     @classmethod
     def get_empty_user_dict(cls):
         return {
-            'user_id': None,
-            'first_name': None,
-            'last_name': None,
-            'email_address': None,
+            'userId': None,
+            'firstName': None,
+            'lastName': None,
+            'email': None,
         }
 
     @classmethod
@@ -1073,7 +1073,14 @@ class ExaminationMocks:
     def get_successful_case_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(None).encode('utf-8')
+        response._content = json.dumps({"examinationId": "example"}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_case_creation_response_with_id_1(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({"examinationId": "1"}).encode('utf-8')
         return response
 
     @classmethod

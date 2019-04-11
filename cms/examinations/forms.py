@@ -3,7 +3,7 @@ from datetime import datetime
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, MedicalTeam
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
+from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 
 
 class PrimaryExaminationInformationForm:
@@ -257,20 +257,20 @@ class SecondaryExaminationInformationForm:
     def __init__(self, request=None):
         self.errors = {'count': 0}
         if request:
-            self.address_line_1 = request.get('address_line_1')
-            self.address_line_2 = request.get('address_line_2')
-            self.address_town = request.get('address_town')
-            self.address_county = request.get('address_county')
-            self.address_country = request.get('address_country')
-            self.address_postcode = request.get('address_postcode')
-            self.relevant_occupation = request.get('relevant_occupation')
-            self.care_organisation = request.get('care_organisation')
-            self.funeral_arrangements = request.get('funeral_arrangements')
-            self.implanted_devices = request.get('implanted_devices')
-            self.implanted_devices_details = request.get('implanted_devices_details')
-            self.funeral_directors = request.get('funeral_directors')
-            self.personal_effects = request.get('personal_effects')
-            self.personal_effects_details = request.get('personal_effects_details')
+            self.address_line_1 = fallback_to(request.get('address_line_1'), '')
+            self.address_line_2 = fallback_to(request.get('address_line_2'), '')
+            self.address_town = fallback_to(request.get('address_town'), '')
+            self.address_county = fallback_to(request.get('address_county'), '')
+            self.address_country = fallback_to(request.get('address_country'), '')
+            self.address_postcode = fallback_to(request.get('address_postcode'), '')
+            self.relevant_occupation = fallback_to(request.get('relevant_occupation'), '')
+            self.care_organisation = fallback_to(request.get('care_organisation'), '')
+            self.funeral_arrangements = fallback_to(request.get('funeral_arrangements'), '')
+            self.implanted_devices = fallback_to(request.get('implanted_devices'), '')
+            self.implanted_devices_details = fallback_to(request.get('implanted_devices_details'), '')
+            self.funeral_directors = fallback_to(request.get('funeral_directors'), '')
+            self.personal_effects = fallback_to(request.get('personal_effects'), '')
+            self.personal_effects_details = fallback_to(request.get('personal_effects_details'), '')
         else:
             self.address_line_1 = ''
             self.address_line_2 = ''
