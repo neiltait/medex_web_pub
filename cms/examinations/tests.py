@@ -10,6 +10,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
     AdmissionNotesEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam
+from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime
@@ -830,3 +831,24 @@ class ExaminationsModelsTests(MedExTestCase):
         self.assertEqual(result, expected_days)
 
 
+class ExaminationsUtilsTests(MedExTestCase):
+
+    # event_form_parser tests
+
+    def test_event_form_parser_returns_a_pre_scrutiny_form_when_given_pre_scrutiny_form_data(self):
+        form_data = {
+            'add-event-to-timeline': 'pre-scrutiny'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), PreScrutinyEventForm)
+
+    def test_event_form_parser_returns_a_admission_notes_form_when_given_admission_notes_form_data(self):
+        form_data = {
+            'date_of_last_admission_not_known': True,
+            'time_of_last_admission_not_known': True,
+            'add-event-to-timeline': 'admission-notes'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), AdmissionNotesEventForm)
