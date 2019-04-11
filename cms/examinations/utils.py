@@ -1,8 +1,9 @@
-from examinations.forms import PreScrutinyEventForm, OtherEventForm
 from . import request_handler
+from examinations.forms import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm
 
 PRE_SCRUTINY_FORM = 'pre-scrutiny'
 OTHER_FORM = 'other'
+ADMISSION_NOTES_FORM= 'admission-notes'
 
 
 def event_form_parser(form_data):
@@ -12,6 +13,8 @@ def event_form_parser(form_data):
         return PreScrutinyEventForm(form_data)
     elif event_type == OTHER_FORM:
         return OtherEventForm(form_data)
+    elif event_type == ADMISSION_NOTES_FORM:
+        return AdmissionNotesEventForm(form_data)
 
 
 def event_form_submitter(auth_token, examination_id, form):
@@ -20,3 +23,5 @@ def event_form_submitter(auth_token, examination_id, form):
         return request_handler.create_pre_scrutiny_event(auth_token, examination_id, form.for_request())
     elif form_type == OtherEventForm:
         return request_handler.create_other_event(auth_token, examination_id, form.for_request())
+    elif form_type == AdmissionNotesEventForm:
+        return request_handler.create_admission_notes_event(auth_token, examination_id, form.for_request())

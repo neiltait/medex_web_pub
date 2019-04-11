@@ -3,13 +3,12 @@ from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
-from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails, CaseBreakdown, MedicalTeam
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
+from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter
-from home.utils import redirect_to_login, redirect_to_landing, render_404
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -32,7 +31,8 @@ def create_examination(request):
             response = request_handler.post_new_examination(form.to_object(), user.auth_token)
             if response.status_code == status.HTTP_200_OK:
                 if 'create-and-continue' in request.POST:
-                    return redirect_to_landing()
+                    examination_id = response.json()['examinationId']
+                    return redirect_to_examination(examination_id)
                 else:
                     form = None
                     status_code = status.HTTP_200_OK

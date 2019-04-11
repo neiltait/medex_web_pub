@@ -117,7 +117,7 @@
                     Notes about the latest admission to hospital
                 </label>
                 <span class="nhsuk-hint">Why were they admitted? What were the circumstances for admission?</span>
-                <textarea class="nhsuk-textarea medex-textarea" name="latest_admission_notes"
+                <textarea id="latest_admission_notes" class="nhsuk-textarea medex-textarea" name="latest_admission_notes"
                           rows="6">{{ latest_admission_form.latest_admission_notes }}</textarea>
             </div>
         </div>
@@ -170,11 +170,10 @@
     <div id="latest-admission__save-buttons" class="nhsuk-form-group margin-bottom">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <input id="submit-btn" class="nhsuk-button" type="submit" value="Add event to timeline"
-                       name="add-event-to-timeline"/>
-                <input id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
-                       value="Save as draft"
-                       name="save-as-draft"/>
+                <button id="submit-btn" class="nhsuk-button" type="submit" value="admission-notes"
+                       name="add-event-to-timeline">Add event to timeline</button>
+                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                       value="admission-notes" name="save-as-draft">Save as draft</button>
             </div>
         </div>
     </div>
