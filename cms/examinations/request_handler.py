@@ -84,7 +84,18 @@ def create_pre_scrutiny_event(auth_token, examination_id, submission):
 
 
 def create_other_event(auth_token, examination_id, submission):
-    return MedexRequest.put(auth_token, '%s/examinations/%s/other' % (settings.API_URL, examination_id),
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/other' % (settings.API_URL, examination_id),
+                            submission)
+
+
+def create_meo_summary_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/meo_summary' % (settings.API_URL, examination_id),
                             submission)
 
 
