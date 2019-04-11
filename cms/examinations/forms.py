@@ -674,3 +674,39 @@ class PreScrutinyEventForm:
           "clinicalGovernanceReview": self.governance_review,
           "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+
+class AdmissionNotesEventForm:
+    date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+
+    def __init__(self, form_data):
+        self.admission_day = form_data.get('day_of_last_admission')
+        self.admission_month = form_data.get('month_of_last_admission')
+        self.admission_year = form_data.get('year_of_last_admission')
+        self.admission_date_unknown = form_data.get('date_of_last_admission_not_known')
+        self.admission_time = form_data.get('time_of_last_admission')
+        self.admission_time_unknown = form_data.get('time_of_last_admission_not_known')
+        self.admission_notes = form_data.get('latest_admission_notes')
+        self.coroner_referral = form_data.get('latest-admission-suspect-referral')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def is_valid(self):
+        return True
+
+    def admission_date(self):
+        if self.admission_date_unknown:
+            return None
+        else:
+            return build_date(self.admission_year, self.admission_month, self.admission_day).strftime(self.date_format)
+
+    def get_immediate_coroner_referral(self):
+        return True if self.coroner_referral == 'yes' else False
+
+    def for_request(self):
+        return {
+          "notes": self.admission_notes,
+          "isFinal": self.is_final,
+          "admittedDate": self.admission_date(),
+          "admittedTime": None if self.admission_time_unknown else self.admission_time,
+          "immediateCoronerReferral": self.get_immediate_coroner_referral()
+        }

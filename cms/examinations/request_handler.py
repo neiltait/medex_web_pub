@@ -76,5 +76,16 @@ def load_case_breakdown_by_id(examination_id, auth_token):
 
 
 def create_pre_scrutiny_event(auth_token, examination_id, submission):
-    return MedexRequest.put(auth_token, '%s/examinations/%s/prescrutiny' % (settings.API_URL, examination_id),
-                            submission)
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/prescrutiny' % (settings.API_URL, examination_id),
+                                submission)
+
+
+def create_admission_notes_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/admission' % (settings.API_URL, examination_id),
+                                submission)

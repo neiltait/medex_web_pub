@@ -674,6 +674,21 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_pre_scrutiny_create_event_data(cls):
+        return {
+            'me-thoughts': "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman.",
+            'cod': 'Expected',
+            'possible-cod-1a': 'Cause of death',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'IssueAnMccd',
+            'gr': 'Yes',
+            'grt': 'Palliative care were called too late.',
+            'add-event-to-timeline': 'pre-scrutiny'
+        }
+
+    @classmethod
     def get_case_breakdown_response_content(cls):
         return {
             "patientName": 'John Doe',
@@ -1027,7 +1042,7 @@ class ExaminationMocks:
                                                      "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
                                                      "improvement...more notes would be added here",
                             "is_final": True,
-                            "event_type": "AdmissionNotes",
+                            "event_type": "Admission",
                             "admitted_date_time": "2019-03-10T08:31:43.019Z",
                             "immediate_coroner_referral": False,
                             "created": "2019-03-12T10:30:43.019Z",
@@ -1038,7 +1053,7 @@ class ExaminationMocks:
                         "user_id": "WERGT-243TRGS-WE4TG-WERGT",
                         "admission_event_notes": "The length of their last admission was 5 days",
                         "is_final": True,
-                        "event_type": "AdmissionNotes",
+                        "event_type": "Admission",
                         "admitted_date_time": "2019-03-10T08:31:43.019Z",
                         "immediate_coroner_referral": False,
                         "created": "2019-03-12T10:30:43.019Z",
@@ -1048,7 +1063,7 @@ class ExaminationMocks:
                         "user_id": "WERGT-243TRGS-WE4TG-WERGT",
                         "admission_event_notes": "The length of their last admission was 5 days",
                         "is_final": False,
-                        "event_type": "AdmissionNotes",
+                        "event_type": "Admission",
                         "admitted_date_time": "2019-03-10T08:31:43.019Z",
                         "immediate_coroner_referral": False,
                         "created": "2019-03-12T10:30:43.019Z",
@@ -1186,6 +1201,20 @@ class ExaminationMocks:
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'eventId': '1'}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None).encode('utf-8')
         return response
 
 
