@@ -160,6 +160,23 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
+    @patch('examinations.request_handler.create_pre_scrutiny_event', return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
+    def test_posting_an_valid_form_that_fails_on_the_api_returns_the_api_response_code(self, mock_pre_scrutiny_create):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+        response = self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code,
+                         ExaminationMocks.get_unsuccessful_timeline_event_create_response().status_code)
+        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
+
+    def test_posting_an_valid_form_that_succeeds_on_the_api_returns_the_api_response_code(self):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+        response = self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code,
+                         ExaminationMocks.get_successful_timeline_event_create_response().status_code)
+        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
+
 
 class ExaminationsFormsTests(MedExTestCase):
 

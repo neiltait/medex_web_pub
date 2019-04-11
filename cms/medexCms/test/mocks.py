@@ -674,6 +674,21 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_pre_scrutiny_create_event_data(cls):
+        return {
+            'me-thoughts': "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman.",
+            'cod': 'Expected',
+            'possible-cod-1a': 'Cause of death',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'IssueAnMccd',
+            'gr': 'Yes',
+            'grt': 'Palliative care were called too late.',
+            'add-event-to-timeline': 'pre-scrutiny'
+        }
+
+    @classmethod
     def get_case_breakdown_response_content(cls):
         return {
             "patientName": 'John Doe',
@@ -1179,6 +1194,20 @@ class ExaminationMocks:
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'eventId': '1'}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None).encode('utf-8')
         return response
 
 
