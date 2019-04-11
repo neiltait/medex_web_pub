@@ -1,8 +1,8 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
 from errors.utils import handle_error
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, API_DATE_FORMAT
 
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
@@ -132,31 +132,36 @@ class PatientDetails:
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
         self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
         self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
-        self.time_of_death = obj_dict.get("timeOfDeath")
         self.death_occurred_location_id = obj_dict.get("placeDeathOccured")
         self.medical_examiner_office_responsible = obj_dict.get("medicalExaminerOfficeResponsible")
         self.out_of_hours = obj_dict.get("outOfHours")
 
-        self.house_name_number = obj_dict.get("houseNameNumber")
-        self.street = obj_dict.get("street")
-        self.town = obj_dict.get("town")
-        self.county = obj_dict.get("county")
-        self.country = obj_dict.get("country")
-        self.postcode = obj_dict.get("postCode")
-        self.last_occupation = obj_dict.get("lastOccupation")
-        self.organisation_care_before_death_location_id = obj_dict.get("organisationCareBeforeDeathLocationId")
+        self.house_name_number = fallback_to(obj_dict.get("houseNameNumber"), '')
+        self.street = fallback_to(obj_dict.get("street"), '')
+        self.town = fallback_to(obj_dict.get("town"), '')
+        self.county = fallback_to(obj_dict.get("county"), '')
+        self.country = fallback_to(obj_dict.get("country"), '')
+        self.postcode = fallback_to(obj_dict.get("postCode"), '')
+        self.last_occupation = fallback_to(obj_dict.get("lastOccupation"), '')
+        self.organisation_care_before_death_location_id = fallback_to(
+            obj_dict.get("organisationCareBeforeDeathLocationId"), '')
         self.any_implants = 'true' if obj_dict.get("anyImplants") else 'false'
-        self.implant_details = obj_dict.get("implantDetails")
-        self.funeral_directors = obj_dict.get("funeralDirectors")
+        self.implant_details = fallback_to(obj_dict.get("implantDetails"), '')
+        self.funeral_directors = fallback_to(obj_dict.get("funeralDirectors"), '')
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
-        self.personal_affects_details = obj_dict.get("personalEffectDetails")
+        self.personal_affects_details = fallback_to(obj_dict.get("personalEffectDetails"), '')
 
         self.cultural_priority = bool_to_string(obj_dict.get("culturalPriority"))
-        self.faith_priority = bool_to_string("faithPriority")
-        self.child_priority = bool_to_string("childPriority")
-        self.coroner_priority = bool_to_string("coronerPriority")
-        self.other_priority = bool_to_string("otherPriority")
-        self.priority_details = obj_dict.get("priorityDetails")
+        self.faith_priority = bool_to_string(obj_dict.get("faithPriority"))
+        self.child_priority = bool_to_string(obj_dict.get("childPriority"))
+        self.coroner_priority = bool_to_string(obj_dict.get("coronerPriority"))
+        self.other_priority = bool_to_string(obj_dict.get("otherPriority"))
+        self.priority_details = fallback_to(obj_dict.get("priorityDetails"), '')
+
+        if is_empty_time(obj_dict.get("timeOfDeath")):
+            self.time_of_death = None
+        else:
+            self.time_of_death = obj_dict.get("timeOfDeath")
 
         if not (is_empty_date(obj_dict.get("dateOfBirth")) or obj_dict.get("dateOfBirth") is None):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
@@ -398,7 +403,7 @@ class CaseEvent:
     MEO_SUMMARY_EVENT_TYPE = 'MeoSummary'
     QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
     MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
-    ADMISSION_NOTES_EVENT_TYPE = 'AdmissionNotes'
+    ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
 
     date_format = '%d.%m.%Y'
@@ -406,21 +411,19 @@ class CaseEvent:
 
     @classmethod
     def parse_event(cls, event_data, latest_id, dod):
-        if event_data['event_type'] == cls.INITIAL_EVENT_TYPE:
-            return CaseInitialEvent(event_data)
-        elif event_data['event_type'] == cls.OTHER_EVENT_TYPE:
+        if event_data.get('event_type') == cls.OTHER_EVENT_TYPE:
             return CaseOtherEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.PRE_SCRUTINY_EVENT_TYPE:
             return CasePreScrutinyEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
             return CaseBereavedDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEO_SUMMARY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.MEO_SUMMARY_EVENT_TYPE:
             return CaseMeoSummaryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.QAP_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.QAP_DISCUSSION_EVENT_TYPE:
             return CaseQapDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEDICAL_HISTORY_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.MEDICAL_HISTORY_EVENT_TYPE:
             return CaseMedicalHistoryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.ADMISSION_NOTES_EVENT_TYPE:
+        elif event_data.get('event_type') == cls.ADMISSION_NOTES_EVENT_TYPE:
             return CaseAdmissionNotesEvent(event_data, latest_id, dod)
 
     def display_date(self):
@@ -594,15 +597,19 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.user_id = obj_dict.get('user_id')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('admission_event_notes')
-        self.admitted_date_time = parse_datetime(obj_dict.get('admitted_date_time'))
+        self.admitted_date = parse_datetime(obj_dict.get('admitted_date'))
+        self.admitted_time = obj_dict.get('admitted_time')
         self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
         self.published = obj_dict.get('is_final')
         self.dod = dod
         self.is_latest = self.event_id == latest_id
 
     def admission_length(self):
-        delta = self.dod - self.admitted_date_time
-        return delta.days
+        if self.dod and self.admitted_date:
+            delta = self.dod - self.admitted_date
+            return delta.days
+        else:
+            return 'Unknown'
 
     def display_coroner_referral(self):
         return 'Yes' if self.immediate_coroner_referral else 'No'
