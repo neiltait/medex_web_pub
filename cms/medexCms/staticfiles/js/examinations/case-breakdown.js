@@ -175,8 +175,8 @@
         setup: function () {
            this.newRep = this.form.find("#bereaved-new-rep");
            this.existingRep = this.form.find("#bereaved-existing-rep");
-           this.repDetails = this.form.find("#bereaved-rep-details");
-           this.repForm = this.form.find("#bereaved-rep-form");
+           this.repDetails = this.form.find(".bereaved-rep-details");
+           this.repForm = this.form.find(".bereaved-rep-form");
 
         },
         showRepForm() {

@@ -14,7 +14,8 @@
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="bereaved-existing-rep" name="bereaved-existing-rep" type="radio"
+                                <input class="nhsuk-radios__input" id="bereaved-existing-rep"
+                                       name="bereaved-existing-rep" type="radio"
                                        value="yes">
                                 <label class="nhsuk-label nhsuk-radios__label" for="bereaved-existing-rep">
                                     Family Member Name
@@ -23,8 +24,8 @@
                         </div>
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-new-rep" type="radio"
-                                       value="yes">
+                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-new-rep"
+                                       type="radio" value="yes">
                                 <label class="nhsuk-label nhsuk-radios__label" for="bereaved-new-rep">
                                     Another representative
                                 </label>
@@ -36,13 +37,12 @@
         </div>
 
         <div id="bereavement-discussion-with-panel margin-time"
-             class="inset-text-panel {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
-
+             class="inset-text-panel bereaved-rep-details {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-form-group">
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
                     <fieldset class="nhsuk-fieldset">
                         <label class="nhsuk-label nhsuk-u-font-weight-bold"
-                               for="qap-other__full-name-input">
+                               for="rep-relationship" id="rep-relationship">
                             Relationship
                         </label>
                         <p class="nhsuk-body-m">Brother</p>
@@ -54,7 +54,8 @@
             <div class="nhsuk-grid-column-one-half nhsuk-radios">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group">
-                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_role">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="rep-present-at-death"
+                               id="rep-present-at-death">
                             Present at death
                         </label>
                         <p class="nhsuk-body-m">No</p>
@@ -62,12 +63,11 @@
                 </fieldset>
             </div>
             <div class="nhsuk-grid-row">
-
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label nhsuk-u-font-weight-bold"
-                                   for="qap_discussion_phone_number">
+                                   for="rep-phone-number" id="rep-phone-number">
                                 Phone number
                             </label>
                             <p class="nhsuk-body-m">07812 345 678</p>
@@ -78,7 +78,7 @@
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label nhsuk-u-font-weight-bold"
-                                   for="qap_discussion_phone_number">
+                                   for="rep-informed-of-death" id="rep-informed-of-death">
                                 Informed of death
                             </label>
                             <p class="nhsuk-body-m">Yes</p>
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
+        <div class="nhsuk-form-group bereaved-rep-form {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-row margin-top">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="bereavement-full-name">
@@ -176,55 +176,55 @@
                         </fieldset>
                     </div>
                 </div>
-                <div class="nhsuk-grid-row margin-top">
-                    <div class="nhsuk-grid-column-one-half">
-                        <label class="nhsuk-label" for="full-name">
-                            Phone number
-                        </label>
-                        <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name"
-                               name="test-width-10"
-                               type="text">
-                    </div>
+            </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <label class="nhsuk-label" for="phone-number">
+                        Phone number
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="phone-number"
+                           name="test-width-10"
+                           type="text">
                 </div>
             </div>
         </div>
 
 
-            <div class="nhsuk-form-group">
+            <div class="nhsuk-form-group margin-top">
                 <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
                     <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                         Date of conversation
                     </legend>
 
-                    <div class="nhsuk-date-input margin-top" id="dob">
+                    <div class="nhsuk-date-input margin-top" id="doc-day">
                         <div class="nhsuk-date-input__item">
                             <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-day">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
                                     Day
                                 </label>
                                 <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
-                                       id="dob-day"
-                                       name="dob-day" type="number" pattern="[0-9]*">
+                                       id="doc-day"
+                                       name="doc-day" type="number" pattern="[0-9]*">
                             </div>
                         </div>
                         <div class="nhsuk-date-input__item">
                             <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-month">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="doc-month">
                                     Month
                                 </label>
                                 <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
-                                       id="dob-month"
-                                       name="dob-month" type="number" pattern="[0-9]*">
+                                       id="doc-month"
+                                       name="doc-month" type="number" pattern="[0-9]*">
                             </div>
                         </div>
                         <div class="nhsuk-date-input__item">
                             <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-date-input__label" for="dob-year">
+                                <label class="nhsuk-label nhsuk-date-input__label" for="doc-year">
                                     Year
                                 </label>
                                 <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4"
-                                       id="dob-year"
-                                       name="dob-year" type="number" pattern="[0-9]*">
+                                       id="doc-year"
+                                       name="doc-year" type="number" pattern="[0-9]*">
                             </div>
                         </div>
                     </div>
@@ -337,7 +337,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
 
