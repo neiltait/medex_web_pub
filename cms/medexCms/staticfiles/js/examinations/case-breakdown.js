@@ -173,15 +173,14 @@
 
     BereavementDiscussionForm.prototype = {
         setup: function () {
-//            this.outcomeDecisionPanel = this.form.find("#bereavement-discussion__outcome-decision");
+           this.representative = this.form.find("#bereavement-full-name");
 //            this.showHideOutcome();
 //            this.showHideOutcomeDecision();
 //
 //            this.startWatchers();
         },
         showHideOutcome() {
-            let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
-            if(selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
+            if(this.representative.isValid()) {
                 this.outcomeDecisionPanel.show();
             } else {
                 this.outcomeDecisionPanel.hide();
