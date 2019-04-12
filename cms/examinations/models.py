@@ -318,7 +318,6 @@ class CaseBreakdown:
         self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
                                                                    self.event_list.get_latest_me_scrutiny_cause_of_death(),
                                                                    self.event_list.get_qap_discussion_draft())
-        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.event_list.get_latest_admission_draft())
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
@@ -333,6 +332,13 @@ class CaseBreakdown:
 
 
 class ExaminationEventList:
+    QAP_DISCUSSION_EVENT_KEY = 'qapDiscussion'
+    OTHER_EVENT_KEY = 'otherEvents'
+    ADMISSION_NOTES_EVENT_KEY = 'admissionNotes'
+    MEO_SUMMARY_EVENT_KEY = 'meoSummary'
+    MEDICAL_HISTORY_EVENT_KEY = 'medicalHistory'
+    BEREAVED_DISCUSSION_EVENT_KEY = 'bereavedDiscussion'
+    PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
 
     def __init__(self, timeline_items, dod, patient_name, user_role):
         self.events = []
@@ -369,25 +375,25 @@ class ExaminationEventList:
             count += 1
 
     def get_qap_discussion_draft(self):
-        return self.drafts.get(CaseEvent().QAP_DISCUSSION_EVENT_TYPE)
+        return self.drafts.get(self.QAP_DISCUSSION_EVENT_KEY)
 
     def get_other_notes_draft(self):
-        return self.drafts.get(CaseEvent().OTHER_EVENT_TYPE)
+        return self.drafts.get(self.OTHER_EVENT_KEY)
 
     def get_latest_admission_draft(self):
-        return self.drafts.get(CaseEvent().ADMISSION_NOTES_EVENT_TYPE)
+        return self.drafts.get(self.ADMISSION_NOTES_EVENT_KEY)
 
     def get_meo_summary_draft(self):
-        return self.drafts.get(CaseEvent().MEO_SUMMARY_EVENT_TYPE)
+        return self.drafts.get(self.MEO_SUMMARY_EVENT_KEY)
 
     def get_medical_history_draft(self):
-        return self.drafts.get(CaseEvent().MEDICAL_HISTORY_EVENT_TYPE)
+        return self.drafts.get(self.MEDICAL_HISTORY_EVENT_KEY)
 
     def get_bereaved_discussion_draft(self):
-        return self.drafts.get(CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE)
+        return self.drafts.get(self.BEREAVED_DISCUSSION_EVENT_KEY)
 
     def get_me_scrutiny_draft(self):
-        return self.drafts.get(CaseEvent().PRE_SCRUTINY_EVENT_TYPE)
+        return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
 
     def get_latest_me_scrutiny_cause_of_death(self):
         return None
@@ -613,52 +619,6 @@ class CaseAdmissionNotesEvent(CaseEvent):
 
     def display_coroner_referral(self):
         return 'Yes' if self.immediate_coroner_referral else 'No'
-
-
-class CaseBreakdownLatestAdmission:
-
-    def __init__(self):
-        self.day_of_last_admission = ''
-        self.month_of_last_admission = ''
-        self.year_of_last_admission = ''
-        self.date_of_last_admission_unknown = False
-
-        self.time_of_last_admission = ''
-        self.time_of_last_admission_unknown = False
-
-        self.latest_admission_notes = ''
-        self.suspect_referral = ''
-
-    @classmethod
-    def from_data(cls, draft=None):
-        latest_admission = CaseBreakdownLatestAdmission()
-        if draft is not None:
-            try:
-                latest_admission.day_of_last_admission = draft['day_of_last_admission']
-                latest_admission.month_of_last_admission = draft['month_of_last_admission']
-                latest_admission.year_of_last_admission = draft['year_of_last_admission']
-                latest_admission.date_of_last_admission_unknown = draft['date_of_last_admission_unknown']
-                latest_admission.time_of_last_admission = draft['time_of_last_admission']
-                latest_admission.time_of_last_admission_unknown = draft['time_of_last_admission_unknown']
-                latest_admission.latest_admission_notes = draft['latest_admission_notes']
-                latest_admission.suspect_referral = draft['suspect_referral']
-
-            except KeyError:
-                print('Could not parse latest admission object')
-
-        return latest_admission
-
-    def to_object(self):
-        return {
-            'day_of_last_admission': self.day_of_last_admission,
-            'month_of_last_admission': self.month_of_last_admission,
-            'year_of_last_admission': self.year_of_last_admission,
-            'date_of_last_admission_unknown': self.date_of_last_admission_unknown,
-            'time_of_last_admission': self.time_of_last_admission,
-            'time_of_last_admission_unknown': self.time_of_last_admission_unknown,
-            'latest_admission_notes': self.latest_admission_notes,
-            'suspect_referral': self.suspect_referral,
-        }
 
 
 class CaseBreakdownQAPDiscussion:
