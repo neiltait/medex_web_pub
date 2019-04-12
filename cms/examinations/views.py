@@ -313,4 +313,7 @@ def __prepare_forms(event_list, form):
         'MeoSummaryEventForm': meo_summary_form
     }
 
+    if form:
+        form_data[type(form).__name__] = form.make_active()
+
     return form_data
