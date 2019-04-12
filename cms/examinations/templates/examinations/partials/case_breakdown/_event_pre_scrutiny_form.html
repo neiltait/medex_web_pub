@@ -1,13 +1,14 @@
 <div id="pre-scrutiny" class="event-form">
+    <input name="pre_scrutiny_id" value="{{form.event_id}}" hidden>
+
     <div class="nhsuk-form-group">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="me-thoughts">
             Pre-scrutiny thoughts of the Medical Examiner assigned to this case
         </label>
         <span class="nhsuk-hint" id="more-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom" id="me-thoughts" name="me-thoughts" rows="5"
-                  aria-describedby="more-detail-hint"></textarea>
+                  aria-describedby="more-detail-hint">{{form.me_thoughts}}</textarea>
     </div>
-
 
     <div class="nhsuk-form-group">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
@@ -16,25 +17,29 @@
         <span class="nhsuk-hint" id="circumstances-of-death">Based on the information scrutinised, the death was:</span>
         <div class="nhsuk-radios">
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="cod-1" name="cod" type="radio" value="Expected">
+                <input class="nhsuk-radios__input" id="cod-1" name="cod" type="radio" value="Expected"
+                    {% if form.circumstances_of_death == 'Expected' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="cod-1">
                     Expected
                 </label>
             </div>
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="cod-2" name="cod" type="radio" value="Unexpected">
+                <input class="nhsuk-radios__input" id="cod-2" name="cod" type="radio" value="Unexpected"
+                    {% if form.circumstances_of_death == 'Unexpected' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="cod-2">
                     Unexpected
                 </label>
             </div>
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="cod-3" name="cod" type="radio" value="SuddenButNotUnexpected">
+                <input class="nhsuk-radios__input" id="cod-3" name="cod" type="radio" value="SuddenButNotUnexpected"
+                    {% if form.circumstances_of_death == 'SuddenButNotUnexpected' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="cod-3">
                     Sudden but not unexpected
                 </label>
             </div>
             <div class="nhsuk-radios__item margin-bottom">
-                <input class="nhsuk-radios__input" id="cod-4" name="cod" type="radio" value="PartOfAnIndividualisedEndOfLifeCarePlan">
+                <input class="nhsuk-radios__input" id="cod-4" name="cod" type="radio" value="PartOfAnIndividualisedEndOfLifeCarePlan"
+                    {% if form.circumstances_of_death == 'PartOfAnIndividualisedEndOfLifeCarePlan' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="cod-4">
                     Part of an individualised end of life care plan
                 </label>
@@ -51,26 +56,26 @@
             1a
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1a" name="possible-cod-1a" rows="2"
-                  aria-describedby="possible-cod-1a"></textarea>
+                  aria-describedby="possible-cod-1a">{{form.possible_cod_1a}}</textarea>
 
         <label class="nhsuk-label" for="possible-cod-1b">
             1b
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1b" name="possible-cod-1b" rows="2"
-                  aria-describedby="possible-cod-1b"></textarea>
+                  aria-describedby="possible-cod-1b">{{form.possible_cod_1b}}</textarea>
 
         <label class="nhsuk-label" for="possible-cod-1c">
             1c
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1c" name="possible-cod-1c" rows="2"
-                  aria-describedby="possible-cod-1c"></textarea>
+                  aria-describedby="possible-cod-1c">{{form.possible_cod_1c}}</textarea>
 
 
         <label class="nhsuk-label" for="possible-cod-2">
             2
         </label>
         <textarea class="nhsuk-textarea margin-bottom" id="possible-cod-2" name="possible-cod-2" rows="2"
-                  aria-describedby="possible-cod-2"></textarea>
+                  aria-describedby="possible-cod-2">{{form.possible_cod_2}}</textarea>
     </div>
 
     <div class="nhsuk-form-group">
@@ -81,14 +86,14 @@
         <div class="nhsuk-radios">
             <div class="nhsuk-radios__item">
                 <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops" type="radio"
-                       value="IssueAnMccd">
+                       value="IssueAnMccd" {% if form.overall_outcome == 'IssueAnMccd' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-1">
                     Issue an MCCD
                 </label>
             </div>
             <div class="nhsuk-radios__item margin-bottom">
                 <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-2" name="ops" type="radio"
-                       value="ReferToCoroner">
+                       value="ReferToCoroner" {% if form.overall_outcome == 'ReferToCoroner' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-2">
                     Refer to coroner
                 </label>
@@ -102,27 +107,27 @@
                 <div class="nhsuk-radios">
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="governance-review-1" name="gr" type="radio"
-                               value="Yes">
+                               value="Yes" {% if form.governance_review == 'Yes' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="governance-review-1">
                             Yes
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="governance-review-2" name="gr" type="radio"
-                               value="No">
+                               value="No" {% if form.governance_review == 'No' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="governance-review-2">
                             No
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="governance-review-3" name="gr" type="radio"
-                               value="Unknown">
+                               value="Unknown" {% if form.governance_review == 'Unknown' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="governance-review-3">
                             Unknown
                         </label>
                     </div>
                     <textarea class="nhsuk-textarea text-area-margin margin-bottom" id="governance-review-text"
-                              name="grt" rows="2" aria-describedby="gr"></textarea>
+                              name="grt" rows="2" aria-describedby="gr">{{form.governance_review_text}}</textarea>
                 </div>
             </div>
 
