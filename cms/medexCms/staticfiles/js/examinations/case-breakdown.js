@@ -173,43 +173,37 @@
 
     BereavementDiscussionForm.prototype = {
         setup: function () {
-           this.representative = this.form.find("#bereavement-full-name");
-//            this.showHideOutcome();
-//            this.showHideOutcomeDecision();
-//
-//            this.startWatchers();
+           this.newRep = this.form.find("#bereaved-new-rep");
+           this.existingRep = this.form.find("#bereaved-existing-rep");
+           this.repDetails = this.form.find("#bereaved-rep-details");
+           this.repForm = this.form.find("#bereaved-rep-form");
+
         },
-        showHideOutcome() {
-            if(this.representative.isValid()) {
-                this.outcomeDecisionPanel.show();
+        showRepForm() {
+            if (this.newRep.checked) {
+                this.repForm.show();
             } else {
-                this.outcomeDecisionPanel.hide();
+                this.repForm.hide();
             }
         },
-        showHideOutcomeDecision() {
-            let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
-            if(selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
-                this.revisedCauseOfDeathPanel.show();
+
+        showRepDetails() {
+            if (this.existingRep.checked) {
+                this.repDetails.show();
             } else {
-                this.revisedCauseOfDeathPanel.hide();
+                this.repDetails.hide();
             }
         },
         startWatchers() {
             let that = this;
-            $('input[type=radio][name=qap-discussion-outcome]').change(function () {
-                if (this.value === 'mccd') {
-                    that.outcomeDecisionPanel.show();
-                } else {
-                    that.outcomeDecisionPanel.hide();
-                }
+             this.newRep.change(function () {
+                that.showRepForm();
+                that.showRepDetails();
             });
 
-            $('input[type=radio][name=qap-discussion-outcome-decision]').change(function () {
-                if (this.value === 'outcome-decision-2') {
-                    that.revisedCauseOfDeathPanel.hide();
-                } else {
-                    that.revisedCauseOfDeathPanel.show();
-                }
+            this.existingRep.change(function () {
+                that.showRepForm();
+                that.showRepDetails();
             });
         }
     };

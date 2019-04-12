@@ -14,18 +14,18 @@
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="pad-1" name="pad-1" type="radio"
+                                <input class="nhsuk-radios__input" id="bereaved-existing-rep" name="bereaved-existing-rep" type="radio"
                                        value="yes">
-                                <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
+                                <label class="nhsuk-label nhsuk-radios__label" for="bereaved-existing-rep">
                                     Family Member Name
                                 </label>
                             </div>
                         </div>
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="pad-1" name="pad-1" type="radio"
+                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-new-rep" type="radio"
                                        value="yes">
-                                <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
+                                <label class="nhsuk-label nhsuk-radios__label" for="bereaved-new-rep">
                                     Another representative
                                 </label>
                             </div>
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="nhsuk-form-group">
+        <div class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-row margin-top">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="bereavement-full-name">
@@ -134,10 +134,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="nhsuk-form-group">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="full-name">
@@ -180,9 +176,6 @@
                         </fieldset>
                     </div>
                 </div>
-
-            </div>
-            <div class="nhsuk-form-group">
                 <div class="nhsuk-grid-row margin-top">
                     <div class="nhsuk-grid-column-one-half">
                         <label class="nhsuk-label" for="full-name">
@@ -194,6 +187,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
                     <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
@@ -343,5 +339,5 @@
             </div>
         </div>
     </div>
-</div>
+
 
