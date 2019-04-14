@@ -270,7 +270,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'session_user': user,
         'examination_id': examination_id,
         'forms': forms,
-        'qap_form': examination.qap_discussion,
+        # 'qap_form': examination.qap_discussion,
         'case_breakdown': examination,
         'patient': patient,
         'form_data': form_data

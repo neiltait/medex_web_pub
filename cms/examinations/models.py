@@ -312,7 +312,7 @@ class CaseBreakdown:
         self.medical_team = medical_team
 
         ## build form objects
-        self.__build_case_breakdown_forms()
+        # self.__build_case_breakdown_forms()
 
     def __build_case_breakdown_forms(self):
         self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
