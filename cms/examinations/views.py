@@ -329,6 +329,7 @@ def view_examination_case_outcome(request, examination_id):
 
     context = {
         'session_user': user,
+        'examination_id': examination_id,
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)
