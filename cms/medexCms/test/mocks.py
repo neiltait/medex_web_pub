@@ -821,7 +821,7 @@ class ExaminationMocks:
                             "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
-                            "evenType": "BereavedDiscussion",
+                            "eventType": "BereavedDiscussion",
                             "created": "2019-03-12T10:30:43.019Z",
                             "participantFullName": "Jane Doe",
                             "participantRelationship": "Wife",
