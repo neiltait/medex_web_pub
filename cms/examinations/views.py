@@ -317,3 +317,18 @@ def __prepare_forms(event_list, form):
         form_data[type(form).__name__] = form.make_active()
 
     return form_data
+
+
+def view_examination_case_outcome(request, examination_id):
+    status_code = status.HTTP_200_OK
+
+    user = User.initialise_with_token(request)
+
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    context = {
+        'session_user': user,
+    }
+
+    return render(request, 'examinations/case_outcome.html', context, status=status_code)
