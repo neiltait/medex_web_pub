@@ -187,6 +187,20 @@ class ExaminationsViewsTests(MedExTestCase):
                          ExaminationMocks.get_successful_timeline_event_create_response().status_code)
         self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    def test_landing_on_the_case_outcome_page_when_not_logged_in_redirects_to_login_page(self, mock_auth_check):
+        self.set_auth_cookies()
+        response = self.client.get('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/login')
+
+    def test_landing_on_the_case_outcome_page_when_logged_in_displays_the_outcome_page(self):
+        self.set_auth_cookies()
+        response = self.client.get('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/case_outcome.html')
+
 
 class ExaminationsFormsTests(MedExTestCase):
 
