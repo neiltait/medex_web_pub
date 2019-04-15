@@ -1,10 +1,12 @@
 import json
 
+from datetime import datetime
+
 from requests.models import Response
 from rest_framework import status
 
 from medexCms import settings
-from medexCms.utils import NONE_DATE
+from medexCms.utils import NONE_DATE, API_DATE_FORMAT
 
 
 class SessionMocks:
@@ -1293,6 +1295,20 @@ class ExaminationMocks:
 
     @classmethod
     def get_unsuccessful_case_outcome_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_successful_scrutiny_complete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({"scrutinyConfirmedOn": datetime.now().strftime(API_DATE_FORMAT)})
+        return response
+
+    @classmethod
+    def get_unsuccessful_scrutiny_complete_response(cls):
         response = Response()
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None)
