@@ -327,6 +327,8 @@ def view_examination_case_outcome(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
