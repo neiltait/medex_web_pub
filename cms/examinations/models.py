@@ -840,6 +840,15 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
+    @classmethod
+    def complete_scrutiny(cls, auth_token, examination_id):
+        response = request_handler.complete_case_scrutiny(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'completing'})
+
     def display_outcome_summary(self):
         return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
 

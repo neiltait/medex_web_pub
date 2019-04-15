@@ -329,7 +329,7 @@ def view_examination_case_outcome(request, examination_id):
 
     if request.method == 'POST':
         if 'pre-scrutiny-confirmed' in request.POST:
-            result = CaseOutcome.complete(user.auth_token, examination_id)
+            result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
 
             if not result == status.HTTP_200_OK:
                 context = {
