@@ -689,6 +689,43 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_case_outcome_response_data(cls):
+        return {
+            "caseHeader": {
+                "urgencyScore": 0,
+                "givenNames": "John",
+                "surname": "Doe",
+                "nhsNumber": "123-456-7890",
+                "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                "timeOfDeath": "10:00",
+                "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                "appointmentDate": "2019-04-15T11:37:01.174Z",
+                "appointmentTime": "09:00",
+                "lastAdmission": "2019-04-15T11:37:01.174Z",
+                "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                "admissionNotesHaveBeenAdded": True,
+                "readyForMEScrutiny": True,
+                "unassigned": True,
+                "haveBeenScrutinisedByME": True,
+                "pendingAdmissionNotes": True,
+                "pendingDiscussionWithQAP": True,
+                "pendingDiscussionWithRepresentative": True,
+                "haveFinalCaseOutstandingOutcomes": True
+            },
+            "caseOutcomeSummary": "ReferToCoroner",
+            "outcomeOfRepresentativeDiscussion": "CauseOfDeathAccepted",
+            "outcomeOfPrescrutiny": "IssueAnMccd",
+            "outcomeQapDiscussion": "MccdCauseOfDeathProvidedByQAP",
+            "caseOpen": True,
+            "scrutinyConfirmedOn": "2019-04-15T11:37:01.174Z",
+            "caseMedicalExaminerFullName": "Dr Bob Smith",
+            "mccdIssed": False,
+            "cremationFormStatus": "",
+            "gpNotifedStatus": ""
+        }
+
+    @classmethod
     def get_case_breakdown_response_content(cls):
         return {
             "patientName": 'John Doe',
@@ -1245,6 +1282,20 @@ class ExaminationMocks:
         response = Response()
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_case_outcome_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_case_outcome_response_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_outcome_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
         return response
 
 
