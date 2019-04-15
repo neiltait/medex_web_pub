@@ -149,11 +149,11 @@ class User:
             return [
                 {
                     'id': 'admin-notes',
-                    'name': 'Latest admission notes'
+                    'name': 'Latest hospital admission details'
                 },
                 {
                     'id': 'history-notes',
-                    'name': 'Medical history notes'
+                    'name': 'Medical and social history notes'
                 },
                 {
                     'id': 'meo-summary',
