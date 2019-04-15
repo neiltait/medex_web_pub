@@ -3,6 +3,8 @@ from . import request_handler
 
 PRE_SCRUTINY_FORM = 'pre-scrutiny'
 
+QAP_DISCUSSION_FORM = 'qap-discussion'
+
 
 def event_form_parser(form_data):
     event_type = form_data.get('add-event-to-timeline') if form_data.get('add-event-to-timeline') else \
@@ -10,6 +12,8 @@ def event_form_parser(form_data):
     print(event_type)
     if event_type == PRE_SCRUTINY_FORM:
         return PreScrutinyEventForm(form_data)
+    elif event_type == QAP_DISCUSSION_FORM:
+        return QapDiscussionEventForm(form_data)
 
 
 def event_form_submitter(auth_token, examination_id, form):

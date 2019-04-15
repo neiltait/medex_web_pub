@@ -674,3 +674,18 @@ class PreScrutinyEventForm:
           "clinicalGovernanceReview": self.governance_review,
           "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+class QapDiscussionEventForm:
+    def __init__(self, form_data):
+        if form_data.get('qap-discussion-doctor') == 'other':
+            self.participant_name = form_data.get('qap-other__full-name')
+            self.participant_role = form_data.get('qap-other__role')
+            self.participant_organisation = form_data.get('qap-other__organisation')
+            self.participant_phone_number = form_data.get('qap-other__phone-number')
+        else:
+            self.participant_name = form_data.get('qap-default__full-name')
+            self.participant_role = form_data.get('qap-default__role')
+            self.participant_organisation = form_data.get('qap-default__organisation')
+            self.participant_phone_number = form_data.get('qap-default__phone-number')
+
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
