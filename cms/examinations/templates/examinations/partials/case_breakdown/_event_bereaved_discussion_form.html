@@ -15,8 +15,8 @@
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
-                                       name="bereaved-existing-rep" type="radio"
-                                       value="yes">
+                                       name="bereaved-rep" type="radio"
+                                       value="existing-rep">
                                 <label class="nhsuk-label nhsuk-radios__label" for="bereaved-existing-rep">
                                     Family Member Name
                                 </label>
@@ -24,8 +24,8 @@
                         </div>
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-new-rep"
-                                       type="radio" value="yes">
+                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-rep"
+                                       type="radio" value="new-rep">
                                 <label class="nhsuk-label nhsuk-radios__label" for="bereaved-new-rep">
                                     Another representative
                                 </label>
@@ -37,8 +37,8 @@
         </div>
 
         <div id="bereavement-discussion-with-panel margin-time"
-             class="inset-text-panel bereaved-rep-details {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
-            <div class="nhsuk-form-group">
+             class="inset-text-panel {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
+            <div class="nhsuk-form-group" id="bereaved-rep-details">
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
                     <fieldset class="nhsuk-fieldset">
                         <label class="nhsuk-label nhsuk-u-font-weight-bold"
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="nhsuk-form-group bereaved-rep-form {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
+        <div id="bereaved-rep-form" class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-row margin-top">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="bereavement-full-name">
@@ -101,7 +101,6 @@
                            name="bereavement-full-name-input"
                            type="text" value="{{ form.bereavement_discussion_full_name }}">
                 </div>
-                <div class="nhsuk-form-group">
                     <div class="nhsuk-grid-column-one-half nhsuk-radios">
                         <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
                             <legend class="nhsuk-fieldset__legend margin-top">
@@ -133,7 +132,6 @@
                         </fieldset>
                     </div>
                 </div>
-            </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="full-name">
@@ -143,7 +141,6 @@
                            name="test-width-10"
                            type="text">
                 </div>
-                <div class="nhsuk-form-group">
                     <div class="nhsuk-grid-column-one-half nhsuk-radios">
                         <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
                             <legend class="nhsuk-fieldset__legend">
@@ -176,7 +173,6 @@
                         </fieldset>
                     </div>
                 </div>
-            </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="phone-number">

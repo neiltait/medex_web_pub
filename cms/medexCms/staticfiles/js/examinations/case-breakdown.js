@@ -135,6 +135,7 @@
             let that = this;
             this.upChevron.click(function (e) {
                 that.contract()
+                console.log(this);
             });
             this.downChevron.click(function (e) {
                 that.expand()
@@ -169,14 +170,18 @@
     var BereavementDiscussionForm = function (form) {
         this.form = form;
         this.setup();
+
     };
 
     BereavementDiscussionForm.prototype = {
         setup: function () {
            this.newRep = this.form.find("#bereaved-new-rep");
            this.existingRep = this.form.find("#bereaved-existing-rep");
-           this.repDetails = this.form.find(".bereaved-rep-details");
-           this.repForm = this.form.find(".bereaved-rep-form");
+           this.repDetails = this.form.find("#bereaved-rep-details");
+           this.repForm = this.form.find("#bereaved-rep-form");
+           this.showRepForm();
+           this.showRepDetails();
+           this.startWatchers();
 
         },
         showRepForm() {
@@ -210,7 +215,7 @@
 
 
     function initBereavementDiscussion() {
-        new BereavementDiscussionForm($('#bereavement-discussion'));
+        new BereavementDiscussionForm($('#bereaved-discussion'));
         var causeOfDeath = new ChevronExpandable($('#bereavement-cause-of-death-panel'))
         causeOfDeath.expand();
     }
