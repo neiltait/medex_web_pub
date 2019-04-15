@@ -3,6 +3,7 @@
 {% load staticfiles %}
 
 {% block tab_css %}
+    <link href="{% sass_src 'scss/examinations/case-outcome.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block tab_js %}
@@ -10,7 +11,65 @@
 
 {% block tab_content %}
     <div class="case-outcome">
-        <h1>Case outcome</h1>
+        <h1 class="page-title">
+            Case outcome
+        </h1>
+
+        <h2 class="page-subheading">
+            Summary
+        </h2>
+
+        <div class="case-summary flex-row">
+            <div class="conversation-outcomes">
+                <div>
+                    <p>
+                        Outcome of pre scrutiny
+                    </p>
+
+                    <p>
+                        {{pre_scrutiny_outcome}}
+                    </p>
+
+                    <p>
+                        <a href="#">Not correct?</a>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        Outcome of QAP/ME discussion
+                    </p>
+
+                    <p>
+                        {{qap_outcome}}
+                    </p>
+
+                    <p>
+                        <a href="#">Not correct?</a>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        Outcome of representative discussion
+                    </p>
+
+                    <p>
+                        {{representative_outcome}}
+                    </p>
+
+                    <p>
+                        <a href="#">Not correct?</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="overall-outcomes">
+                <p>
+                    {{overall_outcome}}
+                </p>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
