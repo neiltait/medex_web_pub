@@ -7,7 +7,7 @@ from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter
 from locations import request_handler as location_request_handler
@@ -340,6 +340,8 @@ def view_examination_case_outcome(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'case_outcome': case_outcome,
+        'patient': case_outcome.case_header
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)
