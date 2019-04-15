@@ -798,3 +798,56 @@ class MedicalTeamMember:
 
 def text_field_is_not_null(field):
     return field and len(field.strip()) > 0
+
+
+class CaseOutcome:
+    QAP_OUTCOMES = {
+        'MccdCauseOfDeathProvidedByQAP': 'MCCD cause of death provided by QAP',
+    }
+
+    REPRESENTATIVE_OUTCOMES = {
+        'CauseOfDeathAccepted': 'Cause of death accepted',
+    }
+
+    PRE_SCRUTINY_OUTCOMES = {
+        'IssueAnMccd': 'Issue an MCCD',
+    }
+
+    OUTCOME_SUMMARIES = {
+        'ReferToCoroner': 'Refer to coroner',
+    }
+
+    def __init__(self, obj_dict):
+        self.case_header = PatientHeader(obj_dict.get("caseHeader"))
+        self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
+        self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
+        self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
+        self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
+        self.case_status = obj_dict.get("caseOpen")
+        self.scrutiny_confirmed = obj_dict.get("scrutinyConfirmedOn")
+        self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
+        self.mccd_issued = obj_dict.get("mccdIssed")
+        self.cremation_form_status = obj_dict.get("cremationFormStatus")
+        self.gp_notified_status = obj_dict.get("gpNotifedStatus")
+
+    @classmethod
+    def load_by_id(cls, auth_token, examination_id):
+        response = request_handler.load_case_outcome(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return CaseOutcome(response.json())
+        else:
+            return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+
+    def display_outcome_summary(self):
+        return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+
+    def display_pre_scrutiny_outcome(self):
+        return self.PRE_SCRUTINY_OUTCOMES.get(self.case_pre_scrutiny_outcome)
+
+    def display_qap_outcome(self):
+        return self.QAP_OUTCOMES.get(self.case_qap_outcome)
+
+    def display_representative_outcome(self):
+        return self.REPRESENTATIVE_OUTCOMES.get(self.case_representative_outcome)
+
