@@ -801,6 +801,7 @@ def text_field_is_not_null(field):
 
 
 class CaseOutcome:
+    date_format = '%d.%m.%Y %H:%M'
     QAP_OUTCOMES = {
         'MccdCauseOfDeathProvidedByQAP': 'MCCD cause of death provided by QAP',
     }
@@ -824,7 +825,7 @@ class CaseOutcome:
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
         self.case_status = obj_dict.get("caseOpen")
-        self.scrutiny_confirmed = obj_dict.get("scrutinyConfirmedOn")
+        self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.mccd_issued = obj_dict.get("mccdIssed")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
@@ -850,6 +851,9 @@ class CaseOutcome:
 
     def display_representative_outcome(self):
         return self.REPRESENTATIVE_OUTCOMES.get(self.case_representative_outcome)
+
+    def display_scrutiny_date(self):
+        return self.scrutiny_confirmed.strftime(self.date_format)
 
 
 class PatientHeader:
