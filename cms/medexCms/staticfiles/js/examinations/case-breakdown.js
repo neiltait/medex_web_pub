@@ -21,7 +21,7 @@
             for (var i = 0; i < forms.length; i++) {
                 var hintID = forms[i].id + '-hint';
                 var hint = this.wrapper.find('#' + hintID)
-                this.forms[forms[i].id] = new EventForm(forms[i], hint);
+                this.forms[forms[i].id] = new EventForm(forms[i], hint, this.setActiveForm.bind(this));
             }
         },
 
@@ -41,18 +41,32 @@
             } else {
                 this.activeForm = selectedKey;
             }
+        },
+
+        setActiveForm: function(formId) {
+            console.log(formId)
+            this.activeForm = formId;
         }
     }
 
-    var EventForm = function (form, hint) {
+    var EventForm = function (form, hint, setActiveCallback) {
         this.form = $(form);
         this.hint = $(hint);
+        this.setActiveCallback = setActiveCallback;
         this.setup();
     }
 
     EventForm.prototype = {
         setup: function () {
             this.inputs = this.form.find('input');
+            this.setInitialView();
+        },
+
+        setInitialView: function() {
+            if (this.form.hasClass('active')) {
+                this.show();
+                this.setActiveCallback(this.form[0].id)
+            }
         },
 
         show: function () {

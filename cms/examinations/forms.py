@@ -645,82 +645,129 @@ class MedicalTeamMembersForm:
 
 
 class PreScrutinyEventForm:
+    active = False
 
-    def __init__(self, form_data):
-        self.me_thoughts = form_data.get('me-thoughts')
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('pre_scrutiny_id')
+        self.me_thoughts = fallback_to(form_data.get('me-thoughts'), '')
         self.circumstances_of_death = form_data.get('cod')
-        self.possible_cod_1a = form_data.get('possible-cod-1a')
-        self.possible_cod_1b = form_data.get('possible-cod-1b')
-        self.possible_cod_1c = form_data.get('possible-cod-1c')
-        self.possible_cod_2 = form_data.get('possible-cod-2')
+        self.possible_cod_1a = fallback_to(form_data.get('possible-cod-1a'), '')
+        self.possible_cod_1b = fallback_to(form_data.get('possible-cod-1b'), '')
+        self.possible_cod_1c = fallback_to(form_data.get('possible-cod-1c'), '')
+        self.possible_cod_2 = fallback_to(form_data.get('possible-cod-2'), '')
         self.overall_outcome = form_data.get('ops')
         self.governance_review = form_data.get('gr')
-        self.governance_review_text = form_data.get('grt')
+        self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
 
     def is_valid(self):
         return True
 
     def for_request(self):
         return {
-          "medicalExaminerThoughts": self.me_thoughts,
-          "isFinal": self.is_final,
-          "circumstancesOfDeath": self.circumstances_of_death,
-          "causeOfDeath1a": self.possible_cod_1a,
-          "causeOfDeath1b": self.possible_cod_1b,
-          "causeOfDeath1c": self.possible_cod_1c,
-          "causeOfDeath2": self.possible_cod_2,
-          "outcomeOfPreScrutiny": self.overall_outcome,
-          "clinicalGovernanceReview": self.governance_review,
-          "clinicalGovernanceReviewText": self.governance_review_text
+            "eventId": self.event_id,
+            "medicalExaminerThoughts": self.me_thoughts,
+            "isFinal": self.is_final,
+            "circumstancesOfDeath": self.circumstances_of_death,
+            "causeOfDeath1a": self.possible_cod_1a,
+            "causeOfDeath1b": self.possible_cod_1b,
+            "causeOfDeath1c": self.possible_cod_1c,
+            "causeOfDeath2": self.possible_cod_2,
+            "outcomeOfPreScrutiny": self.overall_outcome,
+            "clinicalGovernanceReview": self.governance_review,
+            "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.me_thoughts = draft.body
+        self.circumstances_of_death = draft.circumstances_of_death
+        self.possible_cod_1a = draft.cause_of_death_1a
+        self.possible_cod_1b = draft.cause_of_death_1b
+        self.possible_cod_1c = draft.cause_of_death_1c
+        self.possible_cod_2 = draft.cause_of_death_2
+        self.overall_outcome = draft.outcome_of_pre_scrutiny
+        self.governance_review = draft.clinical_governance_review
+        self.governance_review_text = draft.clinical_governance_review_text
 
 
 class MeoSummaryEventForm:
+    active = False
 
-    def __init__(self, form_data):
-        self.meo_summary_notes = form_data.get('meo_summary_notes')
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('meo_summary_id')
+        self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
 
     def is_valid(self):
         return True
 
     def for_request(self):
         return {
+            "eventId": self.event_id,
             "isFinal": self.is_final,
             "summaryDetails": self.meo_summary_notes
         }
 
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.more_detail = draft.body
+
 
 class OtherEventForm:
+    active = False
 
-    def __init__(self, form_data):
-        self.more_detail = form_data.get('more-detail')
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('other_notes_id')
+        self.more_detail = fallback_to(form_data.get('more-detail'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
 
     def is_valid(self):
         return True
 
     def for_request(self):
         return {
-          "text": self.more_detail,
-          "isFinal": self.is_final
+            "eventId": self.event_id,
+            "text": self.more_detail,
+            "isFinal": self.is_final
         }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.more_detail = draft.body
 
 
 class AdmissionNotesEventForm:
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    active = False
 
-    def __init__(self, form_data):
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('admission_notes_id')
         self.admission_day = form_data.get('day_of_last_admission')
         self.admission_month = form_data.get('month_of_last_admission')
         self.admission_year = form_data.get('year_of_last_admission')
         self.admission_date_unknown = form_data.get('date_of_last_admission_not_known')
         self.admission_time = form_data.get('time_of_last_admission')
         self.admission_time_unknown = form_data.get('time_of_last_admission_not_known')
-        self.admission_notes = form_data.get('latest_admission_notes')
+        self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = form_data.get('latest-admission-suspect-referral')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
 
     def is_valid(self):
         return True
@@ -736,9 +783,21 @@ class AdmissionNotesEventForm:
 
     def for_request(self):
         return {
-          "notes": self.admission_notes,
-          "isFinal": self.is_final,
-          "admittedDate": self.admission_date(),
-          "admittedTime": None if self.admission_time_unknown else self.admission_time,
-          "immediateCoronerReferral": self.get_immediate_coroner_referral()
+            "eventId": self.event_id,
+            "notes": self.admission_notes,
+            "isFinal": self.is_final,
+            "admittedDate": self.admission_date(),
+            "admittedTime": None if self.admission_time_unknown else self.admission_time,
+            "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.admission_day = draft.admitted_date.day if draft.admitted_date else ''
+        self.admission_month = draft.admitted_date.month if draft.admitted_date else ''
+        self.admission_year = draft.admitted_date.year if draft.admitted_date else ''
+        self.admission_date_unknown = False if draft.admitted_date else True
+        self.admission_time = draft.admitted_time
+        self.admission_time_unknown = False if draft.admitted_time else True
+        self.admission_notes = draft.body
+        self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'

@@ -5,7 +5,8 @@ from alerts import messages
 from alerts.utils import generate_error_alert
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
+    AdmissionNotesEventForm, MeoSummaryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter
@@ -239,13 +240,14 @@ def edit_examination_case_breakdown(request, examination_id):
     user = User.initialise_with_token(request)
     status_code = status.HTTP_200_OK
 
-    if request.method == 'POST':
-        form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
-
     if not user.check_logged_in():
         return redirect_to_login()
 
     examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
+    form = None
+
+    if request.method == 'POST':
+        form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
 
     if not type(examination) == CaseBreakdown:
         context = {
@@ -256,6 +258,8 @@ def edit_examination_case_breakdown(request, examination_id):
         return render(request, 'errors/base_error.html', context, status=examination.status_code)
 
     forms = user.get_forms_for_role()
+
+    form_data = __prepare_forms(examination.event_list, form)
 
     patient = {
         "name": examination.patient_name,
@@ -270,8 +274,8 @@ def edit_examination_case_breakdown(request, examination_id):
         "case_breakdown": examination,
         'bereaved_form': {"use_default_bereaved": True},
         'latest_admission_form': examination.latest_admission,
-        'patient': patient
-
+        'patient': patient,
+        'form_data': form_data
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
@@ -287,3 +291,31 @@ def __post_case_breakdown_event(request, user, examination_id):
         errors = form.errors
         status_code = status.HTTP_400_BAD_REQUEST
     return form, status_code, errors
+
+
+def __prepare_forms(event_list, form):
+    pre_scrutiny_form = PreScrutinyEventForm()
+    other_notes_form = OtherEventForm()
+    admission_notes_form = AdmissionNotesEventForm()
+    meo_summary_form = MeoSummaryEventForm()
+
+    if event_list.get_me_scrutiny_draft():
+        pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
+    if event_list.get_other_notes_draft():
+        other_notes_form.fill_from_draft(event_list.get_other_notes_draft())
+    if event_list.get_latest_admission_draft():
+        admission_notes_form.fill_from_draft(event_list.get_latest_admission_draft())
+    if event_list.get_meo_summary_draft():
+        meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
+
+    form_data = {
+        'PreScrutinyEventForm': pre_scrutiny_form,
+        'OtherEventForm': other_notes_form,
+        'AdmissionNotesEventForm': admission_notes_form,
+        'MeoSummaryEventForm': meo_summary_form
+    }
+
+    if form:
+        form_data[type(form).__name__] = form.make_active()
+
+    return form_data
