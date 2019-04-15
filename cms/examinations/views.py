@@ -329,6 +329,14 @@ def view_examination_case_outcome(request, examination_id):
 
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
+    if not type(case_outcome) == CaseOutcome:
+        context = {
+            'session_user': user,
+            'error': case_outcome,
+        }
+
+        return render(request, 'errors/base_error.html', context, status=case_outcome.status_code)
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
