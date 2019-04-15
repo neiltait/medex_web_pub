@@ -1,0 +1,50 @@
+<div class="scrutiny-confirmation">
+    <h2 class="page-subheading">
+        Confirmation of scrutiny
+    </h2>
+
+    <p>
+        I confirm that I have carried out an independent scrutiny of this death in a way that complies with he relevant
+        standards and procedure, and the information provided is true to the best of my knowledge and belief.
+    </p>
+
+    <p class="me-name">
+        {{case_outcome.me_full_name}}
+    </p>
+
+    <p class="me-role">
+        Medical Examiner
+    </p>
+
+    {% if not case_outcome.scrutiny_confirmed %}
+        <form id="scrutiny-form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+              method="post">
+            <div class="nhsuk-checkboxes">
+                <div class="nhsuk-checkboxes__item">
+                    <input id="scrutiny-confirmation" type="checkbox" class="nhsuk-checkboxes__input" />
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="scrutiny-confirmation">
+                        Confirm scrutiny
+                    </label>
+                </div>
+            </div>
+
+            <button id="confirm-scrutiny-button" name="pre-scrutiny-confirmed" class="nhsuk-button">
+                Submit ME scrutiny
+            </button>
+        </form>
+    {% endif %}
+
+    {% if case_outcome.scrutiny_confirmed %}
+        <div class="scrutiny-confirmed-tick">
+
+        </div>
+
+        <p class="scrutiny-date-label">
+            Scrutiny confirmed on
+        </p>
+
+        <p>
+            {{case_outcome.display_scrutiny_date}}
+        </p>
+    {% endif %}
+</div>
