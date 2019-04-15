@@ -697,8 +697,8 @@ class ExaminationMocks:
             "timeOfDeath": "13:00",
             "caseBreakdown": {
                 "patientDeathEvent": {
-                    "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                    "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                    "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                    "userId": "WERGT-243TRGS-WE4TG-WERGT",
                     "isFinal": True,
                     "eventType": "PatientDied",
                     "dateOfDeath": "2019-03-10T10:01:34.257Z",
@@ -708,364 +708,394 @@ class ExaminationMocks:
                 "otherEvents": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "created": "2019-03-12T10:30:43.019Z",
-                            "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                "consectetur adipiscing elit, sed do eiusmod tempor",
-                            "is_final": True,
-                            "event_type": "Other"
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                    "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                    "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                    "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                    "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                    "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "isFinal": True,
+                            "eventType": "Other"
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                            "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                            "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                            "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                            "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                            "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "is_final": True,
-                        "event_type": "Other"
+                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "isFinal": True,
+                        "eventType": "Other"
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                            "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                            "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                            "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                            "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                            "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "is_final": False,
-                        "event_type": "Other"
+                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "isFinal": False,
+                        "eventType": "Other"
                     },
                 },
                 "preScrutiny": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "created": "2019-03-12T10:30:43.019Z",
-                            "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                            "medicalExaminerThoughts": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                        "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                        "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                                        "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                                        "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                                        "consectetur adipiscing elit, sed do eiusmod tempor",
-                            "is_final": True,
-                            "event_type": "PreScrutiny",
-                            "circumstances_of_death": "Expected",
-                            "cause_of_death": [
-                            ],
-                            "outcome_of_pre_scrutiny": "IssueAnMccd",
-                            "clinical_governance_review": "Yes",
-                            "clinical_governance_review_text": "Palliative care were called too late."
+                            "isFinal": True,
+                            "eventType": "PreScrutiny",
+                            "circumstancesOfDeath": "Expected",
+                            "causeOfDeath1a": '',
+                            "causeOfDeath1b": '',
+                            "causeOfDeath1c": '',
+                            "causeOfDeath2": '',
+                            "outcomeOfPreScrutiny": "IssueAnMccd",
+                            "clinicalGovernanceReview": "Yes",
+                            "clinicalGovernanceReviewText": "Palliative care were called too late."
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "medicalExaminerThoughts": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                    "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                    "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                                    "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                                    "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                                    "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "is_final": True,
-                        "event_type": "PreScrutiny",
-                        "circumstances_of_death": "Expected",
-                        "cause_of_death": [
-                        ],
-                        "outcome_of_pre_scrutiny": "IssueAnMccd",
-                        "clinical_governance_review": "Yes",
-                        "clinical_governance_review_text": "Yes"
+                        "isFinal": True,
+                        "eventType": "PreScrutiny",
+                        "circumstancesOfDeath": "Expected",
+                        "causeOfDeath1a": '',
+                        "causeOfDeath1b": '',
+                        "causeOfDeath1c": '',
+                        "causeOfDeath2": '',
+                        "outcomeOfPreScrutiny": "IssueAnMccd",
+                        "clinicalGovernanceReview": "Yes",
+                        "clinicalGovernanceReviewText": "Palliative care were called too late."
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "medicalExaminerThoughts": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                    "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                    "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                                    "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                                    "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                                    "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "is_final": False,
-                        "event_type": "PreScrutiny",
-                        "circumstances_of_death": "Expected",
-                        "cause_of_death": [
-                        ],
-                        "outcome_of_pre_scrutiny": "IssueAnMccd",
-                        "clinical_governance_review": "Yes",
-                        "clinical_governance_review_text": "Yes"
+                        "isFinal": False,
+                        "eventType": "PreScrutiny",
+                        "circumstancesOfDeath": "Expected",
+                        "causeOfDeath1a": '',
+                        "causeOfDeath1b": '',
+                        "causeOfDeath1c": '',
+                        "causeOfDeath2": '',
+                        "outcomeOfPreScrutiny": "IssueAnMccd",
+                        "clinicalGovernanceReview": "Yes",
+                        "clinicalGovernanceReviewText": "Palliative care were called too late."
                     }
                 },
                 "bereavedDiscussion": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                            "is_final": True,
-                            "event_type": "BereavedDiscussion",
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                            "isFinal": True,
+                            "eventType": "BereavedDiscussion",
                             "created": "2019-03-12T10:30:43.019Z",
-                            "participant_full_name": "Jane Doe",
-                            "participant_relationship": "Wife",
-                            "participant_phone_number": "01234 567890",
-                            "present_at_death": "Yes",
-                            "informed_at_death": "Yes",
-                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                            "discussion_unable_happen": False,
-                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                            "participantFullName": "Jane Doe",
+                            "participantRelationship": "Wife",
+                            "participantPhoneNumber": "01234 567890",
+                            "presentAtDeath": "Yes",
+                            "informedAtDeath": "Yes",
+                            "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                            "discussionUnableHappen": False,
+                            "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                   "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                   "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                                   "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                                   "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                                   "consectetur adipiscing elit, sed do eiusmod tempor",
-                            "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                            "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": True,
-                        "event_type": "BereavedDiscussion",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": True,
+                        "evenType": "BereavedDiscussion",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "participant_full_name": "Jane Doe",
-                        "participant_relationship": "Wife",
-                        "participant_phone_number": "01234 567890",
-                        "present_at_death": "Yes",
-                        "informed_at_death": "Yes",
-                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                        "discussion_unable_happen": False,
-                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "participantFullName": "Jane Doe",
+                        "participantRelationship": "Wife",
+                        "participantPhoneNumber": "01234 567890",
+                        "presentAtDeath": "Yes",
+                        "informedAtDeath": "Yes",
+                        "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                        "discussionUnableHappen": False,
+                        "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                               "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                        "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": False,
-                        "event_type": "BereavedDiscussion",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": False,
+                        "evenType": "BereavedDiscussion",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "participant_full_name": "Jane Doe",
-                        "participant_relationship": "Wife",
-                        "participant_phone_number": "01234 567890",
-                        "present_at_death": "Yes",
-                        "informed_at_death": "Yes",
-                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                        "discussion_unable_happen": False,
-                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "participantFullName": "Jane Doe",
+                        "participantRelationship": "Wife",
+                        "participantPhoneNumber": "01234 567890",
+                        "presentAtDeath": "Yes",
+                        "informedAtDeath": "Yes",
+                        "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                        "discussionUnableHappen": False,
+                        "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                               "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                        "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                     }
                 },
                 "meoSummary": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                            "is_final": True,
-                            "event_type": "MeoSummary",
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                            "isFinal": True,
+                            "eventType": "MeoSummary",
                             "created": "2019-03-12T10:30:43.019Z",
-                            "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                               "consectetur adipiscing elit, sed do eiusmod tempor"
+                            "summaryDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor"
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": True,
-                        "event_type": "MeoSummary",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": True,
+                        "eventType": "MeoSummary",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                           "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                           "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                           "consectetur adipiscing elit, sed do eiusmod tempor"
+                        "summaryDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                          "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                          "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                          "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                          "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                          "consectetur adipiscing elit, sed do eiusmod tempor"
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": False,
-                        "event_type": "MeoSummary",
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": False,
+                        "eventType": "MeoSummary",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                           "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                           "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                           "consectetur adipiscing elit, sed do eiusmod tempor"
+                        "summaryDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                          "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                          "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                          "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                          "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                          "consectetur adipiscing elit, sed do eiusmod tempor"
                     }
                 },
                 "qapDiscussion": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                            "is_final": True,
-                            "event_type": "QapDiscussion",
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                            "isFinal": True,
+                            "eventType": "QapDiscussion",
                             "created": "2019-03-13T10:30:43.019Z",
-                            "participant_roll": "Consultant",
-                            "participant_organisation": "A Hospital",
-                            "participant_phone_number": "01234 567890",
-                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                            "discussion_unable_happen": False,
-                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                            "participantRoll": "Consultant",
+                            "participantOrganisation": "A Hospital",
+                            "participantPhoneNumber": "01234 567890",
+                            "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                            "discussionUnableHappen": False,
+                            "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                   "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                   "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                                   "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                                   "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                                   "consectetur adipiscing elit, sed do eiusmod tempor",
-                            "qap_discussion_outcome": "MccdToBeIssued"
+                            "qapDiscussionOutcome": "MccdToBeIssued",
+                            "participantName": "Dr G House",
+                            "causeOfDeath1a": "",
+                            "causeOfDeath1b": "",
+                            "causeOfDeath1c": "",
+                            "causeOfDeath2": ""
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": True,
-                        "event_type": "QapDiscussion",
-                        "created": "2019-03-12T10:30:43.019Z",
-                        "participant_roll": "Consultant",
-                        "participant_organisation": "A Hospital",
-                        "participant_phone_number": "01234 567890",
-                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                        "discussion_unable_happen": False,
-                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": True,
+                        "eventType": "QapDiscussion",
+                        "created": "2019-03-13T10:30:43.019Z",
+                        "participantRoll": "Consultant",
+                        "participantOrganisation": "A Hospital",
+                        "participantPhoneNumber": "01234 567890",
+                        "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                        "discussionUnableHappen": False,
+                        "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                               "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "qap_discussion_outcome": "MccdToBeIssued"
+                        "qapDiscussionOutcome": "MccdToBeIssued",
+                        "participantName": "Dr G House",
+                        "causeOfDeath1a": "",
+                        "causeOfDeath1b": "",
+                        "causeOfDeath1c": "",
+                        "causeOfDeath2": ""
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "is_final": False,
-                        "event_type": "QapDiscussion",
-                        "created": "2019-03-12T10:30:43.019Z",
-                        "participant_roll": "Consultant",
-                        "participant_organisation": "A Hospital",
-                        "participant_phone_number": "01234 567890",
-                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
-                        "discussion_unable_happen": False,
-                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "isFinal": False,
+                        "eventType": "QapDiscussion",
+                        "created": "2019-03-13T10:30:43.019Z",
+                        "participantRoll": "Consultant",
+                        "participantOrganisation": "A Hospital",
+                        "participantPhoneNumber": "01234 567890",
+                        "dateOfConversation": "2019-04-08T08:31:43.019Z",
+                        "discussionUnableHappen": False,
+                        "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                               "consectetur adipiscing elit, sed do eiusmod tempor",
-                        "qap_discussion_outcome": "MccdToBeIssued"
+                        "qapDiscussionOutcome": "MccdToBeIssued",
+                        "participantName": "Dr G House",
+                        "causeOfDeath1a": "",
+                        "causeOfDeath1b": "",
+                        "causeOfDeath1c": "",
+                        "causeOfDeath2": ""
                     }
                 },
                 "medicalHistory": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                            "event_type": "MedicalHistory",
-                            "is_final": True,
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                            "eventType": "MedicalHistory",
+                            "isFinal": True,
                             "created": "2019-03-12T10:30:43.019Z",
-                            "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                          "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                          "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                          "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                          "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                          "consectetur adipiscing elit, sed do eiusmod tempor "
-                                                          "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
-                                                          "dolor sit amet, consectetur adipiscing elit, and alsotext "
-                                                          "goes here"
+                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                    "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                    "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                    "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                    "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                    "consectetur adipiscing elit, sed do eiusmod tempor "
+                                    "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                    "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                    "goes here"
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "event_type": "MedicalHistory",
-                        "is_final": True,
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventType": "MedicalHistory",
+                        "isFinal": True,
                         "created": "2019-03-12T10:30:43.019Z",
-                        "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                      "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                      "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                      "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                      "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                      "consectetur adipiscing elit, sed do eiusmod tempor "
-                                                      "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
-                                                      "dolor sit amet, consectetur adipiscing elit, and alsotext "
-                                                      "goes here"
+                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                "consectetur adipiscing elit, sed do eiusmod tempor "
+                                "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                "goes here"
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "event_type": "MedicalHistory",
-                        "is_final": False,
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "eventType": "MedicalHistory",
+                        "isFinal": False,
                         "created": "2019-03-12T10:30:43.019Z",
-                        "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                      "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                      "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                      "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                      "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                      "consectetur adipiscing elit, sed do eiusmod tempor "
-                                                      "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
-                                                      "dolor sit amet, consectetur adipiscing elit, and alsotext "
-                                                      "goes here"
+                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                "consectetur adipiscing elit, sed do eiusmod tempor "
+                                "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                "goes here"
                     }
                 },
                 "admissionNotes": {
                     "history": [
                         {
-                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                            "admission_event_notes": "Notes about latest admission to hospital: James Marshall was "
-                                                     "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
-                                                     "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
-                                                     "improvement...more notes would be added here",
-                            "is_final": True,
-                            "event_type": "Admission",
-                            "admitted_date_time": "2019-03-10T08:31:43.019Z",
-                            "immediate_coroner_referral": False,
+                            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                            "notes": "Notes about latest admission to hospital: James Marshall was "
+                                     "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
+                                     "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
+                                     "improvement...more notes would be added here",
+                            "isFinal": True,
+                            "eventType": "Admission",
+                            "admittedDate": "2019-03-10T08:31:43.019Z",
+                            "admittedTime": "10:00",
+                            "immediateCoronerReferral": False,
                             "created": "2019-03-12T10:30:43.019Z",
                         }
                     ],
                     "latest": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "admission_event_notes": "The length of their last admission was 5 days",
-                        "is_final": True,
-                        "event_type": "Admission",
-                        "admitted_date_time": "2019-03-10T08:31:43.019Z",
-                        "immediate_coroner_referral": False,
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "notes": "Notes about latest admission to hospital: James Marshall was "
+                                 "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
+                                 "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
+                                 "improvement...more notes would be added here",
+                        "isFinal": True,
+                        "eventType": "Admission",
+                        "admittedDate": "2019-03-10T08:31:43.019Z",
+                        "admittedTime": "10:00",
+                        "immediateCoronerReferral": False,
                         "created": "2019-03-12T10:30:43.019Z",
                     },
                     "usersDraft": {
-                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
-                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
-                        "admission_event_notes": "The length of their last admission was 5 days",
-                        "is_final": False,
-                        "event_type": "Admission",
-                        "admitted_date_time": "2019-03-10T08:31:43.019Z",
-                        "immediate_coroner_referral": False,
+                        "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "userId": "WERGT-243TRGS-WE4TG-WERGT",
+                        "notes": "Notes about latest admission to hospital: James Marshall was "
+                                 "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
+                                 "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
+                                 "improvement...more notes would be added here",
+                        "isFinal": True,
+                        "eventType": "Admission",
+                        "admittedDate": "2019-03-10T08:31:43.019Z",
+                        "admittedTime": "10:00",
+                        "immediateCoronerReferral": False,
                         "created": "2019-03-12T10:30:43.019Z",
                     }
                 }

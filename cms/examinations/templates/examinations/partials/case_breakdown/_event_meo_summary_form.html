@@ -1,4 +1,6 @@
-<div id="meo-summary" class="event-form">
+<div id="meo-summary" class="event-form{% if form.active %} active{% endif %}">
+    <input name="meo_summary_id" value="{{form.event_id}}" hidden>
+
     <div class="nhsuk-form-group">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
@@ -7,7 +9,7 @@
                 </label>
                 <span class="nhsuk-hint">Summarise the key information about this case</span>
                 <textarea id="meo_summary_notes" class="nhsuk-textarea medex-textarea" name="meo_summary_notes"
-                          rows="6">{{ meo_summary_form.meo_summary_notes }}</textarea>
+                          rows="6">{{ form.meo_summary_notes }}</textarea>
             </div>
         </div>
 
