@@ -7,12 +7,12 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.nursing_information %}nhsuk-form-group--error{% endif %}">
-                            {% if errors.nursing_information %}
+                        <div class="nhsuk-form-group {% if errors.nursing_team_information %}nhsuk-form-group--error{% endif %}">
+                            {% if errors.nursing_team_information %}
                                 <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.nursing_information }}</span>{% endif %}
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.nursing_team_information }}</span>{% endif %}
                             <textarea class="nhsuk-textarea medex-textarea"
-                                      id="nursing-team" name="nursing-team" rows="3"></textarea>
+                                      id="nursing_team_information" name="nursing_team_information" rows="3">{{ form.nursing_team_information  }}</textarea>
                         </div>
                     </fieldset>
                 </div>

@@ -3,7 +3,7 @@ from medexCms.utils import is_empty_date, parse_datetime
 
 class BereavedRepresentative:
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict={}):
         self.full_name = obj_dict.get("fullName")
         self.relationship = obj_dict.get("relationship")
         self.phone_number = obj_dict.get("phoneNumber")
@@ -21,6 +21,17 @@ class BereavedRepresentative:
             self.appointment_day = None
             self.appointment_month = None
             self.appointment_year = None
+
+    def set_values_from_form(self, obj_dict):
+        self.full_name = obj_dict.get('bereaved_name')
+        self.relationship = obj_dict.get('relationship')
+        self.phone_number = obj_dict.get('phone_number')
+        self.present_at_death = obj_dict.get('present_death')
+        self.informed = obj_dict.get('informed')
+        self.appointment_time = obj_dict.get("time_of_appointment")
+        self.appointment_day = obj_dict.get('day_of_appointment')
+        self.appointment_month = obj_dict.get('month_of_appointment')
+        self.appointment_year = obj_dict.get('year_of_appointment')
 
 
 class DropdownPerson:

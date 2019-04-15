@@ -7,6 +7,10 @@
   .form-section {
     padding: 1rem 2rem;
 
+    &.large-bottom-margin {
+      margin-bottom: 2rem;
+    }
+
     &:nth-child(odd) {
       background-color: $white;
     }
@@ -26,6 +30,22 @@
     display: none;
     background-color: $white;
 
+  }
+}
+
+.case-header {
+  margin-bottom: 3rem;
+
+  .patient-name {
+    font-size: $nhs-heading-l-size;
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+  .nhs-number {
+    font-size: $nhs-heading-xs-size;
+    font-weight: bold;
+    margin-bottom: 0;
   }
 }
 

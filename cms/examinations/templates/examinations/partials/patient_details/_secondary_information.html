@@ -99,7 +99,7 @@
           {% if errors.care_organisation %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.care_organisation }}</span>{% endif %}
 
           <input id="care_organisation" type="text" name="care_organisation" value="{{form.care_organisation}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.care_organisation %}nhsuk-input--error{% endif %}">
+                 class="nhsuk-input nhsuk-input--width-20 {% if errors.care_organisation %}nhsuk-input--error{% endif %}">
         </div>
       </fieldset>
     </div>
@@ -153,6 +153,17 @@
                 </label>
               </div>
             </div>
+
+            <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
+              <div class="nhsuk-radios__item">
+                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                       id="arrangements-5" name="funeral_arrangements" type="radio" value="Unknown"
+                       {% if form.funeral_arrangements == 'Unknown' %}checked{% endif %}>
+                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-5">
+                  Unknown
+                </label>
+              </div>
+            </div>
           </div>
           </div>
         </div>
@@ -163,10 +174,13 @@
       <div id="implant-devices">
         <div class="nhsuk-radios">
           <div class="nhsuk-form-group {% if errors.implanted_devices %}nhsuk-form-group--error{% endif %}">
+
             <legend class="nhsuk-fieldset__legend">
               Does the patient have any devices implanted that could cause issues at cremation?
             </legend>
 
+              <div class="nhsuk-grid-row">
+              <div class="nhsuk-grid-column-one-third">
             <div class="nhsuk-radios__item">
               <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
                      id="implant-devices-1" name="implanted_devices" type="radio" value="true"
@@ -175,7 +189,8 @@
                   Yes
               </label>
             </div>
-
+            </div>
+              <div class="nhsuk-grid-column-one-third">
             <div class="nhsuk-radios__item">
               <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
                      id="implant-devices-2" name="implanted_devices" type="radio" value="false"
@@ -184,6 +199,18 @@
                   No
               </label>
             </div>
+            </div>
+              <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
+              <div class="nhsuk-radios__item">
+                  <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                         id="implant-devices-3" name="implanted_devices" type="radio" value="unknown"
+                         {% if form.implanted_devices == 'unknown' %}checked{% endif %}>
+                  <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-3">
+                      Unknown
+                  </label>
+                </div>
+              </div>
+              </div>
           </div>
         </div>
 
@@ -215,7 +242,7 @@
             {% endif %}
 
             <input id="funeral_directors" type="text" name="funeral_directors" value="{{form.funeral_directors}}"
-                   class="nhsuk-input nhsuk-input--width-10 {% if errors.funeral_directors %}nhsuk-input--error{% endif %}">
+                   class="nhsuk-input nhsuk-input--width-20 {% if errors.funeral_directors %}nhsuk-input--error{% endif %}">
           </div>
         </fieldset>
       </div>
@@ -232,6 +259,8 @@
 
           <p class="small-print">Is there any property to collect from the ward?</p>
 
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
           <div class="nhsuk-radios__item">
             <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
                    id="personal-effects-1" name="personal_effects" type="radio" value="true"
@@ -240,7 +269,8 @@
                 Yes
             </label>
           </div>
-
+        </div>
+        <div class="nhsuk-grid-column-one-third">
           <div class="nhsuk-radios__item">
             <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
                    id="personal-effects-2" name="personal_effects" type="radio" value="false"
@@ -250,8 +280,19 @@
             </label>
           </div>
         </div>
+        <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
+          <div class="nhsuk-radios__item ">
+            <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                   id="personal-effects-3" name="personal_effects" type="radio" value="unknown"
+                   {% if form.personal_effects == 'unknown' %}checked{% endif %}>
+            <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
+                Unknown
+            </label>
+          </div>
+        </div>
       </div>
-
+      </div>
+      </div>
       <div class="nhsuk-form-group additional-info">
         <fieldset class="nhsuk-fieldset">
           <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">

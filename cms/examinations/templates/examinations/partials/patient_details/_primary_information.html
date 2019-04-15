@@ -43,21 +43,21 @@
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-1" name="gender" type="radio" value="male" {% if form.gender == 'male' %}checked{% endif %}>
+                                   id="gender-1" name="gender" type="radio" value="Male" {% if form.gender == 'Male' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-1">
                                 Male
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-2" name="gender" type="radio" value="female" {% if form.gender == 'female' %}checked{% endif %}>
+                                   id="gender-2" name="gender" type="radio" value="Female" {% if form.gender == 'Female' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-2">
                                 Female
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-3" name="gender" type="radio" value="other" {% if form.gender == 'other' %}checked{% endif %}>
+                                   id="gender-3" name="gender" type="radio" value="Other" {% if form.gender == 'Other' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-3">
                                 Other
                             </label>
@@ -153,7 +153,7 @@
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
-                                           value="{{ form.day_of_birth }}">
+                                           {% if form.day_of_birth %}value="{{ form.day_of_birth }}" {% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
@@ -165,7 +165,7 @@
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="month_of_birth" name="month_of_birth" type="number"
                                            pattern="[0-9]*"
-                                           value="{{ form.month_of_birth }}">
+                                           {% if form.month_of_birth %}value="{{ form.month_of_birth }}"{% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
@@ -177,7 +177,7 @@
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
                                            id="year_of_birth" name="year_of_birth" type="number"
                                            pattern="[0-9]*"
-                                           value="{{ form.year_of_birth }}">
+                                           {% if form.year_of_birth %}value="{{ form.year_of_birth }}"{% endif %}>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="day_of_death" name="day_of_death" type="number" pattern="[0-9]*"
-                                           value="{{ form.day_of_death }}">
+                                           {% if form.day_of_death %}value="{{ form.day_of_death }}"{% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
@@ -227,7 +227,7 @@
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="month_of_death" name="month_of_death" type="number"
                                            pattern="[0-9]*"
-                                           value="{{ form.month_of_death }}">
+                                           {% if form.month_of_death %}value="{{ form.month_of_death }}"{% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
@@ -238,7 +238,7 @@
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
                                            id="year_of_death" name="year_of_death" type="number"
                                            pattern="[0-9]*"
-                                           value="{{ form.year_of_death }}">
+                                           {% if form.year_of_death %}value="{{ form.year_of_death }}"{% endif %}>
                                 </div>
                             </div>
                         </div>

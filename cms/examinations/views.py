@@ -3,12 +3,12 @@ from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
-from errors.models import NotFoundError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails, CaseBreakdown, MedicalTeam
-from home.utils import redirect_to_login, redirect_to_landing, render_404
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
+from home.utils import redirect_to_login, render_404, redirect_to_examination
+from examinations.utils import event_form_parser, event_form_submitter
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -31,7 +31,8 @@ def create_examination(request):
             response = request_handler.post_new_examination(form.to_object(), user.auth_token)
             if response.status_code == status.HTTP_200_OK:
                 if 'create-and-continue' in request.POST:
-                    return redirect_to_landing()
+                    examination_id = response.json()['examinationId']
+                    return redirect_to_examination(examination_id)
                 else:
                     form = None
                     status_code = status.HTTP_200_OK
@@ -70,30 +71,32 @@ def edit_examination(request, examination_id):
 
 def edit_examination_patient_details(request, examination_id):
     user = User.initialise_with_token(request)
+
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-    if not examination:
-        return render_404(request, user, 'case')
-
     status_code = status.HTTP_200_OK
     error_count = 0
-    primary_info_form = PrimaryExaminationInformationForm()
-    primary_info_form.set_values_from_instance(examination)
-    secondary_info_form = SecondaryExaminationInformationForm()
-    secondary_info_form.set_values_from_instance(examination)
-    bereaved_info_form = BereavedInformationForm()
-    bereaved_info_form.set_values_from_instance(examination)
-    urgency_info_form = UrgencyInformationForm()
-    urgency_info_form.set_values_from_instance(examination)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        examination = PatientDetails.load_by_id(examination_id, user.auth_token)
+        if not examination:
+            return render_404(request, user, 'case')
+
+        primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
+        secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
+        bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
+        urgency_info_form = UrgencyInformationForm().set_values_from_instance(examination)
+
+    elif request.method == 'POST':
 
         primary_info_form = PrimaryExaminationInformationForm(request.POST)
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
+        examination = PatientDetails().set_primary_info_values(primary_info_form) \
+            .set_secondary_info_values(secondary_info_form).set_bereaved_info_values(bereaved_info_form) \
+            .set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
@@ -103,9 +106,8 @@ def edit_examination_patient_details(request, examination_id):
             submission.update(bereaved_info_form.for_request())
             submission.update(urgency_info_form.for_request())
             submission['id'] = examination_id
-            submission['completed'] = 'true' if examination.completed else 'false'
 
-            response = request_handler.update_patient_details(examination_id, submission, user.auth_token)
+            response = PatientDetails.update(examination_id, submission, user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and request.GET.get('nextTab'):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
@@ -121,6 +123,11 @@ def edit_examination_patient_details(request, examination_id):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
+    patient = {
+        "name": examination.full_name(),
+        "nhs_number": examination.get_nhs_number()
+    }
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -132,6 +139,7 @@ def edit_examination_patient_details(request, examination_id):
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
+        "patient": patient
     }
 
     return render(request, 'examinations/edit_patient_details.html', context, status=status_code)
@@ -144,16 +152,14 @@ def edit_examination_medical_team(request, examination_id):
         return redirect_to_login()
 
     # check the examination exists
-    examination = Examination.load_by_id(examination_id, user.auth_token)
-    if not examination:
-        return render_404(request, user, 'case')
+    # TODO add 404 check (currently not possible from medical_team endpoint
 
     if request.method == 'POST':
         # attempt to post and get return form
         medical_team_members_form, status_code, errors = __post_medical_team_form(request, examination_id,
                                                                                   user.auth_token)
     else:
-        # get a simple form
+        # the GET medical team form
         medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
         medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
@@ -187,8 +193,10 @@ def __post_medical_team_form(request, examination_id, auth_token):
 
 
 def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user):
-    medical_examiners = people_request_handler.get_medical_examiners_list(user.auth_token)
-    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list(user.auth_token)
+    medical_examiners = people_request_handler.get_medical_examiners_list_for_examination(user.auth_token,
+                                                                                          examination_id)
+    medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list_for_examination(
+        user.auth_token, examination_id)
     modal_config = get_tab_change_modal_config()
     context = {
         'session_user': user,
@@ -229,23 +237,30 @@ def get_tab_change_modal_config():
 
 def edit_examination_case_breakdown(request, examination_id):
     user = User.initialise_with_token(request)
+    status_code = status.HTTP_200_OK
+
+    if request.method == 'POST':
+        form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
 
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = CaseBreakdown.load_by_id(examination_id, user.auth_token)
+    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
 
-    if not examination:
+    if not type(examination) == CaseBreakdown:
         context = {
             'session_user': user,
-            'error': NotFoundError('case'),
+            'error': examination,
         }
 
-        return render(request, 'errors/base_error.html', context, status=status.HTTP_404_NOT_FOUND)
-
-    status_code = status.HTTP_200_OK
+        return render(request, 'errors/base_error.html', context, status=examination.status_code)
 
     forms = user.get_forms_for_role()
+
+    patient = {
+        "name": examination.patient_name,
+        "nhs_number": examination.nhs_number
+    }
 
     context = {
         'session_user': user,
@@ -253,7 +268,22 @@ def edit_examination_case_breakdown(request, examination_id):
         'forms': forms,
         'qap_form': examination.qap_discussion,
         "case_breakdown": examination,
-        'bereaved_form': {"use_default_bereaved": True}
+        'bereaved_form': {"use_default_bereaved": True},
+        'latest_admission_form': examination.latest_admission,
+        'patient': patient
+
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
+
+
+def __post_case_breakdown_event(request, user, examination_id):
+    form = event_form_parser(request.POST)
+    if form.is_valid():
+        response = event_form_submitter(user.auth_token, examination_id, form)
+        status_code = response.status_code
+        errors = {'count': 0}
+    else:
+        errors = form.errors
+        status_code = status.HTTP_400_BAD_REQUEST
+    return form, status_code, errors

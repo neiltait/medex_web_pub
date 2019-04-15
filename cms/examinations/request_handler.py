@@ -43,12 +43,12 @@ def update_patient_details(examination_id, submission, auth_token):
         return ExaminationMocks.get_successful_patient_details_update_response()
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/patient_details' % (settings.API_URL, examination_id),
-                            submission)
+                                submission)
 
 
 def load_medical_team_by_id(examination_id, auth_token):
     if settings.LOCAL:
-        return ExaminationMocks.get_successful_medical_team_load_response()
+        return ExaminationMocks.get_successful_medical_team_load_response(examination_id)
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id))
 
@@ -72,4 +72,36 @@ def load_case_breakdown_by_id(examination_id, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_breakdown_load_response()
     else:
-        return MedexRequest.get(auth_token, '%s/examinations/%s/case_breakdown' % (settings.API_URL, examination_id))
+        return MedexRequest.get(auth_token, '%s/examinations/%s/casebreakdown' % (settings.API_URL, examination_id))
+
+
+def create_pre_scrutiny_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/prescrutiny' % (settings.API_URL, examination_id),
+                                submission)
+
+
+def create_other_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/other' % (settings.API_URL, examination_id),
+                            submission)
+
+
+def create_meo_summary_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/meo_summary' % (settings.API_URL, examination_id),
+                            submission)
+
+
+def create_admission_notes_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/admission' % (settings.API_URL, examination_id),
+                                submission)

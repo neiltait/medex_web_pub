@@ -7,8 +7,10 @@ from unittest.mock import patch
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm
-from examinations.models import Examination, PatientDetails, ExaminationOverview
+    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
+    AdmissionNotesEventForm
+from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam
+from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime
@@ -25,19 +27,22 @@ class ExaminationsViewsTests(MedExTestCase):
         alerts_list = self.get_context_value(response.context, 'alerts')
         self.assertEqual(len(alerts_list), 0)
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_create_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
         response = self.client.get('/cases/create')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    def test_create_case_endpoint_redirects_to_home_if_creation_succeeds(self):
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_successful_case_creation_response_with_id_1())
+    def test_create_case_endpoint_redirects_to_examination_page_if_creation_succeeds(self, post_response):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
         form_data["create-and-continue"] = "Create case and continue"
         response = self.client.post('/cases/create', form_data)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/')
+        self.assertEqual(response.url, '/cases/1/patient-details')
 
     def test_case_create_add_another_case_redirects_to_case_create(self):
         self.set_auth_cookies()
@@ -47,7 +52,8 @@ class ExaminationsViewsTests(MedExTestCase):
         form = self.get_context_value(response.context, "form")
         self.assertEqual(form.first_name, "")
 
-    @patch('examinations.request_handler.post_new_examination', return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
     def test_create_case_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_case_create):
         self.set_auth_cookies()
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
@@ -66,7 +72,8 @@ class ExaminationsViewsTests(MedExTestCase):
 
     #### Edit case tests
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_edit_page_when_not_logged_in_redirects_to_login(self, mock_user_validation):
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -80,15 +87,17 @@ class ExaminationsViewsTests(MedExTestCase):
 
     #### Patient details tests
 
-    @patch('examinations.request_handler.load_patient_details_by_id', return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
-    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code\
+    @patch('examinations.request_handler.load_patient_details_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
+    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code \
                     (self, mock_case_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_edit_patient_details_page_redirects_to_landing_when_logged_out(self, mock_user_validation):
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -109,7 +118,8 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
 
-    @patch('examinations.request_handler.update_patient_details', return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
     def test_submitting_a_valid_form_that_fails_on_the_api_returns_the_code_from_the_api(self, mock_update):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
@@ -144,19 +154,38 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_loading_the_case_breakdown_screen_when_not_logged_in_redirects_to_login(self, mock_validate):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    @patch('examinations.request_handler.load_case_breakdown_by_id', return_value=ExaminationMocks.get_unsuccessful_case_load_response())
+    @patch('examinations.request_handler.load_case_breakdown_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
     def test_loading_the_case_breakdown_screen_returns_error_page_with_invalid_case_id(self, mock_breakdown_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
+
+    @patch('examinations.request_handler.create_pre_scrutiny_event', return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
+    def test_posting_an_valid_form_that_fails_on_the_api_returns_the_api_response_code(self, mock_pre_scrutiny_create):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+        response = self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code,
+                         ExaminationMocks.get_unsuccessful_timeline_event_create_response().status_code)
+        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
+
+    def test_posting_an_valid_form_that_succeeds_on_the_api_returns_the_api_response_code(self):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+        response = self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code,
+                         ExaminationMocks.get_successful_timeline_event_create_response().status_code)
+        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
 
 class ExaminationsFormsTests(MedExTestCase):
@@ -472,6 +501,15 @@ class ExaminationsFormsTests(MedExTestCase):
         result = form.is_valid()
         self.assertIsFalse(result)
 
+    def test_api_response_transformed_to_not_known_if_TOD_at_midnight(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        loaded_data['timeOfDeath'] = '00:00:00'
+
+        patient_details = PatientDetails(loaded_data)
+        form = PrimaryExaminationInformationForm()
+        form.set_values_from_instance(patient_details)
+
+        self.assertIsTrue(form.time_of_death_not_known)
 
     #### Secondary Info Form tests
 
@@ -540,13 +578,139 @@ class ExaminationsFormsTests(MedExTestCase):
 
     #### Medical Team Form tests
 
-    def test_medical_team_member_form_initialised_empty_returns_as_valid(self):
+    def test_medical_team_member_form_initialised_empty_returns_as_not_valid(self):
         form = MedicalTeamMembersForm()
-        self.assertIsTrue(form.is_valid())
+        self.assertIsFalse(form.is_valid())
+        self.assertEqual(form.errors['count'], 1)
 
     def test_medical_team_member_form_initialised_with_content_returns_as_valid(self):
         form = MedicalTeamMembersForm(ExaminationMocks.get_medical_team_tab_form_data())
         self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_initialised_with_valid_medical_team_returns_as_valid(self):
+        medical_team = MedicalTeam(obj_dict=ExaminationMocks.get_medical_team_content())
+        form = MedicalTeamMembersForm(medical_team=medical_team)
+
+        self.assertIsTrue(form.is_valid())
+
+    def test_medical_team_member_form_without_consultant_1_is_not_valid(self):
+        mock_data = ExaminationMocks.get_medical_team_tab_form_data()
+        mock_data['consultant_name_1'] = ""
+        mock_data['consultant_role_1'] = ""
+        mock_data['consultant_organisation_1'] = ""
+        mock_data['consultant_phone_number_1'] = ""
+        form = MedicalTeamMembersForm(mock_data)
+
+        self.assertIsFalse(form.is_valid())
+
+    # PreScrutinyEventForm
+
+    def test_is_valid_returns_true_if_the_pre_scrutiny_form_is_valid(self):
+        form = PreScrutinyEventForm({})
+        self.assertIsTrue(form.is_valid())
+
+    def test_for_request_correctly_maps_the_pre_scrutiny_form_for_the_api(self):
+        me_thoughts = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        cod = 'Expected'
+        possible_cod_1a = 'Cause of death'
+        possible_cod_1b = ''
+        possible_cod_1c = ''
+        possible_cod_2 = ''
+        ops = 'IssueAnMccd'
+        gr = 'Yes'
+        grt = 'Palliative care were called too late.'
+        add_event_to_timeline = 'pre-scrutiny'
+
+        form_data = {
+            'me-thoughts': me_thoughts,
+            'cod': cod,
+            'possible-cod-1a': possible_cod_1a,
+            'possible-cod-1b': possible_cod_1b,
+            'possible-cod-1c': possible_cod_1c,
+            'possible-cod-2': possible_cod_2,
+            'ops': ops,
+            'gr': gr,
+            'grt': grt,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+        form = PreScrutinyEventForm(form_data)
+        result = form.for_request()
+        self.assertEqual(result.get('medicalExaminerThoughts'), me_thoughts)
+        self.assertEqual(result.get('circumstancesOfDeath'), cod)
+        self.assertEqual(result.get('causeOfDeath1a'), possible_cod_1a)
+        self.assertEqual(result.get('causeOfDeath1b'), possible_cod_1b)
+        self.assertEqual(result.get('causeOfDeath1c'), possible_cod_1c)
+        self.assertEqual(result.get('causeOfDeath2'), possible_cod_2)
+        self.assertEqual(result.get('outcomeOfPreScrutiny'), ops)
+        self.assertEqual(result.get('clinicalGovernanceReview'), gr)
+        self.assertEqual(result.get('clinicalGovernanceReviewText'), grt)
+        self.assertEqual(result.get('isFinal'), True)
+
+    # AdmissionNotesEventForm
+
+    def test_is_valid_returns_true_if_the_admission_notes_form_is_valid(self):
+        form = AdmissionNotesEventForm({})
+        self.assertIsTrue(form.is_valid())
+
+    def test_for_request_correctly_maps_the_admission_notes_form_for_the_api(self):
+        admission_day = 2
+        admission_month = 2
+        admission_year = 2019
+        admission_date_unknown = False
+        admission_time = '10:00'
+        admission_time_unknown = False
+        admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        coroner_referral = 'no'
+        add_event_to_timeline = 'admission-notes'
+
+        form_data = {
+            'day_of_last_admission': admission_day,
+            'month_of_last_admission': admission_month,
+            'year_of_last_admission': admission_year,
+            'date_of_last_admission_not_known': admission_date_unknown,
+            'time_of_last_admission': admission_time,
+            'time_of_last_admission_not_known': admission_time_unknown,
+            'latest_admission_notes': admission_notes,
+            'latest-admission-suspect-referral': coroner_referral,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+
+        form = AdmissionNotesEventForm(form_data)
+        result = form.for_request()
+
+        self.assertEqual(result.get("notes"), admission_notes)
+        self.assertEqual(result.get("admittedDate"), form.admission_date())
+        self.assertEqual(result.get("admittedTime"), admission_time)
+        self.assertEqual(result.get("immediateCoronerReferral"), False)
+        self.assertEqual(result.get("isFinal"), True)
+
+    def test_admission_date_returns_none_if_admission_date_unknown(self):
+        admission_day = ''
+        admission_month = ''
+        admission_year = ''
+        admission_date_unknown = True
+        admission_time = '10:00'
+        admission_time_unknown = False
+        admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        coroner_referral = 'no'
+        add_event_to_timeline = 'admission-notes'
+
+        form_data = {
+            'day_of_last_admission': admission_day,
+            'month_of_last_admission': admission_month,
+            'year_of_last_admission': admission_year,
+            'date_of_last_admission_not_known': admission_date_unknown,
+            'time_of_last_admission': admission_time,
+            'time_of_last_admission_not_known': admission_time_unknown,
+            'latest_admission_notes': admission_notes,
+            'latest-admission-suspect-referral': coroner_referral,
+            'add-event-to-timeline': add_event_to_timeline
+        }
+
+        form = AdmissionNotesEventForm(form_data)
+        result = form.admission_date()
+
+        self.assertIsNone(result)
 
 
 class ExaminationsModelsTests(MedExTestCase):
@@ -557,7 +721,8 @@ class ExaminationsModelsTests(MedExTestCase):
         examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertEqual(type(examination), Examination)
 
-    @patch('examinations.request_handler.load_by_id', return_value=ExaminationMocks.get_unsuccessful_case_load_response())
+    @patch('examinations.request_handler.load_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
     def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
         examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(examination)
@@ -701,3 +866,26 @@ class ExaminationsModelsTests(MedExTestCase):
         result = examination_overview.calc_created_days_ago()
         expected_days = 0
         self.assertEqual(result, expected_days)
+
+
+class ExaminationsUtilsTests(MedExTestCase):
+
+    # event_form_parser tests
+
+    def test_event_form_parser_returns_a_pre_scrutiny_form_when_given_pre_scrutiny_form_data(self):
+        form_data = {
+            'add-event-to-timeline': 'pre-scrutiny'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), PreScrutinyEventForm)
+
+    def test_event_form_parser_returns_a_admission_notes_form_when_given_admission_notes_form_data(self):
+        form_data = {
+            'date_of_last_admission_not_known': True,
+            'time_of_last_admission_not_known': True,
+            'add-event-to-timeline': 'admission-notes'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), AdmissionNotesEventForm)

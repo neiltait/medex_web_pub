@@ -31,10 +31,10 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'user_id': '1',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email_address': 'test.user@email.com',
+            'userId': '1',
+            'firstName': 'Test',
+            'lastName': 'User',
+            'emailAddress': 'test.user@email.com',
         }
 
     @classmethod
@@ -71,10 +71,10 @@ class UserMocks:
     @classmethod
     def get_empty_user_dict(cls):
         return {
-            'user_id': None,
-            'first_name': None,
-            'last_name': None,
-            'email_address': None,
+            'userId': None,
+            'firstName': None,
+            'lastName': None,
+            'email': None,
         }
 
     @classmethod
@@ -130,16 +130,22 @@ class UserMocks:
     def get_meo_user_list(cls):
         return [
             {
-                'id': '1',
-                'name': 'Sofia Skouros',
+                'userId': '6',
+                'firstName': 'Sofia',
+                'lastName': 'Skouros',
+                "userRole": "MedicalExaminerOfficer"
             },
             {
-                'id': '2',
-                'name': 'Alex McPherson',
+                'userId': '7',
+                'firstName': 'Alex',
+                'lastName': 'McPherson',
+                "userRole": "MedicalExaminerOfficer"
             },
             {
-                'id': '3',
-                'name': 'Suchi Kandukuri',
+                'userId': '8',
+                'firstName': 'Suchi',
+                'lastName': 'Kandukuri',
+                "userRole": "MedicalExaminerOfficer"
             }
         ]
 
@@ -406,10 +412,34 @@ class ExaminationMocks:
         }
 
     @classmethod
-    def get_assigned_medical_team_form_data(cls):
+    def get_medical_team_content(cls):
         return {
-            'medical_examiner': 'Dr Charles Li',
-            'medical_examiners_officer': 'Erica Barber',
+            'consultantResponsible': {
+                'name': 'Dr Arthur Gunz'
+            },
+            'consultantsOther': [
+                {
+                    'name': 'Dr Yolanda Anders'
+                }
+            ],
+            'qap': {
+                'name': 'Dr Kiran Kandukuri'
+            },
+            'generalPractitioner': {
+                'name': ''
+            },
+            'medicalExaminer': {
+                'userId': '1',
+                'firstName': 'Simon',
+                'lastName': 'Li',
+                'email': 's.li@methods.co.uk'
+            },
+            'medicalExaminerOfficer': {
+                'userId': '2',
+                'firstName': 'Janet',
+                'lastName': 'Matthews',
+                'email': 'j.matthews@methods.co.uk'
+            }
         }
 
     @classmethod
@@ -475,58 +505,103 @@ class ExaminationMocks:
         }
 
     @classmethod
-    def get_medical_team_load_response_content(cls):
-        return {
-            "consultantResponsible": {
-                "name": "Peter Hipkiss",
-                "role": "Oncologist",
-                "organisation": "St Thomas's hospital",
-                "phone": "12345",
-                "notes": ""
-            },
-            "consultantsOther": [],
-            "generalPractitioner": {
-                "name": "",
-                "role": "",
-                "organisation": "",
-                "phone": "",
-                "notes": ""
-            },
-            "qap": {
-                "name": "",
-                "role": "",
-                "organisation": "",
-                "phone": "",
-                "notes": ""
-            },
-            "nursingTeamInformation": "",
-            "medicalExaminer": {
-                "userId": "string",
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminerOfficer"
-            },
-            "medicalExaminerOfficer": {
-                "userId": "string",
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "userRole": "MedicalExaminerOfficer"
-            },
-            "errors": {
-                "additionalProp1": [
-                    ""
-                ],
-                "additionalProp2": [
-                    ""
-                ],
-                "additionalProp3": [
-                    ""
-                ]
-            },
-            "success": "true"
-        }
+    def get_medical_team_load_response_content(cls, examination_id=1):
+        if examination_id == 1:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "",
+                "medicalExaminerOfficerUserId": "",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
+        elif examination_id == 2:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "qap": {
+                    "name": "Alessandro da Silva",
+                    "role": "General Practitioner",
+                    "organisation": "The Heathside Medical Center",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "",
+                "medicalExaminerOfficerUserId": "",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
+        else:
+            return {
+                "consultantResponsible": {
+                    "name": "Peter Hipkiss",
+                    "role": "Oncologist",
+                    "organisation": "St Thomas's hospital",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "generalPractitioner": {
+                    "name": "Patricia van Helden",
+                    "role": "General Practitioner",
+                    "organisation": "Cotton Street General Surgery",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "qap": {
+                    "name": "Alessandro da Silva",
+                    "role": "General Practitioner",
+                    "organisation": "The Heathside Medical Center",
+                    "phone": "12345",
+                    "notes": ""
+                },
+                "nursingTeamInformation": "",
+                "medicalExaminerUserId": "4",
+                "medicalExaminerOfficerUserId": "2",
+                "errors": {
+                    "additionalProp1": [
+                        ""
+                    ],
+                    "additionalProp2": [
+                        ""
+                    ],
+                    "additionalProp3": [
+                        ""
+                    ]
+                },
+                "success": "true"
+            }
 
     @classmethod
     def get_case_index_response_content(cls):
@@ -599,86 +674,402 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_pre_scrutiny_create_event_data(cls):
+        return {
+            'me-thoughts': "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman.",
+            'cod': 'Expected',
+            'possible-cod-1a': 'Cause of death',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'IssueAnMccd',
+            'gr': 'Yes',
+            'grt': 'Palliative care were called too late.',
+            'add-event-to-timeline': 'pre-scrutiny'
+        }
+
+    @classmethod
     def get_case_breakdown_response_content(cls):
         return {
             "patientName": 'John Doe',
             "nhsNumber": '0123-456-789',
-            "dateOfDeath": "2019-03-12T00:00:00.000Z",
+            "dateOfDeath": "2019-03-11T13:00:00.000Z",
             "timeOfDeath": "13:00",
-            "events": [
-                {
-                    "latest": {
-                        "type": "John Doe died",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-29T10:48:15.749Z",
-                        "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
-                    },
-                    "history": [
-                        {
-                            "type": "John Doe died",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-29T10:48:15.749Z",
-                            "body": "DOD 2019-03-12T00:00:00.000Z \nTOD 13:00",
-                        }
-                    ]
+            "caseBreakdown": {
+                "patientDeathEvent": {
+                    "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                    "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                    "isFinal": True,
+                    "eventType": "PatientDied",
+                    "dateOfDeath": "2019-03-10T10:01:34.257Z",
+                    "timeOfDeath": "11:11:00",
+                    "created": "2019-03-10T18:01:34.257Z"
                 },
-                {
-                    "latest": {
-                        "type": "Admission Notes",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-31T10:48:15.749Z",
-                        "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
-                    },
+                "otherEvents": {
                     "history": [
                         {
-                            "type": "Admission Notes",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-18T10:48:15.749Z",
-                            "body": "Patient was admitted on 10.03.2019 The length of their last admission was 5 days",
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "created": "2019-03-12T10:30:43.019Z",
+                            "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "is_final": True,
+                            "event_type": "Other"
                         }
-                    ]
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                            "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                            "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                            "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                            "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                            "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": True,
+                        "event_type": "Other"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "other_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                            "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                            "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                            "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                            "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                            "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": False,
+                        "event_type": "Other"
+                    },
                 },
-                {
-                    "latest": {
-                        "type": "Medical history",
-                        "user": {
-                            "id": '1',
-                            "name": 'John Smith',
-                            'role': 'MEO'
-                        },
-                        "createdDate": "2019-03-31T10:48:15.749Z",
-                        "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
-                    },
+                "preScrutiny": {
                     "history": [
                         {
-                            "type": "Medical history",
-                            "user": {
-                                "id": '1',
-                                "name": 'John Smith',
-                                'role': 'MEO'
-                            },
-                            "createdDate": "2019-03-18T10:48:15.749Z",
-                            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur dolore Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut laborr sit amet, consecteur doloreLorem ipsum dolor sit amet, consectetur adipiscing elit, and alsotext goes here",
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "created": "2019-03-12T10:30:43.019Z",
+                            "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                       "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                       "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                       "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                       "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                       "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "is_final": True,
+                            "event_type": "PreScrutiny",
+                            "circumstances_of_death": "Expected",
+                            "cause_of_death": [
+                            ],
+                            "outcome_of_pre_scrutiny": "IssueAnMccd",
+                            "clinical_governance_review": "Yes",
+                            "clinical_governance_review_text": "Palliative care were called too late."
                         }
-                    ]
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                   "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                   "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                   "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                   "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                   "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": True,
+                        "event_type": "PreScrutiny",
+                        "circumstances_of_death": "Expected",
+                        "cause_of_death": [
+                        ],
+                        "outcome_of_pre_scrutiny": "IssueAnMccd",
+                        "clinical_governance_review": "Yes",
+                        "clinical_governance_review_text": "Yes"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "pre_scrutiny_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                   "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                   "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                   "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                   "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                   "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "is_final": False,
+                        "event_type": "PreScrutiny",
+                        "circumstances_of_death": "Expected",
+                        "cause_of_death": [
+                        ],
+                        "outcome_of_pre_scrutiny": "IssueAnMccd",
+                        "clinical_governance_review": "Yes",
+                        "clinical_governance_review_text": "Yes"
+                    }
+                },
+                "bereavedDiscussion": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "BereavedDiscussion",
+                            "created": "2019-03-12T10:30:43.019Z",
+                            "participant_full_name": "Jane Doe",
+                            "participant_relationship": "Wife",
+                            "participant_phone_number": "01234 567890",
+                            "present_at_death": "Yes",
+                            "informed_at_death": "Yes",
+                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                            "discussion_unable_happen": False,
+                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "BereavedDiscussion",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "participant_full_name": "Jane Doe",
+                        "participant_relationship": "Wife",
+                        "participant_phone_number": "01234 567890",
+                        "present_at_death": "Yes",
+                        "informed_at_death": "Yes",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": False,
+                        "event_type": "BereavedDiscussion",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "participant_full_name": "Jane Doe",
+                        "participant_relationship": "Wife",
+                        "participant_phone_number": "01234 567890",
+                        "present_at_death": "Yes",
+                        "informed_at_death": "Yes",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "bereaved_discussion_outcome": "CouseOfDeathAccepted"
+                    }
+                },
+                "meoSummary": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "MeoSummary",
+                            "created": "2019-03-12T10:30:43.019Z",
+                            "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                               "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                               "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                               "consectetur adipiscing elit, sed do eiusmod tempor"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "MeoSummary",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                           "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                           "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                           "consectetur adipiscing elit, sed do eiusmod tempor"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": False,
+                        "event_type": "MeoSummary",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "summary_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                           "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                           "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                           "consectetur adipiscing elit, sed do eiusmod tempor"
+                    }
+                },
+                "qapDiscussion": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "is_final": True,
+                            "event_type": "QapDiscussion",
+                            "created": "2019-03-13T10:30:43.019Z",
+                            "participant_roll": "Consultant",
+                            "participant_organisation": "A Hospital",
+                            "participant_phone_number": "01234 567890",
+                            "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                            "discussion_unable_happen": False,
+                            "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "qap_discussion_outcome": "MccdToBeIssued"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": True,
+                        "event_type": "QapDiscussion",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "participant_roll": "Consultant",
+                        "participant_organisation": "A Hospital",
+                        "participant_phone_number": "01234 567890",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "qap_discussion_outcome": "MccdToBeIssued"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "is_final": False,
+                        "event_type": "QapDiscussion",
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "participant_roll": "Consultant",
+                        "participant_organisation": "A Hospital",
+                        "participant_phone_number": "01234 567890",
+                        "date_of_conversation": "2019-04-08T08:31:43.019Z",
+                        "discussion_unable_happen": False,
+                        "discussion_details": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "qap_discussion_outcome": "MccdToBeIssued"
+                    }
+                },
+                "medicalHistory": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "event_type": "MedicalHistory",
+                            "is_final": True,
+                            "created": "2019-03-12T10:30:43.019Z",
+                            "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                          "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                          "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                          "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                          "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                          "consectetur adipiscing elit, sed do eiusmod tempor "
+                                                          "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                                          "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                                          "goes here"
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "event_type": "MedicalHistory",
+                        "is_final": True,
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                      "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                      "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                      "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                      "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                      "consectetur adipiscing elit, sed do eiusmod tempor "
+                                                      "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                                      "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                                      "goes here"
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "event_type": "MedicalHistory",
+                        "is_final": False,
+                        "created": "2019-03-12T10:30:43.019Z",
+                        "medical_history_event_text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                                                      "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                      "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                      "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                      "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                      "consectetur adipiscing elit, sed do eiusmod tempor "
+                                                      "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
+                                                      "dolor sit amet, consectetur adipiscing elit, and alsotext "
+                                                      "goes here"
+                    }
+                },
+                "admissionNotes": {
+                    "history": [
+                        {
+                            "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                            "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                            "admission_event_notes": "Notes about latest admission to hospital: James Marshall was "
+                                                     "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
+                                                     "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
+                                                     "improvement...more notes would be added here",
+                            "is_final": True,
+                            "event_type": "Admission",
+                            "admitted_date_time": "2019-03-10T08:31:43.019Z",
+                            "immediate_coroner_referral": False,
+                            "created": "2019-03-12T10:30:43.019Z",
+                        }
+                    ],
+                    "latest": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "admission_event_notes": "The length of their last admission was 5 days",
+                        "is_final": True,
+                        "event_type": "Admission",
+                        "admitted_date_time": "2019-03-10T08:31:43.019Z",
+                        "immediate_coroner_referral": False,
+                        "created": "2019-03-12T10:30:43.019Z",
+                    },
+                    "usersDraft": {
+                        "event_id": "8FHWRFG-WE4T24TGF-WT4GW3R",
+                        "user_id": "WERGT-243TRGS-WE4TG-WERGT",
+                        "admission_event_notes": "The length of their last admission was 5 days",
+                        "is_final": False,
+                        "event_type": "Admission",
+                        "admitted_date_time": "2019-03-10T08:31:43.019Z",
+                        "immediate_coroner_referral": False,
+                        "created": "2019-03-12T10:30:43.019Z",
+                    }
                 }
-            ],
+            },
             "errors": {
                 "additionalProp1": [
                     "string"
@@ -697,7 +1088,14 @@ class ExaminationMocks:
     def get_successful_case_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(None).encode('utf-8')
+        response._content = json.dumps({"examinationId": "example"}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_case_creation_response_with_id_1(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({"examinationId": "1"}).encode('utf-8')
         return response
 
     @classmethod
@@ -792,10 +1190,10 @@ class ExaminationMocks:
         return response
 
     @classmethod
-    def get_successful_medical_team_load_response(cls):
+    def get_successful_medical_team_load_response(cls, examination_id):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        response._content = json.dumps(cls.get_medical_team_load_response_content(examination_id=examination_id)).encode('utf-8')
         return response
 
     @classmethod
@@ -803,6 +1201,20 @@ class ExaminationMocks:
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'eventId': '1'}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_timeline_event_create_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None).encode('utf-8')
         return response
 
 
@@ -831,4 +1243,3 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
-

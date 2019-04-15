@@ -72,10 +72,10 @@ class User:
 
             if authenticated:
                 response_data = response.json()
-                self.user_id = response_data['user_id']
-                self.first_name = response_data['first_name']
-                self.last_name = response_data['last_name']
-                self.email_address = response_data['email_address']
+                self.user_id = response_data['userId']
+                self.first_name = response_data['firstName']
+                self.last_name = response_data['lastName']
+                self.email_address = response_data['emailAddress']
                 self.load_permissions()
 
             return authenticated
