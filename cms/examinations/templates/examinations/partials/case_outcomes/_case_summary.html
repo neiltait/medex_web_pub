@@ -1,0 +1,53 @@
+<div class="case-summary flex-row">
+    <div class="conversation-outcomes">
+        <div class="outcome">
+            <p>
+                Outcome of pre scrutiny
+            </p>
+
+            <p class="outcome-description">
+                {{case_outcome.display_pre_scrutiny_outcome}}
+            </p>
+
+            <p>
+                <a href="#">Not correct?</a>
+            </p>
+        </div>
+
+        <div class="outcome">
+            <p>
+                Outcome of QAP/ME discussion
+            </p>
+
+            <p class="outcome-description">
+                {{case_outcome.display_qap_outcome}}
+            </p>
+
+            <p>
+                <a href="#">Not correct?</a>
+            </p>
+        </div>
+
+        <div class="outcome">
+            <p>
+                Outcome of representative discussion
+            </p>
+
+            <p class="outcome-description">
+                {{case_outcome.display_representative_outcome}}
+            </p>
+
+            <p>
+                <a href="#">Not correct?</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="overall-outcomes">
+        <div class="outcome">
+            <p class="outcome-description">
+                {{case_outcome.display_outcome_summary}}
+            </p>
+        </div>
+    </div>
+</div>
