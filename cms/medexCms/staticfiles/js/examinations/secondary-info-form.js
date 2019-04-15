@@ -7,8 +7,8 @@
 
     SecondaryInfoForm.prototype = {
         setup: function () {
-            this.personalEffectsGroup = new AdditionalInfoGroup(this.form.find('#implant-devices'), 'yes');
-            this.personalEffectsGroup = new AdditionalInfoGroup(this.form.find('#personal-effects'), 'yes');
+            this.implantDevicesGroup = new AdditionalInfoGroup(this.form.find('#implant-devices'), 'true');
+            this.personalEffectsGroup = new AdditionalInfoGroup(this.form.find('#personal-effects'), 'true');
         }
     }
 

@@ -1,8 +1,8 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
 from errors.utils import handle_error
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, API_DATE_FORMAT
 
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
@@ -132,31 +132,36 @@ class PatientDetails:
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
         self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
         self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
-        self.time_of_death = obj_dict.get("timeOfDeath")
         self.death_occurred_location_id = obj_dict.get("placeDeathOccured")
         self.medical_examiner_office_responsible = obj_dict.get("medicalExaminerOfficeResponsible")
         self.out_of_hours = obj_dict.get("outOfHours")
 
-        self.house_name_number = obj_dict.get("houseNameNumber")
-        self.street = obj_dict.get("street")
-        self.town = obj_dict.get("town")
-        self.county = obj_dict.get("county")
-        self.country = obj_dict.get("country")
-        self.postcode = obj_dict.get("postCode")
-        self.last_occupation = obj_dict.get("lastOccupation")
-        self.organisation_care_before_death_location_id = obj_dict.get("organisationCareBeforeDeathLocationId")
+        self.house_name_number = fallback_to(obj_dict.get("houseNameNumber"), '')
+        self.street = fallback_to(obj_dict.get("street"), '')
+        self.town = fallback_to(obj_dict.get("town"), '')
+        self.county = fallback_to(obj_dict.get("county"), '')
+        self.country = fallback_to(obj_dict.get("country"), '')
+        self.postcode = fallback_to(obj_dict.get("postCode"), '')
+        self.last_occupation = fallback_to(obj_dict.get("lastOccupation"), '')
+        self.organisation_care_before_death_location_id = fallback_to(
+            obj_dict.get("organisationCareBeforeDeathLocationId"), '')
         self.any_implants = 'true' if obj_dict.get("anyImplants") else 'false'
-        self.implant_details = obj_dict.get("implantDetails")
-        self.funeral_directors = obj_dict.get("funeralDirectors")
+        self.implant_details = fallback_to(obj_dict.get("implantDetails"), '')
+        self.funeral_directors = fallback_to(obj_dict.get("funeralDirectors"), '')
         self.any_personal_effects = 'true' if obj_dict.get("anyPersonalEffects") else 'false'
-        self.personal_affects_details = obj_dict.get("personalEffectDetails")
+        self.personal_affects_details = fallback_to(obj_dict.get("personalEffectDetails"), '')
 
         self.cultural_priority = bool_to_string(obj_dict.get("culturalPriority"))
-        self.faith_priority = bool_to_string("faithPriority")
-        self.child_priority = bool_to_string("childPriority")
-        self.coroner_priority = bool_to_string("coronerPriority")
-        self.other_priority = bool_to_string("otherPriority")
-        self.priority_details = obj_dict.get("priorityDetails")
+        self.faith_priority = bool_to_string(obj_dict.get("faithPriority"))
+        self.child_priority = bool_to_string(obj_dict.get("childPriority"))
+        self.coroner_priority = bool_to_string(obj_dict.get("coronerPriority"))
+        self.other_priority = bool_to_string(obj_dict.get("otherPriority"))
+        self.priority_details = fallback_to(obj_dict.get("priorityDetails"), '')
+
+        if is_empty_time(obj_dict.get("timeOfDeath")):
+            self.time_of_death = None
+        else:
+            self.time_of_death = obj_dict.get("timeOfDeath")
 
         if not (is_empty_date(obj_dict.get("dateOfBirth")) or obj_dict.get("dateOfBirth") is None):
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
@@ -307,13 +312,12 @@ class CaseBreakdown:
         self.medical_team = medical_team
 
         ## build form objects
-        self.__build_case_breakdown_forms()
+        # self.__build_case_breakdown_forms()
 
     def __build_case_breakdown_forms(self):
         self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
                                                                    self.event_list.get_latest_me_scrutiny_cause_of_death(),
                                                                    self.event_list.get_qap_discussion_draft())
-        self.latest_admission = CaseBreakdownLatestAdmission.from_data(self.event_list.get_latest_admission_draft())
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
@@ -328,6 +332,13 @@ class CaseBreakdown:
 
 
 class ExaminationEventList:
+    QAP_DISCUSSION_EVENT_KEY = 'qapDiscussion'
+    OTHER_EVENT_KEY = 'otherEvents'
+    ADMISSION_NOTES_EVENT_KEY = 'admissionNotes'
+    MEO_SUMMARY_EVENT_KEY = 'meoSummary'
+    MEDICAL_HISTORY_EVENT_KEY = 'medicalHistory'
+    BEREAVED_DISCUSSION_EVENT_KEY = 'bereavedDiscussion'
+    PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
 
     def __init__(self, timeline_items, dod, patient_name, user_role):
         self.events = []
@@ -348,10 +359,10 @@ class ExaminationEventList:
                 self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
             elif key != CaseEvent().INITIAL_EVENT_TYPE:
                 for event in event_type['history']:
-                    if event['is_final']:
-                        self.events.append(CaseEvent.parse_event(event, event_type['latest']['event_id'], self.dod))
+                    if event['isFinal']:
+                        self.events.append(CaseEvent.parse_event(event, event_type['latest']['eventId'], self.dod))
                 if event_type['usersDraft']:
-                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['event_id'],
+                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['eventId'],
                                                              None)
 
     def sort_events_oldest_to_newest(self):
@@ -364,25 +375,25 @@ class ExaminationEventList:
             count += 1
 
     def get_qap_discussion_draft(self):
-        return self.drafts.get(CaseEvent().QAP_DISCUSSION_EVENT_TYPE)
+        return self.drafts.get(self.QAP_DISCUSSION_EVENT_KEY)
 
     def get_other_notes_draft(self):
-        return self.drafts.get(CaseEvent().OTHER_EVENT_TYPE)
+        return self.drafts.get(self.OTHER_EVENT_KEY)
 
     def get_latest_admission_draft(self):
-        return self.drafts.get(CaseEvent().ADMISSION_NOTES_EVENT_TYPE)
+        return self.drafts.get(self.ADMISSION_NOTES_EVENT_KEY)
 
     def get_meo_summary_draft(self):
-        return self.drafts.get(CaseEvent().MEO_SUMMARY_EVENT_TYPE)
+        return self.drafts.get(self.MEO_SUMMARY_EVENT_KEY)
 
     def get_medical_history_draft(self):
-        return self.drafts.get(CaseEvent().MEDICAL_HISTORY_EVENT_TYPE)
+        return self.drafts.get(self.MEDICAL_HISTORY_EVENT_KEY)
 
     def get_bereaved_discussion_draft(self):
-        return self.drafts.get(CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE)
+        return self.drafts.get(self.BEREAVED_DISCUSSION_EVENT_KEY)
 
     def get_me_scrutiny_draft(self):
-        return self.drafts.get(CaseEvent().PRE_SCRUTINY_EVENT_TYPE)
+        return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
 
     def get_latest_me_scrutiny_cause_of_death(self):
         return None
@@ -398,7 +409,7 @@ class CaseEvent:
     MEO_SUMMARY_EVENT_TYPE = 'MeoSummary'
     QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
     MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
-    ADMISSION_NOTES_EVENT_TYPE = 'AdmissionNotes'
+    ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
 
     date_format = '%d.%m.%Y'
@@ -406,21 +417,19 @@ class CaseEvent:
 
     @classmethod
     def parse_event(cls, event_data, latest_id, dod):
-        if event_data['event_type'] == cls.INITIAL_EVENT_TYPE:
-            return CaseInitialEvent(event_data)
-        elif event_data['event_type'] == cls.OTHER_EVENT_TYPE:
+        if event_data.get('eventType') == cls.OTHER_EVENT_TYPE:
             return CaseOtherEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.PRE_SCRUTINY_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.PRE_SCRUTINY_EVENT_TYPE:
             return CasePreScrutinyEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.BEREAVED_DISCUSSION_EVENT_TYPE:
             return CaseBereavedDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEO_SUMMARY_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.MEO_SUMMARY_EVENT_TYPE:
             return CaseMeoSummaryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.QAP_DISCUSSION_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.QAP_DISCUSSION_EVENT_TYPE:
             return CaseQapDiscussionEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.MEDICAL_HISTORY_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.MEDICAL_HISTORY_EVENT_TYPE:
             return CaseMedicalHistoryEvent(event_data, latest_id)
-        elif event_data['event_type'] == cls.ADMISSION_NOTES_EVENT_TYPE:
+        elif event_data.get('eventType') == cls.ADMISSION_NOTES_EVENT_TYPE:
             return CaseAdmissionNotesEvent(event_data, latest_id, dod)
 
     def display_date(self):
@@ -466,11 +475,11 @@ class CaseOtherEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.body = obj_dict.get('other_event_text')
-        self.published = obj_dict.get('is_final')
+        self.body = obj_dict.get('text')
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
 
@@ -482,19 +491,19 @@ class CasePreScrutinyEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.body = obj_dict.get('medical_examiner_thoughts')
-        self.circumstances_of_death = obj_dict.get('circumstances_of_death')
-        self.cause_of_death_1a = obj_dict.get('cause_of_death_1a')
-        self.cause_of_death_1b = obj_dict.get('cause_of_death_1b')
-        self.cause_of_death_1c = obj_dict.get('cause_of_death_1c')
-        self.cause_of_death_2 = obj_dict.get('cause_of_death_2')
-        self.outcome_of_pre_scrutiny = obj_dict.get('outcome_of_pre_scrutiny')
-        self.clinical_governance_review = obj_dict.get('clinical_governance_review')
-        self.clinical_governance_review_text = obj_dict.get('clinical_governance_review_text')
-        self.published = obj_dict.get('is_final')
+        self.body = obj_dict.get('medicalExaminerThoughts')
+        self.circumstances_of_death = obj_dict.get('circumstancesOfDeath')
+        self.cause_of_death_1a = obj_dict.get('causeOfDeath1a')
+        self.cause_of_death_1b = obj_dict.get('causeOfDeath1b')
+        self.cause_of_death_1c = obj_dict.get('causeOfDeath1c')
+        self.cause_of_death_2 = obj_dict.get('causeOfDeath2')
+        self.outcome_of_pre_scrutiny = obj_dict.get('outcomeOfPreScrutiny')
+        self.clinical_governance_review = obj_dict.get('clinicalGovernanceReview')
+        self.clinical_governance_review_text = obj_dict.get('clinicalGovernanceReviewText')
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
 
@@ -506,19 +515,19 @@ class CaseBereavedDiscussionEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.participant_full_name = obj_dict.get('participant_full_name')
-        self.participant_relationship = obj_dict.get('participant_relationship')
-        self.participant_phone_number = obj_dict.get('participant_phone_number')
-        self.present_at_death = obj_dict.get('present_at_death')
-        self.informed_at_death = obj_dict.get('informed_at_death')
-        self.date_of_conversation = obj_dict.get('date_of_conversation')
-        self.discussion_unable_happen = obj_dict.get('discussion_unable_happen')
-        self.discussion_details = obj_dict.get('discussion_details')
-        self.bereaved_discussion_outcome = obj_dict.get('bereaved_discussion_outcome')
-        self.published = obj_dict.get('is_final')
+        self.participant_full_name = obj_dict.get('participantFullName')
+        self.participant_relationship = obj_dict.get('participantRelationship')
+        self.participant_phone_number = obj_dict.get('participantPhoneNumber')
+        self.present_at_death = obj_dict.get('presentAtDeath')
+        self.informed_at_death = obj_dict.get('informedAtDeath')
+        self.date_of_conversation = obj_dict.get('dateOfConversation')
+        self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
+        self.discussion_details = obj_dict.get('discussionDetails')
+        self.bereaved_discussion_outcome = obj_dict.get('bereavedDiscussionOutcome')
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
 
@@ -530,11 +539,11 @@ class CaseMeoSummaryEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.body = obj_dict.get('summary_details')
-        self.published = obj_dict.get('is_final')
+        self.body = obj_dict.get('summaryDetails')
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
 
@@ -546,17 +555,22 @@ class CaseQapDiscussionEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.participant_role = obj_dict.get('participant_roll')
-        self.participant_organisation = obj_dict.get('participant_organisation')
-        self.participant_phone_number = obj_dict.get('participant_phone_number')
-        self.date_of_conversation = parse_datetime(obj_dict.get('date_of_conversation'))
-        self.discussion_unable_happen = obj_dict.get('discussion_unable_happen')
-        self.discussion_details = obj_dict.get('discussion_details')
-        self.qap_discussion_outcome = obj_dict.get('qap_discussion_outcome')
-        self.published = obj_dict.get('is_final')
+        self.participant_role = obj_dict.get('participantRoll')
+        self.participant_organisation = obj_dict.get('participantOrganisation')
+        self.participant_phone_number = obj_dict.get('participantPhoneNumber')
+        self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
+        self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
+        self.discussion_details = obj_dict.get('discussionDetails')
+        self.qap_discussion_outcome = obj_dict.get('qapDiscussionOutcome')
+        self.participantName = obj_dict.get("participantName")
+        self.causeOfDeath1a = obj_dict.get("causeOfDeath1a")
+        self.causeOfDeath1b = obj_dict.get("causeOfDeath1b")
+        self.causeOfDeath1c = obj_dict.get("causeOfDeath1c")
+        self.causeOfDeath2 = obj_dict.get("causeOfDeath2")
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
     def conversation_display_date(self):
@@ -574,11 +588,11 @@ class CaseMedicalHistoryEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.body = obj_dict.get('medical_history_event_text')
-        self.published = obj_dict.get('is_final')
+        self.body = obj_dict.get('text')
+        self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
 
@@ -590,68 +604,26 @@ class CaseAdmissionNotesEvent(CaseEvent):
 
     def __init__(self, obj_dict, latest_id, dod):
         self.number = None
-        self.event_id = obj_dict.get('event_id')
-        self.user_id = obj_dict.get('user_id')
+        self.event_id = obj_dict.get('eventId')
+        self.user_id = obj_dict.get('userId')
         self.created_date = obj_dict.get('created')
-        self.body = obj_dict.get('admission_event_notes')
-        self.admitted_date_time = parse_datetime(obj_dict.get('admitted_date_time'))
-        self.immediate_coroner_referral = obj_dict.get('immediate_coroner_referral')
-        self.published = obj_dict.get('is_final')
+        self.body = obj_dict.get('notes')
+        self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))
+        self.admitted_time = obj_dict.get('admittedTime')
+        self.immediate_coroner_referral = obj_dict.get('immediateCoronerReferral')
+        self.published = obj_dict.get('isFinal')
         self.dod = dod
         self.is_latest = self.event_id == latest_id
 
     def admission_length(self):
-        delta = self.dod - self.admitted_date_time
-        return delta.days
+        if self.dod and self.admitted_date:
+            delta = self.dod - self.admitted_date
+            return delta.days
+        else:
+            return 'Unknown'
 
     def display_coroner_referral(self):
         return 'Yes' if self.immediate_coroner_referral else 'No'
-
-
-class CaseBreakdownLatestAdmission:
-
-    def __init__(self):
-        self.day_of_last_admission = ''
-        self.month_of_last_admission = ''
-        self.year_of_last_admission = ''
-        self.date_of_last_admission_unknown = False
-
-        self.time_of_last_admission = ''
-        self.time_of_last_admission_unknown = False
-
-        self.latest_admission_notes = ''
-        self.suspect_referral = ''
-
-    @classmethod
-    def from_data(cls, draft=None):
-        latest_admission = CaseBreakdownLatestAdmission()
-        if draft is not None:
-            try:
-                latest_admission.day_of_last_admission = draft['day_of_last_admission']
-                latest_admission.month_of_last_admission = draft['month_of_last_admission']
-                latest_admission.year_of_last_admission = draft['year_of_last_admission']
-                latest_admission.date_of_last_admission_unknown = draft['date_of_last_admission_unknown']
-                latest_admission.time_of_last_admission = draft['time_of_last_admission']
-                latest_admission.time_of_last_admission_unknown = draft['time_of_last_admission_unknown']
-                latest_admission.latest_admission_notes = draft['latest_admission_notes']
-                latest_admission.suspect_referral = draft['suspect_referral']
-
-            except KeyError:
-                print('Could not parse latest admission object')
-
-        return latest_admission
-
-    def to_object(self):
-        return {
-            'day_of_last_admission': self.day_of_last_admission,
-            'month_of_last_admission': self.month_of_last_admission,
-            'year_of_last_admission': self.year_of_last_admission,
-            'date_of_last_admission_unknown': self.date_of_last_admission_unknown,
-            'time_of_last_admission': self.time_of_last_admission,
-            'time_of_last_admission_unknown': self.time_of_last_admission_unknown,
-            'latest_admission_notes': self.latest_admission_notes,
-            'suspect_referral': self.suspect_referral,
-        }
 
 
 class CaseBreakdownQAPDiscussion:

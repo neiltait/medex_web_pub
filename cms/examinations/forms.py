@@ -3,7 +3,7 @@ from datetime import datetime
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, MedicalTeam
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date
+from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 
 
 class PrimaryExaminationInformationForm:
@@ -257,20 +257,20 @@ class SecondaryExaminationInformationForm:
     def __init__(self, request=None):
         self.errors = {'count': 0}
         if request:
-            self.address_line_1 = request.get('address_line_1')
-            self.address_line_2 = request.get('address_line_2')
-            self.address_town = request.get('address_town')
-            self.address_county = request.get('address_county')
-            self.address_country = request.get('address_country')
-            self.address_postcode = request.get('address_postcode')
-            self.relevant_occupation = request.get('relevant_occupation')
-            self.care_organisation = request.get('care_organisation')
-            self.funeral_arrangements = request.get('funeral_arrangements')
-            self.implanted_devices = request.get('implanted_devices')
-            self.implanted_devices_details = request.get('implanted_devices_details')
-            self.funeral_directors = request.get('funeral_directors')
-            self.personal_effects = request.get('personal_effects')
-            self.personal_effects_details = request.get('personal_effects_details')
+            self.address_line_1 = fallback_to(request.get('address_line_1'), '')
+            self.address_line_2 = fallback_to(request.get('address_line_2'), '')
+            self.address_town = fallback_to(request.get('address_town'), '')
+            self.address_county = fallback_to(request.get('address_county'), '')
+            self.address_country = fallback_to(request.get('address_country'), '')
+            self.address_postcode = fallback_to(request.get('address_postcode'), '')
+            self.relevant_occupation = fallback_to(request.get('relevant_occupation'), '')
+            self.care_organisation = fallback_to(request.get('care_organisation'), '')
+            self.funeral_arrangements = fallback_to(request.get('funeral_arrangements'), '')
+            self.implanted_devices = fallback_to(request.get('implanted_devices'), '')
+            self.implanted_devices_details = fallback_to(request.get('implanted_devices_details'), '')
+            self.funeral_directors = fallback_to(request.get('funeral_directors'), '')
+            self.personal_effects = fallback_to(request.get('personal_effects'), '')
+            self.personal_effects_details = fallback_to(request.get('personal_effects_details'), '')
         else:
             self.address_line_1 = ''
             self.address_line_2 = ''
@@ -645,35 +645,105 @@ class MedicalTeamMembersForm:
 
 
 class PreScrutinyEventForm:
+    active = False
 
-    def __init__(self, form_data):
-        self.me_thoughts = form_data.get('me-thoughts')
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('pre_scrutiny_id')
+        self.me_thoughts = fallback_to(form_data.get('me-thoughts'), '')
         self.circumstances_of_death = form_data.get('cod')
-        self.possible_cod_1a = form_data.get('possible-cod-1a')
-        self.possible_cod_1b = form_data.get('possible-cod-1b')
-        self.possible_cod_1c = form_data.get('possible-cod-1c')
-        self.possible_cod_2 = form_data.get('possible-cod-2')
+        self.possible_cod_1a = fallback_to(form_data.get('possible-cod-1a'), '')
+        self.possible_cod_1b = fallback_to(form_data.get('possible-cod-1b'), '')
+        self.possible_cod_1c = fallback_to(form_data.get('possible-cod-1c'), '')
+        self.possible_cod_2 = fallback_to(form_data.get('possible-cod-2'), '')
         self.overall_outcome = form_data.get('ops')
         self.governance_review = form_data.get('gr')
-        self.governance_review_text = form_data.get('grt')
+        self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
 
     def is_valid(self):
         return True
 
     def for_request(self):
         return {
-          "medicalExaminerThoughts": self.me_thoughts,
-          "isFinal": self.is_final,
-          "circumstancesOfDeath": self.circumstances_of_death,
-          "causeOfDeath1a": self.possible_cod_1a,
-          "causeOfDeath1b": self.possible_cod_1b,
-          "causeOfDeath1c": self.possible_cod_1c,
-          "causeOfDeath2": self.possible_cod_2,
-          "outcomeOfPreScrutiny": self.overall_outcome,
-          "clinicalGovernanceReview": self.governance_review,
-          "clinicalGovernanceReviewText": self.governance_review_text
+            "eventId": self.event_id,
+            "medicalExaminerThoughts": self.me_thoughts,
+            "isFinal": self.is_final,
+            "circumstancesOfDeath": self.circumstances_of_death,
+            "causeOfDeath1a": self.possible_cod_1a,
+            "causeOfDeath1b": self.possible_cod_1b,
+            "causeOfDeath1c": self.possible_cod_1c,
+            "causeOfDeath2": self.possible_cod_2,
+            "outcomeOfPreScrutiny": self.overall_outcome,
+            "clinicalGovernanceReview": self.governance_review,
+            "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.me_thoughts = draft.body
+        self.circumstances_of_death = draft.circumstances_of_death
+        self.possible_cod_1a = draft.cause_of_death_1a
+        self.possible_cod_1b = draft.cause_of_death_1b
+        self.possible_cod_1c = draft.cause_of_death_1c
+        self.possible_cod_2 = draft.cause_of_death_2
+        self.overall_outcome = draft.outcome_of_pre_scrutiny
+        self.governance_review = draft.clinical_governance_review
+        self.governance_review_text = draft.clinical_governance_review_text
+
+
+class MeoSummaryEventForm:
+    active = False
+
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('meo_summary_id')
+        self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+            "eventId": self.event_id,
+            "isFinal": self.is_final,
+            "summaryDetails": self.meo_summary_notes
+        }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.more_detail = draft.body
+
+
+class OtherEventForm:
+    active = False
+
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('other_notes_id')
+        self.more_detail = fallback_to(form_data.get('more-detail'), '')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+            "eventId": self.event_id,
+            "text": self.more_detail,
+            "isFinal": self.is_final
+        }
+
 
 class QapDiscussionEventForm:
     def __init__(self, form_data):
@@ -689,3 +759,61 @@ class QapDiscussionEventForm:
             self.participant_phone_number = form_data.get('qap-default__phone-number')
 
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.more_detail = draft.body
+
+
+class AdmissionNotesEventForm:
+    date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    active = False
+
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('admission_notes_id')
+        self.admission_day = form_data.get('day_of_last_admission')
+        self.admission_month = form_data.get('month_of_last_admission')
+        self.admission_year = form_data.get('year_of_last_admission')
+        self.admission_date_unknown = form_data.get('date_of_last_admission_not_known')
+        self.admission_time = form_data.get('time_of_last_admission')
+        self.admission_time_unknown = form_data.get('time_of_last_admission_not_known')
+        self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
+        self.coroner_referral = form_data.get('latest-admission-suspect-referral')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def is_valid(self):
+        return True
+
+    def admission_date(self):
+        if self.admission_date_unknown:
+            return None
+        else:
+            return build_date(self.admission_year, self.admission_month, self.admission_day).strftime(self.date_format)
+
+    def get_immediate_coroner_referral(self):
+        return True if self.coroner_referral == 'yes' else False
+
+    def for_request(self):
+        return {
+            "eventId": self.event_id,
+            "notes": self.admission_notes,
+            "isFinal": self.is_final,
+            "admittedDate": self.admission_date(),
+            "admittedTime": None if self.admission_time_unknown else self.admission_time,
+            "immediateCoronerReferral": self.get_immediate_coroner_referral()
+        }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.admission_day = draft.admitted_date.day if draft.admitted_date else ''
+        self.admission_month = draft.admitted_date.month if draft.admitted_date else ''
+        self.admission_year = draft.admitted_date.year if draft.admitted_date else ''
+        self.admission_date_unknown = False if draft.admitted_date else True
+        self.admission_time = draft.admitted_time
+        self.admission_time_unknown = False if draft.admitted_time else True
+        self.admission_notes = draft.body
+        self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
