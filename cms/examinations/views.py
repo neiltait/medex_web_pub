@@ -327,6 +327,18 @@ def view_examination_case_outcome(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    if request.method == 'POST':
+        if 'pre-scrutiny-confirmed' in request.POST:
+            result = CaseOutcome.complete(user.auth_token, examination_id)
+
+            if not result == status.HTTP_200_OK:
+                context = {
+                    'session_user': user,
+                    'error': result,
+                }
+
+                return render(request, 'errors/base_error.html', context, status=result.status_code)
+
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
     if not type(case_outcome) == CaseOutcome:
