@@ -744,6 +744,10 @@ class OtherEventForm:
             "isFinal": self.is_final
         }
 
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.more_detail = draft.body
+
 
 class QapDiscussionEventForm:
     def __init__(self, form_data):
@@ -760,9 +764,6 @@ class QapDiscussionEventForm:
 
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
-    def fill_from_draft(self, draft):
-        self.event_id = draft.event_id
-        self.more_detail = draft.body
 
 
 class AdmissionNotesEventForm:
