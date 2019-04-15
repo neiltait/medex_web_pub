@@ -16,7 +16,7 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved-rep" type="radio"
-                                       value="existing-rep">
+                                       value="existing-rep" checked>
                                 <label class="nhsuk-label nhsuk-radios__label" for="bereaved-existing-rep">
                                     Family Member Name
                                 </label>
@@ -36,9 +36,10 @@
             </div>
         </div>
 
-        <div id="bereavement-discussion-with-panel margin-time"
+    <div id="bereaved-rep-details" >
+        <div id="bereavement-discussion-with-panel"
              class="inset-text-panel {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
-            <div class="nhsuk-form-group" id="bereaved-rep-details">
+            <div class="nhsuk-form-group">
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
                     <fieldset class="nhsuk-fieldset">
                         <label class="nhsuk-label nhsuk-u-font-weight-bold"
@@ -87,8 +88,9 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="bereaved-rep-form" class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}nhsuk-u-visually-hidden{% endif %}">
+        <div id="bereaved-rep-form" class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}{% endif %}">
             <div class="nhsuk-grid-row margin-top">
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="bereavement-full-name">

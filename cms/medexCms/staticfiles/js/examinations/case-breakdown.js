@@ -179,36 +179,31 @@
            this.existingRep = this.form.find("#bereaved-existing-rep");
            this.repDetails = this.form.find("#bereaved-rep-details");
            this.repForm = this.form.find("#bereaved-rep-form");
-           this.showRepForm();
-           this.showRepDetails();
+           this.showHidePanels();
+
            this.startWatchers();
 
         },
-        showRepForm() {
-            if (this.newRep.checked) {
-                this.repForm.show();
-            } else {
-                this.repForm.hide();
-            }
-        },
 
-        showRepDetails() {
-            if (this.existingRep.checked) {
+        showHidePanels() {
+            let selectedButton = this.form.find('input[name=bereaved-rep]:checked');
+            if (selectedButton.val() === 'existing-rep') {
                 this.repDetails.show();
-            } else {
-                this.repDetails.hide();
-            }
-        },
+                this.repForm.hide();
+             } else {
+                    this.repForm.show();
+                    this.repDetails.hide();
+                }
+            },
+
         startWatchers() {
             let that = this;
              this.newRep.change(function () {
-                that.showRepForm();
-                that.showRepDetails();
+                that.showHidePanels();
             });
 
             this.existingRep.change(function () {
-                that.showRepForm();
-                that.showRepDetails();
+                that.showHidePanels();
             });
         }
     };
