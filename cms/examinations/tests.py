@@ -8,7 +8,7 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam
 from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
@@ -170,7 +170,8 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTemplateUsed(response, 'errors/base_error.html')
 
-    @patch('examinations.request_handler.create_pre_scrutiny_event', return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
+    @patch('examinations.request_handler.create_pre_scrutiny_event',
+           return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
     def test_posting_an_valid_form_that_fails_on_the_api_returns_the_api_response_code(self, mock_pre_scrutiny_create):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
@@ -200,6 +201,31 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.get('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/case_outcome.html')
+
+    @patch('examinations.request_handler.load_case_outcome',
+           return_value=ExaminationMocks.get_unsuccessful_case_outcome_response())
+    def test_landing_on_the_case_outcome_page_with_invalid_case_id_returns_error_page(self, mock_outcome_load):
+        self.set_auth_cookies()
+        response = self.client.get('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID)
+        self.assertEqual(response.status_code, ExaminationMocks.get_unsuccessful_case_outcome_response().status_code)
+        self.assertTemplateUsed(response, 'errors/base_error.html')
+
+    def test_posting_completion_of_scrutiny_sends_update_to_api(self):
+        self.set_auth_cookies()
+        form_data = {'pre-scrutiny-confirmed': True}
+        response = self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'examinations/case_outcome.html')
+
+    @patch('examinations.request_handler.complete_case_scrutiny',
+           return_value=ExaminationMocks.get_unsuccessful_scrutiny_complete_response())
+    def test_posting_completion_of_scrutiny_returns_error_page_if_api_update_fails(self, mock_completion_response):
+        self.set_auth_cookies()
+        form_data = {'pre-scrutiny-confirmed': True}
+        response = self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+        self.assertEqual(response.status_code,
+                         ExaminationMocks.get_unsuccessful_scrutiny_complete_response().status_code)
+        self.assertTemplateUsed(response, 'errors/base_error.html')
 
 
 class ExaminationsFormsTests(MedExTestCase):
@@ -903,3 +929,21 @@ class ExaminationsUtilsTests(MedExTestCase):
 
         result = event_form_parser(form_data)
         self.assertEqual(type(result), AdmissionNotesEventForm)
+
+    def test_event_form_parser_returns_a_meo_summary_form_when_given_admission_notes_form_data(self):
+        form_data = {
+            'meo_summary_notes': True,
+            'add-event-to-timeline': 'meo-summary'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), MeoSummaryEventForm)
+
+    def test_event_form_parser_returns_an_other_form_when_given_admission_notes_form_data(self):
+        form_data = {
+            'other_notes_id': True,
+            'add-event-to-timeline': 'other'
+        }
+
+        result = event_form_parser(form_data)
+        self.assertEqual(type(result), OtherEventForm)
