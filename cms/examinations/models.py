@@ -802,24 +802,34 @@ def text_field_is_not_null(field):
 
 class CaseOutcome:
     date_format = '%d.%m.%Y %H:%M'
+    REFER_TO_CORONER_KEYS = ['ReferToCoroner', 'IssueMCCDWith100a']
+
     QAP_OUTCOMES = {
-        'MccdCauseOfDeathProvidedByQAP': 'MCCD cause of death provided by QAP',
+        'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
+        'MccdCauseOfDeathProvidedByME': 'MCCD to be issued, COD provided by ME',
+        'MccdCauseOfDeathAgreedByQAPandME': 'MCCD to be issued, new COD reached',
+        'ReferToCoroner': 'Refer to coroner'
     }
 
     REPRESENTATIVE_OUTCOMES = {
-        'CauseOfDeathAccepted': 'Cause of death accepted',
+        'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
+        'ConcernsRaised': 'Refer to coroner, concerns raised'
     }
 
     PRE_SCRUTINY_OUTCOMES = {
-        'IssueAnMccd': 'Issue an MCCD',
+        'IssueAnMccd': 'MCCD to be issued',
+        'ReferToCoroner': 'Refer to coroner'
     }
 
     OUTCOME_SUMMARIES = {
-        'ReferToCoroner': 'Refer to coroner',
+        'ReferToCoroner': {'heading': 'Refer to coroner', 'details': 'For investigation'},
+        'IssueMCCDWith100a': {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
+        'IssueMCCD': {'heading': 'MCCD to be issued'}
     }
 
     CORONER_DISCLAIMERS = {
         'ReferToCoroner': 'This case has been submitted to the coroner for an investigation.',
+        'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
     }
 
     def __init__(self, obj_dict):
@@ -867,7 +877,7 @@ class CaseOutcome:
         return self.is_coroner_referral() and self.scrutiny_confirmed
 
     def is_coroner_referral(self):
-        return True if self.case_outcome_summary == 'ReferToCoroner' else False
+        return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
