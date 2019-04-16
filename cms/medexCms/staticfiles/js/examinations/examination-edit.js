@@ -16,30 +16,6 @@
       this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
       this.setupAdditionalNotes();
       this.setupAddRemovePanels();
-      this.setInitialView();
-    },
-
-    setInitialView: function () {
-      if (location.search && this.hasErrors) {
-        var paramsJSON = this.decodeQueryParams(location.search.substr(1));
-        this.showTab(paramsObject['previousTab']);
-        window.history.replaceState({}, document.title, location.origin + location.pathname);
-      }
-      else if (location.hash) {
-        this.showTab(location.hash.substr(1));
-        window.history.replaceState({}, document.title, location.origin + location.pathname);
-      }
-    },
-
-    decodeQueryParams: function (params) {
-      var pairs = params.split('&');
-      paramsObject = {};
-      pairs.forEach(function (pair) {
-        var key = pair.split('=')[0];
-        var value = pair.split('=')[1];
-        paramsObject[key] = value;
-      });
-      return paramsObject
     },
 
     initialiseTabs: function () {
