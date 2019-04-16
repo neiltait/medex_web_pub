@@ -1,3 +1,342 @@
 <div id="bereaved-discussion" class="event-form">
-    Add bereaved discussion notes
-</div>
+    <div class="nhs-form-group">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <label class="nhsuk-label nhsuk-u-font-weight-bold margin-bottom">
+                    Who is the dicussion with?
+                </label>
+            </div>
+        </div>
+
+        <div class="nhsuk-grid-row {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                    <div class="class=nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="bereaved-existing-rep"
+                                       name="bereaved-rep" type="radio"
+                                       value="existing-rep" checked>
+                                <label class="nhsuk-label nhsuk-radios__label" for="bereaved-existing-rep">
+                                    Family Member Name
+                                </label>
+                            </div>
+                        </div>
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="bereaved-new-rep" name="bereaved-rep"
+                                       type="radio" value="new-rep">
+                                <label class="nhsuk-label nhsuk-radios__label" for="bereaved-new-rep">
+                                    Another representative
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div id="bereaved-rep-details">
+            <div id="bereavement-discussion-with-panel"
+                 class="inset-text-panel {% if bereaved_form.use_default_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
+                <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                            <fieldset class="nhsuk-fieldset">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold"
+                                       for="rep-relationship" id="rep-relationship">
+                                    Relationship
+                                </label>
+                                <p class="nhsuk-body-m">Brother</p>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="rep-present-at-death"
+                                       id="rep-present-at-death">
+                                    Present at death
+                                </label>
+                                <p class="nhsuk-body-m">No</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold"
+                                       for="rep-phone-number" id="rep-phone-number">
+                                    Phone number
+                                </label>
+                                <p class="nhsuk-body-m">07812 345 678</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold"
+                                       for="rep-informed-of-death" id="rep-informed-of-death">
+                                    Informed of death
+                                </label>
+                                <p class="nhsuk-body-m">Yes</p>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bereaved-rep-form"
+             class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}{% endif %}">
+            <div class="nhsuk-grid-row margin-top">
+                <div class="nhsuk-grid-column-one-half">
+                    <label class="nhsuk-label" for="bereavement-full-name">
+                        Full name
+                    </label>
+
+                    <span class="nhsuk-error-message medex-font-default-override"></span>
+
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="bereavement-full-name"
+                           name="bereavement-full-name-input"
+                           type="text" value="{{ form.bereavement_discussion_full_name }}">
+                </div>
+                <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                        <legend class="nhsuk-fieldset__legend margin-top">
+                            Present at death?
+                        </legend>
+                        <div class="class=nhsuk-radios nhsuk-radios--inline">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-1" name="pad-1" type="radio"
+                                       value="yes">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-2" name="pad-2" type="radio"
+                                       value="no">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
+                                    No
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-3" name="pad-3" type="radio"
+                                       value="unknown">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
+                                    Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <label class="nhsuk-label" for="full-name">
+                        Relationship
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name"
+                           name="test-width-10"
+                           type="text">
+                </div>
+                <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                        <legend class="nhsuk-fieldset__legend">
+                            Informed of death?
+                        </legend>
+
+                        <div class="nhsuk-radios nhsuk-radios--inline">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-1" name="pad-1" type="radio"
+                                       value="yes">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-2" name="pad-2" type="radio"
+                                       value="no">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
+                                    No
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="pad-3" name="pad-3" type="radio"
+                                       value="unknown">
+                                <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
+                                    Unknown
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <label class="nhsuk-label" for="phone-number">
+                        Phone number
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="phone-number"
+                           name="test-width-10"
+                           type="text">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="nhsuk-form-group margin-top">
+            <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                    Date of conversation
+                </legend>
+
+                <div class="nhsuk-date-input margin-top" id="doc-day">
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
+                                Day
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
+                                   id="doc-day"
+                                   name="doc-day" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-month">
+                                Month
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
+                                   id="doc-month"
+                                   name="doc-month" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="nhsuk-date-input__item">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-year">
+                                Year
+                            </label>
+                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4"
+                                   id="doc-year"
+                                   name="doc-year" type="number" pattern="[0-9]*">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+        <div id="beravement-discussion-time">
+            <div class="nhsuk-form-group">
+                <label class="nhsuk-label" for="input-width-4">
+                    Time
+                </label>
+                <input class="nhsuk-input nhsuk-input--width-4 margin-time" id="input-width-4"
+                       name="test-width-4"
+                       type="time">
+            </div>
+        </div>
+
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="discussion-hint">
+                        <legend class="nhsuk-fieldset__legend">
+                            Tick if this dicussion with a representative was unable to happen at all
+                        </legend>
+                        <div class="nhsuk-checkboxes">
+                            <div class="nhsuk-checkboxes__item margin-save-button">
+                                <input class="nhsuk-checkboxes__input" id="discussion-check"
+                                       name="nationality"
+                                       type="checkbox"
+                                       value="email">
+                                <label class="nhsuk-label nhsuk-checkboxes__label" for="discussion-check">
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="margin-save-button">
+
+            {% include "examinations/partials/case_breakdown/_cause_of_death.html" with prefix="bereavement" %}
+
+        </div>
+
+        <div id="bereavement-discussion__details">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <label class="nhsuk-label nhsuk-u-font-weight-bold" for="bereavement-discussion-details"
+                           id="bereavement-discussion-details">
+                        Details of the discussion?
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea margin-save-button"
+                              name="bereavement-discussion-details"
+                              rows="6"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div id="bereavement-discussion-outcome">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="nhsuk-form-group">
+
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                                Outcome
+                            </legend>
+
+                            <span class="nhsuk-hint" id="outcome-hint">
+                          What was the ultimate outcome of the conversation with the family member or representative?
+                    </span>
+                            <div class="nhsuk-radios nhsuk-radios--inline">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                           id="bereavement-discussion-outcome-no-concerns"
+                                           name="bereavement-discussion-outcome"
+                                           type="radio" value="concerns">
+                                    <label class="nhsuk-label nhsuk-radios__label"
+                                           for="bereavement-discussion-outcome-no-concerns">
+                                        Cause of death accepted without concerns
+                                    </label>
+                                </div>
+                                <div class="nhsuk-radios__item margin-save-button">
+                                    <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                           id="bereavment-discussion-outcome-concerns"
+                                           name="bereavement-discussion-outcome" type="radio"
+                                           value="No concerns">
+                                    <label class="nhsuk-label nhsuk-radios__label"
+                                           for="bereavment-discussion-outcome-concerns">
+                                        Concerns raised
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <input id="submit-btn" class="nhsuk-button" type="submit" value="Add event to timeline"
+                           name="add-event-to-timeline"/>
+                    <input id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                           value="Save as draft"
+                           name="save-as-draft">
+                </div>
+            </div>
+        </div>
+    </div>
+
+

@@ -271,7 +271,9 @@ def edit_examination_case_breakdown(request, examination_id):
         'examination_id': examination_id,
         'forms': forms,
         # 'qap_form': examination.qap_discussion,
-        'case_breakdown': examination,
+        "case_breakdown": examination,
+        'bereaved_form': {"use_default_bereaved": True},
+        #'latest_admission_form': examination.latest_admission,
         'patient': patient,
         'form_data': form_data
     }

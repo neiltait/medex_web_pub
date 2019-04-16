@@ -37,14 +37,11 @@
     margin-bottom: 5rem;
  }
 
-#qap-discussion {
-
   .inset-text-panel {
     padding-top: 1rem;
     padding-left: 2rem;
     border-left: $nhs-light-grey 3px solid;
   }
-}
 
 #pre-scrutiny {
 
@@ -59,4 +56,40 @@
  .disclaimer-margin {
     margin-bottom: 4rem;
  }
+}
+
+#bereaved-discussion {
+
+    .margin-bottom {
+        margin-bottom: 1rem;
+    }
+
+    .margin-top {
+        margin-top: 1.25rem;
+    }
+
+    .margin-save-button {
+        margin-bottom: 7rem;
+    }
+
+    .margin-time {
+        margin-bottom: 2rem;
+    }
+}
+
+#bereavement-discussion__save-buttons {
+ #submit-btn {
+        margin-right: 1.25rem;
+        width: 15.79rem;
+    }
+
+ #add-another-btn {
+    width: 15.79rem;
+    }
+
+ #more-detail {
+    margin-top: 1.25rem;
+    margin-bottom: 5rem;
+ }
+
 }
