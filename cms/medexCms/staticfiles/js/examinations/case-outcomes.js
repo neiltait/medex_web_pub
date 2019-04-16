@@ -16,7 +16,7 @@
 
         setInitialView: function() {
             this.btn.attr("disabled", true);
-        }
+        },
 
         startWatcher: function() {
             var that = this;
