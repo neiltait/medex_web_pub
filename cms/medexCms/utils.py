@@ -1,6 +1,9 @@
 import datetime
+import re
 
-API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
+API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
+API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
+API_DATE_FORMAT_3 = '%Y-%m-%dT%H:%M:%S'
 
 NONE_TIME = "00:00:00"
 
@@ -23,9 +26,20 @@ def validate_date(year, month, day, hour='00', min='00'):
 def parse_datetime(datetime_string):
     if datetime_string and not is_empty_date(datetime_string):
         try:
+            date_and_time, microseconds_and_zone = datetime_string.split('.')
+            arr = list(filter(None, re.split('(\d+)', microseconds_and_zone)))
+            microseconds = arr.pop(0)[:6]
+            datetime_string = '%s.%s%s' % (date_and_time, microseconds, ''.join(arr))
             return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
-        except ValueError:
-            return parse_datetime(datetime_string[:-7] + 'Z')
+        except (ValueError, TypeError):
+            try:
+                return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_2)
+            except ValueError:
+                try:
+                    return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_3)
+                except ValueError:
+                    print('Unknown date format received')
+                    return None
     else:
         return None
 

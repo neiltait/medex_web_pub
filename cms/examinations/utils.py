@@ -1,11 +1,10 @@
 from . import request_handler
-from examinations.forms import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm, MeoSummaryEventForm
+from examinations.forms import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
 
 PRE_SCRUTINY_FORM = 'pre-scrutiny'
 MEO_SUMMARY_FORM = 'meo-summary'
 OTHER_FORM = 'other'
 ADMISSION_NOTES_FORM = 'admission-notes'
-
 QAP_DISCUSSION_FORM = 'qap-discussion'
 
 

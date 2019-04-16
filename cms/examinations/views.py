@@ -6,7 +6,7 @@ from alerts.utils import generate_error_alert
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter
@@ -243,11 +243,12 @@ def edit_examination_case_breakdown(request, examination_id):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
     form = None
 
     if request.method == 'POST':
         form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
+
+    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
 
     if not type(examination) == CaseBreakdown:
         context = {
@@ -259,7 +260,10 @@ def edit_examination_case_breakdown(request, examination_id):
 
     forms = user.get_forms_for_role()
 
-    form_data = __prepare_forms(examination.event_list, form)
+    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
+    patient_details = PatientDetails.load_by_id(examination_id, user.auth_token)
+
+    form_data = __prepare_forms(examination.event_list, medical_team, patient_details, form)
 
     patient = {
         "name": examination.patient_name,
@@ -270,7 +274,8 @@ def edit_examination_case_breakdown(request, examination_id):
         'session_user': user,
         'examination_id': examination_id,
         'forms': forms,
-        # 'qap_form': examination.qap_discussion,
+        'qap': medical_team.qap,
+        'proposed_cause_of_death': examination.event_list.get_latest_me_scrutiny_cause_of_death(),
         'case_breakdown': examination,
         'patient': patient,
         'form_data': form_data
@@ -291,11 +296,13 @@ def __post_case_breakdown_event(request, user, examination_id):
     return form, status_code, errors
 
 
-def __prepare_forms(event_list, form):
+def __prepare_forms(event_list, medical_team, patient_details, form):
     pre_scrutiny_form = PreScrutinyEventForm()
     other_notes_form = OtherEventForm()
     admission_notes_form = AdmissionNotesEventForm()
     meo_summary_form = MeoSummaryEventForm()
+    qap_discussion_form = QapDiscussionEventForm()
+    qap_discussion_form.set_default_qap(medical_team.qap)
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
@@ -305,12 +312,15 @@ def __prepare_forms(event_list, form):
         admission_notes_form.fill_from_draft(event_list.get_latest_admission_draft())
     if event_list.get_meo_summary_draft():
         meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
+    if event_list.get_qap_discussion_draft():
+        qap_discussion_form.fill_from_draft(event_list.get_meo_summary_draft())
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
         'OtherEventForm': other_notes_form,
         'AdmissionNotesEventForm': admission_notes_form,
-        'MeoSummaryEventForm': meo_summary_form
+        'MeoSummaryEventForm': meo_summary_form,
+        'QapDiscussionEventForm': qap_discussion_form
     }
 
     if form:

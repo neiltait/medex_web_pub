@@ -750,7 +750,10 @@ class OtherEventForm:
 
 
 class QapDiscussionEventForm:
-    def __init__(self, form_data):
+    def __init__(self, form_data={}):
+        self.use_default_qap = False
+        self.default_qap = None
+
         if form_data.get('qap-discussion-doctor') == 'other':
             self.participant_name = form_data.get('qap-other__full-name')
             self.participant_role = form_data.get('qap-other__role')
@@ -764,6 +767,24 @@ class QapDiscussionEventForm:
 
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
+    def set_default_qap(self, default_qap):
+        self.default_qap = default_qap
+
+        self.use_default_qap = False
+        if default_qap is not None and self.participant_name is None:
+            self.use_default_qap = True
+        elif self.participant_is_default_qap():
+            self.use_default_qap = True
+
+    def participant_is_default_qap(self):
+        return self.default_qap is not None and \
+               self.default_qap.name == self.participant_name and \
+               self.default_qap.phone_number == self.participant_phone_number and \
+               self.default_qap.organisation == self.participant_organisation and \
+               self.default_qap.role == self.participant_role
+
+    def fill_from_draft(self, draft):
+        pass
 
 
 class AdmissionNotesEventForm:
