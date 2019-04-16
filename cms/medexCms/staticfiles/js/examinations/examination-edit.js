@@ -90,42 +90,6 @@
     }
   }
 
-  var AddRemoveItemSection = function (section) {
-    this.visible = false;
-    this.section = $(section);
-    this.setup();
-  };
-
-  AddRemoveItemSection.prototype = {
-    setup: function () {
-      this.panel = this.section.find('.add-remove-item-panel');
-      this.addButton = this.section.find('.add-item-button');
-      this.removeButton = this.section.find('.remove-item-button');
-
-      let that = this;
-      this.addButton.on('click', function (event) {
-        event.preventDefault();
-        that.show()
-      });
-      this.removeButton.on('click', function (event) {
-        event.preventDefault();
-        that.hide()
-      });
-    },
-    show: function (event) {
-      this.visible = true;
-      this.panel.removeClass('medex-hidden')
-      this.removeButton.removeClass('medex-hidden')
-      this.addButton.addClass('medex-hidden')
-    },
-    hide: function (event) {
-      this.visible = false;
-      this.panel.addClass('medex-hidden')
-      this.removeButton.addClass('medex-hidden')
-      this.addButton.removeClass('medex-hidden')
-    },
-  }
-
   function init() {
     var examinationsForms = $('.examination__edit');
     for (var i = 0; i < examinationsForms.length; i++) {
