@@ -11,7 +11,14 @@ Input.prototype = {
 
     startWatchers: function () {
         this.input.change(this.changeCallback);
+    },
 
-        this.input.on('input', this.changeCallback);
+    isChecked: function() {
+        if (this.input[0].type === 'checkbox') {
+            return this.input[0].checked;
+        } else {
+            console.error('Checked state being checked on a none checkbox input');
+            return false
+        }
     }
 }
