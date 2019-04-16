@@ -1,3 +1,25 @@
-<div id="history-notes" class="event-form">
-    Add history notes
+<div id="history-notes" class="event-form{% if form.active %} active{% endif %}">
+    <input name="history_notes_id" value="{{form.event_id}}" hidden>
+
+    <div class="nhsuk-form-group">
+        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="more-detail">
+            Medical and social history
+        </label>
+        <span class="nhsuk-hint" id="more-detail-hint">
+    What is the patient's medical and social history?
+  </span>
+        <textarea class="nhsuk-textarea more-detail" id="medical-and-social-history" name="more-detail" rows="5"
+                  aria-describedby="more-detail-hint">{{form.more_detail}}</textarea>
+
+        <div class="nhsuk-grid-row" id="other-notes-section">
+            <div class="nhsuk-grid-column-full">
+                <button id="submit-btn" class="nhsuk-button" type="submit" value="other"
+                        name="add-event-to-timeline">Add event to timeline
+                </button>
+                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                        value="other" name="save-as-draft">Save as draft
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
