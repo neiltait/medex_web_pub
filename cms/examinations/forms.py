@@ -524,27 +524,32 @@ class MedicalTeamMembersForm:
                                               role=request.get('consultant_role_1'),
                                               organisation=request.get('consultant_organisation_1'),
                                               phone_number=request.get('consultant_phone_number_1'),
-                                              notes=request.get('consultant_note_1'))
+                                              notes=request.get('consultant_note_1'),
+                                              gmc_number=request.get('gmc_number_consultant_1'))
         self.consultant_2 = MedicalTeamMember(name=request.get('consultant_name_2'),
                                               role=request.get('consultant_role_2'),
                                               organisation=request.get('consultant_organisation_2'),
                                               phone_number=request.get('consultant_phone_number_2'),
-                                              notes=request.get('consultant_note_2'))
+                                              notes=request.get('consultant_note_2'),
+                                              gmc_number=request.get('gmc_number_consultant_2'))
         self.consultant_3 = MedicalTeamMember(name=request.get('consultant_name_3'),
                                               role=request.get('consultant_role_3'),
                                               organisation=request.get('consultant_organisation_3'),
                                               phone_number=request.get('consultant_phone_number_3'),
-                                              notes=request.get('consultant_note_3'))
+                                              notes=request.get('consultant_note_3'),
+                                              gmc_number=request.get('gmc_number_consultant_3'))
         self.qap = MedicalTeamMember(name=request.get('qap_name'),
                                      role=request.get('qap_role'),
                                      organisation=request.get('qap_organisation'),
                                      phone_number=request.get('qap_phone_number'),
-                                     notes=request.get('qap_note_1'))
+                                     notes=request.get('qap_note_1'),
+                                     gmc_number=request.get('gmc_number_qap'))
         self.gp = MedicalTeamMember(name=request.get('gp_name'),
                                     role=request.get('gp_role'),
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'),
-                                    notes=request.get('gp_note_1'))
+                                    notes=request.get('gp_note_1'),
+                                    gmc_number=request.get('gmc_number_gp'))
         self.nursing_team_information = request.get('nursing_team_information')
         self.medical_examiner = request.get('medical_examiner') if request.get('medical_examiner') else ''
         self.medical_examiners_officer = request.get('medical_examiners_officer') if request.get(
