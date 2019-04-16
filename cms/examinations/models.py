@@ -826,6 +826,7 @@ class CaseOutcome:
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
         self.case_status = obj_dict.get("caseOpen")
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
+        self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.mccd_issued = obj_dict.get("mccdIssed")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
@@ -848,6 +849,15 @@ class CaseOutcome:
             return response.status_code
         else:
             return handle_error(response, {'type': 'case', 'action': 'completing'})
+
+    @classmethod
+    def confirm_coroner_referral(cls, auth_token, examination_id):
+        response = request_handler.confirm_coroner_referral(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
 
     def is_coroner_referral(self):
         return True if self.case_outcome_summary == 'ReferToCoroner' else False
