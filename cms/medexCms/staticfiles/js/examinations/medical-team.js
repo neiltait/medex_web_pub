@@ -1,11 +1,11 @@
 (function ($) {
 
-  var ExaminationEditForm = function (wrapper) {
+  var MedicalTeamPage = function (wrapper) {
     this.wrapper = $(wrapper);
     this.setup();
   }
 
-  ExaminationEditForm.prototype = {
+  MedicalTeamPage.prototype = {
     setup: function () {
       this.saveBar = this.wrapper.find('.sticky-save');
       this.form = this.wrapper.find('form');
@@ -73,9 +73,9 @@
   }
 
   function init() {
-    var examinationsForms = $('.examination__edit');
-    for (var i = 0; i < examinationsForms.length; i++) {
-      new ExaminationEditForm(examinationsForms[i]);
+    var medicalTeamPage = $('.examination__edit');
+    for (var i = 0; i < medicalTeamPage.length; i++) {
+      new MedicalTeamPage(medicalTeamPage[i]);
     }
   }
 
