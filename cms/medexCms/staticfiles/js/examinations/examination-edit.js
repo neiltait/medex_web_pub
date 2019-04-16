@@ -10,32 +10,15 @@
       this.saveBar = this.wrapper.find('.sticky-save');
       this.form = this.wrapper.find('form');
       this.hasChanges = false;
-      this.hasErrors = this.wrapper[0].dataset.errorCount > 0;
-      this.initialiseInputs();
-      this.initialiseTabs();
       this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
+      this.initialiseTabs();
+      this.initialiseInputs();
       this.setupAdditionalNotes();
       this.setupAddRemovePanels();
     },
 
     initialiseTabs: function () {
-      this.tab1 = this.wrapper.find('#patient-details-tab');
-      this.tab2 = this.wrapper.find('#medical-team-tab');
-      this.tab3 = this.wrapper.find('#case-breakdown-tab');
-      this.tab4 = this.wrapper.find('#case-outcomes-tab');
-      let that = this;
-      this.tab1.click(function(evt) {
-        that.showTab("patient-details", evt)
-      });
-      this.tab2.click(function(evt) {
-        that.showTab("medical-team", evt)
-      });
-      this.tab3.click(function(evt) {
-        that.showTab("case-breakdown", evt)
-      });
-      this.tab4.click(function(evt) {
-        that.showTab("case-outcomes", evt)
-      });
+      this.tabBlock = new TabBlock(this.wrapper.find('.examination__tab-bar'), this.getHasChanges.bind(this), this.tabChangeModal);
     },
 
     setupAdditionalNotes() {
@@ -53,13 +36,6 @@
       new AddRemovePanelList(addRemovePanelSection, optionalConsultantCount)
     },
 
-    showTab: function (tabId, evt) {
-      if (this.hasChanges) {
-        evt.preventDefault();
-        this.tabChangeModal.show(tabId);
-      }
-    },
-
     initialiseInputs: function () {
       var inputs = this.wrapper.find('input');
       for (var i = 0; i < inputs.length; i++) {
@@ -75,6 +51,10 @@
       for (var i = 0; i < textAreas.length; i++) {
         new Input(textAreas[i], this.handleChange.bind(this));
       }
+    },
+
+    getHasChanges: function() {
+        return this.hasChanges;
     },
 
     forceSave: function (nextTab) {
