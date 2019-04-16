@@ -818,6 +818,10 @@ class CaseOutcome:
         'ReferToCoroner': 'Refer to coroner',
     }
 
+    CORONER_DISCLAIMERS = {
+        'ReferToCoroner': 'This case has been submitted to the coroner for an investigation.',
+    }
+
     def __init__(self, obj_dict):
         self.case_header = PatientHeader(obj_dict.get("caseHeader"))
         self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
@@ -859,8 +863,14 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
 
+    def show_coroner_referral(self):
+        return self.is_coroner_referral() and self.scrutiny_confirmed
+
     def is_coroner_referral(self):
         return True if self.case_outcome_summary == 'ReferToCoroner' else False
+
+    def coroner_referral_disclaimer(self):
+        return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
 
     def display_outcome_summary(self):
         return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)

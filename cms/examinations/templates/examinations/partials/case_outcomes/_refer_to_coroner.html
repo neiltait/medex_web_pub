@@ -1,4 +1,4 @@
-{% if case_outcome.is_coroner_referral and case_outcome.scrutiny_confirmed %}
+{% if case_outcome.show_coroner_referral %}
     <div class="refer-to-coroner">
         <h2 class="page-subheading">
             Coroner Referral
@@ -28,5 +28,17 @@
                 </div>
             </div>
         </form>
+
+        {% if case_outcome.coroner_referral %}
+            <div class="disclaimer-wrapper">
+                <div class="disclaimer-header">
+                    Disclaimer
+                </div>
+
+                <p class="disclaimer-body">
+                    {{ case_outcome.coroner_referral_disclaimer }}
+                </p>
+            </div>
+        {% endif %}
     </div>
 {% endif %}
