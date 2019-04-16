@@ -849,6 +849,9 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'completing'})
 
+    def is_coroner_referral(self):
+        return True if self.case_outcome_summary == 'ReferToCoroner' else False
+
     def display_outcome_summary(self):
         return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
 
