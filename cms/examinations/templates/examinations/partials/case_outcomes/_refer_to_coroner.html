@@ -8,14 +8,23 @@
             Confirm that the relevant information has been sent to the coroner.
         </p>
 
-        <form id="scrutiny-form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+        <form id="coroner-referral-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
               method="post">
+            {% csrf_token %}
+
             <div class="nhsuk-checkboxes">
                 <div class="nhsuk-checkboxes__item">
-                    <input id="scrutiny-confirmation" type="checkbox" class="nhsuk-checkboxes__input" />
-                    <label class="nhsuk-label nhsuk-checkboxes__label" for="scrutiny-confirmation">
+                    <input id="coroner-referral-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
+                           {% if case_outcome.coroner_referral %} checked disabled {% endif %} />
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner-referral-confirmation">
                         Referral has been sent
                     </label>
+                </div>
+            </div>
+
+            <div class="sticky-save">
+                <div class="container">
+                    <input class="submit-btn" type="submit" name="coroner-referral" value="Save changes" />
                 </div>
             </div>
         </form>
