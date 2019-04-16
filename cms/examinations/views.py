@@ -334,11 +334,14 @@ def view_examination_case_outcome(request, examination_id):
 
         return render(request, 'errors/base_error.html', context, status=case_outcome.status_code)
 
+    modal_config = get_tab_change_modal_config()
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
         'case_outcome': case_outcome,
-        'patient': case_outcome.case_header
+        'patient': case_outcome.case_header,
+        'tab_modal': modal_config,
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)
