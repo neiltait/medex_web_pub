@@ -44,7 +44,6 @@
         },
 
         setActiveForm: function(formId) {
-            console.log(formId)
             this.activeForm = formId;
         }
     }
@@ -149,7 +148,6 @@
             let that = this;
             this.upChevron.click(function (e) {
                 that.contract()
-                console.log(this);
             });
             this.downChevron.click(function (e) {
                 that.expand()
