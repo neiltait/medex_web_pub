@@ -9,7 +9,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     AdmissionNotesEventForm, MeoSummaryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
-from examinations.utils import event_form_parser, event_form_submitter
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -219,21 +219,6 @@ def validate_patient_details_forms(primary_info_form, secondary_info_form, berea
     urgency_valid = urgency_info_form.is_valid()
 
     return primary_valid and secondary_valid and bereaved_valid and urgency_valid
-
-
-def get_tab_change_modal_config():
-    return {
-        'id': 'tab-change-modal',
-        'content': 'You have unsaved changes, do you want to save them before continuing?',
-        'confirm_btn_id': 'save-continue',
-        'confirm_btn_text': 'Save and continue',
-        'extra_buttons': [
-            {
-                'id': 'discard',
-                'text': 'Discard and continue',
-            }
-        ],
-    }
 
 
 def edit_examination_case_breakdown(request, examination_id):
