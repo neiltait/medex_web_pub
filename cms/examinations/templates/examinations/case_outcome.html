@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block tab_js %}
+    <script src="{% static 'js/examinations/examination-edit.js' %}"></script>
     <script src="{% static 'js/examinations/case-outcomes.js' %}"></script>
 {% endblock %}
 
@@ -19,6 +20,8 @@
         {% include 'examinations/partials/case_outcomes/_case_summary.html' %}
 
         {% include 'examinations/partials/case_outcomes/_confirmation_of_scrutiny.html' %}
+
+        {% include 'examinations/partials/case_outcomes/_refer_to_coroner.html' %}
     </div>
 {% endblock %}
 
