@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam
+from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 
 
@@ -750,7 +750,21 @@ class OtherEventForm:
 
 
 class QapDiscussionEventForm:
+    active = False
+
+    date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
+    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
+    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
+    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
+
+    def make_active(self):
+        self.active = True
+        return self
+
     def __init__(self, form_data={}):
+
+        self.event_id = ''
         self.use_default_qap = False
         self.default_qap = None
 
@@ -764,6 +778,30 @@ class QapDiscussionEventForm:
             self.participant_role = form_data.get('qap-default__role')
             self.participant_organisation = form_data.get('qap-default__organisation')
             self.participant_phone_number = form_data.get('qap-default__phone-number')
+
+        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death.section_1a = fallback_to(form_data.get('qap_discussion_revised_1a'), '')
+        self.cause_of_death.section_1b = fallback_to(form_data.get('qap_discussion_revised_1b'), '')
+        self.cause_of_death.section_1c = fallback_to(form_data.get('qap_discussion_revised_1c'), '')
+        self.cause_of_death.section_2 = fallback_to(form_data.get('qap_discussion_revised_2'), '')
+
+        self.discussion_details = fallback_to(form_data.get('qap_discussion_details'), '')
+
+        self.discussion_outcome = None
+        if form_data.get('qap-discussion-outcome') == 'mccd':
+            if form_data.get('qap-discussion-outcome-decision') == 'outcome-decision-1':
+                self.discussion_outcome = self.DISCUSSION_OUTCOME_MCCD_FROM_QAP
+            elif form_data.get('qap-discussion-outcome-decision') == 'outcome-decision-2':
+                self.discussion_outcome = self.DISCUSSION_OUTCOME_MCCD_FROM_ME
+            elif form_data.get('qap-discussion-outcome-decision') == 'outcome-decision-3':
+                self.discussion_outcome = self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
+        elif form_data.get('qap-discussion-outcome') == 'coroner':
+            self.discussion_outcome = self.DISCUSSION_OUTCOME_CORONER
+
+        self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('qap_year_of_conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('qap_time_of_conversation'), '')
 
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
@@ -786,6 +824,33 @@ class QapDiscussionEventForm:
     def fill_from_draft(self, draft):
         pass
 
+    def is_valid(self):
+        return True
+
+    def conversation_date(self):
+        if validate_date(self.year_of_conversation, self.month_of_conversation, self.day_of_conversation):
+            return build_date(self.year_of_conversation, self.month_of_conversation, self.day_of_conversation).strftime(self.date_format)
+        else:
+            return None
+
+    def for_request(self):
+
+        return {
+            "eventId": self.event_id,
+            "isFinal": self.is_final,
+            "participantRoll": self.participant_role,
+            "participantOrganisation": self.participant_organisation,
+            "participantPhoneNumber": self.participant_phone_number,
+            "dateOfConversation": self.conversation_date(),
+            "discussionUnableHappen": False,
+            "discussionDetails": self.discussion_details,
+            "qapDiscussionOutcome": self.discussion_outcome,
+            "participantName": self.participant_name,
+            "causeOfDeath1a": self.cause_of_death.section_1a,
+            "causeOfDeath1b": self.cause_of_death.section_1b,
+            "causeOfDeath1c": self.cause_of_death.section_1c,
+            "causeOfDeath2": self.cause_of_death.section_2
+        }
 
 class AdmissionNotesEventForm:
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
