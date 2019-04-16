@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
+from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
@@ -315,14 +317,18 @@ def view_examination_case_outcome(request, examination_id):
     if request.method == 'POST':
         if 'pre-scrutiny-confirmed' in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
+        else:
+            response = Response()
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            result = GenericError(response, {'type': 'form', 'action': 'submitting'})
 
-            if not result == status.HTTP_200_OK:
-                context = {
-                    'session_user': user,
-                    'error': result,
-                }
+        if result and not result == status.HTTP_200_OK:
+            context = {
+                'session_user': user,
+                'error': result,
+            }
 
-                return render(request, 'errors/base_error.html', context, status=result.status_code)
+            return render(request, 'errors/base_error.html', context, status=result.status_code)
 
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
