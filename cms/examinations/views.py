@@ -317,6 +317,8 @@ def view_examination_case_outcome(request, examination_id):
     if request.method == 'POST':
         if 'pre-scrutiny-confirmed' in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
+        elif 'coroner-referral' in request.POST:
+            result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
         else:
             response = Response()
             response.status_code = status.HTTP_400_BAD_REQUEST
