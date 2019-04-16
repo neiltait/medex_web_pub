@@ -502,11 +502,11 @@ class UrgencyInformationForm:
 
 
 class MedicalTeamMembersForm:
-    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='')
-    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='')
+    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
+    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
+    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
+    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
+    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
     nursing_team_information = ''
     medical_examiner = ''
     medical_examiners_officer = ''
