@@ -1,0 +1,23 @@
+{% if case_outcome.is_coroner_referral and case_outcome.scrutiny_confirmed %}
+    <div class="refer-to-coroner">
+        <h2 class="page-subheading">
+            Coroner Referral
+        </h2>
+
+        <p>
+            Confirm that the relevant information has been sent to the coroner.
+        </p>
+
+        <form id="scrutiny-form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+              method="post">
+            <div class="nhsuk-checkboxes">
+                <div class="nhsuk-checkboxes__item">
+                    <input id="scrutiny-confirmation" type="checkbox" class="nhsuk-checkboxes__input" />
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="scrutiny-confirmation">
+                        Referral has been sent
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endif %}
