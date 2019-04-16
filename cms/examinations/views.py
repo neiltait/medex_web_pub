@@ -277,6 +277,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'qap': medical_team.qap,
         'proposed_cause_of_death': examination.event_list.get_latest_me_scrutiny_cause_of_death(),
         'case_breakdown': examination,
+        'bereaved_form': {"use_default_bereaved": True},
         'patient': patient,
         'form_data': form_data
     }

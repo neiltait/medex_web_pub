@@ -21,10 +21,12 @@
                                     {{ form.default_qap.name }}
                                 </label>
 
-                                <input type="hidden" name="qap-default__full-name" value="{{ form.default_qap.name }}" />
-                                <input type="hidden" name="qap-default__role" value="{{ form.default_qap.role }}" />
-                                <input type="hidden" name="qap-default__organisation" value="{{ form.default_qap.organisation }}" />
-                                <input type="hidden" name="qap-default__phone-number" value="{{ form.default_qap.phone_number }}" />
+                                <input type="hidden" name="qap-default__full-name" value="{{ form.default_qap.name }}"/>
+                                <input type="hidden" name="qap-default__role" value="{{ form.default_qap.role }}"/>
+                                <input type="hidden" name="qap-default__organisation"
+                                       value="{{ form.default_qap.organisation }}"/>
+                                <input type="hidden" name="qap-default__phone-number"
+                                       value="{{ form.default_qap.phone_number }}"/>
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input radio-toggle-group__radio"
@@ -96,6 +98,7 @@
                         </div>
                     </fieldset>
                 </div>
+
 
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
@@ -208,10 +211,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    {% include "examinations/partials/case_breakdown/_cause_of_death.html" %}
+    {% include "examinations/partials/case_breakdown/_cause_of_death.html" with prefix="qap" %}
 
     <div id="qap-discussion__details">
         <div class="nhsuk-grid-row">
@@ -224,7 +226,6 @@
             </div>
         </div>
     </div>
-
     <div id="qap-discussion__outcome">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
@@ -307,59 +308,61 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="qap-discussion__outcome-revised">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <label class="nhsuk-label nhsuk-u-font-weight-bold">
-                        Details of the discussion?
+    <div id="qap-discussion__outcome-revised">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <label class="nhsuk-label nhsuk-u-font-weight-bold">
+                    Details of the discussion?
+                </label>
+
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_revised_1a">
+                        1a
                     </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
+                              rows="2">{{ form.revised_1a }}</textarea>
+                </div>
 
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_revised_1a">
-                            1a
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
-                                  rows="2">{{ form.revised_1a }}</textarea>
-                    </div>
-
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_revised_1b">
-                            1b
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
-                                  rows="2">{{ form.revised_1b }}</textarea>
-                    </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_revised_1b">
+                        1b
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
+                              rows="2">{{ form.revised_1b }}</textarea>
+                </div>
 
 
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_revised_1c">
-                            1c
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
-                                  rows="2">{{ form.revised_1c }}</textarea>
-                    </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_revised_1c">
+                        1c
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
+                              rows="2">{{ form.revised_1c }}</textarea>
+                </div>
 
 
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_revised_2">
-                            2
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
-                                  rows="2">{{ form.revised_2 }}</textarea>
-                    </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_discussion_revised_2">
+                        2
+                    </label>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
+                              rows="2">{{ form.revised_2 }}</textarea>
                 </div>
             </div>
         </div>
     </div>
 
-    <div  id="qap-discussion__save-buttons" class="nhsuk-form-group margin-bottom">
+    <div id="qap-discussion__save-buttons" class="nhsuk-form-group margin-bottom">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <button id="submit-btn" class="nhsuk-button" type="submit" value="qap-discussion"
-                       name="add-event-to-timeline">Add event to timeline</button>
+                        name="add-event-to-timeline">Add event to timeline
+                </button>
                 <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
-                       value="qap-discussion" name="save-as-draft">Save as draft</button>
+                        value="qap-discussion" name="save-as-draft">Save as draft
+                </button>
             </div>
         </div>
     </div>

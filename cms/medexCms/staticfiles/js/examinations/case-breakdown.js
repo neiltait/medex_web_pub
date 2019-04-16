@@ -44,7 +44,6 @@
         },
 
         setActiveForm: function(formId) {
-            console.log(formId)
             this.activeForm = formId;
         }
     }
@@ -171,11 +170,60 @@
         }
 
         initQAPDiscussion();
+        initBereavementDiscussion();
     }
 
     function initQAPDiscussion() {
         new QAPDiscussionForm($('#qap-discussion'));
         var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
+        causeOfDeath.expand();
+    }
+
+    var BereavementDiscussionForm = function (form) {
+        this.form = form;
+        this.setup();
+
+    };
+
+    BereavementDiscussionForm.prototype = {
+        setup: function () {
+           this.newRep = this.form.find("#bereaved-new-rep");
+           this.existingRep = this.form.find("#bereaved-existing-rep");
+           this.repDetails = this.form.find("#bereaved-rep-details");
+           this.repForm = this.form.find("#bereaved-rep-form");
+           this.showHidePanels();
+
+           this.startWatchers();
+
+        },
+
+        showHidePanels() {
+            let selectedButton = this.form.find('input[name=bereaved-rep]:checked');
+            if (selectedButton.val() === 'existing-rep') {
+                this.repDetails.show();
+                this.repForm.hide();
+             } else {
+                    this.repForm.show();
+                    this.repDetails.hide();
+                }
+            },
+
+        startWatchers() {
+            let that = this;
+             this.newRep.change(function () {
+                that.showHidePanels();
+            });
+
+            this.existingRep.change(function () {
+                that.showHidePanels();
+            });
+        }
+    };
+
+
+    function initBereavementDiscussion() {
+        new BereavementDiscussionForm($('#bereaved-discussion'));
+        var causeOfDeath = new ChevronExpandable($('#bereavement-cause-of-death-panel'))
         causeOfDeath.expand();
     }
 

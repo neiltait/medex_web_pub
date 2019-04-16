@@ -11,8 +11,8 @@
                                 Full name
                             </label>
                             {% if errors.qap %}
-                                <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.qap }}</span>{% endif %}
+                            <span
+                                    class="nhsuk-error-message medex-font-default-override">{{ errors.qap }}</span>{% endif %}
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.qap %}nhsuk-input--error{% endif %}"
                                     id="qap_name" name="qap_name"
@@ -39,7 +39,8 @@
                             <label class="nhsuk-label" for="qap_organisation">
                                 Organisation
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10" id="qap_information" name="qap_organisation"
+                            <input class="nhsuk-input nhsuk-input--width-10" id="qap_information"
+                                   name="qap_organisation"
                                    value="{{ form.qap.organisation }}" type="text">
                         </div>
                     </fieldset>
@@ -52,6 +53,18 @@
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="qap_phone_number"
                                    name="qap_phone_number" value="{{ form.qap.phone_number }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gmc_number_qap">
+                                GMC number
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_qap"
+                                   name="gmc_number_qap"
+                                   value="" type="text">
                         </div>
                     </fieldset>
                 </div>

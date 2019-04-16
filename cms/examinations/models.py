@@ -785,12 +785,13 @@ class MedicalTeam:
 
 class MedicalTeamMember:
 
-    def __init__(self, name='', role='', organisation='', phone_number='', notes=''):
+    def __init__(self, name='', role='', organisation='', phone_number='', notes='', gmc_number=''):
         self.name = name.strip() if name else ''
         self.role = role
         self.organisation = organisation
         self.phone_number = phone_number
         self.notes = notes
+        self.gmc_number = gmc_number
 
     @staticmethod
     def from_dict(obj_dict):
@@ -802,8 +803,9 @@ class MedicalTeamMember:
         organisation = obj_dict['organisation'] if 'organisation' in obj_dict else ''
         phone_number = obj_dict['phone'] if 'phone' in obj_dict else ''
         notes = obj_dict['notes'] if 'notes' in obj_dict else ''
+        gmc_number = obj_dict['gmc'] if 'gmc' in obj_dict else ''
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
-                                 notes=notes)
+                                 notes=notes, gmc_number=gmc_number)
 
     def has_name(self):
         return self.name and len(self.name.strip()) > 0
@@ -824,7 +826,8 @@ class MedicalTeamMember:
             "role": self.role,
             "organisation": self.organisation,
             "phone": self.phone_number,
-            "notes": self.notes
+            "notes": self.notes,
+            "gmc": self.gmc_number
         }
 
 
