@@ -88,15 +88,15 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.qap_discussion_full_name %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group {% if errors.qap_discussion_name %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="qap-other__full-name-input">
                                 Full name
                             </label>
                             {% if errors.qap_discussion_full_name %}
-                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_other_full_name }}</span>{% endif %}
-                            <input class="nhsuk-input nhsuk-input--width-10 {% if errors.full_name %}nhsuk-input--error{% endif %}"
+                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_discussion_name }}</span>{% endif %}
+                            <input class="nhsuk-input nhsuk-input--width-10 {% if errors.qap_discussion_name %}nhsuk-input--error{% endif %}"
                                    id="qap-other__full-name-input" name="qap-other__full-name"
-                                   value="{{ form.qap_discussion_full_name }}" type="text">
+                                   value="{{ form.qap_discussion_name }}" type="text">
                         </div>
                     </fieldset>
                 </div>

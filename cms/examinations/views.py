@@ -312,6 +312,9 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     }
 
     if form:
+        if type(form) == QapDiscussionEventForm:
+            form.set_default_qap(medical_team.qap)
+
         form_data[type(form).__name__] = form.make_active()
 
     return form_data
