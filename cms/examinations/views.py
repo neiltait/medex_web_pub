@@ -81,11 +81,11 @@ def edit_examination_patient_details(request, examination_id):
     status_code = status.HTTP_200_OK
     error_count = 0
 
-    if request.method == 'GET':
-        examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-        if not examination:
-            return render_404(request, user, 'case')
+    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
+    if not examination:
+        return render_404(request, user, 'case')
 
+    if request.method == 'GET':
         primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
         secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
         bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
@@ -97,9 +97,8 @@ def edit_examination_patient_details(request, examination_id):
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
-        examination = PatientDetails().set_primary_info_values(primary_info_form) \
-            .set_secondary_info_values(secondary_info_form).set_bereaved_info_values(bereaved_info_form) \
-            .set_urgency_info_values(urgency_info_form)
+        examination.set_primary_info_values(primary_info_form).set_secondary_info_values(secondary_info_form)\
+            .set_bereaved_info_values(bereaved_info_form).set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
@@ -134,6 +133,7 @@ def edit_examination_patient_details(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'patient': examination.case_header,
         'primary_info_form': primary_info_form,
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
@@ -156,6 +156,7 @@ def edit_examination_medical_team(request, examination_id):
 
     # check the examination exists
     # TODO add 404 check (currently not possible from medical_team endpoint
+    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
 
     if request.method == 'POST':
         # attempt to post and get return form
@@ -163,11 +164,11 @@ def edit_examination_medical_team(request, examination_id):
                                                                                   user.auth_token)
     else:
         # the GET medical team form
-        medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
         medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
     # render the tab
-    return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user)
+    return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
+                                     medical_team.case_header)
 
 
 def __get_medical_team_form(medical_team=None):
@@ -195,7 +196,8 @@ def __post_medical_team_form(request, examination_id, auth_token):
     return medical_team_members_form, status_code, errors
 
 
-def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user):
+def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
+                              header_info):
     medical_examiners = people_request_handler.get_medical_examiners_list_for_examination(user.auth_token,
                                                                                           examination_id)
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list_for_examination(
@@ -204,6 +206,7 @@ def __render_medical_team_tab(errors, examination_id, medical_team_members_form,
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'patient': header_info,
         'form': medical_team_members_form,
         'medical_examiners': medical_examiners,
         'medical_examiners_officers': medical_examiners_officers,
@@ -248,11 +251,6 @@ def edit_examination_case_breakdown(request, examination_id):
 
     form_data = __prepare_forms(examination.event_list, form)
 
-    patient = {
-        "name": examination.patient_name,
-        "nhs_number": examination.nhs_number
-    }
-
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -261,7 +259,7 @@ def edit_examination_case_breakdown(request, examination_id):
         "case_breakdown": examination,
         'bereaved_form': {"use_default_bereaved": True},
         #'latest_admission_form': examination.latest_admission,
-        'patient': patient,
+        'patient': examination.case_header,
         'form_data': form_data
     }
 
