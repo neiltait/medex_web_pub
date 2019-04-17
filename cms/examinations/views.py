@@ -315,9 +315,9 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if 'pre-scrutiny-confirmed' in request.POST:
+        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
-        elif 'coroner-referral' in request.POST:
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
         else:
             response = Response()
