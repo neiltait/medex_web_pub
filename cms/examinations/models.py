@@ -1,5 +1,5 @@
 from rest_framework import status
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
 from errors.utils import handle_error
@@ -98,14 +98,22 @@ class ExaminationOverview:
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
-            delta = datetime.now() - self.last_admission
+            # TODO Remove this conditional when we date consistency
+            if self.last_admission.tzinfo is None:
+                delta = datetime.now() - self.last_admission
+            else:
+                delta = datetime.now(timezone.utc) - self.last_admission
             return delta.days
         else:
             return 0
 
     def calc_created_days_ago(self):
         if self.case_created_date:
-            delta = datetime.now() - self.case_created_date
+            # TODO Remove this conditional when we date consistency
+            if self.case_created_date.tzinfo is None:
+                delta = datetime.now() - self.case_created_date
+            else:
+                delta = datetime.now(timezone.utc) - self.case_created_date
             return delta.days
         else:
             return 0
