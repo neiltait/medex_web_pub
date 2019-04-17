@@ -113,3 +113,26 @@ def create_admission_notes_event(auth_token, examination_id, submission):
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/admission' % (settings.API_URL, examination_id),
                                 submission)
+
+
+def load_case_outcome(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_case_outcome_response()
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_outcome' % (settings.API_URL, examination_id))
+
+
+def complete_case_scrutiny(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_scrutiny_complete_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/confirmation_of_scrutiny' % (settings.API_URL,
+                                                                                             examination_id))
+
+
+def confirm_coroner_referral(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_coroner_referral_response()
+    else:
+        return ExaminationMocks.get_successful_coroner_referral_response()
+        # return MedexRequest.put(auth_token, '%s/examinations/%s/coroner_referral' % (settings.API_URL, examination_id))

@@ -833,3 +833,134 @@ class MedicalTeamMember:
 
 def text_field_is_not_null(field):
     return field and len(field.strip()) > 0
+
+
+class CaseOutcome:
+    SCRUTINY_CONFIRMATION_FORM_TYPE = 'pre-scrutiny-confirmed'
+    CORONER_REFERRAL_FORM_TYPE = 'coroner-referral'
+
+    date_format = '%d.%m.%Y %H:%M'
+    REFER_TO_CORONER_KEYS = ['ReferToCoroner', 'IssueMCCDWith100a']
+
+    QAP_OUTCOMES = {
+        'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
+        'MccdCauseOfDeathProvidedByME': 'MCCD to be issued, COD provided by ME',
+        'MccdCauseOfDeathAgreedByQAPandME': 'MCCD to be issued, new COD reached',
+        'ReferToCoroner': 'Refer to coroner'
+    }
+
+    REPRESENTATIVE_OUTCOMES = {
+        'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
+        'ConcernsRaised': 'Refer to coroner, concerns raised'
+    }
+
+    PRE_SCRUTINY_OUTCOMES = {
+        'IssueAnMccd': 'MCCD to be issued',
+        'ReferToCoroner': 'Refer to coroner'
+    }
+
+    OUTCOME_SUMMARIES = {
+        'ReferToCoroner': {'heading': 'Refer to coroner', 'details': 'For investigation'},
+        'IssueMCCDWith100a': {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
+        'IssueMCCD': {'heading': 'MCCD to be issued'}
+    }
+
+    CORONER_DISCLAIMERS = {
+        'ReferToCoroner': 'This case has been submitted to the coroner for an investigation.',
+        'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
+    }
+
+    def __init__(self, obj_dict):
+        self.case_header = PatientHeader(obj_dict.get("caseHeader"))
+        self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
+        self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
+        self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
+        self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
+        self.case_status = obj_dict.get("caseOpen")
+        self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
+        self.coroner_referral = obj_dict.get("coronerReferral")
+        self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
+        self.mccd_issued = obj_dict.get("mccdIssed")
+        self.cremation_form_status = obj_dict.get("cremationFormStatus")
+        self.gp_notified_status = obj_dict.get("gpNotifedStatus")
+
+    @classmethod
+    def load_by_id(cls, auth_token, examination_id):
+        response = request_handler.load_case_outcome(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return CaseOutcome(response.json())
+        else:
+            return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+
+    @classmethod
+    def complete_scrutiny(cls, auth_token, examination_id):
+        response = request_handler.complete_case_scrutiny(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'completing'})
+
+    @classmethod
+    def confirm_coroner_referral(cls, auth_token, examination_id):
+        response = request_handler.confirm_coroner_referral(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
+
+    def show_coroner_referral(self):
+        return self.is_coroner_referral() and self.scrutiny_confirmed
+
+    def is_coroner_referral(self):
+        return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
+
+    def coroner_referral_disclaimer(self):
+        return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
+
+    def display_outcome_summary(self):
+        return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+
+    def display_pre_scrutiny_outcome(self):
+        return self.PRE_SCRUTINY_OUTCOMES.get(self.case_pre_scrutiny_outcome)
+
+    def display_qap_outcome(self):
+        return self.QAP_OUTCOMES.get(self.case_qap_outcome)
+
+    def display_representative_outcome(self):
+        return self.REPRESENTATIVE_OUTCOMES.get(self.case_representative_outcome)
+
+    def display_scrutiny_date(self):
+        return self.scrutiny_confirmed.strftime(self.date_format)
+
+
+class PatientHeader:
+    date_format = '%d.%m.%Y'
+
+    def __init__(self, obj_dict):
+        self.urgency_score = obj_dict.get("urgencyScore")
+        self.given_names = obj_dict.get("givenNames")
+        self.surname = obj_dict.get("surname")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.id = obj_dict.get("examinationId")
+        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
+        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
+        self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
+        self.appointment_time = obj_dict.get("appointmentTime")
+        self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
+        self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+        self.admission_notes_added = obj_dict.get("admissionNotesHaveBeenAdded")
+        self.ready_for_me_scrutiny = obj_dict.get("readyForMEScrutiny")
+        self.unassigned = obj_dict.get("unassigned")
+        self.have_been_scrutinised = obj_dict.get("haveBeenScrutinisedByME")
+        self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
+        self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
+        self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+        self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
+
+    @property
+    def full_name(self):
+        return "%s %s" % (self.given_names, self.surname)
