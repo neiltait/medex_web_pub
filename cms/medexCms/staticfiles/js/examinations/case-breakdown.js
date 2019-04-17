@@ -1,4 +1,33 @@
 (function ($) {
+    var RadioTogglePanelGroup = function (section) {
+        this.section = section;
+        this.setup()
+    };
+
+    RadioTogglePanelGroup.prototype = {
+        setup: function () {
+            this.radios = this.section.find(".radio-toggle-group__radio");
+            this.panels = this.section.find(".radio-toggle-group__panel");
+            this.setupWatchers();
+            this.showHidePanels();
+        },
+        setupWatchers: function () {
+            var that = this;
+            this.radios.change(function () {
+                that.showHidePanels()
+            })
+        },
+        showHidePanels: function () {
+            for (var i = 0; i < this.radios.length; i++) {
+                if (this.radios[i].checked) {
+                    this.panels[i].classList.remove('nhsuk-u-visually-hidden')
+                } else {
+                    this.panels[i].classList.add('nhsuk-u-visually-hidden')
+                }
+            }
+        }
+    };
+
 
     var EventEntryArea = function (wrapper) {
         this.wrapper = $(wrapper);
@@ -43,7 +72,7 @@
             }
         },
 
-        setActiveForm: function(formId) {
+        setActiveForm: function (formId) {
             this.activeForm = formId;
         }
     }
@@ -61,7 +90,7 @@
             this.setInitialView();
         },
 
-        setInitialView: function() {
+        setInitialView: function () {
             if (this.form.hasClass('active')) {
                 this.show();
                 this.setActiveCallback(this.form[0].id)
@@ -95,7 +124,7 @@
         },
         showHideOutcome() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
-            if(selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
                 this.outcomeDecisionPanel.show();
             } else {
                 this.outcomeDecisionPanel.hide();
@@ -103,7 +132,7 @@
         },
         showHideOutcomeDecision() {
             let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
-            if(selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
+            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
                 this.revisedCauseOfDeathPanel.show();
             } else {
                 this.revisedCauseOfDeathPanel.hide();
@@ -168,6 +197,10 @@
         for (var i = 0; i < eventEntry.length; i++) {
             new EventEntryArea(eventEntry[i]);
         }
+        var radioToggleGroups = $('.radio-toggle-group');
+        for (var i = 0; i < radioToggleGroups.length; i++) {
+            new RadioTogglePanelGroup(radioToggleGroups)
+        }
 
         initQAPDiscussion();
         initBereavementDiscussion();
@@ -187,13 +220,13 @@
 
     BereavementDiscussionForm.prototype = {
         setup: function () {
-           this.newRep = this.form.find("#bereaved-new-rep");
-           this.existingRep = this.form.find("#bereaved-existing-rep");
-           this.repDetails = this.form.find("#bereaved-rep-details");
-           this.repForm = this.form.find("#bereaved-rep-form");
-           this.showHidePanels();
+            this.newRep = this.form.find("#bereaved-new-rep");
+            this.existingRep = this.form.find("#bereaved-existing-rep");
+            this.repDetails = this.form.find("#bereaved-rep-details");
+            this.repForm = this.form.find("#bereaved-rep-form");
+            this.showHidePanels();
 
-           this.startWatchers();
+            this.startWatchers();
 
         },
 
@@ -202,15 +235,15 @@
             if (selectedButton.val() === 'existing-rep') {
                 this.repDetails.show();
                 this.repForm.hide();
-             } else {
-                    this.repForm.show();
-                    this.repDetails.hide();
-                }
-            },
+            } else {
+                this.repForm.show();
+                this.repDetails.hide();
+            }
+        },
 
         startWatchers() {
             let that = this;
-             this.newRep.change(function () {
+            this.newRep.change(function () {
                 that.showHidePanels();
             });
 
