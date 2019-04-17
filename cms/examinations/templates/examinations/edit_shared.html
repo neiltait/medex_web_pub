@@ -32,7 +32,8 @@
             </p>
         </div>
     </div>
-    {% else %}
+    {% endif %}
+    {% if error_count == 0 and saved %}
     <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
          role="alert"
          tabindex="-1">
