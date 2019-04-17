@@ -120,6 +120,7 @@ class PatientDetails:
         self.modes_of_disposal = modes_of_disposal
 
         self.id = obj_dict.get("id")
+        self.case_header = PatientHeader(obj_dict.get("header"))
 
         self.completed = obj_dict.get("completed")
         self.coroner_status = obj_dict.get("coronerStatus")
@@ -297,16 +298,11 @@ class CaseBreakdown:
 
     def __init__(self, obj_dict, medical_team):
 
-        self.patient_name = obj_dict.get("patientName")
-        self.nhs_number = obj_dict.get("nhsNumber")
-        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
-        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.case_header = PatientHeader(obj_dict.get("header"))
 
         ## parse data
-        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death, self.patient_name,
-                                               "MEO")
-        # self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
-        #                                      self.time_of_death)
+        self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.case_header.date_of_death,
+                                               self.case_header.full_name, "MEO")
         self.event_list.sort_events_oldest_to_newest()
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
@@ -719,7 +715,7 @@ class CauseOfDeathProposal:
 class MedicalTeam:
 
     def __init__(self, obj_dict):
-
+        self.case_header = PatientHeader(obj_dict.get("header"))
         self.consultant_responsible = MedicalTeamMember.from_dict(
             obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
         self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if obj_dict['qap'] else None
@@ -839,7 +835,7 @@ class CaseOutcome:
     }
 
     def __init__(self, obj_dict):
-        self.case_header = PatientHeader(obj_dict.get("caseHeader"))
+        self.case_header = PatientHeader(obj_dict.get("header"))
         self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
@@ -908,26 +904,27 @@ class PatientHeader:
     date_format = '%d.%m.%Y'
 
     def __init__(self, obj_dict):
-        self.urgency_score = obj_dict.get("urgencyScore")
-        self.given_names = obj_dict.get("givenNames")
-        self.surname = obj_dict.get("surname")
-        self.nhs_number = obj_dict.get("nhsNumber")
-        self.id = obj_dict.get("examinationId")
-        self.time_of_death = obj_dict.get("timeOfDeath")
-        self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
-        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
-        self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
-        self.appointment_time = obj_dict.get("appointmentTime")
-        self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
-        self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
-        self.admission_notes_added = obj_dict.get("admissionNotesHaveBeenAdded")
-        self.ready_for_me_scrutiny = obj_dict.get("readyForMEScrutiny")
-        self.unassigned = obj_dict.get("unassigned")
-        self.have_been_scrutinised = obj_dict.get("haveBeenScrutinisedByME")
-        self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
-        self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
-        self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
-        self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
+        if obj_dict:
+            self.urgency_score = obj_dict.get("urgencyScore")
+            self.given_names = obj_dict.get("givenNames")
+            self.surname = obj_dict.get("surname")
+            self.nhs_number = obj_dict.get("nhsNumber")
+            self.id = obj_dict.get("examinationId")
+            self.time_of_death = obj_dict.get("timeOfDeath")
+            self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
+            self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
+            self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
+            self.appointment_time = obj_dict.get("appointmentTime")
+            self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
+            self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+            self.admission_notes_added = obj_dict.get("admissionNotesHaveBeenAdded")
+            self.ready_for_me_scrutiny = obj_dict.get("readyForMEScrutiny")
+            self.unassigned = obj_dict.get("unassigned")
+            self.have_been_scrutinised = obj_dict.get("haveBeenScrutinisedByME")
+            self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
+            self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
+            self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+            self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
 
     @property
     def full_name(self):
