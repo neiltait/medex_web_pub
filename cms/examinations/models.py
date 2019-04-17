@@ -904,6 +904,8 @@ class PatientHeader:
     date_format = '%d.%m.%Y'
 
     def __init__(self, obj_dict):
+        self.given_names = ''
+        self.surname = ''
         if obj_dict:
             self.urgency_score = obj_dict.get("urgencyScore")
             self.given_names = obj_dict.get("givenNames")
