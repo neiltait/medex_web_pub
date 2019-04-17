@@ -88,7 +88,7 @@ def create_other_event(auth_token, examination_id, submission):
         return ExaminationMocks.get_successful_timeline_event_create_response()
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/other' % (settings.API_URL, examination_id),
-                            submission)
+                                submission)
 
 
 def create_meo_summary_event(auth_token, examination_id, submission):
@@ -96,7 +96,7 @@ def create_meo_summary_event(auth_token, examination_id, submission):
         return ExaminationMocks.get_successful_timeline_event_create_response()
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/meo_summary' % (settings.API_URL, examination_id),
-                            submission)
+                                submission)
 
 
 def create_admission_notes_event(auth_token, examination_id, submission):
@@ -105,3 +105,18 @@ def create_admission_notes_event(auth_token, examination_id, submission):
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/admission' % (settings.API_URL, examination_id),
                                 submission)
+
+
+def load_case_outcome(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_case_outcome_response()
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_outcome' % (settings.API_URL, examination_id))
+
+
+def complete_case_scrutiny(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_scrutiny_complete_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/confirmation_of_scrutiny' % (settings.API_URL,
+                                                                                             examination_id))

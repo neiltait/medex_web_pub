@@ -7,7 +7,7 @@ from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter
 from locations import request_handler as location_request_handler
@@ -319,3 +319,43 @@ def __prepare_forms(event_list, form):
         form_data[type(form).__name__] = form.make_active()
 
     return form_data
+
+
+def view_examination_case_outcome(request, examination_id):
+    status_code = status.HTTP_200_OK
+
+    user = User.initialise_with_token(request)
+
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    if request.method == 'POST':
+        if 'pre-scrutiny-confirmed' in request.POST:
+            result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
+
+            if not result == status.HTTP_200_OK:
+                context = {
+                    'session_user': user,
+                    'error': result,
+                }
+
+                return render(request, 'errors/base_error.html', context, status=result.status_code)
+
+    case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
+
+    if not type(case_outcome) == CaseOutcome:
+        context = {
+            'session_user': user,
+            'error': case_outcome,
+        }
+
+        return render(request, 'errors/base_error.html', context, status=case_outcome.status_code)
+
+    context = {
+        'session_user': user,
+        'examination_id': examination_id,
+        'case_outcome': case_outcome,
+        'patient': case_outcome.case_header
+    }
+
+    return render(request, 'examinations/case_outcome.html', context, status=status_code)

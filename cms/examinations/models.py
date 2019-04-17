@@ -801,3 +801,98 @@ class MedicalTeamMember:
 
 def text_field_is_not_null(field):
     return field and len(field.strip()) > 0
+
+
+class CaseOutcome:
+    date_format = '%d.%m.%Y %H:%M'
+    QAP_OUTCOMES = {
+        'MccdCauseOfDeathProvidedByQAP': 'MCCD cause of death provided by QAP',
+    }
+
+    REPRESENTATIVE_OUTCOMES = {
+        'CauseOfDeathAccepted': 'Cause of death accepted',
+    }
+
+    PRE_SCRUTINY_OUTCOMES = {
+        'IssueAnMccd': 'Issue an MCCD',
+    }
+
+    OUTCOME_SUMMARIES = {
+        'ReferToCoroner': 'Refer to coroner',
+    }
+
+    def __init__(self, obj_dict):
+        self.case_header = PatientHeader(obj_dict.get("caseHeader"))
+        self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
+        self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
+        self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
+        self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
+        self.case_status = obj_dict.get("caseOpen")
+        self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
+        self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
+        self.mccd_issued = obj_dict.get("mccdIssed")
+        self.cremation_form_status = obj_dict.get("cremationFormStatus")
+        self.gp_notified_status = obj_dict.get("gpNotifedStatus")
+
+    @classmethod
+    def load_by_id(cls, auth_token, examination_id):
+        response = request_handler.load_case_outcome(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return CaseOutcome(response.json())
+        else:
+            return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+
+    @classmethod
+    def complete_scrutiny(cls, auth_token, examination_id):
+        response = request_handler.complete_case_scrutiny(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'completing'})
+
+    def display_outcome_summary(self):
+        return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+
+    def display_pre_scrutiny_outcome(self):
+        return self.PRE_SCRUTINY_OUTCOMES.get(self.case_pre_scrutiny_outcome)
+
+    def display_qap_outcome(self):
+        return self.QAP_OUTCOMES.get(self.case_qap_outcome)
+
+    def display_representative_outcome(self):
+        return self.REPRESENTATIVE_OUTCOMES.get(self.case_representative_outcome)
+
+    def display_scrutiny_date(self):
+        return self.scrutiny_confirmed.strftime(self.date_format)
+
+
+class PatientHeader:
+    date_format = '%d.%m.%Y'
+
+    def __init__(self, obj_dict):
+        self.urgency_score = obj_dict.get("urgencyScore")
+        self.given_names = obj_dict.get("givenNames")
+        self.surname = obj_dict.get("surname")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.id = obj_dict.get("examinationId")
+        self.time_of_death = obj_dict.get("timeOfDeath")
+        self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
+        self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
+        self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
+        self.appointment_time = obj_dict.get("appointmentTime")
+        self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
+        self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+        self.admission_notes_added = obj_dict.get("admissionNotesHaveBeenAdded")
+        self.ready_for_me_scrutiny = obj_dict.get("readyForMEScrutiny")
+        self.unassigned = obj_dict.get("unassigned")
+        self.have_been_scrutinised = obj_dict.get("haveBeenScrutinisedByME")
+        self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
+        self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
+        self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+        self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
+
+    @property
+    def full_name(self):
+        return "%s %s" % (self.given_names, self.surname)
