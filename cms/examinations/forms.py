@@ -810,7 +810,27 @@ class QapDiscussionEventForm:
         self.year_of_conversation = fallback_to(form_data.get('qap_year_of_conversation'), '')
         self.time_of_conversation = fallback_to(form_data.get('qap_time_of_conversation'), '')
 
+        self.date_of_conversation = None
+        self.calculate_full_date_of_conversation()
+
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def calculate_full_date_of_conversation(self):
+        if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
+            hr, minute = self.calculate_hour_and_minute_of_conversation()
+            self.date_of_conversation = build_date(self.year_of_conversation, self.month_of_conversation,
+                                                   self.day_of_conversation, hr, minute)
+        else:
+            self.date_of_conversation = None
+
+    def calculate_hour_and_minute_of_conversation(self):
+        hr = 0
+        minute = 0
+        time_components = ":".strip(self.time_of_conversation)
+        if len(time_components) >= 2:
+            hr = int(time_components[0])
+            minute = int(time_components[1])
+        return hr, minute
 
     def set_default_qap(self, default_qap):
         self.default_qap = default_qap
@@ -876,15 +896,8 @@ class QapDiscussionEventForm:
             self.year_of_conversation = ''
             self.time_of_conversation = ''
 
-
     def is_valid(self):
         return True
-
-    def conversation_date(self):
-        if validate_date(self.year_of_conversation, self.month_of_conversation, self.day_of_conversation):
-            return build_date(self.year_of_conversation, self.month_of_conversation, self.day_of_conversation).strftime(self.date_format)
-        else:
-            return None
 
     def for_request(self):
 
@@ -894,7 +907,6 @@ class QapDiscussionEventForm:
             "participantRoll": self.participant_role,
             "participantOrganisation": self.participant_organisation,
             "participantPhoneNumber": self.participant_phone_number,
-            "dateOfConversation": self.conversation_date(),
             "discussionUnableHappen": False,
             "discussionDetails": self.discussion_details,
             "qapDiscussionOutcome": self.discussion_outcome,
@@ -902,8 +914,10 @@ class QapDiscussionEventForm:
             "causeOfDeath1a": self.cause_of_death.section_1a,
             "causeOfDeath1b": self.cause_of_death.section_1b,
             "causeOfDeath1c": self.cause_of_death.section_1c,
-            "causeOfDeath2": self.cause_of_death.section_2
+            "causeOfDeath2": self.cause_of_death.section_2,
+            "dateOfConversation": self.date_of_conversation.strftime(API_DATE_FORMAT)
         }
+
 
 class AdmissionNotesEventForm:
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
