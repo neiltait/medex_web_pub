@@ -1,0 +1,113 @@
+{% if not case_outcome.is_coroner_investigation %}
+    <div class="outstanding-items">
+        <h2 class="page-subheading">
+            Outstanding Case items
+        </h2>
+
+        <p>
+            Following completion of scrutiny, the below should be actioned before a case can be closed.
+        </p>
+
+        <form id="outstanding-items-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+              method="post">
+            <fieldset class="nhsuk-fieldset" {% if not case_outcome.coroner_referral %}disabled{% endif %}>
+                {% csrf_token %}
+
+                <div class="outstanding-item">
+                    <h3>
+                        MCCD
+                    </h3>
+
+                    <p>
+                        Please select if an MCCD has been written and issued to the patient's representative.
+                    </p>
+
+                    <div class="nhsuk-checkboxes">
+                        <div class="nhsuk-checkboxes__item">
+                            <input id="mccd-issued" name="mccd_issued" type="checkbox" class="nhsuk-checkboxes__input"
+                                {% if form.mccd_issued %}checked{% endif %}/>
+
+                            <label class="nhsuk-label nhsuk-checkboxes__label" for="mccd-issued">
+                                MCCD issued
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="outstanding-item">
+                    <h3>
+                        Cremation form
+                    </h3>
+
+                    <p>
+                        Has a cremation form been completed for this death?
+                    </p>
+
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="crem-form-1" name="cremation_form" type="radio"
+                                   value="yes" {% if form.cremation_form == 'yes' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="crem-form-1">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="crem-form-2" name="cremation_form" type="radio"
+                                   value="no" {% if form.cremation_form == 'no' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="crem-form-2">
+                                No
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="crem-form-3" name="cremation_form" type="radio"
+                                   value="unknown" {% if form.cremation_form == 'unknown' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="crem-form-3">
+                                Not yet known
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="outstanding-item">
+                    <h3>
+                        GP notification
+                    </h3>
+
+                    <p>
+                        Has the patient's GP been notified of the cause of death?
+                    </p>
+
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="gp-notified-1" name="gp_notified" type="radio"
+                                   value="yes" {% if form.gp_notified == 'yes' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-1">
+                                GP notified
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="gp-notified-2" name="gp_notified" type="radio"
+                                   value="no" {% if form.gp_notified == 'no' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-2">
+                                GP not able to be notified
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="gp-notified-3" name="gp_notified" type="radio"
+                                   value="n-a" {% if form.gp_notified == 'n-a' %}checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-3">
+                                N/A
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sticky-save">
+                    <div class="container">
+                        <input class="submit-btn" type="submit" name="outstanding-items" value="Save changes" />
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endif %}

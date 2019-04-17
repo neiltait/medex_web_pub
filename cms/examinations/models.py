@@ -1,7 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta
 
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from errors.utils import handle_error
 
 from people.models import BereavedRepresentative
@@ -804,7 +804,8 @@ class CaseOutcome:
     CORONER_REFERRAL_FORM_TYPE = 'coroner-referral'
 
     date_format = '%d.%m.%Y %H:%M'
-    REFER_TO_CORONER_KEYS = ['ReferToCoroner', 'IssueMCCDWith100a']
+    CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
+    REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, 'IssueMCCDWith100a']
 
     QAP_OUTCOMES = {
         'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
@@ -880,6 +881,9 @@ class CaseOutcome:
 
     def is_coroner_referral(self):
         return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
+
+    def is_coroner_investigation(self):
+        return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)

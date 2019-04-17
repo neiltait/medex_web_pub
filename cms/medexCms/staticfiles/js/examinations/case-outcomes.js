@@ -13,6 +13,8 @@
                                             this.setHasChanges.bind(this));
             this.coronerReferralForm = new CoronerReferralForm(this.wrapper.find('#coroner-referral-form'),
                                             this.setHasChanges.bind(this));
+            this.outstandingItemsForm = new OutstandingItemsForm(this.wrapper.find('#outstanding-items-form'),
+                                            this.setHasChanges.bind(this));
             this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
             this.initialiseTabs();
         },
@@ -89,6 +91,37 @@
 
         toggleSaveBar: function () {
             this.saveBar.toggle();
+        }
+    }
+
+     var OutstandingItemsForm = function(form, changeCallback) {
+        this.form = $(form);
+        this.changeCallback = changeCallback;
+        this.setup();
+    }
+
+    OutstandingItemsForm.prototype = {
+        setup: function() {
+            this.inputs = [];
+            this.initialiseInputs();
+            this.checkBox = new Input(this.form.find('#coroner-referral-confirmation'), this.handleChange.bind(this));
+            this.saveBar = this.form.find('.sticky-save');
+        },
+
+        initialiseInputs: function() {
+            var inputsData = this.form.find('input');
+            for (var i = 0; i < inputsData.length; i++) {
+                this.inputs.push(new Input(inputsData[i], this.handleChange.bind(this)));
+            }
+        },
+
+        handleChange: function() {
+            this.showSaveBar();
+            this.changeCallback(true, this);
+        },
+
+        showSaveBar: function () {
+            this.saveBar.show();
         }
     }
 
