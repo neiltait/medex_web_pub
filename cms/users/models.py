@@ -61,7 +61,7 @@ class User:
     def role_type(self):
         # TODO This is changed to force the system into accepting us as an ME.
         #  Remove after development of ME only features
-        # return self.ME_ROLE_TYPE
+        #return self.ME_ROLE_TYPE
         return self.permissions[0].role_type
 
     def check_logged_in(self):
@@ -149,11 +149,11 @@ class User:
             return [
                 {
                     'id': 'admin-notes',
-                    'name': 'Latest admission notes'
+                    'name': 'Latest hospital admission details'
                 },
                 {
                     'id': 'history-notes',
-                    'name': 'Medical history notes'
+                    'name': 'Medical and social history notes'
                 },
                 {
                     'id': 'meo-summary',

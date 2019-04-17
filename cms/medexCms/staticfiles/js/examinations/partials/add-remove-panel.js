@@ -11,6 +11,7 @@ AddRemovePanelList.prototype = {
         let that = this;
         this.addButton.on('click', function (event) {
             event.preventDefault();
+            that.addButton.blur();
             if (that.visibleCount < that.panels.length) {
                 that.visibleCount += 1;
                 that.refreshVisible();
@@ -19,6 +20,7 @@ AddRemovePanelList.prototype = {
 
         this.removeButton.on('click', function (event) {
             event.preventDefault();
+            that.removeButton.blur();
             if (that.visibleCount > 0) {
                 that.visibleCount -= 1;
                 that.refreshVisible();

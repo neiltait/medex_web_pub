@@ -751,12 +751,7 @@ class ExaminationMocks:
                             "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "created": "2019-03-12T10:30:43.019Z",
-                            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                    "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                    "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                    "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                    "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                    "consectetur adipiscing elit, sed do eiusmod tempor",
+                            "text": "",
                             "isFinal": True,
                             "eventType": "Other"
                         }
@@ -765,12 +760,7 @@ class ExaminationMocks:
                         "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                         "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "text": "",
                         "isFinal": True,
                         "eventType": "Other"
                     },
@@ -778,12 +768,7 @@ class ExaminationMocks:
                         "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                         "userId": "WERGT-243TRGS-WE4TG-WERGT",
                         "created": "2019-03-12T10:30:43.019Z",
-                        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                "consectetur adipiscing elit, sed do eiusmod tempor",
+                        "text": "",
                         "isFinal": False,
                         "eventType": "Other"
                     },
@@ -1098,14 +1083,11 @@ class ExaminationMocks:
                         {
                             "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
-                            "notes": "Notes about latest admission to hospital: James Marshall was "
-                                     "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
-                                     "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
-                                     "improvement...more notes would be added here",
+                            "notes": '',
                             "isFinal": True,
                             "eventType": "Admission",
-                            "admittedDate": "2019-03-10T08:31:43.019Z",
-                            "admittedTime": "10:00",
+                            "admittedDate": "",
+                            "admittedTime": "",
                             "immediateCoronerReferral": False,
                             "created": "2019-03-12T10:30:43.019Z",
                         }
@@ -1113,28 +1095,22 @@ class ExaminationMocks:
                     "latest": {
                         "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                         "userId": "WERGT-243TRGS-WE4TG-WERGT",
-                        "notes": "Notes about latest admission to hospital: James Marshall was "
-                                 "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
-                                 "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
-                                 "improvement...more notes would be added here",
+                        "notes": '',
                         "isFinal": True,
                         "eventType": "Admission",
-                        "admittedDate": "2019-03-10T08:31:43.019Z",
-                        "admittedTime": "10:00",
+                        "admittedDate": "",
+                        "admittedTime": "",
                         "immediateCoronerReferral": False,
                         "created": "2019-03-12T10:30:43.019Z",
                     },
                     "usersDraft": {
                         "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                         "userId": "WERGT-243TRGS-WE4TG-WERGT",
-                        "notes": "Notes about latest admission to hospital: James Marshall was "
-                                 "admitted on 2nd March 2019 showing signs of xxxx xxxxx xxxxx, he "
-                                 "was treated for yyyyyyyy with zzzzzzzzz but showed no signs of "
-                                 "improvement...more notes would be added here",
+                        "notes": '',
                         "isFinal": True,
                         "eventType": "Admission",
-                        "admittedDate": "2019-03-10T08:31:43.019Z",
-                        "admittedTime": "10:00",
+                        "admittedDate": "",
+                        "admittedTime": "",
                         "immediateCoronerReferral": False,
                         "created": "2019-03-12T10:30:43.019Z",
                     }
