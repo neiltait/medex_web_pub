@@ -804,21 +804,38 @@ def text_field_is_not_null(field):
 
 
 class CaseOutcome:
+    SCRUTINY_CONFIRMATION_FORM_TYPE = 'pre-scrutiny-confirmed'
+    CORONER_REFERRAL_FORM_TYPE = 'coroner-referral'
+
     date_format = '%d.%m.%Y %H:%M'
+    REFER_TO_CORONER_KEYS = ['ReferToCoroner', 'IssueMCCDWith100a']
+
     QAP_OUTCOMES = {
-        'MccdCauseOfDeathProvidedByQAP': 'MCCD cause of death provided by QAP',
+        'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
+        'MccdCauseOfDeathProvidedByME': 'MCCD to be issued, COD provided by ME',
+        'MccdCauseOfDeathAgreedByQAPandME': 'MCCD to be issued, new COD reached',
+        'ReferToCoroner': 'Refer to coroner'
     }
 
     REPRESENTATIVE_OUTCOMES = {
-        'CauseOfDeathAccepted': 'Cause of death accepted',
+        'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
+        'ConcernsRaised': 'Refer to coroner, concerns raised'
     }
 
     PRE_SCRUTINY_OUTCOMES = {
-        'IssueAnMccd': 'Issue an MCCD',
+        'IssueAnMccd': 'MCCD to be issued',
+        'ReferToCoroner': 'Refer to coroner'
     }
 
     OUTCOME_SUMMARIES = {
-        'ReferToCoroner': 'Refer to coroner',
+        'ReferToCoroner': {'heading': 'Refer to coroner', 'details': 'For investigation'},
+        'IssueMCCDWith100a': {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
+        'IssueMCCD': {'heading': 'MCCD to be issued'}
+    }
+
+    CORONER_DISCLAIMERS = {
+        'ReferToCoroner': 'This case has been submitted to the coroner for an investigation.',
+        'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
     }
 
     def __init__(self, obj_dict):
@@ -829,6 +846,7 @@ class CaseOutcome:
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
         self.case_status = obj_dict.get("caseOpen")
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
+        self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.mccd_issued = obj_dict.get("mccdIssed")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
@@ -851,6 +869,24 @@ class CaseOutcome:
             return response.status_code
         else:
             return handle_error(response, {'type': 'case', 'action': 'completing'})
+
+    @classmethod
+    def confirm_coroner_referral(cls, auth_token, examination_id):
+        response = request_handler.confirm_coroner_referral(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
+
+    def show_coroner_referral(self):
+        return self.is_coroner_referral() and self.scrutiny_confirmed
+
+    def is_coroner_referral(self):
+        return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
+
+    def coroner_referral_disclaimer(self):
+        return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
 
     def display_outcome_summary(self):
         return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)

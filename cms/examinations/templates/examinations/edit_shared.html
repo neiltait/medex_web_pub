@@ -10,8 +10,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/examinations/examination-edit.js' %}"></script>
-
     {% block tab_js %}
     {% endblock %}
 {% endblock %}
@@ -61,7 +59,7 @@
                     Case breakdown
                 </a>
 
-                <a class="tab-item {% if "case-outcomes" in request.path %}active{% endif %}" id="case-outcomes-tab"
+                <a class="tab-item {% if "case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
                         href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
                     Case outcomes
                 </a>

@@ -30,3 +30,18 @@ def event_form_submitter(auth_token, examination_id, form):
         return request_handler.create_other_event(auth_token, examination_id, form.for_request())
     elif form_type == AdmissionNotesEventForm:
         return request_handler.create_admission_notes_event(auth_token, examination_id, form.for_request())
+
+
+def get_tab_change_modal_config():
+    return {
+        'id': 'tab-change-modal',
+        'content': 'You have unsaved changes, do you want to save them before continuing?',
+        'confirm_btn_id': 'save-continue',
+        'confirm_btn_text': 'Save and continue',
+        'extra_buttons': [
+            {
+                'id': 'discard',
+                'text': 'Discard and continue',
+            }
+        ],
+    }

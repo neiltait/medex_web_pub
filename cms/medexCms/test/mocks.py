@@ -721,6 +721,7 @@ class ExaminationMocks:
             "outcomeQapDiscussion": "MccdCauseOfDeathProvidedByQAP",
             "caseOpen": True,
             "scrutinyConfirmedOn": "2019-04-15T11:37:01.174Z",
+            "coronerReferral": True,
             "caseMedicalExaminerFullName": "Dr Bob Smith",
             "mccdIssed": False,
             "cremationFormStatus": "",
@@ -1285,6 +1286,20 @@ class ExaminationMocks:
 
     @classmethod
     def get_unsuccessful_scrutiny_complete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_successful_coroner_referral_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({})
+        return response
+
+    @classmethod
+    def get_unsuccessful_coroner_referral_response(cls):
         response = Response()
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None)

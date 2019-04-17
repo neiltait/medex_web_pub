@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
+from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
+from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
-from examinations.utils import event_form_parser, event_form_submitter
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -221,21 +223,6 @@ def validate_patient_details_forms(primary_info_form, secondary_info_form, berea
     return primary_valid and secondary_valid and bereaved_valid and urgency_valid
 
 
-def get_tab_change_modal_config():
-    return {
-        'id': 'tab-change-modal',
-        'content': 'You have unsaved changes, do you want to save them before continuing?',
-        'confirm_btn_id': 'save-continue',
-        'confirm_btn_text': 'Save and continue',
-        'extra_buttons': [
-            {
-                'id': 'discard',
-                'text': 'Discard and continue',
-            }
-        ],
-    }
-
-
 def edit_examination_case_breakdown(request, examination_id):
     user = User.initialise_with_token(request)
     status_code = status.HTTP_200_OK
@@ -330,16 +317,22 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if 'pre-scrutiny-confirmed' in request.POST:
+        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
+            result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
+        else:
+            response = Response()
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            result = GenericError(response, {'type': 'form', 'action': 'submitting'})
 
-            if not result == status.HTTP_200_OK:
-                context = {
-                    'session_user': user,
-                    'error': result,
-                }
+        if result and not result == status.HTTP_200_OK:
+            context = {
+                'session_user': user,
+                'error': result,
+            }
 
-                return render(request, 'errors/base_error.html', context, status=result.status_code)
+            return render(request, 'errors/base_error.html', context, status=result.status_code)
 
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
@@ -351,11 +344,14 @@ def view_examination_case_outcome(request, examination_id):
 
         return render(request, 'errors/base_error.html', context, status=case_outcome.status_code)
 
+    modal_config = get_tab_change_modal_config()
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
         'case_outcome': case_outcome,
-        'patient': case_outcome.case_header
+        'patient': case_outcome.case_header,
+        'tab_modal': modal_config,
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)

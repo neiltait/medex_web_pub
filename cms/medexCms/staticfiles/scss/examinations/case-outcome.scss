@@ -90,4 +90,29 @@
             margin-bottom: 1rem;
         }
     }
+
+    .refer-to-coroner {
+        margin-top: 5rem;
+
+        .disclaimer-wrapper {
+            margin-top: 5rem;
+
+            .disclaimer-header {
+                position: relative;
+                bottom: -1em;
+                display: inline;
+
+                padding: 0.5rem 1.5rem;
+
+                background-color: $yellow;
+                font-size: $nhs-body-l-size;
+                font-weight: bold;
+            }
+
+            .disclaimer-body {
+                background-color: $pale-yellow;
+                padding: 3rem 2.5rem;
+            }
+        }
+    }
 }

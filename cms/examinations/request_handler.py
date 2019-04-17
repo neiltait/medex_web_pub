@@ -120,3 +120,11 @@ def complete_case_scrutiny(auth_token, examination_id):
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/confirmation_of_scrutiny' % (settings.API_URL,
                                                                                              examination_id))
+
+
+def confirm_coroner_referral(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_coroner_referral_response()
+    else:
+        return ExaminationMocks.get_successful_coroner_referral_response()
+        # return MedexRequest.put(auth_token, '%s/examinations/%s/coroner_referral' % (settings.API_URL, examination_id))
