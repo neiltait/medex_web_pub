@@ -924,15 +924,15 @@ class AdmissionNotesEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('admission_notes_id')
-        self.admission_day = form_data.get('day_of_last_admission')
-        self.admission_month = form_data.get('month_of_last_admission')
-        self.admission_year = form_data.get('year_of_last_admission')
-        self.admission_date_unknown = form_data.get('date_of_last_admission_not_known')
-        self.admission_time = form_data.get('time_of_last_admission')
-        self.admission_time_unknown = form_data.get('time_of_last_admission_not_known')
+        self.event_id = fallback_to(form_data.get('admission_notes_id'), '')
+        self.admission_day = fallback_to(form_data.get('day_of_last_admission'), '')
+        self.admission_month = fallback_to(form_data.get('month_of_last_admission'), '')
+        self.admission_year = fallback_to(form_data.get('year_of_last_admission'), '')
+        self.admission_date_unknown = fallback_to(form_data.get('date_of_last_admission_not_known'), '')
+        self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
+        self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
-        self.coroner_referral = form_data.get('latest-admission-suspect-referral')
+        self.coroner_referral = fallback_to(form_data.get('latest-admission-suspect-referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
