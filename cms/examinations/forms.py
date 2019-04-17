@@ -772,6 +772,8 @@ class QapDiscussionEventForm:
         self.event_id = ''
         self.use_default_qap = False
         self.default_qap = None
+        self.outcome = ""
+        self.outcome_decision = ""
 
         if form_data.get('qap-discussion-doctor') == 'other':
             self.participant_name = form_data.get('qap-other__full-name')
@@ -827,7 +829,32 @@ class QapDiscussionEventForm:
                self.default_qap.role == self.participant_role
 
     def fill_from_draft(self, draft):
-        pass
+        self.event_id = draft.event_id
+        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death.section_1a = draft.causeOfDeath1a
+        self.cause_of_death.section_1b = draft.causeOfDeath1b
+        self.cause_of_death.section_1c = draft.causeOfDeath1c
+        self.cause_of_death.section_2 = draft.causeOfDeath2
+        self.discussion_outcome = draft.qap_discussion_outcome
+
+        if self.discussion_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-1"
+        elif self.discussion_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-2"
+        elif self.discussion_outcome == self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-3"
+        elif self.discussion_outcome == self.DISCUSSION_OUTCOME_CORONER:
+            self.outcome = "coroner"
+            self.outcome_decision = ""
+
+        self.discussion_details = draft.discussion_details
+        self.participant_name = draft.participantName
+        self.participant_role = draft.participant_role
+        self.participant_organisation = draft.participant_organisation
+        self.participant_phone_number = draft.participant_phone_number
 
     def is_valid(self):
         return True

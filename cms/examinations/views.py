@@ -314,7 +314,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     if event_list.get_meo_summary_draft():
         meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
     if event_list.get_qap_discussion_draft():
-        qap_discussion_form.fill_from_draft(event_list.get_meo_summary_draft())
+        qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft())
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
