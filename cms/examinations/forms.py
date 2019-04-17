@@ -769,7 +769,7 @@ class QapDiscussionEventForm:
 
     def __init__(self, form_data={}):
 
-        self.event_id = ''
+        self.event_id = form_data.get('qap_discussion_id')
         self.use_default_qap = False
         self.default_qap = None
         self.outcome = ""
@@ -826,7 +826,7 @@ class QapDiscussionEventForm:
     def calculate_hour_and_minute_of_conversation(self):
         hr = 0
         minute = 0
-        time_components = ":".strip(self.time_of_conversation)
+        time_components = self.time_of_conversation.split(":")
         if len(time_components) >= 2:
             hr = int(time_components[0])
             minute = int(time_components[1])
