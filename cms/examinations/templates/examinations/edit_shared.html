@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/examinations/examination-edit.js' %}"></script>
 
 {% block tab_js %}
 {% endblock %}
@@ -75,14 +74,22 @@
             Case breakdown
             </a>
 
+            <<<<<<< HEAD
             <a class="tab-item {% if " case-outcomes" in request.path %}active{% endif %}" id="case-outcomes-tab"
             href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
             Case outcomes
             </a>
+            =======
+            <a class="tab-item {% if " case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
+            href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
+            Case outcomes
+            </a>
         </div>
+        >>>>>>> master
     </div>
+</div>
 
-    {% block tab_content %}
-    {% endblock %}
+{% block tab_content %}
+{% endblock %}
 </div>
 {% endblock %}

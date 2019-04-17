@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
+from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
+from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
-from examinations.utils import event_form_parser, event_form_submitter
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from locations import request_handler as location_request_handler
 from people import request_handler as people_request_handler
 from users.models import User
@@ -83,11 +85,11 @@ def edit_examination_patient_details(request, examination_id):
     error_count = 0
     saved = False
 
-    if request.method == 'GET':
-        examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-        if not examination:
-            return render_404(request, user, 'case')
+    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
+    if not examination:
+        return render_404(request, user, 'case')
 
+    if request.method == 'GET':
         primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
         secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
         bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
@@ -99,9 +101,8 @@ def edit_examination_patient_details(request, examination_id):
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
-        examination = PatientDetails().set_primary_info_values(primary_info_form) \
-            .set_secondary_info_values(secondary_info_form).set_bereaved_info_values(bereaved_info_form) \
-            .set_urgency_info_values(urgency_info_form)
+        examination.set_primary_info_values(primary_info_form).set_secondary_info_values(secondary_info_form)\
+            .set_bereaved_info_values(bereaved_info_form).set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
                                                      urgency_info_form)
@@ -138,6 +139,7 @@ def edit_examination_patient_details(request, examination_id):
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'patient': examination.case_header,
         'primary_info_form': primary_info_form,
         'secondary_info_form': secondary_info_form,
         'bereaved_info_form': bereaved_info_form,
@@ -163,6 +165,7 @@ def edit_examination_medical_team(request, examination_id):
 
     # check the examination exists
     # TODO add 404 check (currently not possible from medical_team endpoint
+    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
 
     if request.method == 'POST':
         # attempt to post and get return form
@@ -170,11 +173,12 @@ def edit_examination_medical_team(request, examination_id):
                                                                                          user.auth_token, saved)
     else:
         # the GET medical team form
-        medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
         medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
     # render the tab
-    return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user, saved)
+    return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
+                                     medical_team.case_header, saved)
+
 
 
 def __get_medical_team_form(medical_team=None):
@@ -204,7 +208,9 @@ def __post_medical_team_form(request, examination_id, auth_token, saved):
     return medical_team_members_form, status_code, errors, saved
 
 
-def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user, saved):
+def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
+                              header_info, saved):
+
     medical_examiners = people_request_handler.get_medical_examiners_list_for_examination(user.auth_token,
                                                                                           examination_id)
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list_for_examination(
@@ -213,6 +219,7 @@ def __render_medical_team_tab(errors, examination_id, medical_team_members_form,
     context = {
         'session_user': user,
         'examination_id': examination_id,
+        'patient': header_info,
         'form': medical_team_members_form,
         'medical_examiners': medical_examiners,
         'medical_examiners_officers': medical_examiners_officers,
@@ -231,21 +238,6 @@ def validate_patient_details_forms(primary_info_form, secondary_info_form, berea
     urgency_valid = urgency_info_form.is_valid()
 
     return primary_valid and secondary_valid and bereaved_valid and urgency_valid
-
-
-def get_tab_change_modal_config():
-    return {
-        'id': 'tab-change-modal',
-        'content': 'You have unsaved changes, do you want to save them before continuing?',
-        'confirm_btn_id': 'save-continue',
-        'confirm_btn_text': 'Save and continue',
-        'extra_buttons': [
-            {
-                'id': 'discard',
-                'text': 'Discard and continue',
-            }
-        ],
-    }
 
 
 def edit_examination_case_breakdown(request, examination_id):
@@ -273,11 +265,6 @@ def edit_examination_case_breakdown(request, examination_id):
 
     form_data = __prepare_forms(examination.event_list, form)
 
-    patient = {
-        "name": examination.patient_name,
-        "nhs_number": examination.nhs_number
-    }
-
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -286,7 +273,7 @@ def edit_examination_case_breakdown(request, examination_id):
         "case_breakdown": examination,
         'bereaved_form': {"use_default_bereaved": True},
         #'latest_admission_form': examination.latest_admission,
-        'patient': patient,
+        'patient': examination.case_header,
         'form_data': form_data
     }
 
@@ -342,16 +329,22 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if 'pre-scrutiny-confirmed' in request.POST:
+        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
+            result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
+        else:
+            response = Response()
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            result = GenericError(response, {'type': 'form', 'action': 'submitting'})
 
-            if not result == status.HTTP_200_OK:
-                context = {
-                    'session_user': user,
-                    'error': result,
-                }
+        if result and not result == status.HTTP_200_OK:
+            context = {
+                'session_user': user,
+                'error': result,
+            }
 
-                return render(request, 'errors/base_error.html', context, status=result.status_code)
+            return render(request, 'errors/base_error.html', context, status=result.status_code)
 
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
@@ -363,11 +356,14 @@ def view_examination_case_outcome(request, examination_id):
 
         return render(request, 'errors/base_error.html', context, status=case_outcome.status_code)
 
+    modal_config = get_tab_change_modal_config()
+
     context = {
         'session_user': user,
         'examination_id': examination_id,
         'case_outcome': case_outcome,
-        'patient': case_outcome.case_header
+        'patient': case_outcome.case_header,
+        'tab_modal': modal_config,
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)

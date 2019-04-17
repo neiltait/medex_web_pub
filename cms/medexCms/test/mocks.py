@@ -461,6 +461,28 @@ class ExaminationMocks:
     @classmethod
     def get_patient_details_load_response_content(cls):
         return {
+            "header": {
+                "urgencyScore": 0,
+                "givenNames": "John",
+                "surname": "Doe",
+                "nhsNumber": "123-456-7890",
+                "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                "timeOfDeath": "10:00",
+                "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                "appointmentDate": "2019-04-15T11:37:01.174Z",
+                "appointmentTime": "09:00",
+                "lastAdmission": "2019-04-15T11:37:01.174Z",
+                "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                "admissionNotesHaveBeenAdded": True,
+                "readyForMEScrutiny": True,
+                "unassigned": True,
+                "haveBeenScrutinisedByME": True,
+                "pendingAdmissionNotes": True,
+                "pendingDiscussionWithQAP": True,
+                "pendingDiscussionWithRepresentative": True,
+                "haveFinalCaseOutstandingOutcomes": True
+            },
             "id": "0123-456-789",
             "culturalPriority": True,
             "faithPriority": True,
@@ -510,6 +532,28 @@ class ExaminationMocks:
     def get_medical_team_load_response_content(cls, examination_id=1):
         if examination_id == 1:
             return {
+                "header": {
+                    "urgencyScore": 0,
+                    "givenNames": "John",
+                    "surname": "Doe",
+                    "nhsNumber": "123-456-7890",
+                    "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                    "timeOfDeath": "10:00",
+                    "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                    "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                    "appointmentDate": "2019-04-15T11:37:01.174Z",
+                    "appointmentTime": "09:00",
+                    "lastAdmission": "2019-04-15T11:37:01.174Z",
+                    "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                    "admissionNotesHaveBeenAdded": True,
+                    "readyForMEScrutiny": True,
+                    "unassigned": True,
+                    "haveBeenScrutinisedByME": True,
+                    "pendingAdmissionNotes": True,
+                    "pendingDiscussionWithQAP": True,
+                    "pendingDiscussionWithRepresentative": True,
+                    "haveFinalCaseOutstandingOutcomes": True
+                },
                 "consultantResponsible": {
                     "name": "Peter Hipkiss",
                     "role": "Oncologist",
@@ -535,6 +579,28 @@ class ExaminationMocks:
             }
         elif examination_id == 2:
             return {
+                "header": {
+                    "urgencyScore": 0,
+                    "givenNames": "John",
+                    "surname": "Doe",
+                    "nhsNumber": "123-456-7890",
+                    "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                    "timeOfDeath": "10:00",
+                    "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                    "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                    "appointmentDate": "2019-04-15T11:37:01.174Z",
+                    "appointmentTime": "09:00",
+                    "lastAdmission": "2019-04-15T11:37:01.174Z",
+                    "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                    "admissionNotesHaveBeenAdded": True,
+                    "readyForMEScrutiny": True,
+                    "unassigned": True,
+                    "haveBeenScrutinisedByME": True,
+                    "pendingAdmissionNotes": True,
+                    "pendingDiscussionWithQAP": True,
+                    "pendingDiscussionWithRepresentative": True,
+                    "haveFinalCaseOutstandingOutcomes": True
+                },
                 "consultantResponsible": {
                     "name": "Peter Hipkiss",
                     "role": "Oncologist",
@@ -567,6 +633,28 @@ class ExaminationMocks:
             }
         else:
             return {
+                "header": {
+                    "urgencyScore": 0,
+                    "givenNames": "John",
+                    "surname": "Doe",
+                    "nhsNumber": "123-456-7890",
+                    "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                    "timeOfDeath": "10:00",
+                    "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                    "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                    "appointmentDate": "2019-04-15T11:37:01.174Z",
+                    "appointmentTime": "09:00",
+                    "lastAdmission": "2019-04-15T11:37:01.174Z",
+                    "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                    "admissionNotesHaveBeenAdded": True,
+                    "readyForMEScrutiny": True,
+                    "unassigned": True,
+                    "haveBeenScrutinisedByME": True,
+                    "pendingAdmissionNotes": True,
+                    "pendingDiscussionWithQAP": True,
+                    "pendingDiscussionWithRepresentative": True,
+                    "haveFinalCaseOutstandingOutcomes": True
+                },
                 "consultantResponsible": {
                     "name": "Peter Hipkiss",
                     "role": "Oncologist",
@@ -721,6 +809,7 @@ class ExaminationMocks:
             "outcomeQapDiscussion": "MccdCauseOfDeathProvidedByQAP",
             "caseOpen": True,
             "scrutinyConfirmedOn": "2019-04-15T11:37:01.174Z",
+            "coronerReferral": True,
             "caseMedicalExaminerFullName": "Dr Bob Smith",
             "mccdIssed": False,
             "cremationFormStatus": "",
@@ -730,10 +819,28 @@ class ExaminationMocks:
     @classmethod
     def get_case_breakdown_response_content(cls):
         return {
-            "patientName": 'John Doe',
-            "nhsNumber": '0123-456-789',
-            "dateOfDeath": "2019-03-11T13:00:00.000Z",
-            "timeOfDeath": "13:00",
+            "header": {
+                "urgencyScore": 0,
+                "givenNames": "John",
+                "surname": "Doe",
+                "nhsNumber": "123-456-7890",
+                "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+                "timeOfDeath": "10:00",
+                "dateOfBirth": "1919-04-15T10:00:01.174Z",
+                "dateOfDeath": "2019-04-15T10:00:01.174Z",
+                "appointmentDate": "2019-04-15T11:37:01.174Z",
+                "appointmentTime": "09:00",
+                "lastAdmission": "2019-04-15T11:37:01.174Z",
+                "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+                "admissionNotesHaveBeenAdded": True,
+                "readyForMEScrutiny": True,
+                "unassigned": True,
+                "haveBeenScrutinisedByME": True,
+                "pendingAdmissionNotes": True,
+                "pendingDiscussionWithQAP": True,
+                "pendingDiscussionWithRepresentative": True,
+                "haveFinalCaseOutstandingOutcomes": True
+            },
             "caseBreakdown": {
                 "patientDeathEvent": {
                     "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
@@ -1285,6 +1392,20 @@ class ExaminationMocks:
 
     @classmethod
     def get_unsuccessful_scrutiny_complete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_successful_coroner_referral_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({})
+        return response
+
+    @classmethod
+    def get_unsuccessful_coroner_referral_response(cls):
         response = Response()
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None)
