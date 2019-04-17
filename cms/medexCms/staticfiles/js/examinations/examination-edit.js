@@ -215,6 +215,7 @@
       let that = this;
       this.addButton.on('click', function (event) {
         event.preventDefault();
+        that.addButton.blur();
         if (that.visibleCount < that.panels.length) {
           that.visibleCount += 1;
           that.refreshVisible();
@@ -222,6 +223,7 @@
       });
       this.removeButton.on('click', function (event) {
         event.preventDefault();
+        that.removeButton.blur();
         if (that.visibleCount > 0) {
           that.visibleCount -= 1;
           that.refreshVisible();
@@ -273,7 +275,7 @@
       let that = this;
       this.addButton.on('click', function (event) {
         event.preventDefault();
-        that.show()
+        that.show();
       });
       this.removeButton.on('click', function (event) {
         event.preventDefault();
