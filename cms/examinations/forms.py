@@ -856,6 +856,27 @@ class QapDiscussionEventForm:
         self.participant_organisation = draft.participant_organisation
         self.participant_phone_number = draft.participant_phone_number
 
+        self.calculate_time_values(draft)
+
+    def calculate_time_values(self, draft):
+        date_of_conversation = draft.date_of_conversation
+        if date_of_conversation is not None:
+            # Individual day, month, year values
+            self.day_of_conversation = date_of_conversation.day
+            self.month_of_conversation = date_of_conversation.month
+            self.year_of_conversation = date_of_conversation.year
+
+            # Time as a string
+            hr_str = ("0%s" % date_of_conversation.hour)[-2:]
+            min_str = ("0%s" % date_of_conversation.minute)[-2:]
+            self.time_of_conversation = "%s:%s" % (hr_str, min_str)
+        else:
+            self.day_of_conversation = ''
+            self.month_of_conversation = ''
+            self.year_of_conversation = ''
+            self.time_of_conversation = ''
+
+
     def is_valid(self):
         return True
 
