@@ -8,8 +8,9 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm
-from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm
+from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
+    CaseQapDiscussionEvent, MedicalTeamMember
 from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
@@ -775,6 +776,186 @@ class ExaminationsFormsTests(MedExTestCase):
         result = form.admission_date()
 
         self.assertIsNone(result)
+
+    # QapDiscussionEventForm
+
+    def test_qap_discussion__request__maps_to_qap_discussion_api_put_request(self):
+        # Given form data
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call data for an api request
+        request = form.for_request()
+
+        # then the data is not empty
+        self.assertGreater(len(request), 0)
+
+    def test_qap_discussion__request__maps_conversation_day_month_year_time_to_single_api_date(self):
+        # Given form data with specific dates
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap_day_of_conversation'] = '20'
+        form_data['qap_month_of_conversation'] = '5'
+        form_data['qap_year_of_conversation'] = '2019'
+        form_data['qap_time_of_conversation'] = '12:30'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the returned date starts with the expected reverse date
+        expected_date_start = '2019-05-20T12:30'
+        self.assertTrue(request['dateOfConversation'].startswith(expected_date_start))
+
+    def test_qap_discussion__request__maps_mccd_and_qap_combination_to_single_field(self):
+        # Given form data with outcome that mccd is to be produced with decision version 1
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-outcome'] = 'mccd'
+        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-1'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the outcome is mapped to option 1 - qap updates the decision
+        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_FROM_QAP)
+
+    def test_qap_discussion__request__maps_mccd_and_me_combination_to_single_field(self):
+        # Given form data with outcome that mccd is to be produced with decision version 1
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-outcome'] = 'mccd'
+        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-2'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the outcome is mapped to option 2 - me's first decision
+        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_FROM_ME)
+
+    def test_qap_discussion__request__maps_mccd_and_agreement_combination_to_single_field(self):
+        # Given form data with outcome that mccd is to be produced with decision version 1
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-outcome'] = 'mccd'
+        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-3'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the outcome is mapped to option 3 - agreement
+        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE)
+
+    def test_qap_discussion__request__maps_refer_to_coroner_to_single_field(self):
+        # Given form data with outcome that mccd is to be produced with decision version 1
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-outcome'] = 'coroner'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the outcome is mapped to coroner referral
+        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_CORONER)
+
+    def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
+        # Given form data with the Default Qap radio button selected
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-doctor'] = 'qap'
+        form_data['qap-default__full-name'] = 'Default Qap'
+        form_data['qap-other__full-name'] = 'Custom Qap'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the default qap is assigned as participant
+        self.assertEquals(request['participantName'], 'Default Qap')
+
+    def test_qap_discussion__request__maps_custom_qap_to_participant_if_discussion_type_qap_selected(self):
+        # Given form data with the Other Qap radio button selected
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-doctor'] = 'other'
+        form_data['qap-default__full-name'] = 'Default Qap'
+        form_data['qap-other__full-name'] = 'Custom Qap'
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the custom qap is assigned as participant
+        self.assertEquals(request['participantName'], 'Custom Qap')
+
+    def test_qap_discussion__fill_from_draft__recalls_fields_from_api_event_draft(self):
+        # Given draft data from the api
+        draft_data = ExaminationMocks.get_mock_qap_discussion_draft_data()
+        qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
+
+        # Then the form is created
+        self.assertEquals(draft_data["discussionDetails"], form.discussion_details)
+
+    def test_qap_discussion__fill_from_draft__maps_single_conversation_date_to_day_month_year_time_fields(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_qap_discussion_draft_data()
+        draft_data['dateOfConversation'] = "2019-04-08T08:30:00.000Z"
+        qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.day_of_conversation, 8)
+        self.assertEquals(form.month_of_conversation, 4)
+        self.assertEquals(form.year_of_conversation, 2019)
+        self.assertEquals(form.time_of_conversation, "08:30")
+
+    def test_qap_discussion__fill_from_draft__maps_null_conversation_date_to_empty_string_fields(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_qap_discussion_draft_data()
+        draft_data['dateOfConversation'] = ""
+        qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.day_of_conversation, '')
+        self.assertEquals(form.month_of_conversation, '')
+        self.assertEquals(form.year_of_conversation, '')
+        self.assertEquals(form.time_of_conversation, '')
+
+    def test_qap_discussion__fill_from_draft__sets_type_as_qap_if_default_qap_matches_participant(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_qap_discussion_draft_data()
+        qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form when the default
+        qap_in_data = self.get_participant_from_draft(draft_data)
+        form = QapDiscussionEventForm().fill_from_draft(qap_draft, default_qap=qap_in_data)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.discussion_participant_type, 'qap')
+
+    def test_qap_discussion__fill_from_draft__sets_type_as_other_if_default_qap_doesnt_match_participant(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_qap_discussion_draft_data()
+        qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form when the default
+        any_medic = MedicalTeamMember(name='Any other qap')
+        form = QapDiscussionEventForm().fill_from_draft(qap_draft, default_qap=any_medic)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.discussion_participant_type, 'other')
+
+    @staticmethod
+    def get_participant_from_draft(draft_data):
+        return MedicalTeamMember(name=draft_data["participantName"],
+                                 role=draft_data["participantRoll"],
+                                 organisation=draft_data["participantOrganisation"],
+                                 phone_number=draft_data["participantPhoneNumber"])
 
 
 class ExaminationsModelsTests(MedExTestCase):

@@ -770,8 +770,6 @@ class QapDiscussionEventForm:
     def __init__(self, form_data={}):
 
         self.event_id = form_data.get('qap_discussion_id')
-        self.outcome = ""
-        self.outcome_decision = ""
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
 
@@ -793,8 +791,8 @@ class QapDiscussionEventForm:
 
         self.discussion_details = fallback_to(form_data.get('qap_discussion_details'), '')
 
-        self.outcome = form_data.get('qap-discussion-outcome')
-        self.outcome_decision = form_data.get('qap-discussion-outcome-decision')
+        self.outcome = fallback_to(form_data.get('qap-discussion-outcome'), '')
+        self.outcome_decision = fallback_to(form_data.get('qap-discussion-outcome-decision'), '')
 
         self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
         self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
@@ -803,8 +801,8 @@ class QapDiscussionEventForm:
 
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
-
-    def __draft_participant_is_default_qap(self, draft, default_qap):
+    @staticmethod
+    def __draft_participant_is_default_qap(draft, default_qap):
         return default_qap is not None and \
                default_qap.name == draft.participant_name and \
                default_qap.phone_number == draft.participant_phone_number and \
@@ -828,6 +826,8 @@ class QapDiscussionEventForm:
 
         # fill alternate cause of death boxes
         self.__fill_cause_of_death_from_draft(draft)
+
+        return self
 
     def __fill_cause_of_death_from_draft(self, draft):
         self.cause_of_death = CauseOfDeathProposal()

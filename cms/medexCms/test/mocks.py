@@ -856,11 +856,11 @@ class ExaminationMocks:
                             "dateOfConversation": "2019-04-08T08:31:43.019Z",
                             "discussionUnableHappen": False,
                             "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                                                 "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                 "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                 "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                 "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                 "consectetur adipiscing elit, sed do eiusmod tempor",
                             "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                         }
                     ],
@@ -878,11 +878,11 @@ class ExaminationMocks:
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
                         "discussionUnableHappen": False,
                         "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                                             "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                             "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                             "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                             "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                             "consectetur adipiscing elit, sed do eiusmod tempor",
                         "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                     },
                     "usersDraft": {
@@ -899,11 +899,11 @@ class ExaminationMocks:
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
                         "discussionUnableHappen": False,
                         "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                                             "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                             "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                             "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                             "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                             "consectetur adipiscing elit, sed do eiusmod tempor",
                         "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
                     }
                 },
@@ -964,11 +964,11 @@ class ExaminationMocks:
                             "dateOfConversation": "2019-04-08T08:31:43.019Z",
                             "discussionUnableHappen": False,
                             "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                                  "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                                  "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                                  "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                                  "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                                  "consectetur adipiscing elit, sed do eiusmod tempor",
+                                                 "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                                 "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                                 "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                                 "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                                 "consectetur adipiscing elit, sed do eiusmod tempor",
                             "qapDiscussionOutcome": "MccdToBeIssued",
                             "participantName": "Dr G House",
                             "causeOfDeath1a": "",
@@ -989,11 +989,11 @@ class ExaminationMocks:
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
                         "discussionUnableHappen": False,
                         "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                                             "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                             "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                             "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                             "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                             "consectetur adipiscing elit, sed do eiusmod tempor",
                         "qapDiscussionOutcome": "MccdToBeIssued",
                         "participantName": "Dr G House",
                         "causeOfDeath1a": "",
@@ -1013,11 +1013,11 @@ class ExaminationMocks:
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
                         "discussionUnableHappen": False,
                         "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                                              "sed do eiusmod tempor incididunt ut laborr sit amet, "
-                                              "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
-                                              "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
-                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
-                                              "consectetur adipiscing elit, sed do eiusmod tempor",
+                                             "sed do eiusmod tempor incididunt ut laborr sit amet, "
+                                             "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
+                                             "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
+                                             "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
+                                             "consectetur adipiscing elit, sed do eiusmod tempor",
                         "qapDiscussionOutcome": "MccdToBeIssued",
                         "participantName": "Dr G House",
                         "causeOfDeath1a": "",
@@ -1239,7 +1239,8 @@ class ExaminationMocks:
     def get_successful_medical_team_load_response(cls, examination_id):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(cls.get_medical_team_load_response_content(examination_id=examination_id)).encode('utf-8')
+        response._content = json.dumps(
+            cls.get_medical_team_load_response_content(examination_id=examination_id)).encode('utf-8')
         return response
 
     @classmethod
@@ -1304,6 +1305,51 @@ class ExaminationMocks:
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None)
         return response
+
+    @classmethod
+    def get_mock_qap_discussion_form_data(cls):
+        return {
+            'qap_discussion_id': 1,
+            'qap-discussion-doctor': 'other',
+            'qap-default__full-name': 'Dr Default',
+            'qap-default__role': 'Default Qap',
+            'qap-default__organisation': 'Default Org',
+            'qap-default__phone-number': 'Default phone',
+            'qap-other__full-name': 'Dr Alternate',
+            'qap-other__role': 'Alternate Qap',
+            'qap-other__organisation': 'Alternate Org',
+            'qap-other__phone-number': 'Alternate phone',
+
+            'qap_day_of_conversation': '18',
+            'qap_month_of_conversation': '4',
+            'qap_year_of_conversation': '2019',
+            'qap_time_of_conversation': '11:20',
+
+            'qap-discussion-outcome': 'mccd',
+            'qap-dicussion-outcome-decision': 'outcome-decision-1',
+        }
+
+    @classmethod
+    def get_mock_qap_discussion_draft_data(cls):
+        return {
+            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+            "isFinal": True,
+            "eventType": "QapDiscussion",
+            "created": "2019-03-13T10:30:43.019Z",
+            "participantRoll": "Consultant",
+            "participantOrganisation": "A Hospital",
+            "participantPhoneNumber": "01234 567890",
+            "dateOfConversation": "2019-04-08T08:31:43.019Z",
+            "discussionUnableHappen": False,
+            "discussionDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+            "qapDiscussionOutcome": "MccdToBeIssued",
+            "participantName": "Dr G House",
+            "causeOfDeath1a": "",
+            "causeOfDeath1b": "",
+            "causeOfDeath1c": "",
+            "causeOfDeath2": ""
+        }
 
 
 class PeopleMocks:
