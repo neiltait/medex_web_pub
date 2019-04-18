@@ -10,7 +10,7 @@
     </div>
 
     <div class="radio-toggle-group">
-        <div class="nhsuk-grid-row {% if not form.default_qap %}nhsuk-u-visually-hidden{% endif %}">
+        <div class="nhsuk-grid-row {% if not qap %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
@@ -18,23 +18,26 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input radio-toggle-group__radio"
                                        id="qap-discussion-with-qap" name="qap-discussion-doctor"
-                                       type="radio" value="qap" {% if form.use_default_qap %}checked{% endif %}>
+                                       type="radio" value="qap"
+                                       {% if form.discussion_participant_type == "qap" %}checked{% endif %}
+                                       {% if form.discussion_participant_type == "" and qap %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-qap">
-                                    {{ form.default_qap.name }}
+                                    {{ qap.name }}
                                 </label>
 
-                                <input type="hidden" name="qap-default__full-name" value="{{ form.default_qap.name }}"/>
-                                <input type="hidden" name="qap-default__role" value="{{ form.default_qap.role }}"/>
+                                <input type="hidden" name="qap-default__full-name" value="{{ qap.name }}"/>
+                                <input type="hidden" name="qap-default__role" value="{{ qap.role }}"/>
                                 <input type="hidden" name="qap-default__organisation"
-                                       value="{{ form.default_qap.organisation }}"/>
+                                       value="{{ qap.organisation }}"/>
                                 <input type="hidden" name="qap-default__phone-number"
-                                       value="{{ form.default_qap.phone_number }}"/>
+                                       value="{{ qap.phone_number }}"/>
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input radio-toggle-group__radio"
                                        id="qap-discussion-with-other"
                                        name="qap-discussion-doctor" type="radio" value="other"
-                                       {% if form.use_default_qap == False %}checked{% endif %}>
+                                       {% if form.discussion_participant_type == "other" %}checked{% endif %}
+                                       {% if form.discussion_participant_type == "" and not qap %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-with-other">
                                     Another doctor
                                 </label>
@@ -46,7 +49,7 @@
         </div>
 
         <div id="qap-discussion-with-qap__panel"
-             class="radio-toggle-group__panel inset-text-panel {% if form.use_default_qap == False %}nhsuk-u-visually-hidden{% endif %}">
+             class="radio-toggle-group__panel inset-text-panel {% if form.discussion_participant_type == "other" %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
@@ -54,7 +57,7 @@
                             <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap-other__full-name-input">
                                 Role
                             </label>
-                            <p class="nhsuk-body-m">{{ form.default_qap.role }}</p>
+                            <p class="nhsuk-body-m">{{ qap.role }}</p>
                         </div>
                     </fieldset>
                 </div>
@@ -65,7 +68,7 @@
                             <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_role">
                                 Organisation
                             </label>
-                            <p class="nhsuk-body-m">{{ form.default_qap.organisation }}</p>
+                            <p class="nhsuk-body-m">{{ qap.organisation }}</p>
                         </div>
                     </fieldset>
                 </div>
@@ -77,14 +80,14 @@
                             <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_phone_number">
                                 Personal phone/ bleep number
                             </label>
-                            <p class="nhsuk-body-m">{{ form.default_qap.phone_number }}</p>
+                            <p class="nhsuk-body-m">{{ qap.phone_number }}</p>
                         </div>
                     </fieldset>
                 </div>
             </div>
         </div>
         <div id="qap-discussion-with-other__panel"
-             class="radio-toggle-group__panel {% if form.use_default_qap == True %}nhsuk-u-visually-hidden{% endif %}">
+             class="radio-toggle-group__panel {% if form.discussion_participant_type == "other" %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">

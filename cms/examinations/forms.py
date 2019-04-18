@@ -770,12 +770,10 @@ class QapDiscussionEventForm:
     def __init__(self, form_data={}):
 
         self.event_id = form_data.get('qap_discussion_id')
-        self.use_default_qap = False
-        self.default_qap = None
         self.outcome = ""
         self.outcome_decision = ""
 
-        self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), 'other')
+        self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
 
         self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
         self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
@@ -815,7 +813,7 @@ class QapDiscussionEventForm:
 
     def fill_from_draft(self, draft, default_qap):
         # simple values
-        self.event_id = draft.event_id
+        self.event_id = fallback_to(draft.event_id, '')
 
         # in this refactor we make calculations with default qap details at the fill stage
         self.__calculate_discussion_participant_alternatives(default_qap, draft)
@@ -840,6 +838,8 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_participant_alternatives(self, default_qap, draft):
         if self.__draft_participant_is_default_qap(draft, default_qap):
+            self.discussion_participant_type = "qap"
+        elif default_qap and (draft is None or draft.participant_name is None):
             self.discussion_participant_type = "qap"
         else:
             self.discussion_participant_type = "other"
