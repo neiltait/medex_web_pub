@@ -313,19 +313,9 @@ class CaseBreakdown:
         ## parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.date_of_death, self.patient_name,
                                                "MEO")
-        # self.event_list.create_initial_event(self.patient_name, "TODO", "MEO", self.date_of_death, self.date_of_death,
-        #                                      self.time_of_death)
         self.event_list.sort_events_oldest_to_newest()
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
-
-        ## build form objects
-        # self.__build_case_breakdown_forms()
-
-    def __build_case_breakdown_forms(self):
-        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
-                                                                   self.event_list.get_latest_me_scrutiny_cause_of_death(),
-                                                                   self.event_list.get_qap_discussion_draft())
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
@@ -755,6 +745,7 @@ class CauseOfDeathProposal:
                 return "%s at %s" % (date, time)
         else:
             return None
+
 
 class MedicalTeam:
 
