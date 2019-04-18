@@ -3,70 +3,85 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-    <link href="{% sass_src 'scss/examinations/edit.scss' %}" rel="stylesheet" type="text/css">
+<link href="{% sass_src 'scss/examinations/edit.scss' %}" rel="stylesheet" type="text/css">
 
-    {% block tab_css %}
-    {% endblock %}
+{% block tab_css %}
+{% endblock %}
 {% endblock %}
 
 {% block extra_js %}
-    {% block tab_js %}
-    {% endblock %}
+
+{% block tab_js %}
+{% endblock %}
 {% endblock %}
 
 {% block page %}
-    {% include 'alerts/partials/_modal.html' with config=tab_modal %}
+{% include 'alerts/partials/_modal.html' with config=tab_modal %}
 
-    <div class="examination__edit">
-        {% if error_count > 0 %}
-            <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
-                 tabindex="-1">
-                <h2 class="nhsuk-error-summary__title" id="error-summary-title">
-                    There is a problem
-                </h2>
-                <div class="nhsuk-error-summary__body">
-                    <p>
-                        Please correct the errors in this form
-                    </p>
-                </div>
-            </div>
-        {% endif %}
-
-        {% include 'examinations/partials/_case_header.html' %}
-
-        <a name="details"></a>
-
-        {% for alert in alerts %}
-            {% include 'alerts/partials/_alert.html' %}
-        {% endfor %}
-
-
-
-        <div class="examination__tab-bar">
-            <div class="form-tabs flex-row baseline">
-                <a class="tab-item {% if "patient-details" in request.path %}active{% endif %}" id="patient-details-tab"
-                        href="{% url 'edit_examination_patient_details' examination_id=examination_id %}">
-                    Patient details
-                </a>
-
-                <a class="tab-item {% if "medical-team" in request.path %}active{% endif %}" id="medical-team-tab"
-                        href="{% url 'edit_examination_medical_team' examination_id=examination_id %}">
-                    Medical team
-                </a>
-
-                <a class="tab-item {% if "case-breakdown" in request.path %}active{% endif %}" id="case-breakdown-tab"
-                        href="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}">
-                    Case breakdown
-                </a>
-
-                <a class="tab-item {% if "case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
-                        href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
-                    Case outcomes
-                </a>
-            </div>
+<div class="examination__edit">
+    {% if error_count > 0 %}
+    <div class="nhsuk-error-summary" id="error_alert" aria-labelledby="error-summary-title" role="alert"
+         tabindex="-1">
+        <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+            There is a problem
+        </h2>
+        <div class="nhsuk-error-summary__body">
+            <p>
+                Please correct the errors in this form
+            </p>
         </div>
-
-        {% block tab_content %}
-        {% endblock %}
     </div>
+    {% endif %}
+    {% if error_count == 0 and saved %}
+    <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
+         role="alert"
+         tabindex="-1">
+        <ul class="nhsuk-list nhsuk-list--tick">
+            <li>
+                <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     fill="none" aria-hidden="true">
+                    <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
+                </svg>
+                Information saved successfully.
+            </li>
+        </ul>
+    </div>
+    {% endif %}
+
+    {% include 'examinations/partials/_case_header.html' %}
+
+    <a name="details"></a>
+
+    {% for alert in alerts %}
+    {% include 'alerts/partials/_alert.html' %}
+    {% endfor %}
+
+
+    <div class="examination__tab-bar">
+        <div class="form-tabs flex-row baseline">
+            <a class="tab-item {% if " patient-details" in request.path %}active{% endif %}" id="patient-details-tab"
+            href="{% url 'edit_examination_patient_details' examination_id=examination_id %}">
+            Patient details
+            </a>
+
+            <a class="tab-item {% if " medical-team" in request.path %}active{% endif %}" id="medical-team-tab"
+            href="{% url 'edit_examination_medical_team' examination_id=examination_id %}">
+            Medical team
+            </a>
+
+            <a class="tab-item {% if " case-breakdown" in request.path %}active{% endif %}" id="case-breakdown-tab"
+            href="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}">
+            Case breakdown
+            </a>
+
+            <a class="tab-item {% if " case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
+            href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
+            Case outcomes
+            </a>
+        </div>
+    </div>
+
+{% block tab_content %}
+{% endblock %}
+</div>
 {% endblock %}

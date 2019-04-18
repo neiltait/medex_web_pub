@@ -27,6 +27,7 @@ def create_examination(request):
     errors = {"count": 0}
     status_code = status.HTTP_200_OK
     form = None
+    add_another = False
 
     if request.POST:
         form = PrimaryExaminationInformationForm(request.POST)
@@ -37,6 +38,7 @@ def create_examination(request):
                     examination_id = response.json()['examinationId']
                     return redirect_to_examination(examination_id)
                 else:
+                    add_another = True
                     form = None
                     status_code = status.HTTP_200_OK
             else:
@@ -47,10 +49,10 @@ def create_examination(request):
             alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
             status_code = status.HTTP_400_BAD_REQUEST
 
-    return render_create_examination_form(request, user, alerts, errors, status_code, form)
+    return render_create_examination_form(request, user, add_another, alerts, errors, status_code, form)
 
 
-def render_create_examination_form(request, user, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
+def render_create_examination_form(request, user, add_another, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
@@ -63,6 +65,7 @@ def render_create_examination_form(request, user, alerts=[], errors=None, status
         "form": form if form else PrimaryExaminationInformationForm(),
         "alerts": alerts,
         "errors": errors,
+        "add_another": add_another
     }
 
     return render(request, "examinations/create.html", context, status=status_code)
@@ -80,6 +83,7 @@ def edit_examination_patient_details(request, examination_id):
 
     status_code = status.HTTP_200_OK
     error_count = 0
+    saved = False
 
     examination = PatientDetails.load_by_id(examination_id, user.auth_token)
     if not examination:
@@ -115,6 +119,8 @@ def edit_examination_patient_details(request, examination_id):
                 return redirect('/cases/%s/%s' % (examination_id, request.GET.get('nextTab')))
             elif response.status_code != status.HTTP_200_OK:
                 status_code = response.status_code
+            else:
+                saved = True
         else:
             error_count = primary_info_form.errors['count'] + secondary_info_form.errors['count'] + \
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
@@ -142,7 +148,8 @@ def edit_examination_patient_details(request, examination_id):
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
-        "patient": patient
+        "patient": patient,
+        "saved": saved
     }
 
     return render(request, 'examinations/edit_patient_details.html', context, status=status_code)
@@ -151,6 +158,8 @@ def edit_examination_patient_details(request, examination_id):
 def edit_examination_medical_team(request, examination_id):
     # get the current user
     user = User.initialise_with_token(request)
+    saved = False
+
     if not user.check_logged_in():
         return redirect_to_login()
 
@@ -160,15 +169,16 @@ def edit_examination_medical_team(request, examination_id):
 
     if request.method == 'POST':
         # attempt to post and get return form
-        medical_team_members_form, status_code, errors = __post_medical_team_form(request, examination_id,
-                                                                                  user.auth_token)
+        medical_team_members_form, status_code, errors, saved = __post_medical_team_form(request, examination_id,
+                                                                                         user.auth_token, saved)
     else:
         # the GET medical team form
         medical_team_members_form, status_code, errors = __get_medical_team_form(medical_team=medical_team)
 
     # render the tab
     return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
-                                     medical_team.case_header)
+                                     medical_team.case_header, saved)
+
 
 
 def __get_medical_team_form(medical_team=None):
@@ -182,10 +192,12 @@ def __get_medical_team_form(medical_team=None):
     return medical_team_members_form, status_code, errors
 
 
-def __post_medical_team_form(request, examination_id, auth_token):
+def __post_medical_team_form(request, examination_id, auth_token, saved):
     medical_team_members_form = MedicalTeamMembersForm(request.POST)
     forms_valid = medical_team_members_form.is_valid()
+
     if forms_valid:
+        saved = True
         response = request_handler.update_medical_team(examination_id, medical_team_members_form.to_object(),
                                                        auth_token)
         status_code = response.status_code
@@ -193,11 +205,12 @@ def __post_medical_team_form(request, examination_id, auth_token):
     else:
         errors = medical_team_members_form.errors
         status_code = status.HTTP_400_BAD_REQUEST
-    return medical_team_members_form, status_code, errors
+    return medical_team_members_form, status_code, errors, saved
 
 
 def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
-                              header_info):
+                              header_info, saved):
+
     medical_examiners = people_request_handler.get_medical_examiners_list_for_examination(user.auth_token,
                                                                                           examination_id)
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list_for_examination(
@@ -213,6 +226,7 @@ def __render_medical_team_tab(errors, examination_id, medical_team_members_form,
         'error_count': errors['count'],
         'errors': errors,
         'tab_modal': modal_config,
+        'saved': saved
     }
     return render(request, 'examinations/edit_medical_team.html', context, status=status_code)
 
@@ -267,7 +281,8 @@ def edit_examination_case_breakdown(request, examination_id):
 
 
 def __post_case_breakdown_event(request, user, examination_id):
-    form = event_form_parser(request.POST)
+    form = event_form_parser\
+        (request.POST)
     if form.is_valid():
         response = event_form_submitter(user.auth_token, examination_id, form)
         status_code = response.status_code
