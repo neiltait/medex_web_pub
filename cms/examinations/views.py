@@ -290,7 +290,6 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     admission_notes_form = AdmissionNotesEventForm()
     meo_summary_form = MeoSummaryEventForm()
     qap_discussion_form = QapDiscussionEventForm()
-    qap_discussion_form.set_default_qap(medical_team.qap)
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
@@ -301,7 +300,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     if event_list.get_meo_summary_draft():
         meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
     if event_list.get_qap_discussion_draft():
-        qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft())
+        qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
@@ -312,9 +311,6 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     }
 
     if form:
-        if type(form) == QapDiscussionEventForm:
-            form.set_default_qap(medical_team.qap)
-
         form_data[type(form).__name__] = form.make_active()
 
     return form_data

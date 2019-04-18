@@ -590,7 +590,7 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
         self.discussion_details = obj_dict.get('discussionDetails')
         self.qap_discussion_outcome = obj_dict.get('qapDiscussionOutcome')
-        self.participantName = obj_dict.get("participantName")
+        self.participant_name = obj_dict.get("participantName")
         self.causeOfDeath1a = obj_dict.get("causeOfDeath1a")
         self.causeOfDeath1b = obj_dict.get("causeOfDeath1b")
         self.causeOfDeath1c = obj_dict.get("causeOfDeath1c")
