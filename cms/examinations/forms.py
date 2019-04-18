@@ -786,10 +786,10 @@ class QapDiscussionEventForm:
             self.participant_organisation = form_data.get('qap-default__organisation')
             self.participant_phone_number = form_data.get('qap-default__phone-number')
 
-        self.qap_discussion_name = form_data.get('qap-other__full-name')
-        self.qap_discussion_role = form_data.get('qap-other__role')
-        self.qap_discussion_organisation = form_data.get('qap-other__organisation')
-        self.qap_discussion_phone_number = form_data.get('qap-other__phone-number')
+        self.qap_discussion_name = fallback_to(form_data.get('qap-other__full-name'), '')
+        self.qap_discussion_role = fallback_to(form_data.get('qap-other__role'), '')
+        self.qap_discussion_organisation = fallback_to(form_data.get('qap-other__organisation'), '')
+        self.qap_discussion_phone_number = fallback_to(form_data.get('qap-other__phone-number'), '')
 
         self.cause_of_death = CauseOfDeathProposal()
         self.cause_of_death.section_1a = fallback_to(form_data.get('qap_discussion_revised_1a'), '')
