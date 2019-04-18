@@ -724,7 +724,7 @@ class MeoSummaryEventForm:
 
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
-        self.more_detail = draft.body
+        self.meo_summary_notes = draft.body
 
 
 class OtherEventForm:
@@ -806,3 +806,11 @@ class AdmissionNotesEventForm:
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
         self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+
+
+class OutstandingItemsForm:
+
+    def __init__(self, form_data):
+        self.mccd_issued = form_data.get('mccd_issued')
+        self.cremation_form = form_data.get('cremation_form')
+        self.gp_notified = form_data.get('gp_notified')
