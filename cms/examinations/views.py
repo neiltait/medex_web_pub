@@ -125,11 +125,6 @@ def edit_examination_patient_details(request, examination_id):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
-    patient = {
-        "name": examination.full_name(),
-        "nhs_number": examination.get_nhs_number()
-    }
-
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -142,7 +137,6 @@ def edit_examination_patient_details(request, examination_id):
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
-        "patient": patient
     }
 
     return render(request, 'examinations/edit_patient_details.html', context, status=status_code)
