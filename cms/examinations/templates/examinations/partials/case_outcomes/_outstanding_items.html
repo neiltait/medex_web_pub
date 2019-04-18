@@ -24,8 +24,8 @@
 
                     <div class="nhsuk-checkboxes">
                         <div class="nhsuk-checkboxes__item">
-                            <input id="mccd-issued" name="mccd_issued" type="checkbox" class="nhsuk-checkboxes__input"
-                                {% if form.mccd_issued %}checked{% endif %}/>
+                            <input id="mccd-issued" name="mccd_issued" value="true" type="checkbox" class="nhsuk-checkboxes__input"
+                                {% if form.mccd_issued == 'true' %}checked{% endif %}/>
 
                             <label class="nhsuk-label nhsuk-checkboxes__label" for="mccd-issued">
                                 MCCD issued
@@ -46,14 +46,14 @@
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="crem-form-1" name="cremation_form" type="radio"
-                                   value="yes" {% if form.cremation_form == 'yes' %}checked{% endif %}>
+                                   value="Yes" {% if form.cremation_form == 'Yes' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="crem-form-1">
                                 Yes
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="crem-form-2" name="cremation_form" type="radio"
-                                   value="no" {% if form.cremation_form == 'no' %}checked{% endif %}>
+                                   value="No" {% if form.cremation_form == 'No' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="crem-form-2">
                                 No
                             </label>
@@ -80,14 +80,15 @@
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="gp-notified-1" name="gp_notified" type="radio"
-                                   value="yes" {% if form.gp_notified == 'yes' %}checked{% endif %}>
+                                   value="GPUnabledToBeNotified"
+                                   {% if form.gp_notified == 'GPUnabledToBeNotified' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-1">
                                 GP notified
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="gp-notified-2" name="gp_notified" type="radio"
-                                   value="no" {% if form.gp_notified == 'no' %}checked{% endif %}>
+                                   value="GPNotified" {% if form.gp_notified == 'GPNotified' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-2">
                                 GP not able to be notified
                             </label>
