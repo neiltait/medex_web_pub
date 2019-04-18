@@ -791,7 +791,7 @@ class MedicalTeamMember:
             "organisation": self.organisation,
             "phone": self.phone_number,
             "notes": self.notes,
-            "gmc": self.gmc_number
+            "gmcNumber": self.gmc_number
         }
 
 

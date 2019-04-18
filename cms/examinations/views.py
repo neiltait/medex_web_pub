@@ -281,7 +281,8 @@ def edit_examination_case_breakdown(request, examination_id):
 
 
 def __post_case_breakdown_event(request, user, examination_id):
-    form = event_form_parser(request.POST)
+    form = event_form_parser\
+        (request.POST)
     if form.is_valid():
         response = event_form_submitter(user.auth_token, examination_id, form)
         status_code = response.status_code
