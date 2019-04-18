@@ -802,6 +802,7 @@ def text_field_is_not_null(field):
 class CaseOutcome:
     SCRUTINY_CONFIRMATION_FORM_TYPE = 'pre-scrutiny-confirmed'
     CORONER_REFERRAL_FORM_TYPE = 'coroner-referral'
+    OUTSTANDING_ITEMS_FORM_TYPE = 'outstanding-items'
 
     date_format = '%d.%m.%Y %H:%M'
     CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
