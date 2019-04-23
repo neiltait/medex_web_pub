@@ -8,7 +8,7 @@ from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OutstandingItemsForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -309,10 +309,13 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in request.POST:
+            form = OutstandingItemsForm(request.POST)
+            result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
         else:
             response = Response()
             response.status_code = status.HTTP_400_BAD_REQUEST
