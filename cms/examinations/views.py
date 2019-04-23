@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
-from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
 from alerts.utils import generate_error_alert
-from errors.models import GenericError
+from errors.models import GenericError, BadRequestResponse
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
@@ -343,9 +342,7 @@ def view_examination_case_outcome(request, examination_id):
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
         else:
-            response = Response()
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            result = GenericError(response, {'type': 'form', 'action': 'submitting'})
+            result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
 
         if result and not result == status.HTTP_200_OK:
             context = {

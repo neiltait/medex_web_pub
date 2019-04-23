@@ -1,4 +1,5 @@
 from django.conf import settings
+from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
@@ -39,3 +40,12 @@ class GenericError:
         content = content.replace('/pre', '/div')
         content = content.replace('==', '')
         return content
+
+
+class BadRequestResponse:
+
+    @classmethod
+    def new(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return response
