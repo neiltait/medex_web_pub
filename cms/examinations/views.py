@@ -8,7 +8,7 @@ from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -52,7 +52,8 @@ def create_examination(request):
     return render_create_examination_form(request, user, add_another, alerts, errors, status_code, form)
 
 
-def render_create_examination_form(request, user, add_another, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
+def render_create_examination_form(request, user, add_another, alerts=[], errors=None, status_code=status.HTTP_200_OK,
+                                   form=None):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
@@ -101,7 +102,7 @@ def edit_examination_patient_details(request, examination_id):
         secondary_info_form = SecondaryExaminationInformationForm(request.POST)
         bereaved_info_form = BereavedInformationForm(request.POST)
         urgency_info_form = UrgencyInformationForm(request.POST)
-        examination.set_primary_info_values(primary_info_form).set_secondary_info_values(secondary_info_form)\
+        examination.set_primary_info_values(primary_info_form).set_secondary_info_values(secondary_info_form) \
             .set_bereaved_info_values(bereaved_info_form).set_urgency_info_values(urgency_info_form)
 
         forms_valid = validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
@@ -180,7 +181,6 @@ def edit_examination_medical_team(request, examination_id):
                                      medical_team.case_header, saved)
 
 
-
 def __get_medical_team_form(medical_team=None):
     if medical_team:
         medical_team_members_form = MedicalTeamMembersForm(medical_team=medical_team)
@@ -210,7 +210,6 @@ def __post_medical_team_form(request, examination_id, auth_token, saved):
 
 def __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
                               header_info, saved):
-
     medical_examiners = people_request_handler.get_medical_examiners_list_for_examination(user.auth_token,
                                                                                           examination_id)
     medical_examiners_officers = people_request_handler.get_medical_examiners_officers_list_for_examination(
@@ -285,7 +284,7 @@ def edit_examination_case_breakdown(request, examination_id):
 
 
 def __post_case_breakdown_event(request, user, examination_id):
-    form = event_form_parser\
+    form = event_form_parser \
         (request.POST)
     if form.is_valid():
         response = event_form_submitter(user.auth_token, examination_id, form)
@@ -303,6 +302,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     admission_notes_form = AdmissionNotesEventForm()
     meo_summary_form = MeoSummaryEventForm()
     qap_discussion_form = QapDiscussionEventForm()
+    bereaved_discussion_form = BereavedDiscussionEventForm()
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
@@ -314,13 +314,16 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
         meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
     if event_list.get_qap_discussion_draft():
         qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
+    if event_list.get_bereaved_discussion_draft():
+        bereaved_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), patient_details.representatives)
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
         'OtherEventForm': other_notes_form,
         'AdmissionNotesEventForm': admission_notes_form,
         'MeoSummaryEventForm': meo_summary_form,
-        'QapDiscussionEventForm': qap_discussion_form
+        'QapDiscussionEventForm': qap_discussion_form,
+        'BereavedDiscussionEventForm': bereaved_discussion_form
     }
 
     if form:
@@ -338,7 +341,7 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)

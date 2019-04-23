@@ -1009,3 +1009,23 @@ class AdmissionNotesEventForm:
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
         self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+
+
+class BereavedDiscussionEventForm:
+    active = False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def __init__(self, form_data={}):
+        pass
+
+    def is_valid(self):
+        return True
+
+    def fill_from_draft(self, draft, default_representatives):
+        pass
+
+    def for_request(self):
+        return {}

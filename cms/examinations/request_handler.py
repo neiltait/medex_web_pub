@@ -115,6 +115,14 @@ def create_admission_notes_event(auth_token, examination_id, submission):
                                 submission)
 
 
+def create_bereaved_discussion_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/bereaved_discussion' % (settings.API_URL, examination_id),
+                                submission)
+
+
 def load_case_outcome(auth_token, examination_id):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_outcome_response()

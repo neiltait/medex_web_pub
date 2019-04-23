@@ -1457,6 +1457,28 @@ class ExaminationMocks:
             "causeOfDeath2": ""
         }
 
+    @classmethod
+    def get_mock_bereaved_discussion_draft_data(cls):
+        return {
+            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+            "isFinal": True,
+            "eventType": "BereavedDiscussion",
+            "created": "2019-03-13T10:30:43.019Z",
+            "participantFullName": "Anita West",
+            "participantRelationship": "Sister",
+            "participantPhoneNumber": "1234",
+            "presentAtDeath": "Yes",
+            "informedAtDeath": "Yes",
+            "dateOfConversation": "2019-04-23T10:47:51.812Z",
+            "discussionUnableHappen": False,
+            "discussionDetails": "Stop all the clocks, cut off the telephone, "
+                                 "Prevent the dog from barking with a juicy bone. "
+                                 "Silence the pianos and with muffled drum. "
+                                 "Bring out the coffin, let the mourners come.",
+            "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
+        }
+
 
 class PeopleMocks:
 
