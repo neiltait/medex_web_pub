@@ -1411,6 +1411,34 @@ class ExaminationMocks:
         response._content = json.dumps(None)
         return response
 
+    @classmethod
+    def get_successful_outstanding_items_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({})
+        return response
+
+    @classmethod
+    def get_unsuccessful_outstanding_items_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_successful_case_close_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({})
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_close_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
 
 class PeopleMocks:
 

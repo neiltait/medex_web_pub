@@ -131,7 +131,7 @@ def confirm_coroner_referral(auth_token, examination_id):
 
 def update_outcomes_outstanding_items(auth_token, examination_id, submission):
     if settings.LOCAL:
-        return ExaminationMocks.get_successful_coroner_referral_response()
+        return ExaminationMocks.get_successful_outstanding_items_response()
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/outstanding_case_items' % (settings.API_URL,
                                                                                            examination_id), submission)
