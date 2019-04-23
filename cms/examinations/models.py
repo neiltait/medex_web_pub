@@ -905,8 +905,19 @@ class CaseOutcome:
     def is_coroner_investigation(self):
         return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
 
+    def investigation_referral_complete(self):
+        return self.coroner_referral and self.is_coroner_investigation()
+
+    def outstanding_items_complete(self):
+        return self.coroner_referral and self.mccd_issued and self.cremation_form_status and self.gp_notified_status
+
     def outstanding_items_active(self):
         return True if self.coroner_referral and self.case_open else False
+
+    def can_close(self):
+        return True if self.case_open and \
+                       (self.investigation_referral_complete() or self.outstanding_items_complete())\
+                       else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)

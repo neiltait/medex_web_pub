@@ -8,11 +8,10 @@
         <div class="nhsuk-grid-column-one-third">
             <form id="case-close-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
                       method="post">
-                <fieldset class="nhsuk-fieldset" {% if not case_outcome.can_close %}disabled{% endif %}>
-                    {% csrf_token %}
+                {% csrf_token %}
 
-                    <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case" />
-                </fieldset>
+                <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case"
+                        {% if not case_outcome.can_close %}disabled{% endif %} />
             </form>
         </div>
 
