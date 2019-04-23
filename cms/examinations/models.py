@@ -877,6 +877,15 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
 
+    @classmethod
+    def update_outstanding_items(cls, auth_token, examination_id, submission):
+        response = request_handler.update_outcomes_outstanding_items(auth_token, examination_id, submission)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'updating'})
+
     def show_coroner_referral(self):
         return self.is_coroner_referral() and self.scrutiny_confirmed
 
