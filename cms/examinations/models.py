@@ -887,6 +887,15 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'updating'})
 
+    @classmethod
+    def close_case(cls, auth_token, examination_id):
+        response = request_handler.close_case(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'closing'})
+
     def show_coroner_referral(self):
         return self.is_coroner_referral() and self.scrutiny_confirmed
 

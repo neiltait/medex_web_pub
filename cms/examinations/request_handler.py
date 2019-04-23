@@ -135,3 +135,10 @@ def update_outcomes_outstanding_items(auth_token, examination_id, submission):
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/outstanding_case_items' % (settings.API_URL,
                                                                                            examination_id), submission)
+
+
+def close_case(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_case_close_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/close_case' % (settings.API_URL, examination_id))
