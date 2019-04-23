@@ -316,6 +316,8 @@ def view_examination_case_outcome(request, examination_id):
         elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in request.POST:
             form = OutstandingItemsForm(request.POST)
             result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in request.POST:
+            result = CaseOutcome.close_case(user.auth_token, examination_id)
         else:
             # TODO refactor in to BadRequestResponse class
             response = Response()
