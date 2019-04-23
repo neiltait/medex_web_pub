@@ -133,4 +133,23 @@
             }
         }
     }
+
+    .close-case {
+        background-color: $nhs-pale-grey;
+        padding: 6rem 2rem 7rem;
+
+        .page-subheading {
+            margin-top: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .hint-text {
+            margin: 0;
+            padding: 1rem 1.5rem;
+        }
+    }
 }

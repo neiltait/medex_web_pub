@@ -1,10 +1,26 @@
 <div class="close-case">
-    <form id="case-close-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
-              method="post">
-        <fieldset class="nhsuk-fieldset" {% if not case_outcome.can_close %}disabled{% endif %}>
-            {% csrf_token %}
 
-            <input class="submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case" />
-        </fieldset>
-    </form>
+    <h2 class="page-subheading">
+        Close case
+    </h2>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-third">
+            <form id="case-close-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+                      method="post">
+                <fieldset class="nhsuk-fieldset" {% if not case_outcome.can_close %}disabled{% endif %}>
+                    {% csrf_token %}
+
+                    <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case" />
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="nhsuk-grid-column-two-thirds">
+            <div class="nhsuk-inset-text hint-text" id="admin-notes-hint">
+                To close a case you must action all the outstanding items.
+                Once it is closed it will move into 'closed cases'.
+            </div>
+        </div>
+    </div>
 </div>
