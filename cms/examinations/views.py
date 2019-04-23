@@ -1,73 +1,83 @@
 from django.shortcuts import render, redirect
 from rest_framework import status
 
-from alerts import messages
-from alerts.utils import generate_error_alert
-from errors.models import GenericError, BadRequestResponse
+from errors.models import GenericError, BadRequestResponse, MethodNotAllowedError
+from errors.views import __handle_method_not_allowed_error
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from locations import request_handler as location_request_handler
+from locations.models import Location
 from people import request_handler as people_request_handler
 from users.models import User
 
 
 def create_examination(request):
     user = User.initialise_with_token(request)
-
     if not user.check_logged_in():
         return redirect_to_login()
 
-    alerts = []
-    errors = {"count": 0}
+    if request.method == 'GET':
+        template, context, status_code = __get_create_examination(user)
+
+    elif request.POST:
+        template, context, status_code, redirect = __post_create_examination(user, request.POST)
+        if redirect:
+            return redirect
+
+    else:
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
+
+
+def __get_create_examination(user):
+    template = "examinations/create.html"
     status_code = status.HTTP_200_OK
-    form = None
+    context = __set_create_examination_context(user, PrimaryExaminationInformationForm(), False)
+    return template, context, status_code
+
+
+def __post_create_examination(user, post_body):
+    template = "examinations/create.html"
     add_another = False
-
-    if request.POST:
-        form = PrimaryExaminationInformationForm(request.POST)
-        if form.is_valid():
-            response = request_handler.post_new_examination(form.to_object(), user.auth_token)
-            if response.status_code == status.HTTP_200_OK:
-                if 'create-and-continue' in request.POST:
-                    examination_id = response.json()['examinationId']
-                    return redirect_to_examination(examination_id)
-                else:
-                    add_another = True
-                    form = None
-                    status_code = status.HTTP_200_OK
+    form = PrimaryExaminationInformationForm(post_body)
+    if form.is_valid():
+        response = Examination.create(form.to_object(), user.auth_token)
+        if response.ok:
+            if form.CREATE_AND_CONTINUE_FLAG in post_body:
+                examination_id = response.json()['examinationId']
+                return None, None, None, redirect_to_examination(examination_id)
             else:
-                alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-                status_code = response.status_code
+                add_another = True
+                form = PrimaryExaminationInformationForm()
+                status_code = status.HTTP_200_OK
         else:
-            errors = form.errors
-            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-            status_code = status.HTTP_400_BAD_REQUEST
+            status_code = response.status_code
+    else:
+        status_code = status.HTTP_400_BAD_REQUEST
+    context = __set_create_examination_context(user, form, add_another)
+    return template, context, status_code, None
 
-    return render_create_examination_form(request, user, add_another, alerts, errors, status_code, form)
 
+def __set_create_examination_context(user, form, add_another):
+    locations = Location.get_locations_list(user.auth_token)
+    me_offices = Location.get_me_offices_list(user.auth_token)
 
-def render_create_examination_form(request, user, add_another, alerts=[], errors=None, status_code=status.HTTP_200_OK, form=None):
-    locations = location_request_handler.get_locations_list(user.auth_token)
-    me_offices = location_request_handler.get_me_offices_list(user.auth_token)
-
-    context = {
+    return {
         "session_user": user,
         "page_heading": "Add a new case",
         "sub_heading": "Primary information",
         "locations": locations,
         "me_offices": me_offices,
-        "form": form if form else PrimaryExaminationInformationForm(),
-        "alerts": alerts,
-        "errors": errors,
+        "form": form,
+        "errors": form.errors,
         "add_another": add_another
     }
-
-    return render(request, "examinations/create.html", context, status=status_code)
 
 
 def edit_examination(request, examination_id):
