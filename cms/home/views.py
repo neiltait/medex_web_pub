@@ -29,6 +29,7 @@ def index(request):
     locations = user.get_permitted_locations()
 
     context = {
+        'page_header': '%s Dashboard' % user.role_type,
         'session_user': user,
         'filter_locations': locations,
         'filter_people': people,
