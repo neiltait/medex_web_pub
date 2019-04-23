@@ -27,3 +27,11 @@ class Location:
         for user in users_data:
             users.append(DropdownPerson(user))
         return users
+
+    @classmethod
+    def get_locations_list(cls, auth_token):
+        request_handler.get_locations_list(auth_token)
+
+    @classmethod
+    def get_me_offices_list(cls, auth_token):
+        request_handler.get_me_offices_list(auth_token)
