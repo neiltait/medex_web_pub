@@ -16,6 +16,14 @@ class NotFoundError:
         return self.error_message % self.obj_type
 
 
+class MethodNotAllowedError:
+    status_code = status.HTTP_405_METHOD_NOT_ALLOWED
+    error_message = messages.NOT_ALLOWED
+
+    def get_message(self):
+        return self.error_message
+
+
 class GenericError:
     error_message = messages.GENERAL_ERROR
 
