@@ -135,6 +135,16 @@ def edit_examination_patient_details(request, examination_id):
                           bereaved_info_form.errors['count'] + urgency_info_form.errors['count']
             status_code = status.HTTP_400_BAD_REQUEST
 
+    elif request.method not in ["GET", "POST"]:
+        result = MethodNotAllowedError()
+
+        context = {
+            'session_user': user,
+            'error': result,
+        }
+
+        return render(request, 'errors/base_error.html', context, status=result.status_code)
+
     modal_config = get_tab_change_modal_config()
 
     locations = location_request_handler.get_locations_list(user.auth_token)
@@ -187,7 +197,6 @@ def edit_examination_medical_team(request, examination_id):
     # render the tab
     return __render_medical_team_tab(errors, examination_id, medical_team_members_form, request, status_code, user,
                                      medical_team.case_header, saved)
-
 
 
 def __get_medical_team_form(medical_team=None):
@@ -361,6 +370,16 @@ def view_examination_case_outcome(request, examination_id):
             }
 
             return render(request, 'errors/base_error.html', context, status=result.status_code)
+
+    elif request.method not in ["GET", "POST"]:
+        result = MethodNotAllowedError()
+
+        context = {
+            'session_user': user,
+            'error': result,
+        }
+
+        return render(request, 'errors/base_error.html', context, status=result.status_code)
 
     case_outcome = CaseOutcome.load_by_id(user.auth_token, examination_id)
 
