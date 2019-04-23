@@ -2,11 +2,12 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from examinations.models import MedicalTeamMember, CauseOfDeathProposal
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 
 
 class PrimaryExaminationInformationForm:
+    CREATE_AND_CONTINUE_FLAG = 'create-and-continue'
 
     def __init__(self, request=None):
         self.initialiseErrors()
