@@ -4,6 +4,7 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from people.models import BereavedRepresentative
 
 
 class PrimaryExaminationInformationForm:
@@ -1012,6 +1013,9 @@ class AdmissionNotesEventForm:
 
 
 class BereavedDiscussionEventForm:
+    REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
+    REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
+
     active = False
 
     def make_active(self):
@@ -1019,7 +1023,62 @@ class BereavedDiscussionEventForm:
         return self
 
     def __init__(self, form_data={}):
-        pass
+        self.event_id = fallback_to(form_data.get('bereaved-event-id'), '')
+
+        self.__init_representatives(form_data)
+        self.__init_time_of_discussion(form_data)
+        self.__init_discussion_details(form_data)
+
+    def __init_discussion_details(self, form_data):
+        self.discussion_details = fallback_to(form_data.get('bereaved-discussion-details'), '')
+        self.discussion_outcome = fallback_to(form_data.get('bereaved-discussion-outcome'), '')
+
+    def __init_time_of_discussion(self, form_data):
+        self.day_of_conversation = fallback_to(form_data.get('bereaved-day-of-conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('bereaved-month-of-conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('bereaved-year-of-conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('bereaved-time-of-conversation'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved-discussion-could-not-happen'), '')
+
+    def __init_representatives(self, form_data):
+        self.__init_existing_representative(form_data)
+        self.__init_alternate_representative(form_data)
+        self.__init_type_of_representative(form_data)
+
+    def __init_type_of_representative(self, form_data):
+        self.discussion_representative_type = fallback_to(form_data.get('bereaved-rep-type'), '')
+        if self.discussion_representative_type == self.REPRESENTATIVE_TYPE_EXISTING:
+            self.use_existing_bereaved = True
+        elif self.discussion_representative_type == self.REPRESENTATIVE_TYPE_ALTERNATE:
+            self.use_existing_bereaved = False
+        elif self.existing_representative:
+            self.use_existing_bereaved = True
+        else:
+            self.use_existing_bereaved = False
+
+    def __init_alternate_representative(self, form_data):
+        alternate_bereaved_data = {
+            'fullName': fallback_to(form_data.get('bereaved-alternate-rep-name'), ''),
+            'relationship': fallback_to(form_data.get('bereaved-alternate-rep-relationship'), ''),
+            'phoneNumber': fallback_to(form_data.get('bereaved-alternate-rep-phone-number'), ''),
+            'presentAtDeath': fallback_to(form_data.get('bereaved-alternate-rep-present-at-death'), ''),
+            'informed': fallback_to(form_data.get('bereaved-alternate-rep-informed'), '')
+        }
+        self.alternate_representative = BereavedRepresentative(obj_dict=alternate_bereaved_data)
+
+    def __init_existing_representative(self, form_data):
+        self.existing_representative = None
+        bereaved_existing_name = fallback_to(form_data.get('bereaved-existing-rep-name'), '')
+        if len(bereaved_existing_name) > 0:
+            existing_bereaved_data = {
+                'fullName': bereaved_existing_name,
+                'relationship': fallback_to(form_data.get('bereaved-existing-rep-relationship'), ''),
+                'phoneNumber': fallback_to(form_data.get('bereaved-existing-rep-phone-number'), ''),
+                'presentAtDeath': fallback_to(form_data.get('bereaved-existing-rep-present-at-death'), ''),
+                'informed': fallback_to(form_data.get('bereaved-existing-rep-informed'), '')
+            }
+            self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
+
 
     def is_valid(self):
         return True
