@@ -10,7 +10,7 @@
 
         <form id="outstanding-items-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
               method="post">
-            <fieldset class="nhsuk-fieldset" {% if not case_outcome.coroner_referral %}disabled{% endif %}>
+            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_active %}disabled{% endif %}>
                 {% csrf_token %}
 
                 <div class="outstanding-item">

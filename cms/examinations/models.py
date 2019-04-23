@@ -842,7 +842,7 @@ class CaseOutcome:
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
-        self.case_status = obj_dict.get("caseOpen")
+        self.case_open = obj_dict.get("caseOpen")
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
@@ -894,6 +894,9 @@ class CaseOutcome:
 
     def is_coroner_investigation(self):
         return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
+
+    def outstanding_items_active(self):
+        return True if self.coroner_referral and self.case_open else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)

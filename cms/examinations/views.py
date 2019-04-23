@@ -317,6 +317,7 @@ def view_examination_case_outcome(request, examination_id):
             form = OutstandingItemsForm(request.POST)
             result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
         else:
+            # TODO refactor in to BadRequestResponse class
             response = Response()
             response.status_code = status.HTTP_400_BAD_REQUEST
             result = GenericError(response, {'type': 'form', 'action': 'submitting'})
