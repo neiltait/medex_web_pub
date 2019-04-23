@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam
+from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 
 
@@ -754,20 +754,223 @@ class OtherEventForm:
         self.more_detail = draft.body
 
 
+class QapDiscussionEventForm:
+    active = False
+
+    date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
+    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
+    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
+    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def __init__(self, form_data={}):
+
+        self.event_id = form_data.get('qap_discussion_id')
+
+        self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
+
+        self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
+        self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
+        self.qap_default_qap_organisation = fallback_to(form_data.get('qap-default__organisation'), '')
+        self.qap_default_qap_phone_number = fallback_to(form_data.get('qap-default__phone-number'), '')
+
+        self.qap_discussion_name = fallback_to(form_data.get('qap-other__full-name'), '')
+        self.qap_discussion_role = fallback_to(form_data.get('qap-other__role'), '')
+        self.qap_discussion_organisation = fallback_to(form_data.get('qap-other__organisation'), '')
+        self.qap_discussion_phone_number = fallback_to(form_data.get('qap-other__phone-number'), '')
+
+        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death.section_1a = fallback_to(form_data.get('qap_discussion_revised_1a'), '')
+        self.cause_of_death.section_1b = fallback_to(form_data.get('qap_discussion_revised_1b'), '')
+        self.cause_of_death.section_1c = fallback_to(form_data.get('qap_discussion_revised_1c'), '')
+        self.cause_of_death.section_2 = fallback_to(form_data.get('qap_discussion_revised_2'), '')
+
+        self.discussion_details = fallback_to(form_data.get('qap_discussion_details'), '')
+
+        self.outcome = fallback_to(form_data.get('qap-discussion-outcome'), '')
+        self.outcome_decision = fallback_to(form_data.get('qap-discussion-outcome-decision'), '')
+
+        self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('qap_year_of_conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('qap_time_of_conversation'), '')
+
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    @staticmethod
+    def __draft_participant_is_default_qap(draft, default_qap):
+        return default_qap is not None and \
+               default_qap.name == draft.participant_name and \
+               default_qap.phone_number == draft.participant_phone_number and \
+               default_qap.organisation == draft.participant_organisation and \
+               default_qap.role == draft.participant_role
+
+    def fill_from_draft(self, draft, default_qap):
+        # simple values
+        self.event_id = fallback_to(draft.event_id, '')
+
+        # in this refactor we make calculations with default qap details at the fill stage
+        self.__calculate_discussion_participant_alternatives(default_qap, draft)
+
+        self.__fill_default_qap_from_draft(default_qap)
+
+        self.__calculate_time_values(draft)
+
+        self.discussion_details = draft.discussion_details
+
+        self.__calculate_discussion_outcome_radio_button_combination(draft)
+
+        # fill alternate cause of death boxes
+        self.__fill_cause_of_death_from_draft(draft)
+
+        return self
+
+    def __fill_cause_of_death_from_draft(self, draft):
+        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death.section_1a = draft.causeOfDeath1a
+        self.cause_of_death.section_1b = draft.causeOfDeath1b
+        self.cause_of_death.section_1c = draft.causeOfDeath1c
+        self.cause_of_death.section_2 = draft.causeOfDeath2
+
+    def __calculate_discussion_participant_alternatives(self, default_qap, draft):
+        if self.__draft_participant_is_default_qap(draft, default_qap):
+            self.discussion_participant_type = "qap"
+        elif default_qap and (draft is None or draft.participant_name is None):
+            self.discussion_participant_type = "qap"
+        else:
+            self.discussion_participant_type = "other"
+            self.qap_discussion_name = draft.participant_name
+            self.qap_discussion_role = draft.participant_role
+            self.qap_discussion_organisation = draft.participant_organisation
+            self.qap_discussion_phone_number = draft.participant_phone_number
+
+    def __fill_default_qap_from_draft(self, default_qap):
+        if default_qap:
+            self.qap_default_qap_name = default_qap.name
+            self.qap_default_qap_role = default_qap.role
+            self.qap_default_qap_organisation = default_qap.organisation
+            self.qap_default_qap_phone_number = default_qap.phone_number
+
+    def __calculate_discussion_outcome_radio_button_combination(self, draft):
+        api_outcome = draft.qap_discussion_outcome
+        if api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-1"
+        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-2"
+        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+            self.outcome = "mccd"
+            self.outcome_decision = "outcome-decision-3"
+        elif api_outcome == self.DISCUSSION_OUTCOME_CORONER:
+            self.outcome = "coroner"
+            self.outcome_decision = ""
+
+    def __calculate_time_values(self, draft):
+        date_of_conversation = draft.date_of_conversation
+        if date_of_conversation is not None:
+            # Individual day, month, year values
+            self.day_of_conversation = date_of_conversation.day
+            self.month_of_conversation = date_of_conversation.month
+            self.year_of_conversation = date_of_conversation.year
+
+            # Time as a string
+            hr_str = ("0%s" % date_of_conversation.hour)[-2:]
+            min_str = ("0%s" % date_of_conversation.minute)[-2:]
+            self.time_of_conversation = "%s:%s" % (hr_str, min_str)
+        else:
+            self.day_of_conversation = ''
+            self.month_of_conversation = ''
+            self.year_of_conversation = ''
+            self.time_of_conversation = ''
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        name, role, organisation, phone_number = self.__participant_for_request()
+
+        date_of_conversation = self.__calculate_full_date_of_conversation()
+
+        outcome = self.__calculate_discussion_outcome()
+
+        return {
+            "eventId": self.event_id,
+            "isFinal": self.is_final,
+            "participantRoll": role,
+            "participantOrganisation": organisation,
+            "participantPhoneNumber": phone_number,
+            "discussionUnableHappen": False,
+            "discussionDetails": self.discussion_details,
+            "qapDiscussionOutcome": outcome,
+            "participantName": name,
+            "causeOfDeath1a": self.cause_of_death.section_1a,
+            "causeOfDeath1b": self.cause_of_death.section_1b,
+            "causeOfDeath1c": self.cause_of_death.section_1c,
+            "causeOfDeath2": self.cause_of_death.section_2,
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT)
+        }
+
+    def __participant_for_request(self):
+        if self.discussion_participant_type == 'other':
+            name = self.qap_discussion_name
+            role = self.qap_discussion_role
+            organisation = self.qap_discussion_organisation
+            phone_number = self.qap_discussion_phone_number
+        else:
+            name = self.qap_default_qap_name
+            role = self.qap_default_qap_role
+            organisation = self.qap_default_qap_organisation
+            phone_number = self.qap_default_qap_phone_number
+        return name, role, organisation, phone_number
+
+    def __calculate_discussion_outcome(self):
+        if self.outcome == 'mccd':
+            if self.outcome_decision == 'outcome-decision-1':
+                return self.DISCUSSION_OUTCOME_MCCD_FROM_QAP
+            elif self.outcome_decision == 'outcome-decision-2':
+                return self.DISCUSSION_OUTCOME_MCCD_FROM_ME
+            elif self.outcome_decision == 'outcome-decision-3':
+                return self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
+        elif self.outcome == 'coroner':
+            return self.DISCUSSION_OUTCOME_CORONER
+
+    def __calculate_full_date_of_conversation(self):
+        if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
+            hr, minute = self.__calculate_hour_and_minute_of_conversation()
+            return build_date(self.year_of_conversation, self.month_of_conversation,
+                              self.day_of_conversation, hr, minute)
+        else:
+            return None
+
+    def __calculate_hour_and_minute_of_conversation(self):
+        hr = 0
+        minute = 0
+        time_components = self.time_of_conversation.split(":")
+        if len(time_components) >= 2:
+            hr = int(time_components[0])
+            minute = int(time_components[1])
+        return hr, minute
+
+
 class AdmissionNotesEventForm:
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('admission_notes_id')
-        self.admission_day = form_data.get('day_of_last_admission')
-        self.admission_month = form_data.get('month_of_last_admission')
-        self.admission_year = form_data.get('year_of_last_admission')
-        self.admission_date_unknown = form_data.get('date_of_last_admission_not_known')
-        self.admission_time = form_data.get('time_of_last_admission')
-        self.admission_time_unknown = form_data.get('time_of_last_admission_not_known')
+        self.event_id = fallback_to(form_data.get('admission_notes_id'), '')
+        self.admission_day = fallback_to(form_data.get('day_of_last_admission'), '')
+        self.admission_month = fallback_to(form_data.get('month_of_last_admission'), '')
+        self.admission_year = fallback_to(form_data.get('year_of_last_admission'), '')
+        self.admission_date_unknown = fallback_to(form_data.get('date_of_last_admission_not_known'), '')
+        self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
+        self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
-        self.coroner_referral = form_data.get('latest-admission-suspect-referral')
+        self.coroner_referral = fallback_to(form_data.get('latest-admission-suspect-referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):

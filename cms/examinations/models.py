@@ -1,5 +1,5 @@
 from rest_framework import status
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from errors.utils import handle_error
@@ -98,14 +98,22 @@ class ExaminationOverview:
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
-            delta = datetime.now() - self.last_admission
+            # TODO Remove this conditional when we date consistency
+            if self.last_admission.tzinfo is None:
+                delta = datetime.now() - self.last_admission
+            else:
+                delta = datetime.now(timezone.utc) - self.last_admission
             return delta.days
         else:
             return 0
 
     def calc_created_days_ago(self):
         if self.case_created_date:
-            delta = datetime.now() - self.case_created_date
+            # TODO Remove this conditional when we date consistency
+            if self.case_created_date.tzinfo is None:
+                delta = datetime.now() - self.case_created_date
+            else:
+                delta = datetime.now(timezone.utc) - self.case_created_date
             return delta.days
         else:
             return 0
@@ -307,14 +315,6 @@ class CaseBreakdown:
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
 
-        ## build form objects
-        # self.__build_case_breakdown_forms()
-
-    def __build_case_breakdown_forms(self):
-        self.qap_discussion = CaseBreakdownQAPDiscussion.from_data(self.medical_team,
-                                                                   self.event_list.get_latest_me_scrutiny_cause_of_death(),
-                                                                   self.event_list.get_qap_discussion_draft())
-
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
@@ -392,7 +392,24 @@ class ExaminationEventList:
         return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
 
     def get_latest_me_scrutiny_cause_of_death(self):
-        return None
+        events = [event for event in self.events if
+                  event.event_type == CaseEvent().PRE_SCRUTINY_EVENT_TYPE and event.is_latest is True]
+        if len(events) == 0:
+            return None
+        else:
+            return self.get_scrutiny_cause_of_death(events[0])
+
+    @staticmethod
+    def get_scrutiny_cause_of_death(event):
+        from users.models import User
+        cause_of_death = CauseOfDeathProposal()
+        cause_of_death.creation_date = event.created_date
+        cause_of_death.medical_examiner = User({'userId': event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.section_1a = event.cause_of_death_1a
+        cause_of_death.section_1b = event.cause_of_death_1b
+        cause_of_death.section_1c = event.cause_of_death_1c
+        cause_of_death.section_2 = event.cause_of_death_2
+        return cause_of_death
 
     def get_latest_agreed_cause_of_death(self):
         return None
@@ -561,7 +578,7 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
         self.discussion_details = obj_dict.get('discussionDetails')
         self.qap_discussion_outcome = obj_dict.get('qapDiscussionOutcome')
-        self.participantName = obj_dict.get("participantName")
+        self.participant_name = obj_dict.get("participantName")
         self.causeOfDeath1a = obj_dict.get("causeOfDeath1a")
         self.causeOfDeath1b = obj_dict.get("causeOfDeath1b")
         self.causeOfDeath1c = obj_dict.get("causeOfDeath1c")
@@ -690,6 +707,8 @@ class CaseBreakdownQAPDiscussion:
 
 
 class CauseOfDeathProposal:
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
 
     def __init__(self):
         from users.models import User
@@ -710,6 +729,20 @@ class CauseOfDeathProposal:
             'section_1c': self.section_1c,
             'section_2': self.section_2
         }
+
+    def display_date(self):
+        if self.creation_date:
+            date = parse_datetime(self.creation_date)
+            if date.date() == datetime.today().date():
+                return 'Today at %s' % date.strftime(self.time_format)
+            elif date.date() == datetime.today().date() - timedelta(days=1):
+                return 'Yesterday at %s' % date.strftime(self.time_format)
+            else:
+                time = date.strftime(self.time_format)
+                date = date.strftime(self.date_format)
+                return "%s at %s" % (date, time)
+        else:
+            return None
 
 
 class MedicalTeam:
@@ -732,7 +765,8 @@ class MedicalTeam:
             'nursingTeamInformation'] if 'nursingTeamInformation' in obj_dict else ''
 
         self.medical_examiner_id = obj_dict['medicalExaminerId'] if 'medicalExaminerId' in obj_dict else ''
-        self.medical_examiners_officer_id = obj_dict['medicalExaminerOfficer'] if 'medicalExaminerOfficer' in obj_dict else ''
+        self.medical_examiners_officer_id = obj_dict[
+            'medicalExaminerOfficer'] if 'medicalExaminerOfficer' in obj_dict else ''
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
@@ -770,7 +804,6 @@ class MedicalTeamMember:
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
                                  notes=notes, gmc_number=gmc_number)
 
-
     def has_name(self):
         return self.name and len(self.name.strip()) > 0
 
@@ -791,7 +824,7 @@ class MedicalTeamMember:
             "organisation": self.organisation,
             "phone": self.phone_number,
             "notes": self.notes,
-            "gmc": self.gmc_number
+            "gmcNumber": self.gmc_number
         }
 
 
