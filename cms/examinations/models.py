@@ -61,6 +61,10 @@ class Examination:
         else:
             return None
 
+    @classmethod
+    def create(cls, submission, auth_token):
+        return request_handler.post_new_examination(submission, auth_token)
+
 
 class ExaminationOverview:
     date_format = '%d.%m.%Y'
