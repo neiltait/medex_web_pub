@@ -399,20 +399,39 @@ class ExaminationEventList:
         else:
             return self.get_scrutiny_cause_of_death(events[0])
 
+    def get_latest_agreed_cause_of_death(self):
+        events = [event for event in self.events if
+                  event.event_type == CaseEvent().QAP_DISCUSSION_EVENT_TYPE and event.is_latest is True]
+        if len(events) == 0:
+            return None
+        else:
+            return self.get_scrutiny_cause_of_death(events[0])
+
     @staticmethod
-    def get_scrutiny_cause_of_death(event):
+    def get_scrutiny_cause_of_death(me_scrutiny_event):
         from users.models import User
         cause_of_death = CauseOfDeathProposal()
-        cause_of_death.creation_date = event.created_date
-        cause_of_death.medical_examiner = User({'userId': event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
-        cause_of_death.section_1a = event.cause_of_death_1a
-        cause_of_death.section_1b = event.cause_of_death_1b
-        cause_of_death.section_1c = event.cause_of_death_1c
-        cause_of_death.section_2 = event.cause_of_death_2
+        cause_of_death.creation_date = me_scrutiny_event.created_date
+        cause_of_death.medical_examiner = User(
+            {'userId': me_scrutiny_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
+        cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
+        cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
+        cause_of_death.section_2 = me_scrutiny_event.cause_of_death_2
         return cause_of_death
 
-    def get_latest_agreed_cause_of_death(self):
-        return None
+    @staticmethod
+    def get_agreed_cause_of_death(qap_event):
+        from users.models import User
+        cause_of_death = CauseOfDeathProposal()
+        cause_of_death.creation_date = qap_event.created_date
+        cause_of_death.medical_examiner = User(
+            {'userId': qap_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.section_1a = qap_event.cause_of_death_1a
+        cause_of_death.section_1b = qap_event.cause_of_death_1b
+        cause_of_death.section_1c = qap_event.cause_of_death_1c
+        cause_of_death.section_2 = qap_event.cause_of_death_2
+        return cause_of_death
 
 
 class CaseEvent:
@@ -723,6 +742,47 @@ class CauseOfDeathProposal:
     def to_object(self):
         return {
             'medical_examiner': get_user_presenter(self.medical_examiner),
+            'creation_date': self.creation_date,
+            'section_1a': self.section_1a,
+            'section_1b': self.section_1b,
+            'section_1c': self.section_1c,
+            'section_2': self.section_2
+        }
+
+    def display_date(self):
+        if self.creation_date:
+            date = parse_datetime(self.creation_date)
+            if date.date() == datetime.today().date():
+                return 'Today at %s' % date.strftime(self.time_format)
+            elif date.date() == datetime.today().date() - timedelta(days=1):
+                return 'Yesterday at %s' % date.strftime(self.time_format)
+            else:
+                time = date.strftime(self.time_format)
+                date = date.strftime(self.date_format)
+                return "%s at %s" % (date, time)
+        else:
+            return None
+
+
+class CauseOfDeathAgreement:
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+
+    def __init__(self):
+        from users.models import User
+
+        self.medical_examiner = User()
+        self.qap_name = ''
+        self.creation_date = ''
+        self.section_1a = ''
+        self.section_1b = ''
+        self.section_1c = ''
+        self.section_2 = ''
+
+    def to_object(self):
+        return {
+            'medical_examiner': get_user_presenter(self.medical_examiner),
+            'qap_name': self.qap_name,
             'creation_date': self.creation_date,
             'section_1a': self.section_1a,
             'section_1b': self.section_1b,

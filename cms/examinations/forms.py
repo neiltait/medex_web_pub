@@ -2,7 +2,7 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
+from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal, CauseOfDeathAgreement
 from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 from people.models import BereavedRepresentative
 
@@ -1016,6 +1016,13 @@ class BereavedDiscussionEventForm:
     REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
     REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
 
+    BEREAVED_OUTCOME_NO_CONCERNS = 'no concerns'
+    BEREAVED_OUTCOME_CONCERNS = 'concerns'
+
+    BEREAVED_RADIO_YES = 'yes'
+    BEREAVED_RADIO_NO = 'no'
+    BEREAVED_RADIO_UNKNOWN = 'unknown'
+
     active = False
 
     def make_active(self):
@@ -1023,22 +1030,13 @@ class BereavedDiscussionEventForm:
         return self
 
     def __init__(self, form_data={}):
+
         self.event_id = fallback_to(form_data.get('bereaved-event-id'), '')
 
         self.__init_representatives(form_data)
         self.__init_time_of_discussion(form_data)
+        self.__init_cause_of_death_agreement(form_data)
         self.__init_discussion_details(form_data)
-
-    def __init_discussion_details(self, form_data):
-        self.discussion_details = fallback_to(form_data.get('bereaved-discussion-details'), '')
-        self.discussion_outcome = fallback_to(form_data.get('bereaved-discussion-outcome'), '')
-
-    def __init_time_of_discussion(self, form_data):
-        self.day_of_conversation = fallback_to(form_data.get('bereaved-day-of-conversation'), '')
-        self.month_of_conversation = fallback_to(form_data.get('bereaved-month-of-conversation'), '')
-        self.year_of_conversation = fallback_to(form_data.get('bereaved-year-of-conversation'), '')
-        self.time_of_conversation = fallback_to(form_data.get('bereaved-time-of-conversation'), '')
-        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved-discussion-could-not-happen'), '')
 
     def __init_representatives(self, form_data):
         self.__init_existing_representative(form_data)
@@ -1079,6 +1077,32 @@ class BereavedDiscussionEventForm:
             }
             self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
 
+    def __init_cause_of_death_agreement(self, form_data):
+        from users.models import User
+        self.cause_of_death = CauseOfDeathAgreement()
+        self.cause_of_death.medical_examiner = User(obj_dict={
+            'userId': fallback_to(form_data.get('bereaved_cause_of_death_me'), ''),
+            'firstName': '',
+            'lastName': '',
+            'email_address': ''
+        })
+        self.cause_of_death.qap_name = fallback_to(form_data.get('bereaved_cause_of_death_qap'), '')
+        self.cause_of_death.creation_date = fallback_to(form_data.get('bereaved_cause_of_death_date'), '')
+        self.cause_of_death.section_1a = fallback_to(form_data.get('bereaved_cause_of_death_1a'), '')
+        self.cause_of_death.section_1b = fallback_to(form_data.get('bereaved_cause_of_death_1b'), '')
+        self.cause_of_death.section_1c = fallback_to(form_data.get('bereaved_cause_of_death_1c'), '')
+        self.cause_of_death.section_2 = fallback_to(form_data.get('bereaved_cause_of_death_2'), '')
+
+    def __init_discussion_details(self, form_data):
+        self.discussion_details = fallback_to(form_data.get('bereaved-discussion-details'), '')
+        self.discussion_outcome = fallback_to(form_data.get('bereaved-discussion-outcome'), '')
+
+    def __init_time_of_discussion(self, form_data):
+        self.day_of_conversation = fallback_to(form_data.get('bereaved-day-of-conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('bereaved-month-of-conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('bereaved-year-of-conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('bereaved-time-of-conversation'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved-discussion-could-not-happen'), '')
 
     def is_valid(self):
         return True

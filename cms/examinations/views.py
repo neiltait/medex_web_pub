@@ -379,3 +379,4 @@ def view_examination_case_outcome(request, examination_id):
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)
+
