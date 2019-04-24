@@ -1013,25 +1013,50 @@ class AdmissionNotesEventForm:
 
 
 class BereavedDiscussionEventForm:
+    # constants
     REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
     REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
 
     BEREAVED_OUTCOME_NO_CONCERNS = 'no concerns'
     BEREAVED_OUTCOME_CONCERNS = 'concerns'
 
+    BEREAVED_CONCERNED_OUTCOME_CORONER = 'coroner'
+    BEREAVED_CONCERNED_OUTCOME_100A = '100a'
+    BEREAVED_CONCERNED_OUTCOME_ADDRESSED = 'addressed'
+
     BEREAVED_RADIO_YES = 'yes'
     BEREAVED_RADIO_NO = 'no'
     BEREAVED_RADIO_UNKNOWN = 'unknown'
 
+    REQUEST_OUTCOME_NO_CONCERNS = "CauseOfDeathAccepted"
+    REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
+    REQUEST_OUTCOME_100A = "ConcernsRequires100a"
+    REQUEST_OUTCOME_ADDRESSED = "ConcernsAddressedWithoutCoroner"
+
+    # properties
     active = False
+    event_id = ''
+    use_existing_bereaved = False
+    discussion_representative_type = ''
+    existing_representative = None
+    alternate_representative = None
+    cause_of_death = None
+    discussion_details = ''
+    discussion_outcome = ''
+    discussion_concerned_outcome = ''
+    day_of_conversation = ''
+    month_of_conversation = ''
+    year_of_conversation = ''
+    discussion_could_not_happen = ''
 
     def make_active(self):
         self.active = True
         return self
 
+    # init from form_data (used on POST request)
     def __init__(self, form_data={}):
 
-        self.event_id = fallback_to(form_data.get('bereaved-event-id'), '')
+        self.event_id = fallback_to(form_data.get('bereaved_event_id'), '')
 
         self.__init_representatives(form_data)
         self.__init_time_of_discussion(form_data)
@@ -1044,7 +1069,7 @@ class BereavedDiscussionEventForm:
         self.__init_type_of_representative(form_data)
 
     def __init_type_of_representative(self, form_data):
-        self.discussion_representative_type = fallback_to(form_data.get('bereaved-rep-type'), '')
+        self.discussion_representative_type = fallback_to(form_data.get('bereaved_rep_type'), '')
         if self.discussion_representative_type == self.REPRESENTATIVE_TYPE_EXISTING:
             self.use_existing_bereaved = True
         elif self.discussion_representative_type == self.REPRESENTATIVE_TYPE_ALTERNATE:
@@ -1056,24 +1081,24 @@ class BereavedDiscussionEventForm:
 
     def __init_alternate_representative(self, form_data):
         alternate_bereaved_data = {
-            'fullName': fallback_to(form_data.get('bereaved-alternate-rep-name'), ''),
-            'relationship': fallback_to(form_data.get('bereaved-alternate-rep-relationship'), ''),
-            'phoneNumber': fallback_to(form_data.get('bereaved-alternate-rep-phone-number'), ''),
-            'presentAtDeath': fallback_to(form_data.get('bereaved-alternate-rep-present-at-death'), ''),
-            'informed': fallback_to(form_data.get('bereaved-alternate-rep-informed'), '')
+            'fullName': fallback_to(form_data.get('bereaved_alternate_rep_name'), ''),
+            'relationship': fallback_to(form_data.get('bereaved_alternate_rep_relationship'), ''),
+            'phoneNumber': fallback_to(form_data.get('bereaved_alternate_rep_phone_number'), ''),
+            'presentAtDeath': fallback_to(form_data.get('bereaved_alternate_rep_present_at_death'), ''),
+            'informed': fallback_to(form_data.get('bereaved_alternate_rep_informed'), '')
         }
         self.alternate_representative = BereavedRepresentative(obj_dict=alternate_bereaved_data)
 
     def __init_existing_representative(self, form_data):
         self.existing_representative = None
-        bereaved_existing_name = fallback_to(form_data.get('bereaved-existing-rep-name'), '')
+        bereaved_existing_name = fallback_to(form_data.get('bereaved_existing_rep_name'), '')
         if len(bereaved_existing_name) > 0:
             existing_bereaved_data = {
                 'fullName': bereaved_existing_name,
-                'relationship': fallback_to(form_data.get('bereaved-existing-rep-relationship'), ''),
-                'phoneNumber': fallback_to(form_data.get('bereaved-existing-rep-phone-number'), ''),
-                'presentAtDeath': fallback_to(form_data.get('bereaved-existing-rep-present-at-death'), ''),
-                'informed': fallback_to(form_data.get('bereaved-existing-rep-informed'), '')
+                'relationship': fallback_to(form_data.get('bereaved_existing_rep_relationship'), ''),
+                'phoneNumber': fallback_to(form_data.get('bereaved_existing_rep_phone_number'), ''),
+                'presentAtDeath': fallback_to(form_data.get('bereaved_existing_rep_present_at_death'), ''),
+                'informed': fallback_to(form_data.get('bereaved_existing_rep_informed'), '')
             }
             self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
 
@@ -1084,7 +1109,7 @@ class BereavedDiscussionEventForm:
             'userId': fallback_to(form_data.get('bereaved_cause_of_death_me'), ''),
             'firstName': '',
             'lastName': '',
-            'email_address': ''
+            'email': ''
         })
         self.cause_of_death.qap_name = fallback_to(form_data.get('bereaved_cause_of_death_qap'), '')
         self.cause_of_death.creation_date = fallback_to(form_data.get('bereaved_cause_of_death_date'), '')
@@ -1094,15 +1119,16 @@ class BereavedDiscussionEventForm:
         self.cause_of_death.section_2 = fallback_to(form_data.get('bereaved_cause_of_death_2'), '')
 
     def __init_discussion_details(self, form_data):
-        self.discussion_details = fallback_to(form_data.get('bereaved-discussion-details'), '')
-        self.discussion_outcome = fallback_to(form_data.get('bereaved-discussion-outcome'), '')
+        self.discussion_details = fallback_to(form_data.get('bereaved_discussion_details'), '')
+        self.discussion_outcome = fallback_to(form_data.get('bereaved_discussion_outcome'), '')
+        self.discussion_concerned_outcome = fallback_to(form_data.get('bereaved_discussion_concerned_outcome'), '')
 
     def __init_time_of_discussion(self, form_data):
-        self.day_of_conversation = fallback_to(form_data.get('bereaved-day-of-conversation'), '')
-        self.month_of_conversation = fallback_to(form_data.get('bereaved-month-of-conversation'), '')
-        self.year_of_conversation = fallback_to(form_data.get('bereaved-year-of-conversation'), '')
-        self.time_of_conversation = fallback_to(form_data.get('bereaved-time-of-conversation'), '')
-        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved-discussion-could-not-happen'), '')
+        self.day_of_conversation = fallback_to(form_data.get('bereaved_day_of_conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('bereaved_month_of_conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved_discussion_could_not_happen'), '')
 
     def is_valid(self):
         return True
@@ -1111,4 +1137,59 @@ class BereavedDiscussionEventForm:
         pass
 
     def for_request(self):
-        return {}
+        date_of_conversation = self.__calculate_full_date_of_conversation()
+
+        participant = self.__participant_for_request()
+
+        return {
+            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+            "isFinal": True,
+            "eventType": "BereavedDiscussion",
+            "created": "2019-03-13T10:30:43.019Z",
+            "participantFullName": participant.full_name if participant else "",
+            "participantRelationship": participant.relationship if participant else "",
+            "participantPhoneNumber": participant.phone_number if participant else "",
+            "presentAtDeath": participant.present_at_death if participant else "",
+            "informedAtDeath": participant.informed if participant else "",
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT),
+            "discussionUnableHappen": self.discussion_could_not_happen,
+            "discussionDetails": self.discussion_details,
+            "bereavedDiscussionOutcome": self.__calculate_combined_outcome()
+        }
+
+    def __calculate_combined_outcome(self):
+        if self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS:
+            return BereavedDiscussionEventForm.REQUEST_OUTCOME_NO_CONCERNS
+        elif self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS:
+            if self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER
+            elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_100A
+            else:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED
+        else:
+            return ''
+
+    def __participant_for_request(self):
+        if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
+            return self.existing_representative
+        else:
+            return self.alternate_representative
+
+    def __calculate_full_date_of_conversation(self):
+        if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
+            hr, minute = self.__calculate_hour_and_minute_of_conversation()
+            return build_date(self.year_of_conversation, self.month_of_conversation,
+                              self.day_of_conversation, hr, minute)
+        else:
+            return None
+
+    def __calculate_hour_and_minute_of_conversation(self):
+        hr = 0
+        minute = 0
+        time_components = self.time_of_conversation.split(":")
+        if len(time_components) >= 2:
+            hr = int(time_components[0])
+            minute = int(time_components[1])
+        return hr, minute

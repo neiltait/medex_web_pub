@@ -1,10 +1,10 @@
 <div id="bereaved-discussion" class="event-form">
-    <input type="hidden" name="bereaved-event-id" value="{{ form.event_id }}"/>
+    <input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>
     <div class="nhs-form-group">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <label class="nhsuk-label nhsuk-u-font-weight-bold margin-bottom">
-                    Who is the dicussion with?
+                    Who is the discussion with?
                 </label>
             </div>
         </div>
@@ -16,21 +16,21 @@
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
-                                       name="{{ form.REPRESENTATIVE_TYPE_EXISTING }}" type="radio"
-                                       value="existing-rep" checked>
+                                       name="bereaved_rep_type" type="radio"
+                                       value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}" checked>
                                 <label class="nhsuk-label nhsuk-radios__label"
-                                       for="{{ form.REPRESENTATIVE_TYPE_EXISTING }}">
-                                    Family Member Name
+                                       for="bereaved-existing-rep">
+                                    {{ form.existing_representative.full_name }}
                                 </label>
                             </div>
                         </div>
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-new-rep"
-                                       name="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}"
-                                       type="radio" value="new-rep">
+                                       name="bereaved_rep_type"
+                                       type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}">
                                 <label class="nhsuk-label nhsuk-radios__label"
-                                       for="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}">
+                                       for="bereaved-new-rep">
                                     Another representative
                                 </label>
                             </div>
@@ -42,15 +42,15 @@
 
         <div id="bereaved-rep-details">
             {% if form.existing_representative %}
-                <input type="hidden" name="bereaved-existing-rep-name"
+                <input type="hidden" name="bereaved_existing_rep_name"
                        value="{{ form.existing_representative.full_name }}"/>
-                <input type="hidden" name="bereaved-existing-rep-relationship"
+                <input type="hidden" name="bereaved_existing_rep_relationship"
                        value="{{ form.existing_representative.relationship }}"/>
-                <input type="hidden" name="bereaved-existing-rep-phone-number"
+                <input type="hidden" name="bereaved_existing_rep_phone_number"
                        value="{{ form.existing_representative.phone_number }}"/>
-                <input type="hidden" name="bereaved-existing-rep-present-at-death"
+                <input type="hidden" name="bereaved_existing_rep_present_at_death"
                        value="{{ form.existing_representative.present_death }}"/>
-                <input type="hidden" name="bereaved-existing-rep-informed"
+                <input type="hidden" name="bereaved_existing_rep_informed"
                        value="{{ form.existing_representative.informed }}"/>
             {% endif %}
             <div id="bereavement-discussion-with-panel"
@@ -62,7 +62,7 @@
                                    for="rep-relationship" id="rep-relationship">
                                 Relationship
                             </label>
-                            <p class="nhsuk-body-m">Brother</p>
+                            <p class="nhsuk-body-m">{{ form.existing_representative.relationship }}</p>
 
                         </fieldset>
                     </div>
@@ -116,7 +116,7 @@
                     <span class="nhsuk-error-message medex-font-default-override"></span>
 
                     <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="bereavement-full-name"
-                           name="bereaved-alternate-rep-name"
+                           name="bereaved_alternate_rep_name"
                            type="text" value="{{ form.bereavement_discussion_full_name }}">
                 </div>
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
@@ -127,7 +127,7 @@
                         <div class="class=nhsuk-radios nhsuk-radios--inline">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-1"
-                                       name="bereaved-alternate-rep-present-at-death" type="radio"
+                                       name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="yes">
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
                                     Yes
@@ -135,7 +135,7 @@
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-2"
-                                       name="bereaved-alternate-rep-present-at-death" type="radio"
+                                       name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="no">
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
                                     No
@@ -143,7 +143,7 @@
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-3"
-                                       name="bereaved-alternate-rep-present-at-death" type="radio"
+                                       name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="unknown">
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
                                     Unknown
@@ -159,7 +159,7 @@
                         Relationship
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name"
-                           name="bereaved-alternate-rep-relationship"
+                           name="bereaved_alternate_rep_relationship"
                            type="text">
                 </div>
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
@@ -171,7 +171,7 @@
                         <div class="nhsuk-radios nhsuk-radios--inline">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-1"
-                                       name="bereaved-alternate-rep-informed" type="radio"
+                                       name="bereaved_alternate_rep_informed" type="radio"
                                        value="yes">
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-1">
                                     Yes
@@ -179,7 +179,7 @@
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-2"
-                                       name="bereaved-alternate-rep-informed" type="radio"
+                                       name="bereaved_alternate_rep_informed" type="radio"
                                        value="no">
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-2">
                                     No
@@ -187,7 +187,7 @@
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-3"
-                                       name="bereaved-alternate-rep-informed" type="radio"
+                                       name="bereaved_alternate_rep_informed" type="radio"
                                        value="unknown">
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-3">
                                     Unknown
@@ -203,7 +203,7 @@
                         Phone number
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="phone-number"
-                           name="bereaved-alternate-rep-phone-number"
+                           name="bereaved_alternate_rep_phone_number"
                            type="text"
                            value="{{ form.alternate_representative.phone_number }}">
                 </div>
@@ -225,7 +225,7 @@
                             </label>
                             <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
                                    id="doc-day"
-                                   name="bereaved-day-of-conversation" type="number" pattern="[0-9]*"
+                                   name="bereaved_day_of_conversation" type="number" pattern="[0-9]*"
                                    value="{{ form.day_of_conversation }}">>
                         </div>
                     </div>
@@ -236,7 +236,7 @@
                             </label>
                             <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
                                    id="doc-month"
-                                   name="bereaved-month-of-conversation" type="number" pattern="[0-9]*"
+                                   name="bereaved_month_of_conversation" type="number" pattern="[0-9]*"
                                    value="{{ form.month_of_conversation }}">>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                             </label>
                             <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4"
                                    id="doc-year"
-                                   name="bereaved-year-of-conversation" type="number" pattern="[0-9]*"
+                                   name="bereaved_year_of_conversation" type="number" pattern="[0-9]*"
                                    value="{{ form.year_of_conversation }}">
                         </div>
                     </div>
@@ -261,7 +261,7 @@
                     Time
                 </label>
                 <input class="nhsuk-input nhsuk-input--width-4 margin-time" id="input-width-4"
-                       name="bereaved-time-of-conversation"
+                       name="bereaved_time_of_conversation"
                        type="time"
                        value="{{ form.time_of_conversation }}">
             </div>
@@ -277,7 +277,7 @@
                         <div class="nhsuk-checkboxes">
                             <div class="nhsuk-checkboxes__item margin-save-button">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
-                                       name="bereaved-discussion-could-not-happen"
+                                       name="bereaved_discussion_could_not_happen"
                                        type="checkbox"
                                         {% if form.discussion_could_not_happen %} checked{% endif %}/>
                             </div>
@@ -305,7 +305,7 @@
                         Details of the discussion?
                     </label>
                     <textarea class="nhsuk-textarea medex-textarea margin-save-button"
-                              name="bereaved-discussion-details"
+                              name="bereaved_discussion_details"
                               rows="6">{{ form.discussion_details }}</textarea>
                 </div>
             </div>
@@ -328,7 +328,7 @@
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
                                            id="bereavement-discussion-outcome-no-concerns"
-                                           name="bereaved-discussion-outcome"
+                                           name="bereaved_discussion_outcome"
                                            type="radio" value="{{ form.BEREAVED_OUTCOME_NO_CONCERNS }}"
                                             {% if form.discussion_outcome == form.BEREAVED_OUTCOME_NO_CONCERNS %}
                                            checked{% endif %}>
@@ -340,7 +340,7 @@
                                 <div class="nhsuk-radios__item margin-save-button">
                                     <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
                                            id="bereavment-discussion-outcome-concerns"
-                                           name="bereaved-discussion-outcome" type="radio"
+                                           name="bereaved_discussion_outcome" type="radio"
                                            value="{{ form.BEREAVED_OUTCOME_CONCERNS }}"
                                             {% if form.discussion_outcome == form.BEREAVED_OUTCOME_CONCERNS %}
                                            checked{% endif %}>
