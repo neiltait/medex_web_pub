@@ -38,15 +38,17 @@
         </p>
       </div>
 
-      <div class="overview-block nhsuk-grid-column-one-third">
-        <p class="overview-heading">
-          Number of urgent cases
-        </p>
+      {% if not closed_list %}
+        <div class="overview-block nhsuk-grid-column-one-third">
+          <p class="overview-heading">
+            Number of urgent cases
+          </p>
 
-        <p class="overview-body">
-          {{session_user.index_overview.urgent_cases}}
-        </p>
-      </div>
+          <p class="overview-body">
+            {{session_user.index_overview.urgent_cases}}
+          </p>
+        </div>
+      {% endif %}
     </div>
 
     {% include 'home/partials/_filter_block.html' %}
