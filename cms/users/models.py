@@ -133,6 +133,7 @@ class User:
         if success:
             self.index_overview = IndexOverview(location, response.json())
             for examination in response.json()['examinations']:
+                examination['open'] = True
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
@@ -160,6 +161,7 @@ class User:
         if success:
             self.index_overview = IndexOverview(location, response.json())
             for examination in response.json()['examinations']:
+                examination['open'] = False
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)
