@@ -44,11 +44,17 @@
 
             .outcome {
                 margin-bottom: 15px;
+                text-transform: uppercase;
 
-                .outcome-description {
-                    margin-bottom: 0;
+                .outcome-description-heading {
                     color: $black;
                     font-size: $nhs-heading-l-size;
+                }
+
+                .outcome-description-details {
+                    margin-bottom: 0;
+                    color: $nhs-grey;
+                    font-size: $nhs-heading-s-size;
                 }
             }
         }
@@ -113,6 +119,37 @@
                 background-color: $pale-yellow;
                 padding: 3rem 2.5rem;
             }
+        }
+    }
+
+    .outstanding-items {
+        margin-top: 7rem;
+
+        .outstanding-item {
+            margin: 2rem 0rem 4rem;
+
+            .nhsuk-radios__item {
+                margin-right: 4rem;
+            }
+        }
+    }
+
+    .close-case {
+        background-color: $nhs-pale-grey;
+        padding: 6rem 2rem 7rem;
+
+        .page-subheading {
+            margin-top: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .hint-text {
+            margin: 0;
+            padding: 1rem 1.5rem;
         }
     }
 }

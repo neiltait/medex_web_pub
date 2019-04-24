@@ -8,7 +8,7 @@ from errors.models import GenericError
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, OutstandingItemsForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -131,11 +131,6 @@ def edit_examination_patient_details(request, examination_id):
     locations = location_request_handler.get_locations_list(user.auth_token)
     me_offices = location_request_handler.get_me_offices_list(user.auth_token)
 
-    patient = {
-        "name": examination.full_name(),
-        "nhs_number": examination.get_nhs_number()
-    }
-
     context = {
         'session_user': user,
         'examination_id': examination_id,
@@ -148,7 +143,6 @@ def edit_examination_patient_details(request, examination_id):
         'tab_modal': modal_config,
         "locations": locations,
         "me_offices": me_offices,
-        "patient": patient,
         "saved": saved
     }
 
@@ -338,11 +332,17 @@ def view_examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in request.POST:
+            form = OutstandingItemsForm(request.POST)
+            result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in request.POST:
+            result = CaseOutcome.close_case(user.auth_token, examination_id)
         else:
+            # TODO refactor in to BadRequestResponse class
             response = Response()
             response.status_code = status.HTTP_400_BAD_REQUEST
             result = GenericError(response, {'type': 'form', 'action': 'submitting'})

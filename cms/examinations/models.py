@@ -1,7 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, API_DATE_FORMAT
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from errors.utils import handle_error
 
 from people.models import BereavedRepresentative
@@ -835,9 +835,12 @@ def text_field_is_not_null(field):
 class CaseOutcome:
     SCRUTINY_CONFIRMATION_FORM_TYPE = 'pre-scrutiny-confirmed'
     CORONER_REFERRAL_FORM_TYPE = 'coroner-referral'
+    OUTSTANDING_ITEMS_FORM_TYPE = 'outstanding-items'
+    CLOSE_CASE_FORM_TYPE = 'close-case'
 
     date_format = '%d.%m.%Y %H:%M'
-    REFER_TO_CORONER_KEYS = ['ReferToCoroner', 'IssueMCCDWith100a']
+    CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
+    REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, 'IssueMCCDWith100a']
 
     QAP_OUTCOMES = {
         'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
@@ -873,7 +876,7 @@ class CaseOutcome:
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
-        self.case_status = obj_dict.get("caseOpen")
+        self.case_open = obj_dict.get("caseOpen")
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
@@ -908,11 +911,46 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'confirming coroner referral'})
 
+    @classmethod
+    def update_outstanding_items(cls, auth_token, examination_id, submission):
+        response = request_handler.update_outcomes_outstanding_items(auth_token, examination_id, submission)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'updating'})
+
+    @classmethod
+    def close_case(cls, auth_token, examination_id):
+        response = request_handler.close_case(auth_token, examination_id)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.status_code
+        else:
+            return handle_error(response, {'type': 'case', 'action': 'closing'})
+
     def show_coroner_referral(self):
         return self.is_coroner_referral() and self.scrutiny_confirmed
 
     def is_coroner_referral(self):
         return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
+
+    def is_coroner_investigation(self):
+        return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
+
+    def investigation_referral_complete(self):
+        return self.coroner_referral and self.is_coroner_investigation()
+
+    def outstanding_items_complete(self):
+        return self.coroner_referral and self.mccd_issued and self.cremation_form_status and self.gp_notified_status
+
+    def outstanding_items_active(self):
+        return True if self.coroner_referral and self.case_open else False
+
+    def can_close(self):
+        return True if self.case_open and \
+                       (self.investigation_referral_complete() or self.outstanding_items_complete())\
+                       else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
