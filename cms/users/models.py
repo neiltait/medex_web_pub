@@ -157,6 +157,9 @@ class User:
     def get_permitted_regions(self):
         return Location.load_region_list(self.auth_token)
 
+    def get_permitted_me_offices(self):
+        return Location.load_me_offices(self.auth_token)
+
     def get_forms_for_role(self):
         if self.role_type == self.MEO_ROLE_TYPE:
             return [

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
+from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error
 from home.forms import IndexFilterForm
 from locations.models import Location
@@ -24,6 +25,7 @@ def index(request):
         template, context, status_code = __post_index(user, request.POST)
 
     else:
+        log_unexpected_method(request.method, 'case index')
         template, context, status_code = __handle_method_not_allowed_error(user)
 
     return render(request, template, context, status=status_code)
@@ -92,6 +94,7 @@ def login(request):
             'issuer': settings.OP_ISSUER
         }
     else:
+        log_unexpected_method(request.method, 'login')
         template, context, status_code = __handle_method_not_allowed_error(user)
 
     return render(request, template, context, status=status_code)
@@ -121,6 +124,7 @@ def settings_index(request):
             'sub_heading': 'Overview',
         }
     else:
+        log_unexpected_method(request.method, 'settings index')
         template, context, status_code = __handle_method_not_allowed_error(user)
 
     return render(request, template, context, status=status_code)

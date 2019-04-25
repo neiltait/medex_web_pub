@@ -43,3 +43,7 @@ class Location:
     @classmethod
     def load_region_list(cls, auth_token):
         return request_handler.load_region_list(auth_token)
+
+    @classmethod
+    def load_me_offices(cls, auth_token):
+        return request_handler.get_me_offices_list(auth_token)

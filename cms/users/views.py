@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
+from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error
 from home.utils import redirect_to_login, render_404
 from permissions.forms import PermissionBuilderForm
@@ -19,12 +20,13 @@ def create_user(request):
         template, context, status_code = __get_create_user(user)
 
     elif request.method == 'POST':
-        template, context, status_code, redirect = __post_create_user(user, request.POST)
+        template, context, status_code, redirect_response = __post_create_user(user, request.POST)
 
-        if redirect:
-            return redirect
+        if redirect_response:
+            return redirect_response
 
     else:
+        log_unexpected_method(request.method, 'create user')
         template, context, status_code = __handle_method_not_allowed_error(user)
 
     return render(request, template, context, status=status_code)
@@ -78,15 +80,16 @@ def add_permission(request, user_id):
         template, context, status_code = __get_add_permission(user, managed_user)
 
     elif request.method == 'POST':
-        template, context, status_code, redirect = __post_add_permission(user, managed_user, request.POST)
+        template, context, status_code, redirect_response = __post_add_permission(user, managed_user, request.POST)
 
-        if redirect:
-            return redirect
+        if redirect_response:
+            return redirect_response
 
     else:
+        log_unexpected_method(request.method, 'add permission')
         template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, 'users/permission_builder.html', context, status=status_code)
+    return render(request, template, context, status=status_code)
 
 
 def __get_add_permission(user, managed_user):
