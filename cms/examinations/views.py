@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework import status
 
 from errors.models import GenericError, BadRequestResponse
-from errors.utils import log_unexpected_method
+from errors.utils import log_unexpected_method, log_api_error
 from errors.views import __handle_method_not_allowed_error
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
@@ -57,6 +57,7 @@ def __post_create_examination(user, post_body):
                 form = PrimaryExaminationInformationForm()
                 status_code = status.HTTP_200_OK
         else:
+            log_api_error('case creation', response.text)
             status_code = response.status_code
     else:
         status_code = status.HTTP_400_BAD_REQUEST
@@ -148,11 +149,12 @@ def __post_examination_patient_details(user, post_body, examination, get_body):
         submission.update(urgency_info_form.for_request())
         submission['id'] = examination.examination_id
 
-        response = PatientDetails.update(examination.examination_id, submission, user.auth_token)
+        response = PatientDetails.update(examination.id, submission, user.auth_token)
 
         if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
-            return None, None, None, redirect('/cases/%s/%s' % (examination.examination_id, get_body.get('nextTab')))
+            return None, None, None, redirect('/cases/%s/%s' % (examination.id, get_body.get('nextTab')))
         elif response.status_code != status.HTTP_200_OK:
+            log_api_error('patient details update', response.text)
             status_code = response.status_code
         else:
             saved = True
@@ -184,7 +186,7 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         urgency_form.error_count
     return {
         'session_user': user,
-        'examination_id': examination.examination_id,
+        'examination_id': examination.id,
         'patient': examination.case_header,
         'primary_info_form': primary_form,
         'secondary_info_form': secondary_form,
@@ -403,6 +405,7 @@ def __post_examination_case_outcome(user, examination_id, post_body):
         result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
 
     if result and not result.ok:
+        log_api_error('case outcome update', result.get_message())
         context = {
             'session_user': user,
             'error': result,

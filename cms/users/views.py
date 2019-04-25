@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
-from errors.utils import log_unexpected_method
+from errors.utils import log_unexpected_method, log_api_error
 from errors.views import __handle_method_not_allowed_error
 from home.utils import redirect_to_login, render_404
 from permissions.forms import PermissionBuilderForm
@@ -47,9 +47,10 @@ def __post_create_user(user, post_body):
     if form.validate():
         response = User.create(form.response_to_dict(), user.auth_token)
 
-        if response.status_code == status.HTTP_200_OK:
+        if response.ok:
             return None, None, None, redirect('/users/%s/add_permission' % response.json()['userId'])
         else:
+            log_api_error('user creation', response.text)
             status_code = response.status_code
     else:
         status_code = status.HTTP_400_BAD_REQUEST
@@ -115,6 +116,7 @@ def __post_add_permission(user, managed_user, post_body):
             else:
                 return redirect('/settings')
         else:
+            log_api_error('permission creation', response.text)
             status_code = response.status_code
 
     else:

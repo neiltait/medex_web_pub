@@ -2,7 +2,7 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
-from errors.utils import handle_error
+from errors.utils import handle_error, log_api_error
 
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter
@@ -293,6 +293,7 @@ class PatientDetails:
             modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
             return PatientDetails(response.json(), modes_of_disposal)
         else:
+            log_api_error('patient details load', response.text)
             return None
 
     @classmethod
@@ -782,6 +783,7 @@ class MedicalTeam:
         if authenticated:
             return MedicalTeam(response.json(), examination_id)
         else:
+            log_api_error('medical team load', response.text)
             return None
 
     def update(self, submission, auth_token):
@@ -900,6 +902,7 @@ class CaseOutcome:
         if response.status_code == status.HTTP_200_OK:
             return CaseOutcome(response.json(), examination_id), None
         else:
+            log_api_error('case outcome load', response.text)
             return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod

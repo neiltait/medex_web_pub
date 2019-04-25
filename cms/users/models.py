@@ -1,10 +1,10 @@
 import json
-import logging
 
 from django.conf import settings
 
 from rest_framework import status
 
+from errors.utils import log_api_error, log_internal_error
 from examinations.models import ExaminationOverview
 from examinations import request_handler as examination_request_handler
 
@@ -18,8 +18,6 @@ from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
 
 from . import request_handler
-
-logger = logging.getLogger(__name__)
 
 
 class User:
@@ -116,7 +114,7 @@ class User:
             for permission in response.json()['permissions']:
                 self.permissions.append(Permission(permission))
         else:
-            logger.error(response.status_code)
+            log_api_error('permissions load', response.text)
 
     def load_examinations(self, location='', person=''):
         if person:
@@ -142,7 +140,7 @@ class User:
             for examination in response.json()['examinations']:
                 self.examinations.append(ExaminationOverview(examination))
         else:
-            logger.error(response.status_code)
+            log_api_error('case load', response.text)
 
     def get_permitted_locations(self):
         permitted_locations = []
@@ -200,4 +198,4 @@ class User:
                 }
             ]
         else:
-            logger.error('Unknown role type')
+            log_internal_error('(User) get_form_for_role', 'Unknown role type')

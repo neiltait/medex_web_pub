@@ -14,4 +14,12 @@ def handle_error(error_response, params):
 
 
 def log_unexpected_method(method, view):
-    logger.error('Unexpected HTTP method received (%s) on the %s endpoint')
+    logger.error('Unexpected HTTP method received (%s) on the %s endpoint' % (method, view))
+
+
+def log_api_error(process, response):
+    logger.error('An error occurred on the API during the execution of %s. - %s' % (process, response))
+
+
+def log_internal_error(function, details=''):
+    logger.error('An error occurred in %s - %s' % (function, details))
