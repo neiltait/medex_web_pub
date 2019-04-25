@@ -751,7 +751,8 @@ class CauseOfDeathProposal:
 
 class MedicalTeam:
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, examination_id):
+        self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.consultant_responsible = MedicalTeamMember.from_dict(
             obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
@@ -779,9 +780,12 @@ class MedicalTeam:
         authenticated = response.status_code == status.HTTP_200_OK
 
         if authenticated:
-            return MedicalTeam(response.json())
+            return MedicalTeam(response.json(), examination_id)
         else:
             return None
+
+    def update(self, submission, auth_token):
+        return request_handler.update_medical_team(self.examination_id, submission, auth_token)
 
 
 class MedicalTeamMember:
@@ -874,7 +878,8 @@ class CaseOutcome:
         'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
     }
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, examination_id):
+        self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
@@ -893,9 +898,9 @@ class CaseOutcome:
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseOutcome(response.json())
+            return CaseOutcome(response.json(), examination_id), None
         else:
-            return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+            return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod
     def complete_scrutiny(cls, auth_token, examination_id):

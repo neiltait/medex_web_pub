@@ -642,6 +642,10 @@ class MedicalTeamMembersForm:
     def initialise_errors(self):
         self.errors = {"count": 0}
 
+    @property
+    def error_count(self):
+        return self.errors['count']
+
     def to_object(self):
         consultants_other = []
         if self.consultant_2.has_name():
