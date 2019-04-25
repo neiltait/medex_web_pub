@@ -30,8 +30,16 @@ class Location:
 
     @classmethod
     def get_locations_list(cls, auth_token):
-        request_handler.get_locations_list(auth_token)
+        return request_handler.get_locations_list(auth_token)
 
     @classmethod
     def get_me_offices_list(cls, auth_token):
-        request_handler.get_me_offices_list(auth_token)
+        return request_handler.get_me_offices_list(auth_token)
+
+    @classmethod
+    def load_trusts_list(cls, auth_token):
+        return request_handler.load_trusts_list(auth_token)
+
+    @classmethod
+    def load_region_list(cls, auth_token):
+        return request_handler.load_region_list(auth_token)

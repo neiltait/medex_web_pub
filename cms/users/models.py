@@ -100,6 +100,13 @@ class User:
         else:
             return None
 
+    @classmethod
+    def create(cls, submission, auth_token):
+        return request_handler.create_user(json.dumps(submission), auth_token)
+
+    def add_permission(self, form, auth_token):
+        return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
+
     def load_permissions(self):
         response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
 
@@ -143,6 +150,12 @@ class User:
         for location in location_data:
             permitted_locations.append(Location().set_values(location))
         return permitted_locations
+
+    def get_permitted_trusts(self):
+        return Location.load_trusts_list(self.auth_token)
+
+    def get_permitted_regions(self):
+        return Location.load_region_list(self.auth_token)
 
     def get_forms_for_role(self):
         if self.role_type == self.MEO_ROLE_TYPE:

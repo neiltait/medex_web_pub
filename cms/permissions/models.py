@@ -1,3 +1,7 @@
+import json
+
+from permissions import request_handler
+
 
 class Permission:
     ROLES = {
@@ -16,3 +20,7 @@ class Permission:
     @property
     def role_type(self):
         return self.ROLES[str(self.user_role)]
+
+    @classmethod
+    def create(cls, submission, user_id, auth_token):
+        return request_handler.create_permission(json.dumps(submission), user_id, auth_token)
