@@ -7,7 +7,7 @@ from errors.views import __handle_method_not_allowed_error
 from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, OutstandingItemsForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -372,10 +372,15 @@ def examination_case_outcome(request, examination_id):
         return redirect_to_login()
 
     if request.method == 'POST':
-        if  CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in request.POST:
             result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in request.POST:
             result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in request.POST:
+            form = OutstandingItemsForm(request.POST)
+            result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in request.POST:
+            result = CaseOutcome.close_case(user.auth_token, examination_id)
         else:
             result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
 
