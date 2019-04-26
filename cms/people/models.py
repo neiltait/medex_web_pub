@@ -33,6 +33,12 @@ class BereavedRepresentative:
         self.appointment_month = obj_dict.get('month_of_appointment')
         self.appointment_year = obj_dict.get('year_of_appointment')
 
+    def equals(self, representative):
+        return representative is not None and \
+               self.full_name == representative.full_name and \
+               self.relationship == representative.relationship and \
+               self.phone_number == representative.phone_number
+
 
 class DropdownPerson:
 

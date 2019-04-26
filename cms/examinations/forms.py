@@ -2,8 +2,8 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal, CauseOfDeathAgreement
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseBreakdownQAPDiscussion
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 from people.models import BereavedRepresentative
 
 
@@ -757,12 +757,7 @@ class OtherEventForm:
 
 class QapDiscussionEventForm:
     active = False
-
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
-    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
-    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
-    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
 
     def make_active(self):
         self.active = True
@@ -858,16 +853,16 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
-        if api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+        if api_outcome == CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-1"
-        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+        elif api_outcome == CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_FROM_ME:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-2"
-        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+        elif api_outcome == CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-3"
-        elif api_outcome == self.DISCUSSION_OUTCOME_CORONER:
+        elif api_outcome == CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_CORONER:
             self.outcome = "coroner"
             self.outcome_decision = ""
 
@@ -932,13 +927,13 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome(self):
         if self.outcome == 'mccd':
             if self.outcome_decision == 'outcome-decision-1':
-                return self.DISCUSSION_OUTCOME_MCCD_FROM_QAP
+                return CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_FROM_QAP
             elif self.outcome_decision == 'outcome-decision-2':
-                return self.DISCUSSION_OUTCOME_MCCD_FROM_ME
+                return CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_FROM_ME
             elif self.outcome_decision == 'outcome-decision-3':
-                return self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
+                return CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
         elif self.outcome == 'coroner':
-            return self.DISCUSSION_OUTCOME_CORONER
+            return CaseBreakdownQAPDiscussion.DISCUSSION_OUTCOME_CORONER
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
@@ -1040,7 +1035,6 @@ class BereavedDiscussionEventForm:
     discussion_representative_type = ''
     existing_representative = None
     alternate_representative = None
-    cause_of_death = None
     discussion_details = ''
     discussion_outcome = ''
     discussion_concerned_outcome = ''
@@ -1060,7 +1054,6 @@ class BereavedDiscussionEventForm:
 
         self.__init_representatives(form_data)
         self.__init_time_of_discussion(form_data)
-        self.__init_cause_of_death_agreement(form_data)
         self.__init_discussion_details(form_data)
 
     def __init_representatives(self, form_data):
@@ -1102,22 +1095,6 @@ class BereavedDiscussionEventForm:
             }
             self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
 
-    def __init_cause_of_death_agreement(self, form_data):
-        from users.models import User
-        self.cause_of_death = CauseOfDeathAgreement()
-        self.cause_of_death.medical_examiner = User(obj_dict={
-            'userId': fallback_to(form_data.get('bereaved_cause_of_death_me'), ''),
-            'firstName': '',
-            'lastName': '',
-            'email': ''
-        })
-        self.cause_of_death.qap_name = fallback_to(form_data.get('bereaved_cause_of_death_qap'), '')
-        self.cause_of_death.creation_date = fallback_to(form_data.get('bereaved_cause_of_death_date'), '')
-        self.cause_of_death.section_1a = fallback_to(form_data.get('bereaved_cause_of_death_1a'), '')
-        self.cause_of_death.section_1b = fallback_to(form_data.get('bereaved_cause_of_death_1b'), '')
-        self.cause_of_death.section_1c = fallback_to(form_data.get('bereaved_cause_of_death_1c'), '')
-        self.cause_of_death.section_2 = fallback_to(form_data.get('bereaved_cause_of_death_2'), '')
-
     def __init_discussion_details(self, form_data):
         self.discussion_details = fallback_to(form_data.get('bereaved_discussion_details'), '')
         self.discussion_outcome = fallback_to(form_data.get('bereaved_discussion_outcome'), '')
@@ -1134,7 +1111,75 @@ class BereavedDiscussionEventForm:
         return True
 
     def fill_from_draft(self, draft, default_representatives):
-        pass
+
+        self.event_id = draft.event_id
+        self.discussion_could_not_happen = draft.discussion_unable_happen
+        self.discussion_details = draft.discussion_details
+
+        self.__fill_representatives_from_draft(default_representatives, draft)
+
+        self.__calculate_bereaved_outcomes(draft)
+
+        self.__calculate_time_values(draft)
+
+    def __calculate_bereaved_outcomes(self, draft):
+        request_outcome = draft.bereaved_discussion_outcome
+        if request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_NO_CONCERNS:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_100A:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED
+
+    def __calculate_time_values(self, draft):
+        date_of_conversation = draft.date_of_conversation
+        if date_of_conversation is not None:
+            # Individual day, month, year values
+            self.day_of_conversation = date_of_conversation.day
+            self.month_of_conversation = date_of_conversation.month
+            self.year_of_conversation = date_of_conversation.year
+
+            # Time as a string
+            hr_str = ("0%s" % date_of_conversation.hour)[-2:]
+            min_str = ("0%s" % date_of_conversation.minute)[-2:]
+            self.time_of_conversation = "%s:%s" % (hr_str, min_str)
+        else:
+            self.day_of_conversation = ''
+            self.month_of_conversation = ''
+            self.year_of_conversation = ''
+            self.time_of_conversation = ''
+
+    def __fill_representatives_from_draft(self, default_representatives, draft):
+
+        self.existing_representative = None
+        self.alternate_representative = None
+        if len(default_representatives) > 0:
+            self.existing_representative = default_representatives[0]
+        draft_participant = None
+        if len(draft.participant_full_name) > 0:
+            draft_participant = BereavedRepresentative({
+                "fullName": draft.participant_full_name,
+                "relationship": draft.participant_relationship,
+                'phoneNumber': draft.participant_phone_number,
+                'presentAtDeath': draft.present_at_death,
+                'informed': draft.informed_at_death,
+            })
+        if draft_participant is None:
+            if self.existing_representative is not None:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+            else:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+        else:
+            if draft_participant.equals(self.existing_representative):
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+            else:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.alternate_representative = draft_participant
 
     def for_request(self):
         date_of_conversation = self.__calculate_full_date_of_conversation()
@@ -1152,7 +1197,7 @@ class BereavedDiscussionEventForm:
             "participantPhoneNumber": participant.phone_number if participant else "",
             "presentAtDeath": participant.present_at_death if participant else "",
             "informedAtDeath": participant.informed if participant else "",
-            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT),
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else '',
             "discussionUnableHappen": self.discussion_could_not_happen,
             "discussionDetails": self.discussion_details,
             "bereavedDiscussionOutcome": self.__calculate_combined_outcome()

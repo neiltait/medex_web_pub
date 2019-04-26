@@ -1064,26 +1064,26 @@ class ExaminationsFormsTests(MedExTestCase):
 
         # then the default qap is assigned as participant
         self.assertEquals(request['participantFullName'], 'Alternate rep')
-    #
-    # def test_bereaved_discussion__fill_from_draft__recalls_fields_from_api_event_draft(self):
-    #     # Given draft data from the api
-    #     draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
-    #     qap_draft = CaseQapDiscussionEvent(draft_data, 1)
-    #
-    #     # When we fill a form using this data
-    #     form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
-    #
-    #     # Then the form is created
-    #     self.assertEquals(draft_data["discussionDetails"], form.discussion_details)
+
+    def test_bereaved_discussion__fill_from_draft__recalls_fields_from_api_event_draft(self):
+        # Given draft data from the api
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, None)
+
+        # Then the form is created
+        self.assertEquals(draft_data["discussionDetails"], form.discussion_details)
     #
     # def test_bereaved_discussion__fill_from_draft__maps_single_conversation_date_to_day_month_year_time_fields(self):
     #     # Given draft data from the api with a specified test date
     #     draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
     #     draft_data['dateOfConversation'] = "2019-04-08T08:30:00.000Z"
-    #     qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+    #     bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
     #
     #     # When we fill a form using this data
-    #     form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
+    #     form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, None)
     #
     #     # Then the form is filled with individual date fields
     #     self.assertEquals(form.day_of_conversation, 8)
@@ -1095,10 +1095,10 @@ class ExaminationsFormsTests(MedExTestCase):
     #     # Given draft data from the api with a specified test date
     #     draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
     #     draft_data['dateOfConversation'] = ""
-    #     qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+    #     bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
     #
     #     # When we fill a form using this data
-    #     form = QapDiscussionEventForm().fill_from_draft(qap_draft, None)
+    #     form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, None)
     #
     #     # Then the form is filled with individual date fields
     #     self.assertEquals(form.day_of_conversation, '')
@@ -1109,11 +1109,11 @@ class ExaminationsFormsTests(MedExTestCase):
     # def test_bereaved_discussion__fill_from_draft__sets_type_as_qap_if_default_qap_matches_participant(self):
     #     # Given draft data from the api with a specified test date
     #     draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
-    #     qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+    #     bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
     #
     #     # When we fill a form when the default
     #     qap_in_data = self.get_participant_from_draft(draft_data)
-    #     form = QapDiscussionEventForm().fill_from_draft(qap_draft, default_qap=qap_in_data)
+    #     form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, default_qap=qap_in_data)
     #
     #     # Then the form is filled with individual date fields
     #     self.assertEquals(form.discussion_participant_type, 'qap')
@@ -1121,11 +1121,11 @@ class ExaminationsFormsTests(MedExTestCase):
     # def test_bereaved_discussion__fill_from_draft__sets_type_as_other_if_default_qap_doesnt_match_participant(self):
     #     # Given draft data from the api with a specified test date
     #     draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
-    #     qap_draft = CaseQapDiscussionEvent(draft_data, 1)
+    #     bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
     #
     #     # When we fill a form when the default
     #     any_medic = MedicalTeamMember(name='Any other qap')
-    #     form = QapDiscussionEventForm().fill_from_draft(qap_draft, default_qap=any_medic)
+    #     form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, default_qap=any_medic)
     #
     #     # Then the form is filled with individual date fields
     #     self.assertEquals(form.discussion_participant_type, 'other')
