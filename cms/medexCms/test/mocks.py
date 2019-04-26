@@ -483,7 +483,7 @@ class ExaminationMocks:
                 "pendingDiscussionWithRepresentative": True,
                 "haveFinalCaseOutstandingOutcomes": True
             },
-            "id": "0123-456-789",
+            "id": "1",
             "culturalPriority": True,
             "faithPriority": True,
             "childPriority": True,

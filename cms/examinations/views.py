@@ -147,7 +147,7 @@ def __post_examination_patient_details(user, post_body, examination, get_body):
         submission.update(secondary_info_form.for_request())
         submission.update(bereaved_info_form.for_request())
         submission.update(urgency_info_form.for_request())
-        submission['id'] = examination.examination_id
+        submission['id'] = examination.id
 
         response = PatientDetails.update(examination.id, submission, user.auth_token)
 
@@ -246,7 +246,7 @@ def __get_medical_team_form(user, medical_team):
 def __post_medical_team_form(user, medical_team, post_body):
     template = 'examinations/edit_medical_team.html'
     saved = False
-    form = MedicalTeamMembersForm(post_body)
+    form = MedicalTeamMembersForm(medical_team=post_body)
     forms_valid = form.is_valid()
 
     if forms_valid:
@@ -404,7 +404,7 @@ def __post_examination_case_outcome(user, examination_id, post_body):
     else:
         result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
 
-    if result and not result.ok:
+    if result and not result == status.HTTP_200_OK:
         log_api_error('case outcome update', result.get_message())
         context = {
             'session_user': user,

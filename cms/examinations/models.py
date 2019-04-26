@@ -902,7 +902,7 @@ class CaseOutcome:
         if response.status_code == status.HTTP_200_OK:
             return CaseOutcome(response.json(), examination_id), None
         else:
-            log_api_error('case outcome load', response.text)
+            log_api_error('case outcome load', response.text if response.content != 'null' else '')
             return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod

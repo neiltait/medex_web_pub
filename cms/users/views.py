@@ -114,7 +114,7 @@ def __post_add_permission(user, managed_user, post_body):
             if add_another:
                 return None, None, None, redirect('add_permission', user_id=managed_user.user_id)
             else:
-                return redirect('/settings')
+                return None, None, None, redirect('/settings')
         else:
             log_api_error('permission creation', response.text)
             status_code = response.status_code
