@@ -409,6 +409,11 @@ class ExaminationEventList:
 
     @staticmethod
     def get_scrutiny_cause_of_death(me_scrutiny_event):
+        """
+        get the cause of death agreed in me scrutiny
+        :param me_scrutiny_event:
+        :return: CauseOfDeathProposal
+        """
         from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = me_scrutiny_event.created_date
@@ -422,6 +427,11 @@ class ExaminationEventList:
 
     @staticmethod
     def get_agreed_cause_of_death(qap_event):
+        """
+        get the cause of death agreed in qap discussion
+        :param qap_event: CaseQapDiscussionEvent
+        :return: CauseOfDeathProposal
+        """
         from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = qap_event.created_date
@@ -434,6 +444,23 @@ class ExaminationEventList:
             phone_number=qap_event.participant_phone_number,
         )
 
+        ExaminationEventList.__calculate_qap_cause_of_death_status(cause_of_death, qap_event)
+
+        cause_of_death.section_1a = qap_event.cause_of_death_1a
+        cause_of_death.section_1b = qap_event.cause_of_death_1b
+        cause_of_death.section_1c = qap_event.cause_of_death_1c
+        cause_of_death.section_2 = qap_event.cause_of_death_2
+
+        return cause_of_death
+
+    @staticmethod
+    def __calculate_qap_cause_of_death_status(cause_of_death, qap_event):
+        """
+        extract current status from a qap discussion event
+        :param cause_of_death: CauseOfDeathProposal
+        :param qap_event: CaseQapDiscussionEvent
+        :return:
+        """
         cause_of_death.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
         outcome_from_event = qap_event.qap_discussion_outcome
         if qap_event.discussion_unable_happen is True:
@@ -446,13 +473,6 @@ class ExaminationEventList:
             cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL
         elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
             cause_of_death.status = CauseOfDeathProposal.STATUS__CORONER
-
-        cause_of_death.section_1a = qap_event.cause_of_death_1a
-        cause_of_death.section_1b = qap_event.cause_of_death_1b
-        cause_of_death.section_1c = qap_event.cause_of_death_1c
-        cause_of_death.section_2 = qap_event.cause_of_death_2
-
-        return cause_of_death
 
 
 class CaseEvent:
@@ -576,7 +596,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.participant_phone_number = obj_dict.get('participantPhoneNumber')
         self.present_at_death = obj_dict.get('presentAtDeath')
         self.informed_at_death = obj_dict.get('informedAtDeath')
-        self.date_of_conversation = obj_dict.get('dateOfConversation')
+        self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
         self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
         self.discussion_details = obj_dict.get('discussionDetails')
         self.bereaved_discussion_outcome = obj_dict.get('bereavedDiscussionOutcome')
