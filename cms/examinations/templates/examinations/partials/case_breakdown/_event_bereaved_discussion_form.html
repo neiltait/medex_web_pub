@@ -17,7 +17,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved_rep_type" type="radio"
-                                       value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}" {% if bereaved_form.use_existing_bereaved %}checked{% endif %}>
+                                       value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}"
+                                       {% if bereaved_form.use_existing_bereaved %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-existing-rep">
                                     {{ form.existing_representative.full_name }}
@@ -28,7 +29,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-new-rep"
                                        name="bereaved_rep_type"
-                                       type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}" {% if not bereaved_form.use_existing_bereaved %}checked{% endif %}>
+                                       type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}"
+                                       {% if not bereaved_form.use_existing_bereaved %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-new-rep">
                                     Another representative
@@ -128,7 +130,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-1"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="yes">
+                                       value="{{ form.BEREAVED_RADIO_YES }}"
+                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_YES %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
                                     Yes
                                 </label>
@@ -136,7 +139,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-2"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="no">
+                                       value="{{ form.BEREAVED_RADIO_NO }}"
+                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_NO %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
                                     No
                                 </label>
@@ -144,7 +148,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-3"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="unknown">
+                                       value="{{ form.BEREAVED_RADIO_UNKNOWN }}"
+                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
                                     Unknown
                                 </label>
@@ -160,7 +165,7 @@
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10 margin-bottom" id="full-name"
                            name="bereaved_alternate_rep_relationship"
-                           type="text" value="{{form.alternate_representative.relationship}}">
+                           type="text" value="{{ form.alternate_representative.relationship }}">
                 </div>
                 <div class="nhsuk-grid-column-one-half nhsuk-radios">
                     <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
@@ -172,7 +177,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-1"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="yes">
+                                       value="{{ form.BEREAVED_RADIO_YES }}"
+                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_YES %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-1">
                                     Yes
                                 </label>
@@ -180,7 +186,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-2"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="no">
+                                       value="{{ form.BEREAVED_RADIO_NO }}"
+                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_NO %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-2">
                                     No
                                 </label>
@@ -188,7 +195,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-3"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="unknown">
+                                       value="{{ form.BEREAVED_RADIO_UNKNOWN }}"
+                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-3">
                                     Unknown
                                 </label>
@@ -271,15 +279,17 @@
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset" aria-describedby="discussion-hint">
-                        <legend class="nhsuk-fieldset__legend">
-                            Tick if this dicussion with a representative was unable to happen at all
-                        </legend>
                         <div class="nhsuk-checkboxes">
-                            <div class="nhsuk-checkboxes__item margin-save-button">
+                            <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
                                        name="bereaved_discussion_could_not_happen"
+                                       value="{{ form.BEREAVED_RADIO_YES }}"
                                        type="checkbox"
-                                        {% if form.discussion_could_not_happen %} checked{% endif %}/>
+                                        {% if form.discussion_could_not_happen == form.BEREAVED_RADIO_YES %}
+                                       checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-checkboxes__label" for="bereaved_discussion_could_not_happen">
+                                    Tick if this dicussion with a representative was unable to happen at all
+                                </label>
                             </div>
                         </div>
                     </fieldset>
@@ -317,8 +327,8 @@
                             </legend>
 
                             <span class="nhsuk-hint" id="outcome-hint">
-                          What was the ultimate outcome of the conversation with the family member or representative?
-                    </span>
+                                What was the ultimate outcome of the conversation with the family member or representative?
+                            </span>
                             <div class="nhsuk-radios nhsuk-radios--inline">
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
@@ -332,7 +342,7 @@
                                         Cause of death accepted without concerns
                                     </label>
                                 </div>
-                                <div class="nhsuk-radios__item margin-save-button">
+                                <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
                                            id="bereavment-discussion-outcome-concerns"
                                            name="bereaved_discussion_outcome" type="radio"
@@ -351,14 +361,63 @@
             </div>
         </div>
 
+        <div id="bereavement-discussion-concerned-outcomes">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="inset-text-panel nhsuk-form-group">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                           id="qap-discussion-outcome-decision-1"
+                                           name="bereaved_outcome_concerned_outcome"
+                                           type="radio" value="outcome-decision-1"
+                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label"
+                                           for="bereaved_outcome_concerned_outcome-1">
+                                        That indicate a coronial investigation
+                                    </label>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                           id="bereaved_outcome_concerned_outcome-2"
+                                           name="bereaved_outcome_concerned_outcome" type="radio"
+                                           value="outcome-decision-2"
+                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label"
+                                           for="bereaved_outcome_concerned_outcome-2">
+                                        That indicate a requirement for a 100a
+                                    </label>
+                                </div>
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                           id="bereaved_outcome_concerned_outcome-3"
+                                           name="bereaved_outcome_concerned_outcome" type="radio"
+                                           value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
+                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label"
+                                           for="bereaved_outcome_concerned_outcome-3">
+                                        But were addressed by the Medical Examiner with no coroner involvement required
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <button id="submit-btn" class="nhsuk-button" type="submit" value="bereaved-discussion"
-                            name="add-event-to-timeline">Add to timeline</button>
+                            name="add-event-to-timeline">Add to timeline
+                    </button>
                     <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
-                           value="bereaved-discussion"
-                            name="save-as-draft">Save as draft</button>
+                            value="bereaved-discussion"
+                            name="save-as-draft">Save as draft
+                    </button>
                 </div>
             </div>
         </div>

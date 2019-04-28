@@ -1042,7 +1042,7 @@ class BereavedDiscussionEventForm:
     day_of_conversation = ''
     month_of_conversation = ''
     year_of_conversation = ''
-    discussion_could_not_happen = ''
+    discussion_could_not_happen = False
 
     def make_active(self):
         self.active = True
@@ -1109,7 +1109,8 @@ class BereavedDiscussionEventForm:
         self.month_of_conversation = fallback_to(form_data.get('bereaved_month_of_conversation'), '')
         self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
         self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
-        self.discussion_could_not_happen = fallback_to(form_data.get('bereaved_discussion_could_not_happen'), '')
+        self.discussion_could_not_happen = True if form_data.get(
+            'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
 
     def is_valid(self):
         return True
