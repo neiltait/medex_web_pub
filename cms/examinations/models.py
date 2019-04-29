@@ -5,7 +5,7 @@ from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_emp
 from errors.utils import handle_error
 
 from people.models import BereavedRepresentative
-from users.utils import get_user_presenter
+from users.utils import get_user_presenter, get_medical_team_member_presenter
 
 from . import request_handler
 
@@ -400,20 +400,80 @@ class ExaminationEventList:
         else:
             return self.get_scrutiny_cause_of_death(events[0])
 
+    def get_latest_agreed_cause_of_death(self):
+        events = [event for event in self.events if
+                  event.event_type == CaseEvent().QAP_DISCUSSION_EVENT_TYPE and event.is_latest is True]
+        if len(events) == 0:
+            return None
+        else:
+            return self.get_agreed_cause_of_death(events[0])
+
     @staticmethod
-    def get_scrutiny_cause_of_death(event):
+    def get_scrutiny_cause_of_death(me_scrutiny_event):
+        """
+        get the cause of death agreed in me scrutiny
+        :param me_scrutiny_event:
+        :return: CauseOfDeathProposal
+        """
         from users.models import User
         cause_of_death = CauseOfDeathProposal()
-        cause_of_death.creation_date = event.created_date
-        cause_of_death.medical_examiner = User({'userId': event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
-        cause_of_death.section_1a = event.cause_of_death_1a
-        cause_of_death.section_1b = event.cause_of_death_1b
-        cause_of_death.section_1c = event.cause_of_death_1c
-        cause_of_death.section_2 = event.cause_of_death_2
+        cause_of_death.creation_date = me_scrutiny_event.created_date
+        cause_of_death.medical_examiner = User(
+            {'userId': me_scrutiny_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
+        cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
+        cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
+        cause_of_death.section_2 = me_scrutiny_event.cause_of_death_2
         return cause_of_death
 
-    def get_latest_agreed_cause_of_death(self):
-        return None
+    @staticmethod
+    def get_agreed_cause_of_death(qap_event):
+        """
+        get the cause of death agreed in qap discussion
+        :param qap_event: CaseQapDiscussionEvent
+        :return: CauseOfDeathProposal
+        """
+        from users.models import User
+        cause_of_death = CauseOfDeathProposal()
+        cause_of_death.creation_date = qap_event.created_date
+        cause_of_death.medical_examiner = User(
+            {'userId': qap_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.qap = MedicalTeamMember(
+            name=qap_event.participant_name,
+            role=qap_event.participant_role,
+            organisation=qap_event.participant_organisation,
+            phone_number=qap_event.participant_phone_number,
+        )
+
+        ExaminationEventList.__calculate_qap_cause_of_death_status(cause_of_death, qap_event)
+
+        cause_of_death.section_1a = qap_event.cause_of_death_1a
+        cause_of_death.section_1b = qap_event.cause_of_death_1b
+        cause_of_death.section_1c = qap_event.cause_of_death_1c
+        cause_of_death.section_2 = qap_event.cause_of_death_2
+
+        return cause_of_death
+
+    @staticmethod
+    def __calculate_qap_cause_of_death_status(cause_of_death, qap_event):
+        """
+        extract current status from a qap discussion event
+        :param cause_of_death: CauseOfDeathProposal
+        :param qap_event: CaseQapDiscussionEvent
+        :return:
+        """
+        cause_of_death.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
+        outcome_from_event = qap_event.qap_discussion_outcome
+        if qap_event.discussion_unable_happen is True:
+            cause_of_death.status = CauseOfDeathProposal.STATUS__DISCUSSION_NOT_POSSIBLE
+        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_PROPOSAL
+        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+            cause_of_death.status = CauseOfDeathProposal.STATUS__MEDICAL_EXAMINER_PROPOSAL
+        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL
+        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
+            cause_of_death.status = CauseOfDeathProposal.STATUS__CORONER
 
 
 class CaseEvent:
@@ -537,7 +597,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.participant_phone_number = obj_dict.get('participantPhoneNumber')
         self.present_at_death = obj_dict.get('presentAtDeath')
         self.informed_at_death = obj_dict.get('informedAtDeath')
-        self.date_of_conversation = obj_dict.get('dateOfConversation')
+        self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
         self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
         self.discussion_details = obj_dict.get('discussionDetails')
         self.bereaved_discussion_outcome = obj_dict.get('bereavedDiscussionOutcome')
@@ -562,6 +622,11 @@ class CaseMeoSummaryEvent(CaseEvent):
 
 
 class CaseQapDiscussionEvent(CaseEvent):
+    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
+    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
+    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
+    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
+
     event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
     display_type = 'QAP discussion'
@@ -580,10 +645,10 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.discussion_details = obj_dict.get('discussionDetails')
         self.qap_discussion_outcome = obj_dict.get('qapDiscussionOutcome')
         self.participant_name = obj_dict.get("participantName")
-        self.causeOfDeath1a = obj_dict.get("causeOfDeath1a")
-        self.causeOfDeath1b = obj_dict.get("causeOfDeath1b")
-        self.causeOfDeath1c = obj_dict.get("causeOfDeath1c")
-        self.causeOfDeath2 = obj_dict.get("causeOfDeath2")
+        self.cause_of_death_1a = obj_dict.get("causeOfDeath1a")
+        self.cause_of_death_1b = obj_dict.get("causeOfDeath1b")
+        self.cause_of_death_1c = obj_dict.get("causeOfDeath1c")
+        self.cause_of_death_2 = obj_dict.get("causeOfDeath2")
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
@@ -708,6 +773,13 @@ class CaseBreakdownQAPDiscussion:
 
 
 class CauseOfDeathProposal:
+    STATUS__NOT_DISCUSSED = "Not discussed"
+    STATUS__DISCUSSION_NOT_POSSIBLE = "QAP discussion not possible"
+    STATUS__MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME"
+    STATUS__QAP_PROPOSAL = "agreed proposal by QAP"
+    STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME and QAP"
+    STATUS__CORONER = "agreed to send to coroner"
+
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
 
@@ -715,6 +787,8 @@ class CauseOfDeathProposal:
         from users.models import User
 
         self.medical_examiner = User()
+        self.qap = None
+        self.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
         self.creation_date = ''
         self.section_1a = ''
         self.section_1b = ''
@@ -725,6 +799,8 @@ class CauseOfDeathProposal:
         return {
             'medical_examiner': get_user_presenter(self.medical_examiner),
             'creation_date': self.creation_date,
+            'qap': get_medical_team_member_presenter(self.qap),
+            'status': self.status,
             'section_1a': self.section_1a,
             'section_1b': self.section_1b,
             'section_1c': self.section_1c,
@@ -978,6 +1054,25 @@ class PatientHeader:
     def __init__(self, obj_dict):
         self.given_names = ''
         self.surname = ''
+        self.urgency_score = 0
+        self.nhs_number = ''
+        self.id = ''
+        self.time_of_death = ''
+        self.date_of_birth = ''
+        self.date_of_death = ''
+        self.appointment_date = ''
+        self.appointment_time = ''
+        self.last_admission = ''
+        self.case_created_date = ''
+        self.admission_notes_added = ''
+        self.ready_for_me_scrutiny = ''
+        self.unassigned = ''
+        self.have_been_scrutinised = ''
+        self.pending_admission_notes = ''
+        self.pending_discussion_with_qap = ''
+        self.pending_discussion_with_representative = ''
+        self.have_final_case_outstanding_outcomes = ''
+
         if obj_dict:
             self.urgency_score = obj_dict.get("urgencyScore")
             self.given_names = obj_dict.get("givenNames")

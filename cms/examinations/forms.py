@@ -2,8 +2,10 @@ from datetime import datetime
 
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, MedicalTeam, CauseOfDeathProposal
-from medexCms.utils import validate_date, parse_datetime, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseBreakdownQAPDiscussion, \
+    CaseQapDiscussionEvent
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from people.models import BereavedRepresentative
 
 
 class PrimaryExaminationInformationForm:
@@ -415,12 +417,12 @@ class BereavedInformationForm:
                                          self.day_of_appointment_2, hours, mins)
 
         elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                       self.day_of_appointment_2, self.time_of_appointment_1]):
+                                       self.day_of_appointment_2, self.time_of_appointment_2]):
             valid_date_2 = False
 
         if not valid_date_2:
             self.errors['count'] += 1
-            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
+            self.errors['date_of_appointment_2'] = messages.INVALID_DATE
 
         return True if valid_date_1 and valid_date_2 else False
 
@@ -756,12 +758,7 @@ class OtherEventForm:
 
 class QapDiscussionEventForm:
     active = False
-
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
-    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
-    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
-    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
 
     def make_active(self):
         self.active = True
@@ -831,10 +828,10 @@ class QapDiscussionEventForm:
 
     def __fill_cause_of_death_from_draft(self, draft):
         self.cause_of_death = CauseOfDeathProposal()
-        self.cause_of_death.section_1a = draft.causeOfDeath1a
-        self.cause_of_death.section_1b = draft.causeOfDeath1b
-        self.cause_of_death.section_1c = draft.causeOfDeath1c
-        self.cause_of_death.section_2 = draft.causeOfDeath2
+        self.cause_of_death.section_1a = draft.cause_of_death_1a
+        self.cause_of_death.section_1b = draft.cause_of_death_1b
+        self.cause_of_death.section_1c = draft.cause_of_death_1c
+        self.cause_of_death.section_2 = draft.cause_of_death_2
 
     def __calculate_discussion_participant_alternatives(self, default_qap, draft):
         if self.__draft_participant_is_default_qap(draft, default_qap):
@@ -857,16 +854,16 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
-        if api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+        if api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-1"
-        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-2"
-        elif api_outcome == self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
             self.outcome = "mccd"
             self.outcome_decision = "outcome-decision-3"
-        elif api_outcome == self.DISCUSSION_OUTCOME_CORONER:
+        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
             self.outcome = "coroner"
             self.outcome_decision = ""
 
@@ -931,13 +928,13 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome(self):
         if self.outcome == 'mccd':
             if self.outcome_decision == 'outcome-decision-1':
-                return self.DISCUSSION_OUTCOME_MCCD_FROM_QAP
+                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP
             elif self.outcome_decision == 'outcome-decision-2':
-                return self.DISCUSSION_OUTCOME_MCCD_FROM_ME
+                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
             elif self.outcome_decision == 'outcome-decision-3':
-                return self.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
+                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
         elif self.outcome == 'coroner':
-            return self.DISCUSSION_OUTCOME_CORONER
+            return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
@@ -1009,6 +1006,256 @@ class AdmissionNotesEventForm:
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
         self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+
+
+class BereavedDiscussionEventForm:
+    # constants
+    REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
+    REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
+
+    BEREAVED_OUTCOME_NO_CONCERNS = 'no concerns'
+    BEREAVED_OUTCOME_CONCERNS = 'concerns'
+
+    BEREAVED_CONCERNED_OUTCOME_CORONER = 'coroner'
+    BEREAVED_CONCERNED_OUTCOME_100A = '100a'
+    BEREAVED_CONCERNED_OUTCOME_ADDRESSED = 'addressed'
+
+    BEREAVED_RADIO_YES = 'yes'
+    BEREAVED_RADIO_NO = 'no'
+    BEREAVED_RADIO_UNKNOWN = 'unknown'
+
+    REQUEST_OUTCOME_NO_CONCERNS = "CauseOfDeathAccepted"
+    REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
+    REQUEST_OUTCOME_100A = "ConcernsRequires100a"
+    REQUEST_OUTCOME_ADDRESSED = "ConcernsAddressedWithoutCoroner"
+
+    # properties
+    active = False
+    event_id = ''
+    use_existing_bereaved = False
+    discussion_representative_type = ''
+    existing_representative = None
+    alternate_representative = None
+    discussion_details = ''
+    discussion_outcome = ''
+    discussion_concerned_outcome = ''
+    day_of_conversation = ''
+    month_of_conversation = ''
+    year_of_conversation = ''
+    discussion_could_not_happen = False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    # init from form_data (used on POST request)
+    def __init__(self, form_data={}, representatives=[]):
+
+        self.event_id = fallback_to(form_data.get('bereaved_event_id'), '')
+
+        if len(form_data) > 0:
+            self.__init_representatives_from_draft(form_data)
+        elif len(representatives) > 0:
+            self.__init_representatives(representatives)
+
+        self.__init_time_of_discussion(form_data)
+        self.__init_discussion_details(form_data)
+
+    def __init_representatives(self, representatives):
+        self.existing_representative = representatives[0]
+        self.discussion_representative_type = self.REPRESENTATIVE_TYPE_EXISTING
+        self.use_existing_bereaved = True
+
+    def __init_representatives_from_draft(self, form_data):
+        self.__init_existing_representative(form_data)
+        self.__init_alternate_representative(form_data)
+        self.__init_type_of_representative(form_data)
+
+    def __init_type_of_representative(self, form_data):
+        self.discussion_representative_type = fallback_to(form_data.get('bereaved_rep_type'), '')
+        self.__set_use_existing_bereaved()
+
+    def __set_use_existing_bereaved(self):
+        if self.discussion_representative_type == self.REPRESENTATIVE_TYPE_EXISTING:
+            self.use_existing_bereaved = True
+        elif self.discussion_representative_type == self.REPRESENTATIVE_TYPE_ALTERNATE:
+            self.use_existing_bereaved = False
+        elif self.existing_representative:
+            self.use_existing_bereaved = True
+        else:
+            self.use_existing_bereaved = False
+
+    def __init_alternate_representative(self, form_data):
+        alternate_bereaved_data = {
+            'fullName': fallback_to(form_data.get('bereaved_alternate_rep_name'), ''),
+            'relationship': fallback_to(form_data.get('bereaved_alternate_rep_relationship'), ''),
+            'phoneNumber': fallback_to(form_data.get('bereaved_alternate_rep_phone_number'), ''),
+            'presentAtDeath': fallback_to(form_data.get('bereaved_alternate_rep_present_at_death'), ''),
+            'informed': fallback_to(form_data.get('bereaved_alternate_rep_informed'), '')
+        }
+        self.alternate_representative = BereavedRepresentative(obj_dict=alternate_bereaved_data)
+
+    def __init_existing_representative(self, form_data):
+        self.existing_representative = None
+        bereaved_existing_name = fallback_to(form_data.get('bereaved_existing_rep_name'), '')
+        if len(bereaved_existing_name) > 0:
+            existing_bereaved_data = {
+                'fullName': bereaved_existing_name,
+                'relationship': fallback_to(form_data.get('bereaved_existing_rep_relationship'), ''),
+                'phoneNumber': fallback_to(form_data.get('bereaved_existing_rep_phone_number'), ''),
+                'presentAtDeath': fallback_to(form_data.get('bereaved_existing_rep_present_at_death'), ''),
+                'informed': fallback_to(form_data.get('bereaved_existing_rep_informed'), '')
+            }
+            self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
+
+    def __init_discussion_details(self, form_data):
+        self.discussion_details = fallback_to(form_data.get('bereaved_discussion_details'), '')
+        self.discussion_outcome = fallback_to(form_data.get('bereaved_discussion_outcome'), '')
+        self.discussion_concerned_outcome = fallback_to(form_data.get('bereaved_outcome_concerned_outcome'), '')
+
+    def __init_time_of_discussion(self, form_data):
+        self.day_of_conversation = fallback_to(form_data.get('bereaved_day_of_conversation'), '')
+        self.month_of_conversation = fallback_to(form_data.get('bereaved_month_of_conversation'), '')
+        self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
+        self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
+        self.discussion_could_not_happen = True if form_data.get(
+            'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
+
+    def is_valid(self):
+        return True
+
+    def fill_from_draft(self, draft, default_representatives):
+
+        self.event_id = draft.event_id
+        self.discussion_could_not_happen = draft.discussion_unable_happen
+        self.discussion_details = draft.discussion_details
+
+        self.__fill_representatives_from_draft(default_representatives, draft)
+
+        self.__calculate_bereaved_outcomes(draft)
+
+        self.__calculate_time_values(draft)
+
+        return self
+
+    def __calculate_bereaved_outcomes(self, draft):
+        request_outcome = draft.bereaved_discussion_outcome
+        if request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_NO_CONCERNS:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_100A:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A
+        elif request_outcome == BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED:
+            self.discussion_outcome = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+            self.discussion_concerned_outcome = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED
+
+    def __calculate_time_values(self, draft):
+        date_of_conversation = draft.date_of_conversation
+        if date_of_conversation is not None:
+            # Individual day, month, year values
+            self.day_of_conversation = date_of_conversation.day
+            self.month_of_conversation = date_of_conversation.month
+            self.year_of_conversation = date_of_conversation.year
+
+            # Time as a string
+            hr_str = ("0%s" % date_of_conversation.hour)[-2:]
+            min_str = ("0%s" % date_of_conversation.minute)[-2:]
+            self.time_of_conversation = "%s:%s" % (hr_str, min_str)
+        else:
+            self.day_of_conversation = ''
+            self.month_of_conversation = ''
+            self.year_of_conversation = ''
+            self.time_of_conversation = ''
+
+    def __fill_representatives_from_draft(self, default_representatives, draft):
+
+        self.existing_representative = None
+        self.alternate_representative = None
+        if default_representatives and len(default_representatives) > 0:
+            self.existing_representative = default_representatives[0]
+        draft_participant = None
+        if len(draft.participant_full_name) > 0:
+            draft_participant = BereavedRepresentative({
+                "fullName": draft.participant_full_name,
+                "relationship": draft.participant_relationship,
+                'phoneNumber': draft.participant_phone_number,
+                'presentAtDeath': draft.present_at_death,
+                'informed': draft.informed_at_death,
+            })
+        if draft_participant is None:
+            if self.existing_representative is not None:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+            else:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+        else:
+            if draft_participant.equals(self.existing_representative):
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+            else:
+                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.alternate_representative = draft_participant
+
+        self.__set_use_existing_bereaved()
+
+    def for_request(self):
+        date_of_conversation = self.__calculate_full_date_of_conversation()
+
+        participant = self.__participant_for_request()
+
+        return {
+            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+            "isFinal": True,
+            "eventType": "BereavedDiscussion",
+            "created": "2019-03-13T10:30:43.019Z",
+            "participantFullName": participant.full_name if participant else "",
+            "participantRelationship": participant.relationship if participant else "",
+            "participantPhoneNumber": participant.phone_number if participant else "",
+            "presentAtDeath": participant.present_at_death if participant else "",
+            "informedAtDeath": participant.informed if participant else "",
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else '',
+            "discussionUnableHappen": self.discussion_could_not_happen,
+            "discussionDetails": self.discussion_details,
+            "bereavedDiscussionOutcome": self.__calculate_combined_outcome()
+        }
+
+    def __calculate_combined_outcome(self):
+        if self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS:
+            return BereavedDiscussionEventForm.REQUEST_OUTCOME_NO_CONCERNS
+        elif self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS:
+            if self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER
+            elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_100A
+            elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED:
+                return BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED
+
+        return ''
+
+    def __participant_for_request(self):
+        if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
+            return self.existing_representative
+        else:
+            return self.alternate_representative
+
+    def __calculate_full_date_of_conversation(self):
+        if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
+            hr, minute = self.__calculate_hour_and_minute_of_conversation()
+            return build_date(self.year_of_conversation, self.month_of_conversation,
+                              self.day_of_conversation, hr, minute)
+        else:
+            return None
+
+    def __calculate_hour_and_minute_of_conversation(self):
+        hr = 0
+        minute = 0
+        time_components = self.time_of_conversation.split(":")
+        if len(time_components) >= 2:
+            hr = int(time_components[0])
+            minute = int(time_components[1])
+        return hr, minute
 
 
 class OutstandingItemsForm:
