@@ -733,8 +733,8 @@ class OtherEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('other_notes_id')
-        self.more_detail = fallback_to(form_data.get('more-detail'), '')
+        self.event_id = fallback_to(form_data.get('other_notes_id'), '')
+        self.more_detail = fallback_to(form_data.get('other-text'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
