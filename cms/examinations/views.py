@@ -9,7 +9,7 @@ from examinations import request_handler
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
-    OutstandingItemsForm
+    OutstandingItemsForm, MedicalHistoryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -298,6 +298,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     meo_summary_form = MeoSummaryEventForm()
     qap_discussion_form = QapDiscussionEventForm()
     bereaved_discussion_form = BereavedDiscussionEventForm(representatives=patient_details.representatives)
+    medical_history_form = MedicalHistoryEventForm()
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
@@ -311,6 +312,8 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
         qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
     if event_list.get_bereaved_discussion_draft():
         bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(), patient_details.representatives)
+    if event_list.get_medical_history_draft():
+        medical_history_form.fill_from_draft(event_list.get_medical_history_draft())
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
@@ -318,7 +321,8 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
         'AdmissionNotesEventForm': admission_notes_form,
         'MeoSummaryEventForm': meo_summary_form,
         'QapDiscussionEventForm': qap_discussion_form,
-        'BereavedDiscussionEventForm': bereaved_discussion_form
+        'BereavedDiscussionEventForm': bereaved_discussion_form,
+        'MedicalHistoryEventForm': medical_history_form
     }
 
     if form:

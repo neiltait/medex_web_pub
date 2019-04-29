@@ -34,7 +34,7 @@
 
     {% include "examinations/partials/case_breakdown/_event_admin_notes_form.html" with form=form_data.AdmissionNotesEventForm %}
 
-    {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" %}
+    {% include "examinations/partials/case_breakdown/_event_history_notes_form.html" with form=form_data.MedicalHistoryEventForm %}
 
     {% include "examinations/partials/case_breakdown/_event_meo_summary_form.html" with form=form_data.MeoSummaryEventForm %}
 
