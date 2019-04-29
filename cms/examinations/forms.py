@@ -417,12 +417,12 @@ class BereavedInformationForm:
                                          self.day_of_appointment_2, hours, mins)
 
         elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                       self.day_of_appointment_2, self.time_of_appointment_1]):
+                                       self.day_of_appointment_2, self.time_of_appointment_2]):
             valid_date_2 = False
 
         if not valid_date_2:
             self.errors['count'] += 1
-            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
+            self.errors['date_of_appointment_2'] = messages.INVALID_DATE
 
         return True if valid_date_1 and valid_date_2 else False
 
