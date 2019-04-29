@@ -1004,7 +1004,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
         form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
         form_data[
-            'bereaved_discussion_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER
+            'bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER
         form = BereavedDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
@@ -1017,7 +1017,7 @@ class ExaminationsFormsTests(MedExTestCase):
         # Given form data with outcome that there are concerns and these should result in a 100a
         form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
         form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
-        form_data['bereaved_discussion_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A
+        form_data['bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A
         form = BereavedDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
@@ -1031,7 +1031,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
         form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
         form_data[
-            'bereaved_discussion_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED
+            'bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED
         form = BereavedDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
