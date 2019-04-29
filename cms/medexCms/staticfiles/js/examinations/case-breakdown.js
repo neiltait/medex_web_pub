@@ -235,7 +235,7 @@
         },
 
         showHideRepTypePanels() {
-            let selectedButton = this.form.find('input[name=bereaved-rep]:checked');
+            let selectedButton = this.form.find('input[name=bereaved_rep_type]:checked');
             if (selectedButton.val() === 'existing-rep') {
                 this.repDetails.show();
                 this.repForm.hide();
