@@ -310,7 +310,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     if event_list.get_qap_discussion_draft():
         qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
     if event_list.get_bereaved_discussion_draft():
-        bereaved_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), patient_details.representatives)
+        bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(), patient_details.representatives)
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,

@@ -131,7 +131,7 @@
                                 <input class="nhsuk-radios__input" id="pad-1"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="{{ form.BEREAVED_RADIO_YES }}"
-                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_YES %}checked{% endif %}>
+                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_YES %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
                                     Yes
                                 </label>
@@ -140,7 +140,7 @@
                                 <input class="nhsuk-radios__input" id="pad-2"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="{{ form.BEREAVED_RADIO_NO }}"
-                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_NO %}checked{% endif %}>
+                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_NO %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
                                     No
                                 </label>
@@ -149,7 +149,7 @@
                                 <input class="nhsuk-radios__input" id="pad-3"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
                                        value="{{ form.BEREAVED_RADIO_UNKNOWN }}"
-                                       {% if form.alternate_representative.presentAtDeath == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
+                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
                                     Unknown
                                 </label>
@@ -287,7 +287,8 @@
                                        type="checkbox"
                                         {% if form.discussion_could_not_happen == form.BEREAVED_RADIO_YES %}
                                        checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-checkboxes__label" for="bereaved_discussion_could_not_happen">
+                                <label class="nhsuk-label nhsuk-checkboxes__label"
+                                       for="bereaved_discussion_could_not_happen">
                                     Tick if this dicussion with a representative was unable to happen at all
                                 </label>
                             </div>
@@ -359,49 +360,50 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="bereavement-discussion-concerned-outcomes">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <div class="inset-text-panel nhsuk-form-group">
-                        <fieldset class="nhsuk-fieldset">
-                            <div class="nhsuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
-                                           id="qap-discussion-outcome-decision-1"
-                                           name="bereaved_outcome_concerned_outcome"
-                                           type="radio" value="outcome-decision-1"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-1">
-                                        That indicate a coronial investigation
-                                    </label>
+            <div id="bereavement-discussion-concerned-outcomes" class="margin-save-button">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <div class="inset-text-panel nhsuk-form-group">
+                            <fieldset class="nhsuk-fieldset">
+                                <div class="nhsuk-radios">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                               id="bereaved_outcome_concerned_outcome-1"
+                                               name="bereaved_outcome_concerned_outcome"
+                                               type="radio" value="{{ form.BEREAVED_CONCERNED_OUTCOME_CORONER }}"
+                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="bereaved_outcome_concerned_outcome-1">
+                                            That indicate a coronial investigation
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                               id="bereaved_outcome_concerned_outcome-2"
+                                               name="bereaved_outcome_concerned_outcome" type="radio"
+                                               value="{{ form.BEREAVED_CONCERNED_OUTCOME_100A }}"
+                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="bereaved_outcome_concerned_outcome-2">
+                                            That indicate a requirement for a 100a
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                               id="bereaved_outcome_concerned_outcome-3"
+                                               name="bereaved_outcome_concerned_outcome" type="radio"
+                                               value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
+                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="bereaved_outcome_concerned_outcome-3">
+                                            But were addressed by the Medical Examiner with no coroner involvement
+                                            required
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                           id="bereaved_outcome_concerned_outcome-2"
-                                           name="bereaved_outcome_concerned_outcome" type="radio"
-                                           value="outcome-decision-2"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-2">
-                                        That indicate a requirement for a 100a
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                           id="bereaved_outcome_concerned_outcome-3"
-                                           name="bereaved_outcome_concerned_outcome" type="radio"
-                                           value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-3">
-                                        But were addressed by the Medical Examiner with no coroner involvement required
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
+                            </fieldset>
+                        </div>
                     </div>
                 </div>
             </div>

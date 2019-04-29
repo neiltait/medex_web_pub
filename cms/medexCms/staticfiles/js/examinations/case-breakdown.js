@@ -224,13 +224,17 @@
             this.existingRep = this.form.find("#bereaved-existing-rep");
             this.repDetails = this.form.find("#bereaved-rep-details");
             this.repForm = this.form.find("#bereaved-rep-form");
-            this.showHidePanels();
+            this.showHideRepTypePanels();
+
+            this.concernsRadio = this.form.find("#bereavment-discussion-outcome-concerns");
+            this.noConcernsRadio = this.form.find("#bereavement-discussion-outcome-no-concerns");
+            this.concernsPanel = this.form.find("#bereavement-discussion-concerned-outcomes");
+            this.showHideConcernsPanel();
 
             this.startWatchers();
-
         },
 
-        showHidePanels() {
+        showHideRepTypePanels() {
             let selectedButton = this.form.find('input[name=bereaved-rep]:checked');
             if (selectedButton.val() === 'existing-rep') {
                 this.repDetails.show();
@@ -241,14 +245,31 @@
             }
         },
 
+        showHideConcernsPanel() {
+            let selectedButton = this.form.find('input[name=bereaved_discussion_outcome]:checked');
+            if (selectedButton && (selectedButton.val() === 'concerns')) {
+                this.concernsPanel.show();
+            } else {
+                this.concernsPanel.hide();
+            }
+        },
+
         startWatchers() {
             let that = this;
             this.newRep.change(function () {
-                that.showHidePanels();
+                that.showHideRepTypePanels();
             });
 
             this.existingRep.change(function () {
-                that.showHidePanels();
+                that.showHideRepTypePanels();
+            });
+
+            this.concernsRadio.change(function () {
+                that.showHideConcernsPanel();
+            });
+
+            this.noConcernsRadio.change(function () {
+                that.showHideConcernsPanel()
             });
         }
     };
