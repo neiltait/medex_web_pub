@@ -23,7 +23,7 @@ def event_form_parser(form_data):
     elif event_type == ADMISSION_NOTES_FORM:
         return AdmissionNotesEventForm(form_data)
     elif event_type == BEREAVED_DISCUSSION_FORM:
-        return BereavedDiscussionEventForm(form_data)
+        return BereavedDiscussionEventForm(form_data=form_data)
 
 
 def event_form_submitter(auth_token, examination_id, form):

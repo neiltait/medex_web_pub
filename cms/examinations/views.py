@@ -297,7 +297,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     admission_notes_form = AdmissionNotesEventForm()
     meo_summary_form = MeoSummaryEventForm()
     qap_discussion_form = QapDiscussionEventForm()
-    bereaved_discussion_form = BereavedDiscussionEventForm()
+    bereaved_discussion_form = BereavedDiscussionEventForm(representatives=patient_details.representatives)
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())

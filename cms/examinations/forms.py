@@ -1049,15 +1049,24 @@ class BereavedDiscussionEventForm:
         return self
 
     # init from form_data (used on POST request)
-    def __init__(self, form_data={}):
+    def __init__(self, form_data={}, representatives=[]):
 
         self.event_id = fallback_to(form_data.get('bereaved_event_id'), '')
 
-        self.__init_representatives(form_data)
+        if len(form_data) > 0:
+            self.__init_representatives_from_draft(form_data)
+        elif len(representatives) > 0:
+            self.__init_representatives(representatives)
+
         self.__init_time_of_discussion(form_data)
         self.__init_discussion_details(form_data)
 
-    def __init_representatives(self, form_data):
+    def __init_representatives(self, representatives):
+        self.existing_representative = representatives[0]
+        self.discussion_representative_type = self.REPRESENTATIVE_TYPE_EXISTING
+        self.use_existing_bereaved = True
+
+    def __init_representatives_from_draft(self, form_data):
         self.__init_existing_representative(form_data)
         self.__init_alternate_representative(form_data)
         self.__init_type_of_representative(form_data)
@@ -1102,7 +1111,7 @@ class BereavedDiscussionEventForm:
     def __init_discussion_details(self, form_data):
         self.discussion_details = fallback_to(form_data.get('bereaved_discussion_details'), '')
         self.discussion_outcome = fallback_to(form_data.get('bereaved_discussion_outcome'), '')
-        self.discussion_concerned_outcome = fallback_to(form_data.get('bereaved_discussion_concerned_outcome'), '')
+        self.discussion_concerned_outcome = fallback_to(form_data.get('bereaved_outcome_concerned_outcome'), '')
 
     def __init_time_of_discussion(self, form_data):
         self.day_of_conversation = fallback_to(form_data.get('bereaved_day_of_conversation'), '')
@@ -1220,10 +1229,10 @@ class BereavedDiscussionEventForm:
                 return BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER
             elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A:
                 return BereavedDiscussionEventForm.REQUEST_OUTCOME_100A
-            else:
+            elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED:
                 return BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED
-        else:
-            return ''
+
+        return ''
 
     def __participant_for_request(self):
         if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
