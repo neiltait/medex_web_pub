@@ -133,6 +133,35 @@ class User:
         if success:
             self.index_overview = IndexOverview(location, response.json())
             for examination in response.json()['examinations']:
+                examination['open'] = True
+                self.examinations.append(ExaminationOverview(examination))
+        else:
+            logger.error(response.status_code)
+
+    def load_closed_examinations(self, location='', person=''):
+        if person:
+            user = person
+        else:
+            user = ''
+
+        query_params = {
+            "LocationId": location,
+            "UserId": user,
+            "CaseStatus": '',
+            "OrderBy": "CaseCreated",
+            "OpenCases": False,
+            "PageSize": 20,
+            "PageNumber": 1
+        }
+
+        response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
+
+        success = response.status_code == status.HTTP_200_OK
+
+        if success:
+            self.index_overview = IndexOverview(location, response.json())
+            for examination in response.json()['examinations']:
+                examination['open'] = False
                 self.examinations.append(ExaminationOverview(examination))
         else:
             logger.error(response.status_code)

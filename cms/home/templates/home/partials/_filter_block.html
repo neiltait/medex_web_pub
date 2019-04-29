@@ -35,5 +35,7 @@
     </div>
   </form>
 
-  <img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">
+  {% if not closed_list %}
+    <img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">
+  {% endif %}
 </div>
