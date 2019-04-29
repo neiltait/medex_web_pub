@@ -66,6 +66,7 @@ class ExaminationOverview:
     date_format = '%d.%m.%Y'
 
     def __init__(self, obj_dict):
+        self.open = obj_dict.get('open')
         self.urgency_score = obj_dict.get("urgencyScore")
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
@@ -119,7 +120,7 @@ class ExaminationOverview:
             return 0
 
     def urgent(self):
-        return True if self.urgency_score and self.urgency_score > 0 else False
+        return True if self.urgency_score and self.urgency_score > 0 and self.open else False
 
 
 class PatientDetails:

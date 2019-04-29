@@ -265,15 +265,15 @@ class LocationsMocks:
     def get_trust_location_list(cls):
         return [
             {
-                'id': 1,
+                'locationId': 1,
                 'name': 'Gloucester NHS Trust',
             },
             {
-                'id': 2,
+                'locationId': 2,
                 'name': 'Sheffield NHS Trust',
             },
             {
-                'id': 3,
+                'locationId': 3,
                 'name': 'Barts NHS Trust',
             }
         ]
@@ -282,19 +282,19 @@ class LocationsMocks:
     def get_region_location_list(cls):
         return [
             {
-                'id': 1,
+                'locationId': 1,
                 'name': 'North',
             },
             {
-                'id': 2,
+                'locationId': 2,
                 'name': 'South',
             },
             {
-                'id': 3,
+                'locationId': 3,
                 'name': 'East',
             },
             {
-                'id': 4,
+                'locationId': 4,
                 'name': 'West',
             }
         ]
@@ -303,15 +303,15 @@ class LocationsMocks:
     def get_me_office_location_list(cls):
         return [
             {
-                'id': '1',
+                'locationId': '1',
                 'name': 'Barnet Hospital ME Office',
             },
             {
-                'id': '2',
+                'locationId': '2',
                 'name': 'Sheffield Hospital ME Office',
             },
             {
-                'id': '3',
+                'locationId': '3',
                 'name': 'Gloucester Hospital ME Office',
             }
         ]

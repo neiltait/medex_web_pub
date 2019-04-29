@@ -11,9 +11,11 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     OutstandingItemsForm, MedicalHistoryEventForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome
+from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from locations import request_handler as location_request_handler
+from locations.models import Location
 from people import request_handler as people_request_handler
 from users.models import User
 
@@ -384,3 +386,31 @@ def view_examination_case_outcome(request, examination_id):
     }
 
     return render(request, 'examinations/case_outcome.html', context, status=status_code)
+
+
+def closed_examination_index(request):
+    user = User.initialise_with_token(request)
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    people = False
+
+    if request.method == 'GET':
+        user.load_closed_examinations()
+        form = IndexFilterForm()
+    elif request.method == 'POST':
+        form = IndexFilterForm(request.POST)
+        user.load_closed_examinations(location=form.location, person=form.person)
+        filter_location = Location.initialise_with_id(request.POST.get('location'))
+        people = filter_location.load_permitted_users(user.auth_token)
+    locations = user.get_permitted_locations()
+
+    context = {
+        'page_header': 'Closed Case Dashboard',
+        'session_user': user,
+        'filter_locations': locations,
+        'filter_people': people,
+        'form': form,
+        'closed_list': True
+    }
+    return render(request, 'home/index.html', context)
