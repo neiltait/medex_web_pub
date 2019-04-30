@@ -32,7 +32,7 @@ function update() {
 echo "Fetching remote branches (git fetch)"
 git fetch --quiet
 
-switch_to master
+switch_to development
 current_commit="$(git rev-parse HEAD)"
 
 
