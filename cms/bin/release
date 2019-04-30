@@ -46,17 +46,17 @@ function clean () {
 
 trap 'clean $LINENO' ERR
 
-update master
+update development
 
 #Bump version up
 #version=$(npm version --prefix frontend/hay-ui  "$1" --no-git-tag-version)
-version=$(bump_version.py $1)
+version=$(python ./bump_version.py $1)
 echo "Bumped version to $version"
 
 # commit version number increment
 #git commit -am "$version"
 
-# create tag for new version from -master
+# create tag for new version from -development
 #git tag "$version"
 
 
