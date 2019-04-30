@@ -78,7 +78,7 @@ class User:
                 self.email_address = response_data['emailAddress']
                 self.load_permissions()
 
-            return authenticated
+            return authenticated and len(self.permissions) > 0
         else:
             return False
 
