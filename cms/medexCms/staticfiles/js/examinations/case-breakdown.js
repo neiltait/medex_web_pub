@@ -74,6 +74,7 @@
 
         setActiveForm: function (formId) {
             this.activeForm = formId;
+            this.picker[0].value = formId;
         }
     }
 
