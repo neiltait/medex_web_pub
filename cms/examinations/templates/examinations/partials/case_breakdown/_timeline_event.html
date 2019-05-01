@@ -28,6 +28,13 @@
             <div class="event-body">
                 {% include event.type_template with card_content=event %}
             </div>
+
+            {% if event.is_latest %}
+                <a class="amend-link"
+                   href="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}?amendType={{event.event_type}}">
+                    Amend event
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -82,6 +82,10 @@
                 }
             }
         }
+
+        .amend-link {
+            color: $nhs-grey;
+        }
     }
 
     &.other, &.medical-history, &.meo-summary {
