@@ -560,6 +560,7 @@ class CaseInitialEvent(CaseEvent):
 
 
 class CaseOtherEvent(CaseEvent):
+    form_type = 'OtherEventForm'
     event_type = CaseEvent().OTHER_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_other_event_body.html'
     display_type = 'Other case info'
@@ -582,6 +583,7 @@ class CaseOtherEvent(CaseEvent):
 
 
 class CasePreScrutinyEvent(CaseEvent):
+    form_type = 'PreScrutinyEventForm'
     event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_pre_scrutiny_event_body.html'
     display_type = 'ME pre-scrutiny'
@@ -612,6 +614,7 @@ class CasePreScrutinyEvent(CaseEvent):
 
 
 class CaseBereavedDiscussionEvent(CaseEvent):
+    form_type = 'BereavedDiscussionEventForm'
     event_type = CaseEvent().BEREAVED_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_bereaved_discussion_event_body.html'
     display_type = 'Bereaved/representative discussion'
@@ -642,6 +645,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
 
 
 class CaseMeoSummaryEvent(CaseEvent):
+    form_type = 'MeoSummaryEventForm'
     event_type = CaseEvent().MEO_SUMMARY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_meo_summary_event_body.html'
     display_type = 'MEO summary'
@@ -664,6 +668,7 @@ class CaseMeoSummaryEvent(CaseEvent):
 
 
 class CaseQapDiscussionEvent(CaseEvent):
+    form_type = 'QapDiscussionEventForm'
     DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
     DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
     DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
@@ -708,6 +713,7 @@ class CaseQapDiscussionEvent(CaseEvent):
 
 
 class CaseMedicalHistoryEvent(CaseEvent):
+    form_type = 'MedicalHistoryEventForm'
     event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_medical_history_event_body.html'
     display_type = 'Medical history'
@@ -730,6 +736,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
 
 
 class CaseAdmissionNotesEvent(CaseEvent):
+    form_type = 'AdmissionNotesEventForm'
     event_type = CaseEvent().ADMISSION_NOTES_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_admission_notes_event_body.html'
     display_type = 'Admission notes'
@@ -759,8 +766,8 @@ class CaseAdmissionNotesEvent(CaseEvent):
         return 'Yes' if self.immediate_coroner_referral else 'No'
 
     def as_amendment_form(self, representatives):
-        from examinations.forms import MedicalHistoryEventForm
-        form = MedicalHistoryEventForm().fill_from_draft(self)
+        from examinations.forms import AdmissionNotesEventForm
+        form = AdmissionNotesEventForm().fill_from_draft(self)
         form.event_id = None
         return form
 
