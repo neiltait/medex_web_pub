@@ -214,3 +214,22 @@ class User:
             ]
         else:
             logger.error('Unknown role type')
+
+    def editable_event_types(self):
+        if self.role_type == self.MEO_ROLE_TYPE:
+            return [
+                'admission-notes',
+                'medical-history',
+                'meo-summary',
+                'other',
+            ]
+        elif self.role_type == self.ME_ROLE_TYPE:
+            return [
+                'pre-scrutiny',
+                'qap-discussion',
+                'bereaved-discussion',
+                'other',
+            ]
+        else:
+            logger.error('Unknown role type')
+            return []
