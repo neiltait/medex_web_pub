@@ -340,6 +340,7 @@ class ExaminationEventList:
     def __init__(self, timeline_items, dod, patient_name, user_role):
         self.events = []
         self.drafts = {}
+        self.latests = {}
         self.qap_discussion_draft = None
         self.other_notes_draft = None
         self.latest_admission_draft = None
@@ -352,16 +353,19 @@ class ExaminationEventList:
 
     def parse_events(self, timeline_items, patient_name, user_role):
         for key, event_type in timeline_items.items():
-            if key == CaseEvent().INITIAL_EVENT_TYPE and event_type:
+            if key == CaseEvent.INITIAL_EVENT_TYPE and event_type:
                 self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
-            elif key != CaseEvent().INITIAL_EVENT_TYPE:
+            elif key != CaseEvent.INITIAL_EVENT_TYPE:
                 for event in event_type['history']:
                     if event['isFinal']:
                         self.events.append(CaseEvent.parse_event(event, event_type['latest']['eventId'], self.dod))
                 if event_type['usersDraft']:
                     latest_id = event_type['latest']['eventId'] if event_type['latest'] else ''
-                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], latest_id,
-                                                             None)
+                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], latest_id, None)
+                if event_type['latest']:
+                    latest_id = event_type['latest']['eventId']
+                    self.latests[CaseEvent.EVENT_TYPES[key]] = CaseEvent.parse_event(event_type['latest'], latest_id,
+                                                                                     None)
 
     def sort_events_oldest_to_newest(self):
         self.events.sort(key=lambda event: event.created_date, reverse=False)
@@ -392,6 +396,9 @@ class ExaminationEventList:
 
     def get_me_scrutiny_draft(self):
         return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
+
+    def get_latest_of_type(self, event_type):
+        return self.latests[event_type]
 
     def get_latest_me_scrutiny_cause_of_death(self):
         events = [event for event in self.events if
@@ -487,6 +494,16 @@ class CaseEvent:
     ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
 
+    EVENT_TYPES = {
+        ExaminationEventList.OTHER_EVENT_KEY: OTHER_EVENT_TYPE,
+        ExaminationEventList.PRE_SCRUTINY_EVENT_KEY: PRE_SCRUTINY_EVENT_TYPE,
+        ExaminationEventList.BEREAVED_DISCUSSION_EVENT_KEY: BEREAVED_DISCUSSION_EVENT_TYPE,
+        ExaminationEventList.MEO_SUMMARY_EVENT_KEY: MEO_SUMMARY_EVENT_TYPE,
+        ExaminationEventList.QAP_DISCUSSION_EVENT_KEY: QAP_DISCUSSION_EVENT_TYPE,
+        ExaminationEventList.MEDICAL_HISTORY_EVENT_KEY: MEDICAL_HISTORY_EVENT_TYPE,
+        ExaminationEventList.ADMISSION_NOTES_EVENT_KEY: ADMISSION_NOTES_EVENT_TYPE,
+    }
+
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
 
@@ -557,6 +574,12 @@ class CaseOtherEvent(CaseEvent):
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
+    def as_amendment_form(self, representatives):
+        from examinations.forms import OtherEventForm
+        form = OtherEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
+
 
 class CasePreScrutinyEvent(CaseEvent):
     event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
@@ -580,6 +603,12 @@ class CasePreScrutinyEvent(CaseEvent):
         self.clinical_governance_review_text = obj_dict.get('clinicalGovernanceReviewText')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
+
+    def as_amendment_form(self, representatives):
+        from examinations.forms import PreScrutinyEventForm
+        form = PreScrutinyEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
 
 
 class CaseBereavedDiscussionEvent(CaseEvent):
@@ -605,6 +634,12 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
 
+    def as_amendment_form(self, representatives):
+        from examinations.forms import BereavedDiscussionEventForm
+        form = BereavedDiscussionEventForm(representatives=representatives).fill_from_draft(self)
+        form.event_id = None
+        return form
+
 
 class CaseMeoSummaryEvent(CaseEvent):
     event_type = CaseEvent().MEO_SUMMARY_EVENT_TYPE
@@ -620,6 +655,12 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.body = obj_dict.get('summaryDetails')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
+
+    def as_amendment_form(self, representatives):
+        from examinations.forms import MeoSummaryEventForm
+        form = MeoSummaryEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
 
 
 class CaseQapDiscussionEvent(CaseEvent):
@@ -659,6 +700,12 @@ class CaseQapDiscussionEvent(CaseEvent):
     def conversation_display_time(self):
         return self.date_of_conversation.strftime(self.time_format)
 
+    def as_amendment_form(self, representatives):
+        from examinations.forms import QapDiscussionEventForm
+        form = QapDiscussionEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
+
 
 class CaseMedicalHistoryEvent(CaseEvent):
     event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
@@ -674,6 +721,12 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
+
+    def as_amendment_form(self, representatives):
+        from examinations.forms import MedicalHistoryEventForm
+        form = MedicalHistoryEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
 
 
 class CaseAdmissionNotesEvent(CaseEvent):
@@ -704,6 +757,12 @@ class CaseAdmissionNotesEvent(CaseEvent):
 
     def display_coroner_referral(self):
         return 'Yes' if self.immediate_coroner_referral else 'No'
+
+    def as_amendment_form(self, representatives):
+        from examinations.forms import MedicalHistoryEventForm
+        form = MedicalHistoryEventForm().fill_from_draft(self)
+        form.event_id = None
+        return form
 
 
 class CaseBreakdownQAPDiscussion:
