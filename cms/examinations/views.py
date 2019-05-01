@@ -286,6 +286,7 @@ def __post_case_breakdown_event(request, user, examination_id):
     if form.is_valid():
         response = event_form_submitter(user.auth_token, examination_id, form)
         status_code = response.status_code
+        form = None
         errors = {'count': 0}
     else:
         errors = form.errors
