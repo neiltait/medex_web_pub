@@ -93,7 +93,10 @@
         setInitialView: function () {
             if (this.form.hasClass('active')) {
                 this.show();
-                this.setActiveCallback(this.form[0].id)
+                this.setActiveCallback(this.form[0].id);
+                this.form[0].scrollIntoView({
+                    behavior: "smooth",
+                });
             }
         },
 
