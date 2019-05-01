@@ -7,13 +7,14 @@ from unittest.mock import patch
 from alerts import messages
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
-    CaseQapDiscussionEvent, MedicalTeamMember
+    CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent
 from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime
+from people.models import BereavedRepresentative
 
 
 class ExaminationsViewsTests(MedExTestCase):
@@ -811,7 +812,7 @@ class ExaminationsFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 1 - qap updates the decision
-        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_FROM_QAP)
+        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP)
 
     def test_qap_discussion__request__maps_mccd_and_me_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -824,7 +825,7 @@ class ExaminationsFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 2 - me's first decision
-        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_FROM_ME)
+        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME)
 
     def test_qap_discussion__request__maps_mccd_and_agreement_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -837,7 +838,7 @@ class ExaminationsFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 3 - agreement
-        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE)
+        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE)
 
     def test_qap_discussion__request__maps_refer_to_coroner_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -849,7 +850,7 @@ class ExaminationsFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], QapDiscussionEventForm.DISCUSSION_OUTCOME_CORONER)
+        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER)
 
     def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
         # Given form data with the Default Qap radio button selected
@@ -950,6 +951,197 @@ class ExaminationsFormsTests(MedExTestCase):
                                  role=draft_data["participantRoll"],
                                  organisation=draft_data["participantOrganisation"],
                                  phone_number=draft_data["participantPhoneNumber"])
+
+    # BereavedDiscussionEvent
+
+    def test_bereaved_discussion__request__maps_to_bereaved_discussion_api_put_request(self):
+        # Given form data
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call data for an api request
+        request = form.for_request()
+
+        # then the data is not empty
+        self.assertGreater(len(request), 0)
+
+    def test_bereaved_discussion__request__maps_conversation_day_month_year_time_to_single_api_date(self):
+        # Given form data with specific dates
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_day_of_conversation'] = '20'
+        form_data['bereaved_month_of_conversation'] = '5'
+        form_data['bereaved_year_of_conversation'] = '2019'
+        form_data['bereaved_time_of_conversation'] = '12:30'
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the returned date starts with the expected reverse date
+        expected_date_start = '2019-05-20T12:30'
+        self.assertTrue(request['dateOfConversation'].startswith(expected_date_start))
+
+    def test_bereaved_discussion__request__maps_no_concerns_to_a_single_field(self):
+        # Given form data with outcome that there are no concerns
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the combined outcomes are mapped to option 1 - Request_100a
+        self.assertEquals(request['bereavedDiscussionOutcome'], BereavedDiscussionEventForm.REQUEST_OUTCOME_NO_CONCERNS)
+
+    def test_bereaved_discussion__request__maps_concerns_leading_to_coroner_investigation_to_a_single_field(self):
+        # Given form data with outcome that there are concerns and these should result in a 100a
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+        form_data[
+            'bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_CORONER
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the combined outcomes are mapped to option 2 - Coroner enquiry required
+        self.assertEquals(request['bereavedDiscussionOutcome'], BereavedDiscussionEventForm.REQUEST_OUTCOME_CORONER)
+
+    def test_bereaved_discussion__request__maps_concerns_leading_to_100a_to_a_single_field(self):
+        # Given form data with outcome that there are concerns and these should result in a 100a
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+        form_data['bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_100A
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the combined outcomes are mapped to option 3 - 100a required
+        self.assertEquals(request['bereavedDiscussionOutcome'], BereavedDiscussionEventForm.REQUEST_OUTCOME_100A)
+
+    def test_bereaved_discussion__request__maps_concerns_leading_to_agreement_to_a_single_field(self):
+        # Given form data with outcome that there are concerns and these should result in a 100a
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+        form_data[
+            'bereaved_outcome_concerned_outcome'] = BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the combined outcomes are mapped to option 4 - disagreements have been addressed
+        self.assertEquals(request['bereavedDiscussionOutcome'], BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED)
+
+    def test_bereaved_discussion__request__maps_existing_rep_to_participant_if_existing_rep_selected(self):
+        # Given form data with the Default Qap radio button selected
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_rep_type'] = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+        form_data['bereaved_existing_rep_name'] = 'Existing rep'
+        form_data['bereaved_alternate_rep_name'] = 'Alternate rep'
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the default qap is assigned as participant
+        self.assertEquals(request['participantFullName'], 'Existing rep')
+
+    def test_bereaved_discussion__request__maps_alternate_rep_to_participant_if_alternate_rep_selected(self):
+        # Given form data with the Default Qap radio button selected
+        form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
+        form_data['bereaved_rep_type'] = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+        form_data['bereaved_existing_rep_name'] = 'Existing rep'
+        form_data['bereaved_alternate_rep_name'] = 'Alternate rep'
+        form = BereavedDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the default qap is assigned as participant
+        self.assertEquals(request['participantFullName'], 'Alternate rep')
+
+    def test_bereaved_discussion__fill_from_draft__recalls_fields_from_api_event_draft(self):
+        # Given draft data from the api
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        bereaved_draft = CaseQapDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = QapDiscussionEventForm().fill_from_draft(bereaved_draft, None)
+
+        # Then the form is created
+        self.assertEquals(draft_data["discussionDetails"], form.discussion_details)
+
+    def test_bereaved_discussion__fill_from_draft__maps_single_conversation_date_to_day_month_year_time_fields(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        draft_data['dateOfConversation'] = "2019-04-08T08:30:00.000Z"
+        bereaved_draft = CaseBereavedDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = BereavedDiscussionEventForm().fill_from_draft(bereaved_draft, None)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.day_of_conversation, 8)
+        self.assertEquals(form.month_of_conversation, 4)
+        self.assertEquals(form.year_of_conversation, 2019)
+        self.assertEquals(form.time_of_conversation, "08:30")
+
+    def test_bereaved_discussion__fill_from_draft__maps_null_conversation_date_to_empty_string_fields(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        draft_data['dateOfConversation'] = ""
+        bereaved_draft = CaseBereavedDiscussionEvent(draft_data, 1)
+
+        # When we fill a form using this data
+        form = BereavedDiscussionEventForm().fill_from_draft(bereaved_draft, None)
+
+        # Then the form is filled with individual date fields
+        self.assertEquals(form.day_of_conversation, '')
+        self.assertEquals(form.month_of_conversation, '')
+        self.assertEquals(form.year_of_conversation, '')
+        self.assertEquals(form.time_of_conversation, '')
+
+    def test_bereaved_discussion__fill_from_draft__sets_type_as_existing_if_existing_rep_matches_participant(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        bereaved_draft = CaseBereavedDiscussionEvent(draft_data, 1)
+
+        # When we fill a form when the default
+        representative_in_data = self.get_existing_bereaved_representative_from_draft(draft_data)
+        form = BereavedDiscussionEventForm().fill_from_draft(bereaved_draft,
+                                                             default_representatives=[representative_in_data])
+
+        # Then the form is filled with individual date fields
+        self.assertIsTrue(form.use_existing_bereaved)
+
+    def test_bereaved_discussion__fill_from_draft__sets_type_as_other_if_existing_rep_doesnt_match_participant(self):
+        # Given draft data from the api with a specified test date
+        draft_data = ExaminationMocks.get_mock_bereaved_discussion_draft_data()
+        bereaved_draft = CaseBereavedDiscussionEvent(draft_data, 1)
+
+        # When we fill a form when the default
+        mock_existing_rep = BereavedRepresentative(
+            {
+                "fullName": "mock",
+                "relationship": "mock",
+                "phoneNumber": "1234"
+            }
+        )
+        form = BereavedDiscussionEventForm().fill_from_draft(bereaved_draft,
+                                                             default_representatives=[mock_existing_rep])
+
+        # Then the form is filled with individual date fields
+        self.assertIsFalse(form.use_existing_bereaved)
+
+    @staticmethod
+    def get_existing_bereaved_representative_from_draft(draft_data):
+        return BereavedRepresentative({
+            'fullName': draft_data.get("participantFullName"),
+            'relationship': draft_data.get("participantRelationship"),
+            'phoneNumber': draft_data.get("participantPhoneNumber")
+        })
 
 
 class ExaminationsModelsTests(MedExTestCase):

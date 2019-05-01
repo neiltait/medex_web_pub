@@ -6,10 +6,12 @@ from errors.utils import log_unexpected_method, log_api_error
 from errors.views import __handle_method_not_allowed_error
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, OutstandingItemsForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
+    OutstandingItemsForm
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination
-from home.utils import redirect_to_login, render_404, redirect_to_examination
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
+from home.forms import IndexFilterForm
+from home.utils import redirect_to_login, render_404, redirect_to_examination
 from locations.models import Location
 from people.models import DropdownPerson
 from users.models import User
@@ -229,6 +231,7 @@ def examination_medical_team(request, examination_id):
     return render(request, template, context, status=status_code)
 
 
+
 def __get_medical_team_form(user, medical_team):
     template = 'examinations/edit_medical_team.html'
     status_code = status.HTTP_200_OK
@@ -313,6 +316,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'forms': forms,
         'qap': medical_team.qap,
         'proposed_cause_of_death': examination.event_list.get_latest_me_scrutiny_cause_of_death(),
+        'agreed_cause_of_death': examination.event_list.get_latest_agreed_cause_of_death(),
         'case_breakdown': examination,
         'bereaved_form': {"use_default_bereaved": True},
         'patient': examination.case_header,
@@ -323,8 +327,7 @@ def edit_examination_case_breakdown(request, examination_id):
 
 
 def __post_case_breakdown_event(request, user, examination_id):
-    form = event_form_parser\
-        (request.POST)
+    form = event_form_parser(request.POST)
     if form.is_valid():
         response = event_form_submitter(user.auth_token, examination_id, form)
         status_code = response.status_code
@@ -341,6 +344,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
     admission_notes_form = AdmissionNotesEventForm()
     meo_summary_form = MeoSummaryEventForm()
     qap_discussion_form = QapDiscussionEventForm()
+    bereaved_discussion_form = BereavedDiscussionEventForm(representatives=patient_details.representatives)
 
     if event_list.get_me_scrutiny_draft():
         pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
@@ -352,13 +356,16 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
         meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
     if event_list.get_qap_discussion_draft():
         qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
+    if event_list.get_bereaved_discussion_draft():
+        bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(), patient_details.representatives)
 
     form_data = {
         'PreScrutinyEventForm': pre_scrutiny_form,
         'OtherEventForm': other_notes_form,
         'AdmissionNotesEventForm': admission_notes_form,
         'MeoSummaryEventForm': meo_summary_form,
-        'QapDiscussionEventForm': qap_discussion_form
+        'QapDiscussionEventForm': qap_discussion_form,
+        'BereavedDiscussionEventForm': bereaved_discussion_form
     }
 
     if form:
@@ -444,3 +451,31 @@ def __set_examination_case_outcome_context(user, case_outcome):
         'patient': case_outcome.case_header,
         'tab_modal': modal_config,
     }
+
+
+def closed_examination_index(request):
+    user = User.initialise_with_token(request)
+    if not user.check_logged_in():
+        return redirect_to_login()
+
+    people = False
+
+    if request.method == 'GET':
+        user.load_closed_examinations()
+        form = IndexFilterForm()
+    elif request.method == 'POST':
+        form = IndexFilterForm(request.POST)
+        user.load_closed_examinations(location=form.location, person=form.person)
+        filter_location = Location.initialise_with_id(request.POST.get('location'))
+        people = filter_location.load_permitted_users(user.auth_token)
+    locations = user.get_permitted_locations()
+
+    context = {
+        'page_header': 'Closed Case Dashboard',
+        'session_user': user,
+        'filter_locations': locations,
+        'filter_people': people,
+        'form': form,
+        'closed_list': True
+    }
+    return render(request, 'home/index.html', context)

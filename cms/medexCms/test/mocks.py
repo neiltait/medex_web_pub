@@ -265,15 +265,15 @@ class LocationsMocks:
     def get_trust_location_list(cls):
         return [
             {
-                'id': 1,
+                'locationId': 1,
                 'name': 'Gloucester NHS Trust',
             },
             {
-                'id': 2,
+                'locationId': 2,
                 'name': 'Sheffield NHS Trust',
             },
             {
-                'id': 3,
+                'locationId': 3,
                 'name': 'Barts NHS Trust',
             }
         ]
@@ -282,19 +282,19 @@ class LocationsMocks:
     def get_region_location_list(cls):
         return [
             {
-                'id': 1,
+                'locationId': 1,
                 'name': 'North',
             },
             {
-                'id': 2,
+                'locationId': 2,
                 'name': 'South',
             },
             {
-                'id': 3,
+                'locationId': 3,
                 'name': 'East',
             },
             {
-                'id': 4,
+                'locationId': 4,
                 'name': 'West',
             }
         ]
@@ -303,15 +303,15 @@ class LocationsMocks:
     def get_me_office_location_list(cls):
         return [
             {
-                'id': '1',
+                'locationId': '1',
                 'name': 'Barnet Hospital ME Office',
             },
             {
-                'id': '2',
+                'locationId': '2',
                 'name': 'Sheffield Hospital ME Office',
             },
             {
-                'id': '3',
+                'locationId': '3',
                 'name': 'Gloucester Hospital ME Office',
             }
         ]
@@ -1484,6 +1484,51 @@ class ExaminationMocks:
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps(None)
         return response
+
+    @classmethod
+    def get_mock_bereaved_discussion_form_data(cls):
+        return {
+            'bereaved_event_id': '',
+            'bereaved_rep_type': 'alternate-rep',
+            'bereaved_existing_rep_name': 'Dominic Hall',
+            'bereaved_existing_rep_relationship': 'Uncle',
+            'bereaved_existing_rep_phone_number': '1234',
+            'bereaved_existing_rep_present_at_death': "no",
+            'bereaved_existing_rep_informed': "yes",
+            'bereaved_alternate_rep_name': 'Anita West',
+            'bereaved_alternate_rep_relationship': 'Sister',
+            'bereaved_alternate_rep_phone_number': '1234',
+            'bereaved_alternate_rep_present_at_death': "no",
+            'bereaved_alternate_rep_informed': "yes",
+            'bereaved_day_of_conversation': '24',
+            'bereaved_month_of_conversation': '4',
+            'bereaved_year_of_conversation': '2019',
+            'bereaved_time_of_conversation': '12:40',
+            'bereaved_discussion_details': 'The bereaved had some concerns',
+            'bereaved_discussion_outcome': 'concerns',
+        }
+
+    @classmethod
+    def get_mock_bereaved_discussion_draft_data(cls):
+        return {
+            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
+            "userId": "WERGT-243TRGS-WE4TG-WERGT",
+            "isFinal": True,
+            "eventType": "BereavedDiscussion",
+            "created": "2019-03-13T10:30:43.019Z",
+            "participantFullName": "Anita West",
+            "participantRelationship": "Sister",
+            "participantPhoneNumber": "1234",
+            "presentAtDeath": "Yes",
+            "informedAtDeath": "Yes",
+            "dateOfConversation": "2019-04-23T10:47:51.812Z",
+            "discussionUnableHappen": False,
+            "discussionDetails": "Stop all the clocks, cut off the telephone, "
+                                 "Prevent the dog from barking with a juicy bone. "
+                                 "Silence the pianos and with muffled drum. "
+                                 "Bring out the coffin, let the mourners come.",
+            "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
+        }
 
 
 class PeopleMocks:
