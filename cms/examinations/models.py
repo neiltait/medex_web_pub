@@ -359,7 +359,8 @@ class ExaminationEventList:
                     if event['isFinal']:
                         self.events.append(CaseEvent.parse_event(event, event_type['latest']['eventId'], self.dod))
                 if event_type['usersDraft']:
-                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], event_type['latest']['eventId'],
+                    latest_id = event_type['latest']['eventId'] if event_type['latest'] else ''
+                    self.drafts[key] = CaseEvent.parse_event(event_type['usersDraft'], latest_id,
                                                              None)
 
     def sort_events_oldest_to_newest(self):
