@@ -1,5 +1,5 @@
 <div id="admin-notes" class="event-form{% if form.active %} active{% endif %}">
-    <input name="admission_notes_id" value="{{form.event_id}}" hidden>
+    <input name="admission_notes_id" value="{{ form.event_id }}" hidden>
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
@@ -16,7 +16,7 @@
                 <div class="medex-text-checkbox-group__textbox">
                     <fieldset class="nhsuk-fieldset" role="group">
                         {% if errors.date_of_last_admission %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_last_admission }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_last_admission }}</span>
                         {% endif %}
                         <div class="nhsuk-date-input" id="date_of_last_admission">
                             <div class="nhsuk-date-input__item">
@@ -61,7 +61,7 @@
                             <input class="nhsuk-checkboxes__input" id="date_of_last_admission_not_known"
                                    name="date_of_last_admission_not_known" type="checkbox"
                                    value="true"
-                                   {% if form.admission_date_unknown %} checked {% endif %}>
+                                    {% if form.admission_date_unknown %} checked {% endif %}>
                             <label class="nhsuk-label nhsuk-checkboxes__label"
                                    for="date_of_last_admission_not_known">
                                 Unknown
@@ -82,7 +82,7 @@
                         Time
                     </label>
                     {% if errors.time_of_last_admission %}
-                    <span class="nhsuk-error-message medex-font-default-override">{{ errors.time_of_last_admission }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.time_of_last_admission }}</span>
                     {% endif %}
                     <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_last_admission"
                            name="time_of_last_admission"
@@ -97,7 +97,7 @@
                                 <input class="nhsuk-checkboxes__input" id="time_of_last_admission_not_known"
                                        name="time_of_last_admission_not_known" type="checkbox"
                                        value="true"
-                                       {% if form.admission_time_unknown %}
+                                        {% if form.admission_time_unknown %}
                                        checked {% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
                                        for="time_of_last_admission_not_known">
@@ -111,88 +111,134 @@
         </div>
     </div>
 
-    <div id="latest-admission__suspect-referral" class="more-detail">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-form-group">
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="meo_summary_notes">
+                Notes about the latest admission to hospital
+            </label>
+            <span class="nhsuk-hint">Why were they admitted? What were the circumstances for admission?</span>
+            <textarea id="admission_notes" class="nhsuk-textarea more-detail" name="latest_admission_notes"
+                      rows="6">{{ form.admission_notes }}</textarea>
+        </div>
+    </div>
 
-                    <fieldset class="nhsuk-fieldset">
-                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
-                            Route of hospital admission
-                        </legend>
-
-                        <span class="nhsuk-hint" id="example-hint">
-                          How was the patient admitted?
-                    </span>
-                        <div class="nhsuk-radios">
-                            <div class="nhsuk-grid-row">
-                                <div class="nhsuk-grid-column-one-half">
-
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-ae"
-                                               name="latest-admission"
-                                               type="radio" value="ae">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-ae">
-                                            A&E
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-gp"
-                                               name="latest-admission" type="radio" value="gp">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-gp">
-                                            GP referral
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-outpatient"
-                                               name="latest-admission" type="radio" value="outpatient">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-outpatient">
-                                            From outpatient clinic
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="nhsuk-grid-column-one-half">
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-ward"
-                                               name="latest-admission" type="radio" value="ward">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-ward">
-                                            Direct to the ward
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-transfer"
-                                               name="latest-admission" type="radio" value="transfer">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-transfer">
-                                            Transfer from another hospital
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input"
-                                               id="latest-admission-paramedic"
-                                               name="latest-admission" type="radio" value="paramedic">
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="latest-admission-paramedic">
-                                            Paramedic to specialist center
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group">
+                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="meo_summary_notes">
+                    Do you suspect this case may need immediate coroner referral?
+                </label>
+                <span class="nhsuk-hint">This will fast track the case to ME pre scrutiny where they will be able to confirm the referral</span>
+                <fieldset class="nhsuk-fieldset  more-detail">
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="latest_admission_immediate_referral"
+                                   id="latest_admission_immediate_referral_yes"
+                                   type="radio" value="{{ form.YES }}" {% if form.coroner_referral == form.YES %}
+                                   checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="latest_admission_immediate_referral_yes">
+                                Yes
+                            </label>
                         </div>
-                    </fieldset>
-                </div>
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" name="latest_admission_immediate_referral"
+                                   id="latest_admission_immediate_referral_no"
+                                   type="radio" value="{{ form.NO }}" {% if form.coroner_referral == form.NO %}
+                                   checked{% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="latest_admission_immediate_referral_no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </div>
     </div>
+
+
+    {##}
+    {#    <div id="latest-admission__suspect-referral" class="more-detail">#}
+    {#        <div class="nhsuk-grid-row">#}
+    {#            <div class="nhsuk-grid-column-full">#}
+    {#                <div class="nhsuk-form-group">#}
+    {##}
+    {#                    <fieldset class="nhsuk-fieldset">#}
+    {#                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">#}
+    {#                            Route of hospital admission#}
+    {#                        </legend>#}
+    {##}
+    {#                        <span class="nhsuk-hint" id="example-hint">#}
+    {#                          How was the patient admitted?#}
+    {#                    </span>#}
+    {#                        <div class="nhsuk-radios">#}
+    {#                            <div class="nhsuk-grid-row">#}
+    {#                                <div class="nhsuk-grid-column-one-half">#}
+    {##}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-ae"#}
+    {#                                               name="latest-admission"#}
+    {#                                               type="radio" value="ae">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-ae">#}
+    {#                                            A&E#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-gp"#}
+    {#                                               name="latest-admission" type="radio" value="gp">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-gp">#}
+    {#                                            GP referral#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-outpatient"#}
+    {#                                               name="latest-admission" type="radio" value="outpatient">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-outpatient">#}
+    {#                                            From outpatient clinic#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                                <div class="nhsuk-grid-column-one-half">#}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-ward"#}
+    {#                                               name="latest-admission" type="radio" value="ward">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-ward">#}
+    {#                                            Direct to the ward#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-transfer"#}
+    {#                                               name="latest-admission" type="radio" value="transfer">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-transfer">#}
+    {#                                            Transfer from another hospital#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                    <div class="nhsuk-radios__item">#}
+    {#                                        <input class="nhsuk-radios__input"#}
+    {#                                               id="latest-admission-paramedic"#}
+    {#                                               name="latest-admission" type="radio" value="paramedic">#}
+    {#                                        <label class="nhsuk-label nhsuk-radios__label"#}
+    {#                                               for="latest-admission-paramedic">#}
+    {#                                            Paramedic to specialist center#}
+    {#                                        </label>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        </div>#}
+    {#                    </fieldset>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
 
 
     <div id="latest-admission__save-buttons" class="nhsuk-form-group more-detail">

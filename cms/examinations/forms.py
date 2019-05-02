@@ -1003,6 +1003,9 @@ class QapDiscussionEventForm:
 
 
 class AdmissionNotesEventForm:
+    YES = 'yes'
+    NO = 'no'
+
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
     active = False
 
@@ -1015,7 +1018,7 @@ class AdmissionNotesEventForm:
         self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
         self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
-        self.coroner_referral = fallback_to(form_data.get('latest-admission-suspect-referral'), '')
+        self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
