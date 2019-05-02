@@ -308,7 +308,9 @@ def edit_examination_case_breakdown(request, examination_id):
     medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
     patient_details = PatientDetails.load_by_id(examination_id, user.auth_token)
 
-    form_data = __prepare_forms(examination.event_list, medical_team, patient_details, form)
+    amend_type = request.GET.get('amendType')
+
+    form_data = __prepare_forms(examination.event_list, medical_team, patient_details, form, amend_type)
 
     context = {
         'session_user': user,
@@ -339,7 +341,7 @@ def __post_case_breakdown_event(request, user, examination_id):
     return form, status_code, errors
 
 
-def __prepare_forms(event_list, medical_team, patient_details, form):
+def __prepare_forms(event_list, medical_team, patient_details, form, amend_type):
     pre_scrutiny_form = PreScrutinyEventForm()
     other_notes_form = OtherEventForm()
     admission_notes_form = AdmissionNotesEventForm()
@@ -372,6 +374,11 @@ def __prepare_forms(event_list, medical_team, patient_details, form):
         'BereavedDiscussionEventForm': bereaved_discussion_form,
         'MedicalHistoryEventForm': medical_history_form
     }
+
+    if amend_type and not form:
+        latest_for_type = event_list.get_latest_of_type(amend_type)
+        if latest_for_type:
+            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(patient_details.representatives).make_active()
 
     if form:
         form_data[type(form).__name__] = form.make_active()

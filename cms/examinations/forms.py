@@ -1,9 +1,6 @@
-from datetime import datetime
-
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
-from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseBreakdownQAPDiscussion, \
-    CaseQapDiscussionEvent
+from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
 from people.models import BereavedRepresentative
 
@@ -721,6 +718,7 @@ class PreScrutinyEventForm:
         self.overall_outcome = draft.outcome_of_pre_scrutiny
         self.governance_review = draft.clinical_governance_review
         self.governance_review_text = draft.clinical_governance_review_text
+        return self
 
 
 class MeoSummaryEventForm:
@@ -748,6 +746,7 @@ class MeoSummaryEventForm:
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
         self.meo_summary_notes = draft.body
+        return self
 
 
 class OtherEventForm:
@@ -775,6 +774,7 @@ class OtherEventForm:
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
         self.more_detail = draft.body
+        return self
 
 
 class MedicalHistoryEventForm:
@@ -802,6 +802,7 @@ class MedicalHistoryEventForm:
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
         self.medical_history_details = draft.body
+        return self
 
 
 class QapDiscussionEventForm:
@@ -1003,6 +1004,9 @@ class QapDiscussionEventForm:
 
 
 class AdmissionNotesEventForm:
+    YES = 'yes'
+    NO = 'no'
+
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
     active = False
 
@@ -1015,7 +1019,7 @@ class AdmissionNotesEventForm:
         self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
         self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
-        self.coroner_referral = fallback_to(form_data.get('latest-admission-suspect-referral'), '')
+        self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
@@ -1054,6 +1058,7 @@ class AdmissionNotesEventForm:
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
         self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+        return self
 
 
 class BereavedDiscussionEventForm:
