@@ -1,4 +1,5 @@
 from django.conf import settings
+from requests.models import Response
 from rest_framework import status
 
 from alerts import messages
@@ -13,6 +14,14 @@ class NotFoundError:
 
     def get_message(self):
         return self.error_message % self.obj_type
+
+
+class MethodNotAllowedError:
+    status_code = status.HTTP_405_METHOD_NOT_ALLOWED
+    error_message = messages.NOT_ALLOWED
+
+    def get_message(self):
+        return self.error_message
 
 
 class GenericError:
@@ -39,3 +48,12 @@ class GenericError:
         content = content.replace('/pre', '/div')
         content = content.replace('==', '')
         return content
+
+
+class BadRequestResponse:
+
+    @classmethod
+    def new(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return response

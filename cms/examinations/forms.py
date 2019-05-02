@@ -9,9 +9,10 @@ from people.models import BereavedRepresentative
 
 
 class PrimaryExaminationInformationForm:
+    CREATE_AND_CONTINUE_FLAG = 'create-and-continue'
 
     def __init__(self, request=None):
-        self.initialiseErrors()
+        self.initialise_errors()
         if request:
             self.initialise_form_from_data(request)
         else:
@@ -120,8 +121,12 @@ class PrimaryExaminationInformationForm:
                 not_empty.append(item)
         return not_empty
 
-    def initialiseErrors(self):
+    def initialise_errors(self):
         self.errors = {"count": 0}
+
+    @property
+    def error_count(self):
+        return self.errors['count']
 
     def is_valid(self):
         self.errors["count"] = 0
@@ -309,6 +314,10 @@ class SecondaryExaminationInformationForm:
     def is_valid(self):
         return True
 
+    @property
+    def error_count(self):
+        return self.errors['count']
+
     def for_request(self):
         return {
             'houseNameNumber': self.address_line_1,
@@ -426,6 +435,10 @@ class BereavedInformationForm:
 
         return True if valid_date_1 and valid_date_2 else False
 
+    @property
+    def error_count(self):
+        return self.errors['count']
+
     def for_request(self):
         representatives = []
         if self.bereaved_name_1:
@@ -491,6 +504,10 @@ class UrgencyInformationForm:
 
     def is_valid(self):
         return True
+
+    @property
+    def error_count(self):
+        return self.errors['count']
 
     def for_request(self):
         return {
@@ -627,6 +644,10 @@ class MedicalTeamMembersForm:
     def initialise_errors(self):
         self.errors = {"count": 0}
 
+    @property
+    def error_count(self):
+        return self.errors['count']
+
     def to_object(self):
         consultants_other = []
         if self.consultant_2.has_name():
@@ -733,8 +754,8 @@ class OtherEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('other_notes_id')
-        self.more_detail = fallback_to(form_data.get('more-detail'), '')
+        self.event_id = fallback_to(form_data.get('other_notes_id'), '')
+        self.more_detail = fallback_to(form_data.get('other-text'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
@@ -754,6 +775,33 @@ class OtherEventForm:
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
         self.more_detail = draft.body
+
+
+class MedicalHistoryEventForm:
+    active = False
+
+    def __init__(self, form_data={}):
+        self.event_id = form_data.get('history_notes_id')
+        self.medical_history_details = fallback_to(form_data.get('medical-history-details'), '')
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
+
+    def make_active(self):
+        self.active = True
+        return self
+
+    def is_valid(self):
+        return True
+
+    def for_request(self):
+        return {
+            "eventId": self.event_id,
+            "text": self.medical_history_details,
+            "isFinal": self.is_final
+        }
+
+    def fill_from_draft(self, draft):
+        self.event_id = draft.event_id
+        self.medical_history_details = draft.body
 
 
 class QapDiscussionEventForm:

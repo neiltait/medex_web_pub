@@ -5,7 +5,6 @@ from rest_framework import status
 from unittest.mock import patch
 
 from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
@@ -26,8 +25,6 @@ class ExaminationsViewsTests(MedExTestCase):
         self.set_auth_cookies()
         response = self.client.get('/cases/create')
         self.assertTemplateUsed(response, 'examinations/create.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 0)
 
     @patch('users.request_handler.validate_session',
            return_value=SessionMocks.get_unsuccessful_validate_session_response())
@@ -68,9 +65,6 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/create.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
     #### Edit case tests
 
@@ -261,7 +255,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
         result = form.is_valid()
         self.assertIsFalse(result)
-        self.assertEqual(form.errors["first_name"], ErrorFieldRequiredMessage('first name'))
+        self.assertEqual(form.errors["first_name"], messages.ErrorFieldRequiredMessage('first name'))
 
     def test_given_create_examination_with_first_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt'})
@@ -272,7 +266,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
         result = form.is_valid()
         self.assertIsFalse(result)
-        self.assertEqual(form.errors["last_name"], ErrorFieldRequiredMessage('last name'))
+        self.assertEqual(form.errors["last_name"], messages.ErrorFieldRequiredMessage('last name'))
 
     def test_given_create_examination_with_name_greater_than_250_characters_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt' * 40,
@@ -299,7 +293,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_given_create_examination_without_gender_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
         result = form.is_valid()
-        self.assertEqual(form.errors["gender"], ErrorFieldRequiredMessage('gender'))
+        self.assertEqual(form.errors["gender"], messages.ErrorFieldRequiredMessage('gender'))
 
     def test_given_create_examination_with_gender_other_but_no_detail_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'gender': 'other'})
@@ -372,7 +366,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_nhs_number_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'nhs_number': ''})
         form.is_valid()
-        self.assertEqual(form.errors["nhs_number"], ErrorFieldRequiredMessage('NHS number'))
+        self.assertEqual(form.errors["nhs_number"], messages.ErrorFieldRequiredMessage('NHS number'))
 
     def test_time_of_death_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm({'time_of_death': '', 'time_of_death_not_known': True})
@@ -387,7 +381,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_time_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'time_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["time_of_death"], ErrorFieldRequiredMessage('time of death'))
+        self.assertEqual(form.errors["time_of_death"], messages.ErrorFieldRequiredMessage('time of death'))
 
     def test_date_of_birth_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm(
@@ -410,12 +404,12 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_date_of_birth_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_birth"], ErrorFieldRequiredMessage('date of birth'))
+        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('date of birth'))
 
     def test_date_of_birth_group_does_not_validate_if_partial_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '26', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_birth"], ErrorFieldRequiredMessage('date of birth'))
+        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('date of birth'))
 
     def test_date_of_death_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm(
@@ -438,17 +432,17 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_date_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_death"], ErrorFieldRequiredMessage('date of death'))
+        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('date of death'))
 
     def test_date_of_death_group_does_not_validate_if_partial_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_death"], ErrorFieldRequiredMessage('date of death'))
+        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('date of death'))
 
     def test_place_of_death_does_not_validate_if_missing(self):
         form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
-        self.assertEqual(form.errors["place_of_death"], ErrorFieldRequiredMessage('place of death'))
+        self.assertEqual(form.errors["place_of_death"], messages.ErrorFieldRequiredMessage('place of death'))
 
     def test_place_of_death_does_validate_if_present(self):
         form = PrimaryExaminationInformationForm({'place_of_death': 1})
@@ -458,7 +452,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_me_office_does_not_validate_if_missing(self):
         form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
-        self.assertEqual(form.errors["me_office"], ErrorFieldRequiredMessage('ME office'))
+        self.assertEqual(form.errors["me_office"], messages.ErrorFieldRequiredMessage('ME office'))
 
     def test_me_office_does_validate_if_present(self):
         form = PrimaryExaminationInformationForm({'me_office': 1})
@@ -654,7 +648,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     def test_medical_team_member_form_initialised_with_valid_medical_team_returns_as_valid(self):
-        medical_team = MedicalTeam(obj_dict=ExaminationMocks.get_medical_team_content())
+        medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
         form = MedicalTeamMembersForm(medical_team=medical_team)
 
         self.assertIsTrue(form.is_valid())

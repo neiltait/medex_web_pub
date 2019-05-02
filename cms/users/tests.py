@@ -20,8 +20,6 @@ class UsersViewsTest(MedExTestCase):
         self.set_auth_cookies()
         response = self.client.get('/users/new')
         self.assertTemplateUsed(response, 'users/new.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 0)
 
     @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_user_creation_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
@@ -29,23 +27,16 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    def test_user_creation_endpoint_returns_a_bad_request_response_and_the_correct_alert_if_form_invalid(self):
+    def test_user_creation_endpoint_returns_a_bad_request_response_if_form_invalid(self):
         self.set_auth_cookies()
         response = self.client.post('/users/new', {'email_address': 'test.user@email.com'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
     @patch('users.request_handler.create_user', return_value=UserMocks.get_unsuccessful_user_creation_response())
-    def test_user_creation_endpoint_returns_response_status_from_api_and_the_correct_alert_if_creation_fails(self,
-                                                                                                    mock_user_creation):
+    def test_user_creation_endpoint_returns_response_status_from_api_if_creation_fails(self, mock_user_creation):
         self.set_auth_cookies()
         response = self.client.post('/users/new', {'email_address': 'test.user@nhs.uk'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
     def test_user_creation_endpoint_returns_redirect_if_creation_succeeds(self):
         self.set_auth_cookies()
@@ -59,8 +50,6 @@ class UsersViewsTest(MedExTestCase):
         self.set_auth_cookies()
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
         self.assertTemplateUsed(response, 'users/permission_builder.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 0)
 
     @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_add_permission_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
@@ -69,14 +58,11 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.url, '/login')
 
     @patch('users.request_handler.load_by_id', return_value=UserMocks.get_unsuccessful_single_user_load_response())
-    def test_landing_on_the_add_permission_page_loads_the_correct_template_with_alert_if_the_user_cant_be_found(self,
-                                                                                                        mock_user_load):
+    def test_landing_on_the_add_permission_page_loads_the_correct_template_if_the_user_cant_be_found(self,
+                                                                                                     mock_user_load):
         self.set_auth_cookies()
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
-        self.assertTemplateUsed(response, 'users/permission_builder.html')
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.OBJECT_NOT_FOUND % 'user')
+        self.assertTemplateUsed(response, 'errors/base_error.html')
 
     def test_submitting_an_invalid_form_returns_a_bad_request_response_and_an_error_message(self):
         self.set_auth_cookies()
@@ -84,9 +70,6 @@ class UsersViewsTest(MedExTestCase):
         response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
         self.assertTemplateUsed(response, 'users/permission_builder.html')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
     @patch('permissions.request_handler.create_permission', return_value=PermissionMocks.get_unsuccessful_permission_creation_response())
     def test_submitting_a_valid_form_that_errors_on_api_returns_the_status_from_server_and_an_error_message(self,
@@ -96,9 +79,6 @@ class UsersViewsTest(MedExTestCase):
         response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
         self.assertTemplateUsed(response, 'users/permission_builder.html')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        alerts_list = self.get_context_value(response.context, 'alerts')
-        self.assertEqual(len(alerts_list), 1)
-        self.assertEqual(alerts_list[0]['message'], messages.ERROR_IN_FORM)
 
     def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_settings_page(self):
         self.set_auth_cookies()
