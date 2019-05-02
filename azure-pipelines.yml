@@ -20,7 +20,7 @@ variables:
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: 3.5
+    versionSpec: 3.7
     architecture: 'x64'
 
 - task: PythonScript@0
@@ -75,7 +75,7 @@ steps:
 
 - script: |
     pushd '$(projectRoot)'
-    docker build -f Dockerfile -t $(stagingDockerId).azurecr.io/$(imageName) .
+    docker build -f ./deploy_files/Dockerfile -t $(stagingDockerId).azurecr.io/$(imageName) .
     docker login -u $(stagingDockerId) -p $pswd $(stagingDockerId).azurecr.io
     docker push $(stagingDockerId).azurecr.io/$(imageName)
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
