@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 
 from rest_framework import status
 
+from errors.utils import log_unexpected_method
+from errors.views import __handle_method_not_allowed_error
 from home.forms import IndexFilterForm
 from locations.models import Location
 from . import request_handler
@@ -16,26 +18,55 @@ def index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    people = False
-
     if request.method == 'GET':
-        user.load_examinations()
-        form = IndexFilterForm()
+        template, context, status_code = __get_index(user)
+
     elif request.method == 'POST':
-        form = IndexFilterForm(request.POST)
-        user.load_examinations(location=form.location, person=form.person)
-        filter_location = Location.initialise_with_id(request.POST.get('location'))
-        people = filter_location.load_permitted_users(user.auth_token)
+        template, context, status_code = __post_index(user, request.POST)
+
+    else:
+        log_unexpected_method(request.method, 'case index')
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
+
+
+def __get_index(user):
+    template = 'home/index.html'
+    status_code = status.HTTP_200_OK
+
+    form = IndexFilterForm()
+    user.load_examinations()
     locations = user.get_permitted_locations()
 
-    context = {
+    context = __set_index_context(user, locations, None, form)
+
+    return template, context, status_code
+
+
+def __post_index(user, post_body):
+    template = 'home/index.html'
+    status_code = status.HTTP_200_OK
+
+    form = IndexFilterForm(post_body)
+    user.load_examinations(location=form.location, person=form.person)
+    locations = user.get_permitted_locations()
+    filter_location = Location.initialise_with_id(form.location)
+    people = filter_location.load_permitted_users(user.auth_token)
+
+    context = __set_index_context(user, locations, people, form)
+
+    return template, context, status_code
+
+
+def __set_index_context(user, locations, people, form):
+    return {
         'page_header': '%s Dashboard' % user.role_type,
         'session_user': user,
         'filter_locations': locations,
         'filter_people': people,
         'form': form
     }
-    return render(request, 'home/index.html', context)
 
 
 def login_callback(request):
@@ -49,20 +80,25 @@ def login_callback(request):
 
 
 def login(request):
-    context = {
-        'page_heading': 'Welcome to the Medical Examiners Service',
-        'base_uri': settings.OP_DOMAIN,
-        'client_id': settings.OP_ID,
-        'cms_url': settings.CMS_URL,
-        'issuer': settings.OP_ISSUER
-    }
-    status_code = status.HTTP_200_OK
-
     user = User.initialise_with_token(request)
     if user.check_logged_in():
         return redirect_to_landing()
 
-    return render(request, 'home/login.html', context, status=status_code)
+    if request.method == "GET":
+        template = 'home/login.html'
+        status_code = status.HTTP_200_OK
+        context = {
+            'page_heading': 'Welcome to the Medical Examiners Service',
+            'base_uri': settings.OP_DOMAIN,
+            'client_id': settings.OP_ID,
+            'cms_url': settings.CMS_URL,
+            'issuer': settings.OP_ISSUER
+        }
+    else:
+        log_unexpected_method(request.method, 'login')
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
 
 
 def logout(request):
@@ -80,9 +116,16 @@ def settings_index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    context = {
-        'session_user': user,
-        'page_heading': 'Settings',
-        'sub_heading': 'Overview',
-    }
-    return render(request, 'home/settings_index.html', context)
+    if request.method == 'GET':
+        template = 'home/settings_index.html'
+        status_code = status.HTTP_200_OK
+        context = {
+            'session_user': user,
+            'page_heading': 'Settings',
+            'sub_heading': 'Overview',
+        }
+    else:
+        log_unexpected_method(request.method, 'settings index')
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
