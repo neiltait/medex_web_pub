@@ -163,7 +163,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "medexCms/staticfiles"),
 ]
-
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
 if not DEBUG:
