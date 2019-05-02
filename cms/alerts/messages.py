@@ -26,8 +26,13 @@ DEATH_IS_NOT_AFTER_BIRTH = 'Death date must be after birth date'
 
 GENERAL_ERROR = 'There was an error whilst %s the %s'
 
+NOT_ALLOWED = 'The action you tried is not supported by the service'
+
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 
+
 def ErrorFieldTooLong(character_max):
     return ("Please enter fewer than %d characters") % character_max
+

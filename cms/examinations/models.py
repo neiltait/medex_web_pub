@@ -2,7 +2,7 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
-from errors.utils import handle_error
+from errors.utils import handle_error, log_api_error
 
 from people.models import BereavedRepresentative
 from users.utils import get_user_presenter, get_medical_team_member_presenter
@@ -60,6 +60,10 @@ class Examination:
             return Examination(response.json())
         else:
             return None
+
+    @classmethod
+    def create(cls, submission, auth_token):
+        return request_handler.post_new_examination(submission, auth_token)
 
 
 class ExaminationOverview:
@@ -290,6 +294,7 @@ class PatientDetails:
             modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
             return PatientDetails(response.json(), modes_of_disposal)
         else:
+            log_api_error('patient details load', response.text)
             return None
 
     @classmethod
@@ -891,7 +896,8 @@ class CauseOfDeathProposal:
 
 class MedicalTeam:
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, examination_id):
+        self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.consultant_responsible = MedicalTeamMember.from_dict(
             obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
@@ -919,9 +925,13 @@ class MedicalTeam:
         authenticated = response.status_code == status.HTTP_200_OK
 
         if authenticated:
-            return MedicalTeam(response.json())
+            return MedicalTeam(response.json(), examination_id)
         else:
+            log_api_error('medical team load', response.text)
             return None
+
+    def update(self, submission, auth_token):
+        return request_handler.update_medical_team(self.examination_id, submission, auth_token)
 
 
 class MedicalTeamMember:
@@ -1014,7 +1024,8 @@ class CaseOutcome:
         'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
     }
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict, examination_id):
+        self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.case_outcome_summary = obj_dict.get("caseOutcomeSummary")
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
@@ -1033,9 +1044,10 @@ class CaseOutcome:
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseOutcome(response.json())
+            return CaseOutcome(response.json(), examination_id), None
         else:
-            return handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+            log_api_error('case outcome load', response.text if response.content != 'null' else '')
+            return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod
     def complete_scrutiny(cls, auth_token, examination_id):

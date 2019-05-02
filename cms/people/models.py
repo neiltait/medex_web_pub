@@ -1,4 +1,5 @@
 from medexCms.utils import is_empty_date, parse_datetime
+from people import request_handler
 
 
 class BereavedRepresentative:
@@ -45,3 +46,11 @@ class DropdownPerson:
     def __init__(self, obj_dict):
         self.person_id = obj_dict.get('userId')
         self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')
+
+    @classmethod
+    def get_medical_examiners(cls, auth_token, examination_id):
+        return request_handler.get_medical_examiners_list_for_examination(auth_token, examination_id)
+
+    @classmethod
+    def get_meos(cls, auth_token, examination_id):
+        return request_handler.get_medical_examiners_officers_list_for_examination(auth_token, examination_id)

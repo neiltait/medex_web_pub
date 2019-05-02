@@ -1,10 +1,10 @@
 import json
-import logging
 
 from django.conf import settings
 
 from rest_framework import status
 
+from errors.utils import log_api_error, log_internal_error
 from examinations.models import ExaminationOverview
 from examinations import request_handler as examination_request_handler
 
@@ -18,8 +18,6 @@ from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission
 
 from . import request_handler
-
-logger = logging.getLogger(__name__)
 
 
 class User:
@@ -78,7 +76,7 @@ class User:
                 self.email_address = response_data['emailAddress']
                 self.load_permissions()
 
-            return authenticated
+            return authenticated and len(self.permissions) > 0
         else:
             return False
 
@@ -100,6 +98,13 @@ class User:
         else:
             return None
 
+    @classmethod
+    def create(cls, submission, auth_token):
+        return request_handler.create_user(json.dumps(submission), auth_token)
+
+    def add_permission(self, form, auth_token):
+        return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
+
     def load_permissions(self):
         response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
 
@@ -109,7 +114,7 @@ class User:
             for permission in response.json()['permissions']:
                 self.permissions.append(Permission(permission))
         else:
-            logger.error(response.status_code)
+            log_api_error('permissions load', response.text)
 
     def load_examinations(self, location='', person=''):
         if person:
@@ -164,7 +169,7 @@ class User:
                 examination['open'] = False
                 self.examinations.append(ExaminationOverview(examination))
         else:
-            logger.error(response.status_code)
+            log_api_error('case load', response.text)
 
     def get_permitted_locations(self):
         permitted_locations = []
@@ -172,6 +177,15 @@ class User:
         for location in location_data:
             permitted_locations.append(Location().set_values(location))
         return permitted_locations
+
+    def get_permitted_trusts(self):
+        return Location.load_trusts_list(self.auth_token)
+
+    def get_permitted_regions(self):
+        return Location.load_region_list(self.auth_token)
+
+    def get_permitted_me_offices(self):
+        return Location.load_me_offices(self.auth_token)
 
     def get_forms_for_role(self):
         if self.role_type == self.MEO_ROLE_TYPE:
@@ -213,7 +227,7 @@ class User:
                 }
             ]
         else:
-            logger.error('Unknown role type')
+            log_internal_error('(User) get_form_for_role', 'Unknown role type')
 
     def editable_event_types(self):
         if self.role_type == self.MEO_ROLE_TYPE:
@@ -231,5 +245,5 @@ class User:
                 'other',
             ]
         else:
-            logger.error('Unknown role type')
+            log_internal_error('(User) get_form_for_role', 'Unknown role type')
             return []

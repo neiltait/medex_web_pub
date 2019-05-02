@@ -1,103 +1,143 @@
-import json
-
 from django.shortcuts import render, redirect
 
 from rest_framework import status
 
-from alerts import messages
-from alerts.utils import generate_error_alert
-from home.utils import redirect_to_login
-from locations import request_handler as locations_request_handler
-from permissions import request_handler as permissions_request_handler
+from errors.utils import log_unexpected_method, log_api_error
+from errors.views import __handle_method_not_allowed_error
+from home.utils import redirect_to_login, render_404
 from permissions.forms import PermissionBuilderForm
 
-from . import request_handler
 from .forms import CreateUserForm
 from .models import User
 
 
 def create_user(request):
     user = User.initialise_with_token(request)
-
     if not user.check_logged_in():
         return redirect_to_login()
 
-    context = {
+    if request.method == 'GET':
+        template, context, status_code = __get_create_user(user)
+
+    elif request.method == 'POST':
+        template, context, status_code, redirect_response = __post_create_user(user, request.POST)
+
+        if redirect_response:
+            return redirect_response
+
+    else:
+        log_unexpected_method(request.method, 'create user')
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
+
+
+def __get_create_user(user):
+    template = 'users/new.html'
+    status_code = status.HTTP_200_OK
+    context = __set_create_user_context(user, CreateUserForm(), False)
+    return template, context, status_code
+
+
+def __post_create_user(user, post_body):
+    template = 'users/new.html'
+
+    form = CreateUserForm(post_body)
+
+    if form.validate():
+        response = User.create(form.response_to_dict(), user.auth_token)
+
+        if response.ok:
+            return None, None, None, redirect('/users/%s/add_permission' % response.json()['userId'])
+        else:
+            log_api_error('user creation', response.text)
+            status_code = response.status_code
+    else:
+        status_code = status.HTTP_400_BAD_REQUEST
+
+    context = __set_create_user_context(user, form, True)
+    return template, context, status_code, None
+
+
+def __set_create_user_context(user, form, invalid):
+    return {
         'session_user': user,
         'page_heading': 'Add a user',
-        'form': CreateUserForm()
+        'form': form,
+        'invalid': invalid,
     }
-    alerts = []
-    status_code = status.HTTP_200_OK
-
-    if request.POST:
-        form = CreateUserForm(request.POST)
-
-        if form.validate():
-            response = request_handler.create_user(json.dumps(form.response_to_dict()), user.auth_token)
-
-            if response.status_code == status.HTTP_200_OK:
-                return redirect('/users/%s/add_permission' % response.json()['userId'])
-            else:
-                alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-                status_code = response.status_code
-        else:
-            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-            status_code = status.HTTP_400_BAD_REQUEST
-
-        context['form'] = form
-        context['invalid'] = True
-
-    context['alerts'] = alerts
-    return render(request, 'users/new.html', context, status=status_code)
 
 
 def add_permission(request, user_id):
     user = User.initialise_with_token(request)
-
     if not user.check_logged_in():
         return redirect_to_login()
 
-    context = {
-        'session_user': user,
-        'sub_heading': 'Add role and permission level',
-        'form': PermissionBuilderForm(),
-        'submit_path': 'add_permission'
-    }
-    alerts = []
+    managed_user = User.load_by_id(user_id, user.auth_token)
+    if managed_user is None:
+        return render_404(request, user, 'user')
+
+    if request.method == 'GET':
+        template, context, status_code = __get_add_permission(user, managed_user)
+
+    elif request.method == 'POST':
+        template, context, status_code, redirect_response = __post_add_permission(user, managed_user, request.POST)
+
+        if redirect_response:
+            return redirect_response
+
+    else:
+        log_unexpected_method(request.method, 'add permission')
+        template, context, status_code = __handle_method_not_allowed_error(user)
+
+    return render(request, template, context, status=status_code)
+
+
+def __get_add_permission(user, managed_user):
+    template = 'users/permission_builder.html'
     status_code = status.HTTP_200_OK
 
-    if request.POST:
-        form = PermissionBuilderForm(request.POST)
-        add_another = True if request.POST.get('add_another') == "true" else False
+    context = __set_add_permission_context(user, PermissionBuilderForm(), False, managed_user)
+    return template, context, status_code
 
-        if form.is_valid():
-            response = permissions_request_handler.create_permission(json.dumps(form.to_dict(user_id)), user_id, user.auth_token)
 
-            if response.status_code == status.HTTP_200_OK:
-                if add_another:
-                    return redirect('add_permission', user_id=user_id)
-                else:
-                    return redirect('/settings')
+def __post_add_permission(user, managed_user, post_body):
+    template = 'users/permission_builder.html'
+
+    form = PermissionBuilderForm(post_body)
+    add_another = True if post_body.get('add_another') == "true" else False
+
+    if form.is_valid():
+        response = managed_user.add_permission(form, user.auth_token)
+
+        if response.ok:
+            if add_another:
+                return None, None, None, redirect('add_permission', user_id=managed_user.user_id)
             else:
-                alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-                status_code = response.status_code
-
+                return None, None, None, redirect('/settings')
         else:
-            alerts.append(generate_error_alert(messages.ERROR_IN_FORM))
-            status_code = status.HTTP_400_BAD_REQUEST
+            log_api_error('permission creation', response.text)
+            status_code = response.status_code
 
-        context['form'] = form
-        context['invalid'] = True
-
-    managed_user = User.load_by_id(user_id, user.auth_token)
-    context['managed_user'] = managed_user
-
-    if managed_user == None:
-        alerts.append(generate_error_alert(messages.OBJECT_NOT_FOUND % 'user'))
     else:
-        context['trusts'] = locations_request_handler.load_trusts_list(user.auth_token)
-        context['regions'] = locations_request_handler.load_region_list(user.auth_token)
+        status_code = status.HTTP_400_BAD_REQUEST
 
-    context['alerts'] = alerts
-    return render(request, 'users/permission_builder.html', context, status=status_code)
+    context = __set_add_permission_context(user, form, True, managed_user)
+
+    return template, context, status_code, None
+
+
+def __set_add_permission_context(user, form, invalid, managed_user):
+    trusts = user.get_permitted_trusts()
+    regions = user.get_permitted_regions()
+
+    return {
+        'session_user': user,
+        'sub_heading': 'Add role and permission level',
+        'form': form,
+        'submit_path': 'add_permission',
+        'invalid': invalid,
+        'trusts': trusts,
+        'regions': regions,
+        'managed_user': managed_user,
+    }
