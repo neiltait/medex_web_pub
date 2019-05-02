@@ -12,9 +12,9 @@ from . import request_handler
 
 class Examination:
 
-    def __init__(self, obj_dict=None):
+    def __init__(self, obj_dict=None, examination_id=None):
         if obj_dict:
-            self.id = obj_dict.get("id")
+            self.id = examination_id if examination_id else obj_dict.get("id")
             self.time_of_death = obj_dict.get("timeOfDeath")
             self.given_names = obj_dict.get("givenNames")
             self.surname = obj_dict.get("surname")
@@ -57,7 +57,7 @@ class Examination:
         authenticated = response.status_code == status.HTTP_200_OK
 
         if authenticated:
-            return Examination(response.json())
+            return Examination(obj_dict=response.json(), examination_id=examination_id)
         else:
             return None
 
@@ -129,10 +129,10 @@ class ExaminationOverview:
 
 class PatientDetails:
 
-    def __init__(self, obj_dict={}, modes_of_disposal={}):
+    def __init__(self, obj_dict={}, modes_of_disposal={}, examination_id=None):
         self.modes_of_disposal = modes_of_disposal
 
-        self.id = obj_dict.get("id")
+        self.id = examination_id if examination_id else obj_dict.get("id")
         self.case_header = PatientHeader(obj_dict.get("header"))
 
         self.completed = obj_dict.get("completed")
@@ -292,7 +292,7 @@ class PatientDetails:
 
         if authenticated:
             modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
-            return PatientDetails(response.json(), modes_of_disposal)
+            return PatientDetails(response.json(), modes_of_disposal, examination_id)
         else:
             log_api_error('patient details load', response.text)
             return None
