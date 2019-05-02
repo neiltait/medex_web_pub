@@ -74,6 +74,7 @@
 
         setActiveForm: function (formId) {
             this.activeForm = formId;
+            this.picker[0].value = formId;
         }
     }
 
@@ -93,7 +94,10 @@
         setInitialView: function () {
             if (this.form.hasClass('active')) {
                 this.show();
-                this.setActiveCallback(this.form[0].id)
+                this.setActiveCallback(this.form[0].id);
+                this.form[0].scrollIntoView({
+                    behavior: "smooth",
+                });
             }
         },
 
