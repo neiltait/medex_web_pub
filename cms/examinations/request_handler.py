@@ -119,7 +119,16 @@ def create_bereaved_discussion_event(auth_token, examination_id, submission):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_timeline_event_create_response()
     else:
-        return MedexRequest.put(auth_token, '%s/examinations/%s/bereaved_discussion' % (settings.API_URL, examination_id),
+        return MedexRequest.put(auth_token,
+                                '%s/examinations/%s/bereaved_discussion' % (settings.API_URL, examination_id),
+                                submission)
+
+
+def create_medical_history_event(auth_token, examination_id, submission):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_timeline_event_create_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/examinations/%s/medical_history' % (settings.API_URL, examination_id),
                                 submission)
 
 
