@@ -189,8 +189,9 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(type(user.examinations), list)
 
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_me(self):
-        user = User(UserMocks.get_filled_user_dict())
-        user.permissions.append(Permission(PermissionMocks.get_me_permission_dict()))
+        user_data = UserMocks.get_filled_user_dict()
+        user_data['role'] = User.ME_ROLE_TYPE
+        user = User(user_data)
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'pre-scrutiny')
@@ -199,8 +200,9 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(available_forms[3]['id'], 'other')
 
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_meo(self):
-        user = User(UserMocks.get_filled_user_dict())
-        user.permissions.append(Permission(PermissionMocks.get_meo_permission_dict()))
+        user_data = UserMocks.get_filled_user_dict()
+        user_data['role'] = User.MEO_ROLE_TYPE
+        user = User(user_data)
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'admin-notes')

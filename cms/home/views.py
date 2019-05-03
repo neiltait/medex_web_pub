@@ -61,7 +61,7 @@ def __post_index(user, post_body):
 
 def __set_index_context(user, locations, people, form):
     return {
-        'page_header': '%s Dashboard' % user.role_type,
+        'page_header': '%s Dashboard' % user.role,
         'session_user': user,
         'filter_locations': locations,
         'filter_people': people,
