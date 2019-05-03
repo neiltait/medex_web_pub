@@ -33,10 +33,43 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'userId': '1',
-            'firstName': 'Test',
-            'lastName': 'User',
-            'emailAddress': 'test.user@email.com',
+            "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+            "firstName": "Joe",
+            "lastName": "Bloggs",
+            "emailAddress": "joe.bloggs@nhs.uk",
+            "role": "MedicalExaminerOfficer",
+            "permissions": {
+                "GetUsers": True,
+                "GetUser": True,
+                "InviteUser": True,
+                "SuspendUser": True,
+                "EnableUser": True,
+                "DeleteUser": True,
+                "UpdateUser": False,
+                "CreateUser": False,
+                "GetUserPermissions": True,
+                "GetUserPermission": True,
+                "CreateUserPermission": True,
+                "UpdateUserPermission": True,
+                "DeleteUserPermission": True,
+                "GetLocations": True,
+                "GetLocation": True,
+                "GetExaminations": True,
+                "GetExamination": True,
+                "CreateExamination": True,
+                "AssignExaminationToMedicalExaminer": True,
+                "UpdateExamination": True,
+                "UpdateExaminationState": True,
+                "AddEventToExamination": True,
+                "GetExaminationEvents": True,
+                "GetExaminationEvent": True,
+                "GetProfile": True,
+                "UpdateProfile": True,
+                "GetProfilePermissions": True
+            },
+            "errors": {},
+            "lookups": None,
+            "success": True
         }
 
     @classmethod
