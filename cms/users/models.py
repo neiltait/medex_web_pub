@@ -15,7 +15,7 @@ from locations import request_handler as location_request_handler
 from locations.models import Location
 
 from permissions import request_handler as permissions_request_handler
-from permissions.models import Permission
+from permissions.models import Permission, PermittedActions
 
 from . import request_handler
 
@@ -26,10 +26,12 @@ class User:
 
     def __init__(self, obj_dict=None):
         if obj_dict:
-            self.user_id = obj_dict['userId']
-            self.first_name = obj_dict['firstName']
-            self.last_name = obj_dict['lastName']
-            self.email_address = obj_dict['email']
+            self.user_id = obj_dict.get('userId')
+            self.first_name = obj_dict.get('firstName')
+            self.last_name = obj_dict.get('lastName')
+            self.email_address = obj_dict.get('email')
+            self.role = obj_dict.get('role')
+            self.permitted_actions = PermittedActions(obj_dict.get('permissions'))
         self.auth_token = None
         self.id_token = None
         self.index_overview = None
@@ -55,13 +57,6 @@ class User:
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    @property
-    def role_type(self):
-        # TODO This is changed to force the system into accepting us as an ME.
-        #  Remove after development of ME only features
-        #return self.ME_ROLE_TYPE
-        return self.permissions[0].role_type
-
     def check_logged_in(self):
         if self.auth_token:
             response = request_handler.validate_session(self.auth_token)
@@ -70,13 +65,14 @@ class User:
 
             if authenticated:
                 response_data = response.json()
-                self.user_id = response_data['userId']
-                self.first_name = response_data['firstName']
-                self.last_name = response_data['lastName']
-                self.email_address = response_data['emailAddress']
-                self.load_permissions()
+                self.user_id = response_data.get('userId')
+                self.first_name = response_data.get('firstName')
+                self.last_name = response_data.get('lastName')
+                self.email_address = response_data.get('emailAddress')
+                self.role = response_data.get('role')
+                self.permitted_actions = PermittedActions(response_data.get('permissions'))
 
-            return authenticated and len(self.permissions) > 0
+            return authenticated
         else:
             return False
 
@@ -120,7 +116,7 @@ class User:
         if person:
             user = person
         else:
-            user = self.user_id if self.role_type == self.ME_ROLE_TYPE else ''
+            user = self.user_id if self.is_me() else ''
         query_params = {
             "LocationId": location,
             "UserId": user,
@@ -141,7 +137,7 @@ class User:
                 examination['open'] = True
                 self.examinations.append(ExaminationOverview(examination))
         else:
-            logger.error(response.status_code)
+            log_api_error('permissions load', response.text)
 
     def load_closed_examinations(self, location='', person=''):
         if person:
@@ -187,8 +183,14 @@ class User:
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
 
+    def is_me(self):
+        return self.role == self.ME_ROLE_TYPE
+
+    def is_meo(self):
+        return self.role == self.MEO_ROLE_TYPE
+
     def get_forms_for_role(self):
-        if self.role_type == self.MEO_ROLE_TYPE:
+        if self.is_meo():
             return [
                 {
                     'id': 'admin-notes',
@@ -207,7 +209,7 @@ class User:
                     'name': 'Other case info'
                 }
             ]
-        elif self.role_type == self.ME_ROLE_TYPE:
+        elif self.is_me():
             return [
                 {
                     'id': 'pre-scrutiny',
@@ -230,14 +232,14 @@ class User:
             log_internal_error('(User) get_form_for_role', 'Unknown role type')
 
     def editable_event_types(self):
-        if self.role_type == self.MEO_ROLE_TYPE:
+        if self.is_meo():
             return [
                 'admission-notes',
                 'medical-history',
                 'meo-summary',
                 'other',
             ]
-        elif self.role_type == self.ME_ROLE_TYPE:
+        elif self.is_me():
             return [
                 'pre-scrutiny',
                 'qap-discussion',
