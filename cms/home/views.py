@@ -115,7 +115,7 @@ def settings_index(request):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
-    if not user.can_access('settings_index'):
+    if not user.permitted_actions.can_access_settings_index():
         template, context, status_code = __handle_not_permitted_error(user)
 
     elif request.method == 'GET':

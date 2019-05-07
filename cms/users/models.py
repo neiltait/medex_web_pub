@@ -189,13 +189,6 @@ class User:
     def is_meo(self):
         return self.role == self.MEO_ROLE_TYPE
 
-    def can_access(self, page):
-        if page == 'settings_index':
-            return self.permitted_actions.can_get_users
-        else:
-            log_internal_error('can_access', 'Unknown page being checked')
-            return False
-
     def get_forms_for_role(self):
         if self.is_meo():
             return [
