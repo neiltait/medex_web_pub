@@ -16,7 +16,7 @@ def create_user(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    if not user.permitted_actions.can_create_user:
+    if not user.permitted_actions.can_invite_user:
         template, context, status_code = __handle_not_permitted_error(user)
 
     elif request.method == 'GET':

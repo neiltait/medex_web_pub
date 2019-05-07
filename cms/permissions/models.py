@@ -36,7 +36,6 @@ class PermittedActions:
         self.can_enable_user = obj_dict.get("EnableUser") if obj_dict else False
         self.can_delete_user = obj_dict.get("DeleteUser") if obj_dict else False
         self.can_update_user = obj_dict.get("UpdateUser") if obj_dict else False
-        self.can_create_user = obj_dict.get("CreateUser") if obj_dict else False
         self.can_get_user_permissions = obj_dict.get("GetUserPermissions") if obj_dict else False
         self.can_get_user_permission = obj_dict.get("GetUserPermission") if obj_dict else False
         self.can_create_user_permission = obj_dict.get("CreateUserPermission") if obj_dict else False
@@ -59,4 +58,4 @@ class PermittedActions:
         self.can_get_profile_permissions = obj_dict.get("GetProfilePermissions") if obj_dict else False
 
     def can_access_settings_index(self):
-        return self.permitted_actions.can_get_users
+        return self.can_get_users
