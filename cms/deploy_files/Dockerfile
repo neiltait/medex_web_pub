@@ -8,6 +8,6 @@ COPY . /code/
 RUN python manage.py compilescss
 RUN python manage.py  collectstatic --ignore=*.scss
 
-RUN chmod +x docker-entrypoint.sh
+RUN chmod +x ./deploy_files/docker-entrypoint.sh
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["./deploy_files/docker-entrypoint.sh"]
