@@ -6,3 +6,4 @@ django-sass-processor
 djangorestframework
 requests
 applicationinsights
+gunicorn==19.6.0
