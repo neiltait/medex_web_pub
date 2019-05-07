@@ -49,18 +49,18 @@
 
             <div class="nav-dropdown--content">
               {% if session_user.permitted_actions.can_get_users %}
-                <div class="nav-dropdown--item">
-                  <a href="/settings">
+                <a href="/settings">
+                  <div class="nav-dropdown--item">
                     Settings
-                  </a>
-                </div>
-              {% endif %}
-              
-              <div class="nav-dropdown--item">
-                <a href="/logout">
-                  Logout
+                  </div>
                 </a>
-              </div>
+              {% endif %}
+
+              <a href="/logout">
+                <div class="nav-dropdown--item">
+                  Logout
+                </div>
+              </a>
             </div>
           </div>
         </div>
