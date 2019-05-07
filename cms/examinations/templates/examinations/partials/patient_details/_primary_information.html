@@ -305,7 +305,7 @@
                 <select class="nhsuk-select" id="place_of_death" name="place_of_death">
                     <option value="" disabled hidden selected>Select a location</option>
                     {% for location in locations %}
-                        <option value="{{ location.locationId }}" {% if location.locationId == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>
+                        <option value="{{ location.location_id }}" {% if location.location_id == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>
                     {% endfor %}
                 </select>
             </div>
