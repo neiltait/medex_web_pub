@@ -446,11 +446,9 @@ class ExaminationEventList:
         :param qap_event: CaseQapDiscussionEvent
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = qap_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': qap_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = qap_event.user_full_name
         cause_of_death.qap = MedicalTeamMember(
             name=qap_event.participant_name,
             role=qap_event.participant_role,
