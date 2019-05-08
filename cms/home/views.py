@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from rest_framework import status
 
 from errors.utils import log_unexpected_method
-from errors.views import __handle_method_not_allowed_error
+from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
 from locations.models import Location
 from . import request_handler
@@ -115,8 +115,10 @@ def settings_index(request):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
+    if not user.permitted_actions.can_access_settings_index():
+        template, context, status_code = __handle_not_permitted_error(user)
 
-    if request.method == 'GET':
+    elif request.method == 'GET':
         template = 'home/settings_index.html'
         status_code = status.HTTP_200_OK
         context = {

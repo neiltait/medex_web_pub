@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from rest_framework import status
 
 from errors.utils import log_unexpected_method, log_api_error
-from errors.views import __handle_method_not_allowed_error
+from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.utils import redirect_to_login, render_404
 from permissions.forms import PermissionBuilderForm
 
@@ -16,7 +16,10 @@ def create_user(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    if request.method == 'GET':
+    if not user.permitted_actions.can_invite_user:
+        template, context, status_code = __handle_not_permitted_error(user)
+
+    elif request.method == 'GET':
         template, context, status_code = __get_create_user(user)
 
     elif request.method == 'POST':
@@ -77,7 +80,10 @@ def add_permission(request, user_id):
     if managed_user is None:
         return render_404(request, user, 'user')
 
-    if request.method == 'GET':
+    if not user.permitted_actions.can_create_user_permission:
+        template, context, status_code = __handle_not_permitted_error(user)
+
+    elif request.method == 'GET':
         template, context, status_code = __get_add_permission(user, managed_user)
 
     elif request.method == 'POST':
