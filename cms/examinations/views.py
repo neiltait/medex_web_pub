@@ -68,14 +68,12 @@ def __post_create_examination(user, post_body):
 
 
 def __set_create_examination_context(user, form, add_another):
-    locations = Location.get_locations_list(user.auth_token)
     me_offices = Location.get_me_offices_list(user.auth_token)
 
     return {
         "session_user": user,
         "page_heading": "Add a new case",
         "sub_heading": "Primary information",
-        "locations": locations,
         "me_offices": me_offices,
         "form": form,
         "errors": form.errors,
@@ -181,7 +179,6 @@ def __validate_patient_details_forms(primary_info_form, secondary_info_form, ber
 def __set_examination_patient_details_context(user, examination, primary_form, secondary_form, bereaved_form,
                                               urgency_form, saved):
     modal_config = get_tab_change_modal_config()
-    locations = user.get_permitted_locations()
     me_offices = user.get_permitted_me_offices()
 
     error_count = primary_form.error_count + secondary_form.error_count + bereaved_form.error_count + \
@@ -196,7 +193,6 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'urgency_info_form': urgency_form,
         'error_count': error_count,
         'tab_modal': modal_config,
-        "locations": locations,
         "me_offices": me_offices,
         "saved": saved
     }

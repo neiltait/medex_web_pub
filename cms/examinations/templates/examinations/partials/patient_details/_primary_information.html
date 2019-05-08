@@ -302,12 +302,8 @@
                     Place where death occurred
                 </label>
                 {% if errors.place_of_death %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.place_of_death }}</span>{% endif %}
-                <select class="nhsuk-select" id="place_of_death" name="place_of_death">
-                    <option value="" disabled hidden selected>Select a location</option>
-                    {% for location in locations %}
-                        <option value="{{ location.locationId }}" {% if location.locationId == form.place_of_death %}selected{% endif %}>{{ location.name }}</option>
-                    {% endfor %}
-                </select>
+                <input class="nhsuk-input nhsuk-input--width-10 {% if errors.place_of_death %}nhsuk-input--error{% endif %}"
+                           id="place_of_death" name="place_of_death" value="{{ form.place_of_death }}" type="text">
             </div>
         </div>
 
