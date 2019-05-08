@@ -4,7 +4,7 @@ from django.views.generic.base import View
 from rest_framework import status
 
 from errors.utils import log_unexpected_method, log_api_error
-from errors.views import __handle_method_not_allowed_error
+from errors.views import __handle_method_not_allowed_error, handle_not_permitted_error
 from home.utils import redirect_to_login, render_404
 from medexCms.mixins import LoginRequiredMixin
 
@@ -15,9 +15,16 @@ from .models import User
 class ManageUserBaseView(View):
 
     def dispatch(self, request, *args, **kwargs):
+        if not self.user.permitted_actions.can_invite_user:
+            return handle_not_permitted_error(request, self.user)
+
+        if not self.user.permitted_actions.can_create_user_permission:
+            return handle_not_permitted_error(request, self.user)
+
         self.managed_user = User.load_by_id(kwargs['user_id'], self.user.auth_token)
         if self.managed_user is None:
             return render_404(request, self.user, 'user')
+
         return super().dispatch(request, *args, **kwargs)
 
 

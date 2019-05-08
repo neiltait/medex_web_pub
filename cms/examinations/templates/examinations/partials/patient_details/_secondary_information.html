@@ -259,37 +259,39 @@
 
           <p class="small-print">Is there any property to collect from the ward?</p>
 
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-third">
-          <div class="nhsuk-radios__item">
-            <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                   id="personal-effects-1" name="personal_effects" type="radio" value="true"
-                   {% if form.personal_effects == 'true' %}checked{% endif %}>
-            <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
-                Yes
-            </label>
+          <div class="nhsuk-grid-row">
+              <div class="nhsuk-grid-column-one-third">
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                     id="personal-effects-1" name="personal_effects" type="radio" value="true"
+                     {% if form.personal_effects == 'true' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
+                  Yes
+              </label>
+            </div>
           </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third">
-          <div class="nhsuk-radios__item">
-            <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                   id="personal-effects-2" name="personal_effects" type="radio" value="false"
-                   {% if form.personal_effects == 'false' %}checked{% endif %}>
-            <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
-                No
-            </label>
+
+          <div class="nhsuk-grid-column-one-third">
+            <div class="nhsuk-radios__item">
+              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                     id="personal-effects-2" name="personal_effects" type="radio" value="false"
+                     {% if form.personal_effects == 'false' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
+                  No
+              </label>
+            </div>
           </div>
-        </div>
-        <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
-          <div class="nhsuk-radios__item ">
-            <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                   id="personal-effects-3" name="personal_effects" type="radio" value="unknown"
-                   {% if form.personal_effects == 'unknown' %}checked{% endif %}>
-            <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
-                Unknown
-            </label>
+
+          <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
+            <div class="nhsuk-radios__item ">
+              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                     id="personal-effects-3" name="personal_effects" type="radio" value="unknown"
+                     {% if form.personal_effects == 'unknown' %}checked{% endif %}>
+              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
+                  Unknown
+              </label>
+            </div>
           </div>
-        </div>
       </div>
       </div>
       </div>

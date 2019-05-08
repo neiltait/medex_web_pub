@@ -918,6 +918,20 @@ class MedicalTeam:
         self.medical_examiners_officer_id = obj_dict[
             'medicalExaminerOfficer'] if 'medicalExaminerOfficer' in obj_dict else ''
 
+        if 'lookups' in obj_dict:
+            lookups = obj_dict['lookups']
+            self.medical_examiner_lookup = self.get_lookup(
+                lookups['medicalExaminers']) if 'medicalExaminers' in lookups else []
+            self.medical_examiner_officer_lookup = self.get_lookup(
+                lookups['medicalExaminerOfficers']) if 'medicalExaminerOfficers' in lookups else []
+        else:
+            self.medical_examiner_lookup = []
+            self.medical_examiner_officer_lookup = []
+
+    @classmethod
+    def get_lookup(cls, user_list):
+        return [{'display_name': user['fullName'], 'user_id': user['userId']} for user in user_list]
+
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_medical_team_by_id(examination_id, auth_token)
@@ -1105,8 +1119,8 @@ class CaseOutcome:
 
     def can_close(self):
         return True if self.case_open and \
-                       (self.investigation_referral_complete() or self.outstanding_items_complete())\
-                       else False
+                       (self.investigation_referral_complete() or self.outstanding_items_complete()) \
+            else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)

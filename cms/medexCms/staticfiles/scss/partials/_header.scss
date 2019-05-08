@@ -76,7 +76,7 @@
           &.nav-dropdown {
             position: relative;
             .nav-dropdown--content {
-              padding: 0.25rem;
+              padding: 0.25rem 0.5rem;
               display: none;
               position: absolute;
               background-color: $white;
@@ -84,6 +84,8 @@
               box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
               color: $nhs-blue;
               z-index: 20;
+              min-width: 120px;
+              text-align: right;
 
               .nav-dropdown--item {
                 border-bottom: 1px solid $nhs-blue;

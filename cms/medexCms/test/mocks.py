@@ -474,6 +474,16 @@ class ExaminationMocks:
                 'firstName': 'Janet',
                 'lastName': 'Matthews',
                 'email': 'j.matthews@methods.co.uk'
+            },
+            'lookups': {
+                'medicalExaminers': [
+                    {'userId': '1', 'fullName':'Dr Foster'},
+                    {'userId': '2', 'fullName':'Dr Watson'}
+                ],
+                'medicalExaminerOfficers': [
+                    {'userId': '3', 'fullName':'Little Miss Chatterbox'},
+                    {'userId': '4', 'fullName':'Mr. Bump'}
+                ]
             }
         }
 
