@@ -11,13 +11,13 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
     permission_required = 'can_create_user_permission'
     template = 'users/permission_builder.html'
 
-    def get(self, request):
+    def get(self, request, user_id):
         status_code = status.HTTP_200_OK
 
         context = self.__set_add_permission_context(PermissionBuilderForm(), False)
         return render(request, self.template, context, status=status_code)
 
-    def post(self, request):
+    def post(self, request, user_id):
         post_body = request.POST
         form = PermissionBuilderForm(post_body)
         add_another = True if post_body.get('add_another') == "true" else False
