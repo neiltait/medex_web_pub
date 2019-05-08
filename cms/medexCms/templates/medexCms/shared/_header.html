@@ -48,7 +48,7 @@
             </a>
 
             <div class="nav-dropdown--content">
-              {% if session_user.permitted_actions.can_get_users %}
+              {% if session_user.permitted_actions.can_access_settings_index %}
                 <a href="/settings">
                   <div class="nav-dropdown--item">
                     Settings
