@@ -2,13 +2,13 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
-from medexCms.mixins import LoginRequiredMixin
-from medexCms.views import MedExBaseView
+from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
 from users.views import ManageUserBaseView
 
 
-class AddPermissionView(LoginRequiredMixin, ManageUserBaseView):
+class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView):
+    permission_required = 'can_create_user_permission'
     template = 'users/permission_builder.html'
 
     def get(self, request):
