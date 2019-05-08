@@ -1,6 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
+from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from errors.utils import handle_error, log_api_error
 
@@ -539,6 +540,9 @@ class CaseEvent:
         else:
             return None
 
+    def user_display_role(self):
+        return get_display_short_user_role(self.user_role)
+
 
 class CaseInitialEvent(CaseEvent):
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
@@ -652,6 +656,9 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         form.event_id = None
         return form
 
+    def display_bereaved_discussion_outcome(self):
+        return get_display_bereaved_outcome(self.bereaved_discussion_outcome)
+
 
 class CaseMeoSummaryEvent(CaseEvent):
     form_type = 'MeoSummaryEventForm'
@@ -724,6 +731,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         form.event_id = None
         return form
 
+    def display_qap_discussion_outcome(self):
+        return get_display_qap_outcome(self.qap_discussion_outcome)
 
 class CaseMedicalHistoryEvent(CaseEvent):
     form_type = 'MedicalHistoryEventForm'
