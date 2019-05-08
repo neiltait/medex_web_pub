@@ -5,7 +5,6 @@ from rest_framework import status
 from errors.utils import log_unexpected_method, log_api_error
 from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.utils import redirect_to_login, render_404
-from medexCms.utils import get_code_versions
 from permissions.forms import PermissionBuilderForm
 
 from .forms import CreateUserForm
@@ -69,7 +68,6 @@ def __set_create_user_context(user, form, invalid):
         'page_heading': 'Add a user',
         'form': form,
         'invalid': invalid,
-        'version': get_code_versions(),
     }
 
 
@@ -148,5 +146,4 @@ def __set_add_permission_context(user, form, invalid, managed_user):
         'trusts': trusts,
         'regions': regions,
         'managed_user': managed_user,
-        'version': get_code_versions(),
     }

@@ -61,11 +61,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'home.apps.HomeConfig',
-    'errors.apps.ErrorsConfig',
     'alerts.apps.AlertsConfig',
-    'users.apps.UsersConfig',
+    'errors.apps.ErrorsConfig',
     'examinations.apps.ExaminationsConfig',
+    'home.apps.HomeConfig',
+    'locations.apps.LocationsConfig',
+    'people.apps.PeopleConfig',
+    'permissions.apps.PermissionsConfig',
+    'users.apps.UsersConfig',
     'sass_processor',
 ]
 

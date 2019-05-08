@@ -67,5 +67,5 @@ def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
 
 
-def get_code_versions():
+def get_code_version():
     return settings.VERSION

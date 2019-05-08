@@ -7,7 +7,6 @@ from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
 from locations.models import Location
-from medexCms.utils import get_code_versions
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
@@ -67,7 +66,6 @@ def __set_index_context(user, locations, people, form):
         'filter_locations': locations,
         'filter_people': people,
         'form': form,
-        'version': get_code_versions(),
     }
 
 
@@ -95,7 +93,6 @@ def login(request):
             'client_id': settings.OP_ID,
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
-            'version': get_code_versions(),
         }
     else:
         log_unexpected_method(request.method, 'login')
@@ -128,7 +125,6 @@ def settings_index(request):
             'session_user': user,
             'page_heading': 'Settings',
             'sub_heading': 'Overview',
-            'version': get_code_versions(),
         }
     else:
         log_unexpected_method(request.method, 'settings index')

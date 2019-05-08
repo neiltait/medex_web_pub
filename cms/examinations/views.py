@@ -13,7 +13,6 @@ from examinations.utils import event_form_parser, event_form_submitter, get_tab_
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from locations.models import Location
-from medexCms.utils import get_code_versions
 from users.models import User
 
 
@@ -78,7 +77,6 @@ def __set_create_examination_context(user, form, add_another):
         "form": form,
         "errors": form.errors,
         "add_another": add_another,
-        'version': get_code_versions(),
     }
 
 
@@ -196,7 +194,6 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'tab_modal': modal_config,
         "me_offices": me_offices,
         "saved": saved,
-        'version': get_code_versions(),
     }
 
 
@@ -273,7 +270,6 @@ def __set_medical_team_context(user, medical_team, form, saved):
         'errors': form.errors,
         'tab_modal': modal_config,
         'saved': saved,
-        'version': get_code_versions(),
     }
 
 
@@ -295,7 +291,6 @@ def edit_examination_case_breakdown(request, examination_id):
         context = {
             'session_user': user,
             'error': examination,
-            'version': get_code_versions(),
         }
 
         return render(request, 'errors/base_error.html', context, status=examination.status_code)
@@ -320,7 +315,6 @@ def edit_examination_case_breakdown(request, examination_id):
         'bereaved_form': {"use_default_bereaved": True},
         'patient': examination.case_header,
         'form_data': form_data,
-        'version': get_code_versions(),
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
@@ -426,7 +420,6 @@ def __post_examination_case_outcome(user, examination_id, post_body):
         context = {
             'session_user': user,
             'error': result,
-            'version': get_code_versions(),
         }
 
         return 'errors/base_error.html', context, result.status_code
@@ -443,7 +436,6 @@ def __load_case_outcome(user, examination_id):
         context = {
             'session_user': user,
             'error': error,
-            'version': get_code_versions(),
         }
 
         return 'errors/base_error.html', context, error.status_code
@@ -462,7 +454,6 @@ def __set_examination_case_outcome_context(user, case_outcome):
         'case_outcome': case_outcome,
         'patient': case_outcome.case_header,
         'tab_modal': modal_config,
-        'version': get_code_versions(),
     }
 
 
@@ -490,6 +481,5 @@ def closed_examination_index(request):
         'filter_people': people,
         'form': form,
         'closed_list': True,
-        'version': get_code_versions(),
     }
     return render(request, 'home/index.html', context)
