@@ -637,6 +637,12 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     #### Medical Team Form tests
+    def test_medical_team_member_initialised_with_valid_medical_team_contains_lookups(self):
+        medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
+
+        self.assertGreater(len(medical_team.medical_examiner_lookup), 0)
+        self.assertGreater(len(medical_team.medical_examiner_officer_lookup), 0)
+
 
     def test_medical_team_member_form_initialised_empty_returns_as_not_valid(self):
         form = MedicalTeamMembersForm()
@@ -652,6 +658,9 @@ class ExaminationsFormsTests(MedExTestCase):
         form = MedicalTeamMembersForm(medical_team=medical_team)
 
         self.assertIsTrue(form.is_valid())
+
+
+
 
     def test_medical_team_member_form_without_consultant_1_is_not_valid(self):
         mock_data = ExaminationMocks.get_medical_team_tab_form_data()
