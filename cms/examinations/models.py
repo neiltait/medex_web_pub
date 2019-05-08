@@ -428,11 +428,9 @@ class ExaminationEventList:
         :param me_scrutiny_event:
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = me_scrutiny_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': me_scrutiny_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = me_scrutiny_event.user_full_name
         cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
         cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
         cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
