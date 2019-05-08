@@ -15,7 +15,6 @@ def handle_method_not_allowed_error(request, user):
     return render(request, template, context, status=result.status_code)
 
 
-
 def __handle_method_not_allowed_error(user):
     template = 'errors/base_error.html'
     result = MethodNotAllowedError()
@@ -37,7 +36,7 @@ def handle_not_permitted_error(request, user):
         'error': result
     }
 
-    return render(request, template, context, status=result.status_code)
+    return render(request, template, context, status=result.http_code)
 
 
 def __handle_not_permitted_error(user):
