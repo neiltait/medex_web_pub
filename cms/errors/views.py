@@ -19,7 +19,7 @@ def __handle_not_permitted_error(user):
 
     context = {
         'session_user': user,
-        'error': result
+        'error': result,
     }
 
     return template, context, result.http_code
