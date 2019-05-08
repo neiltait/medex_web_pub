@@ -553,6 +553,8 @@ class CaseInitialEvent(CaseEvent):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.user_role = user_role
         self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
@@ -575,6 +577,8 @@ class CaseOtherEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -598,6 +602,8 @@ class CasePreScrutinyEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('medicalExaminerThoughts')
         self.circumstances_of_death = obj_dict.get('circumstancesOfDeath')
@@ -629,6 +635,8 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.participant_full_name = obj_dict.get('participantFullName')
         self.participant_relationship = obj_dict.get('participantRelationship')
@@ -660,6 +668,8 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('summaryDetails')
         self.published = obj_dict.get('isFinal')
@@ -688,6 +698,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.participant_role = obj_dict.get('participantRoll')
         self.participant_organisation = obj_dict.get('participantOrganisation')
@@ -728,6 +740,8 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -751,6 +765,8 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('notes')
         self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))
