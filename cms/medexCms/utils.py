@@ -1,5 +1,8 @@
+from django.conf import settings
+
 import datetime
 import re
+
 
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -66,3 +69,7 @@ def is_empty_time(time_string):
 
 def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
+
+
+def get_code_version():
+    return settings.VERSION

@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load medex_tags %}
 
 <div class="footer">
   <div class="container">
@@ -52,4 +53,9 @@
       </div>
     </div>
   </div>
+
+  <p class="version">
+    {% code_version as current_version %}
+    Version: {{current_version}}
+  </p>
 </div>
