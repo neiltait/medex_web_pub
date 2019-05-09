@@ -168,11 +168,7 @@ class User:
             log_api_error('case load', response.text)
 
     def get_permitted_locations(self):
-        permitted_locations = []
-        location_data = Location.get_permitted_locations_for_user(self.auth_token)
-        for location in location_data:
-            permitted_locations.append(Location().set_values(location))
-        return permitted_locations
+        return Location.get_permitted_locations_for_user(self.auth_token)
 
     def get_permitted_trusts(self):
         return Location.load_trusts_list_for_user(self.auth_token)
