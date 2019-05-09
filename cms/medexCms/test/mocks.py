@@ -818,7 +818,7 @@ class ExaminationMocks:
             'ops': 'IssueAnMccd',
             'gr': 'Yes',
             'grt': 'Palliative care were called too late.',
-            'add-event-to-timeline': 'pre-sqcrutiny'
+            'add-event-to-timeline': 'pre-scrutiny'
         }
 
     @classmethod
