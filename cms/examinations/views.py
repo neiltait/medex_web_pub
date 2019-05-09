@@ -67,7 +67,7 @@ def __post_create_examination(user, post_body):
 
 
 def __set_create_examination_context(user, form, add_another):
-    me_offices = Location.get_me_offices_list(user.auth_token)
+    me_offices = user.get_permitted_me_offices()
 
     return {
         "session_user": user,
