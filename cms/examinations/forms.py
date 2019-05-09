@@ -1,7 +1,7 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
-from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field
 from people.models import BereavedRepresentative
 
 
@@ -397,39 +397,12 @@ class BereavedInformationForm:
         return self
 
     def is_valid(self):
-        valid_date_1 = True
-        valid_date_2 = True
-
-        if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                     self.day_of_appointment_1, self.time_of_appointment_1]):
-            hours = self.time_of_appointment_1.split(':')[0]
-            mins = self.time_of_appointment_1.split(':')[1]
-            valid_date_1 = validate_date(self.year_of_appointment_1, self.month_of_appointment_1,
-                                         self.day_of_appointment_1, hours, mins)
-
-        elif any(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                       self.day_of_appointment_1, self.time_of_appointment_1]):
-            valid_date_1 = False
-
-        if not valid_date_1:
-            self.errors['count'] += 1
-            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
-
-        if all(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                     self.day_of_appointment_2, self.time_of_appointment_2]):
-            hours = self.time_of_appointment_2.split(':')[0]
-            mins = self.time_of_appointment_2.split(':')[1]
-            valid_date_2 = validate_date(self.year_of_appointment_2, self.month_of_appointment_2,
-                                         self.day_of_appointment_2, hours, mins)
-
-        elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                       self.day_of_appointment_2, self.time_of_appointment_2]):
-            valid_date_2 = False
-
-        if not valid_date_2:
-            self.errors['count'] += 1
-            self.errors['date_of_appointment_2'] = messages.INVALID_DATE
-
+        valid_date_1 = validate_date_time_field('date_of_appointment_1', self.errors, self.year_of_appointment_1,
+                                                self.month_of_appointment_1, self.day_of_appointment_1,
+                                                self.time_of_appointment_1)
+        valid_date_2 = validate_date_time_field('date_of_appointment_2', self.errors, self.year_of_appointment_2,
+                                                self.month_of_appointment_2, self.day_of_appointment_2,
+                                                self.time_of_appointment_2)
         return True if valid_date_1 and valid_date_2 else False
 
     @property

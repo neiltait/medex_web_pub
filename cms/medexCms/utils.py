@@ -1,6 +1,8 @@
 import datetime
 import re
 
+from alerts import messages
+
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
 API_DATE_FORMAT_3 = '%Y-%m-%dT%H:%M:%SZ'
@@ -23,6 +25,32 @@ def validate_date(year, month, day, hour='00', min='00'):
         return True
     except (ValueError, TypeError, AttributeError) as ex:
         return False
+
+
+def all_not_blank(*args):
+    return all(v is not '' for v in args)
+
+
+def any_not_blank(*args):
+    return any(v is not '' for v in args)
+
+
+def validate_date_time_field(field_name, errors, year, month, day, time, require_not_blank=False):
+    valid = not require_not_blank
+
+    if all_not_blank(year, month, day, time):
+        hours = time.split(':')[0]
+        mins = time.split(':')[1]
+        valid = validate_date(year, month, day, hours, mins)
+
+    elif any_not_blank(year, month, day, time):
+        valid = False
+
+    if not valid:
+        errors['count'] += 1
+        errors[field_name] = messages.INVALID_DATE
+
+    return valid
 
 
 def parse_datetime(datetime_string):

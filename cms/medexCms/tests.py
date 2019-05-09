@@ -1,6 +1,7 @@
+from alerts import messages
 from .test.utils import MedExTestCase
 
-from .utils import validate_date, parse_datetime
+from .utils import validate_date, parse_datetime, all_not_blank, any_not_blank, validate_date_time_field
 
 
 class MedexTestUtilsTests(MedExTestCase):
@@ -121,3 +122,106 @@ class MedexUtilsTests(MedExTestCase):
     def test_parse_datetime_returns_none_if_passed_a_falsey_argument(self):
         parsed_date = parse_datetime('')
         self.assertEqual(parsed_date, None)
+
+    def test_all_not_blank_returns_false_if_all_args_are_blank(self):
+        self.assertIsFalse(all_not_blank('', '', ''))
+
+    def test_all_not_blank_returns_false_if_some_args_are_blank(self):
+        self.assertIsFalse(all_not_blank('x', 'y', ''))
+
+    def test_all_not_blank_returns_true_if_all_args_are_not_blank(self):
+        self.assertIsTrue(all_not_blank('x', 'y', 'z'))
+
+    def test_any_not_blank_returns_false_if_all_args_are_blank(self):
+        self.assertIsFalse(any_not_blank('', '', ''))
+
+    def test_any_not_blank_returns_true_if_some_args_are_not_blank(self):
+        self.assertIsTrue(any_not_blank('x', 'y', ''))
+
+    def test_any_not_blank_returns_true_if_all_args_are_not_blank(self):
+        self.assertIsTrue(any_not_blank('x', 'y', 'z'))
+
+    def test_validate_date_time_field_returns_true_by_default_for_empty_input(self):
+        # Given empty fields
+        year = ''
+        month = ''
+        day = ''
+        time = ''
+        errors = {'count': 0}
+
+        # When validated
+        date_time_valid = validate_date_time_field('any', errors, year, month, day, time)
+
+        # Then should return valid
+        self.assertIsTrue(date_time_valid)
+
+    def test_validate_date_time_field_returns_false_when_date_required(self):
+        # Given empty fields
+        year = ''
+        month = ''
+        day = ''
+        time = ''
+        errors = {'count': 0}
+
+        # When validated with require_not_blank set to true
+        date_time_valid = validate_date_time_field('any', errors, year, month, day, time, require_not_blank=True)
+
+        # Then should return valid
+        self.assertFalse(date_time_valid)
+
+    def test_validate_date_time_field_returns_true_for_a_valid_date_and_time(self):
+        # Given valid fields
+        year = '2019'
+        month = '5'
+        day = '8'
+        time = '12:00'
+        errors = {'count': 0}
+
+        # When validated
+        date_time_valid = validate_date_time_field('any', errors, year, month, day, time)
+
+        # Then should return valid
+        self.assertIsTrue(date_time_valid)
+
+    def test_validate_date_time_field_returns_false_for_invalid_date_and_time(self):
+        # Given invalid month
+        year = '2019'
+        month = '205'
+        day = '8'
+        time = '12:00'
+        errors = {'count': 0}
+
+        # When validated
+        date_time_valid = validate_date_time_field('any', errors, year, month, day, time)
+
+        # Then should return valid
+        self.assertFalse(date_time_valid)
+
+    def test_validate_date_time_field_returns_false_when_some_date_and_time_fields_are_empty(self):
+        # Given invalid month
+        year = '2019'
+        month = ''
+        day = '8'
+        time = '12:00'
+        errors = {'count': 0}
+
+        # When validated
+        date_time_valid = validate_date_time_field('any', errors, year, month, day, time)
+
+        # Then should return valid
+        self.assertFalse(date_time_valid)
+
+    def test_validate_date_time_field_updates_errors_when_date_time_is_invalid(self):
+        # Given invalid month
+        year = '2019'
+        month = ''
+        day = '8'
+        time = '12:00'
+        errors = {'count': 0}
+
+        # When validated
+        validate_date_time_field('field_name', errors, year, month, day, time)
+
+        # Then should return valid
+        self.assertEquals(errors['field_name'], messages.INVALID_DATE)
+        self.assertEquals(errors['count'], 1)
