@@ -317,88 +317,44 @@
             </div>
         </div>
 
-        <div id="bereavement-discussion-outcome">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <div class="nhsuk-form-group">
+        <div class="margin-save-button">
 
-                        <fieldset class="nhsuk-fieldset">
-                            <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
-                                Outcome
-                            </legend>
-
-                            <span class="nhsuk-hint" id="outcome-hint">
-                                What was the ultimate outcome of the conversation with the family member or representative?
-                            </span>
-                            <div class="nhsuk-radios nhsuk-radios--inline">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
-                                           id="bereavement-discussion-outcome-no-concerns"
-                                           name="bereaved_discussion_outcome"
-                                           type="radio" value="{{ form.BEREAVED_OUTCOME_NO_CONCERNS }}"
-                                            {% if form.discussion_outcome == form.BEREAVED_OUTCOME_NO_CONCERNS %}
-                                           checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereavement-discussion-outcome-no-concerns">
-                                        Cause of death accepted without concerns
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
-                                           id="bereavment-discussion-outcome-concerns"
-                                           name="bereaved_discussion_outcome" type="radio"
-                                           value="{{ form.BEREAVED_OUTCOME_CONCERNS }}"
-                                            {% if form.discussion_outcome == form.BEREAVED_OUTCOME_CONCERNS %}
-                                           checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereavment-discussion-outcome-concerns">
-                                        Concerns raised
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-
-            <div id="bereavement-discussion-concerned-outcomes" class="margin-save-button">
+            <div id="bereavement-discussion-outcome">
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full">
-                        <div class="inset-text-panel nhsuk-form-group">
+                        <div class="nhsuk-form-group">
+
                             <fieldset class="nhsuk-fieldset">
-                                <div class="nhsuk-radios">
+                                <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                                    Outcome
+                                </legend>
+
+                                <span class="nhsuk-hint" id="outcome-hint">
+                                What was the ultimate outcome of the conversation with the family member or representative?
+                            </span>
+                                <div class="nhsuk-radios nhsuk-radios--inline">
                                     <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
-                                               id="bereaved_outcome_concerned_outcome-1"
-                                               name="bereaved_outcome_concerned_outcome"
-                                               type="radio" value="{{ form.BEREAVED_CONCERNED_OUTCOME_CORONER }}"
-                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
+                                        <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                               id="bereavement-discussion-outcome-no-concerns"
+                                               name="bereaved_discussion_outcome"
+                                               type="radio" value="{{ form.BEREAVED_OUTCOME_NO_CONCERNS }}"
+                                                {% if form.discussion_outcome == form.BEREAVED_OUTCOME_NO_CONCERNS %}
+                                               checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
-                                               for="bereaved_outcome_concerned_outcome-1">
-                                            That indicate a coronial investigation
+                                               for="bereavement-discussion-outcome-no-concerns">
+                                            Cause of death accepted without concerns
                                         </label>
                                     </div>
                                     <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                               id="bereaved_outcome_concerned_outcome-2"
-                                               name="bereaved_outcome_concerned_outcome" type="radio"
-                                               value="{{ form.BEREAVED_CONCERNED_OUTCOME_100A }}"
-                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
+                                        <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                               id="bereavment-discussion-outcome-concerns"
+                                               name="bereaved_discussion_outcome" type="radio"
+                                               value="{{ form.BEREAVED_OUTCOME_CONCERNS }}"
+                                                {% if form.discussion_outcome == form.BEREAVED_OUTCOME_CONCERNS %}
+                                               checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
-                                               for="bereaved_outcome_concerned_outcome-2">
-                                            That indicate a requirement for a 100a
-                                        </label>
-                                    </div>
-                                    <div class="nhsuk-radios__item">
-                                        <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                               id="bereaved_outcome_concerned_outcome-3"
-                                               name="bereaved_outcome_concerned_outcome" type="radio"
-                                               value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
-                                               {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
-                                        <label class="nhsuk-label nhsuk-radios__label"
-                                               for="bereaved_outcome_concerned_outcome-3">
-                                            But were addressed by the Medical Examiner with no coroner involvement
-                                            required
+                                               for="bereavment-discussion-outcome-concerns">
+                                            Concerns raised
                                         </label>
                                     </div>
                                 </div>
@@ -406,9 +362,55 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="bereavement-discussion-concerned-outcomes">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full">
+                            <div class="inset-text-panel nhsuk-form-group">
+                                <fieldset class="nhsuk-fieldset">
+                                    <div class="nhsuk-radios">
+                                        <div class="nhsuk-radios__item">
+                                            <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                                   id="bereaved_outcome_concerned_outcome-1"
+                                                   name="bereaved_outcome_concerned_outcome"
+                                                   type="radio" value="{{ form.BEREAVED_CONCERNED_OUTCOME_CORONER }}"
+                                                   {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
+                                            <label class="nhsuk-label nhsuk-radios__label"
+                                                   for="bereaved_outcome_concerned_outcome-1">
+                                                That indicate a coronial investigation
+                                            </label>
+                                        </div>
+                                        <div class="nhsuk-radios__item">
+                                            <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                                   id="bereaved_outcome_concerned_outcome-2"
+                                                   name="bereaved_outcome_concerned_outcome" type="radio"
+                                                   value="{{ form.BEREAVED_CONCERNED_OUTCOME_100A }}"
+                                                   {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
+                                            <label class="nhsuk-label nhsuk-radios__label"
+                                                   for="bereaved_outcome_concerned_outcome-2">
+                                                That indicate a requirement for a 100a
+                                            </label>
+                                        </div>
+                                        <div class="nhsuk-radios__item">
+                                            <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                                   id="bereaved_outcome_concerned_outcome-3"
+                                                   name="bereaved_outcome_concerned_outcome" type="radio"
+                                                   value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
+                                                   {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
+                                            <label class="nhsuk-label nhsuk-radios__label"
+                                                   for="bereaved_outcome_concerned_outcome-3">
+                                                But were addressed by the Medical Examiner with no coroner involvement
+                                                required
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
 
         <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
             <div class="nhsuk-grid-row">

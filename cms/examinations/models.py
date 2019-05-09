@@ -1,6 +1,7 @@
 from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
+from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from errors.utils import handle_error, log_api_error
 
@@ -428,11 +429,9 @@ class ExaminationEventList:
         :param me_scrutiny_event:
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = me_scrutiny_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': me_scrutiny_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = me_scrutiny_event.user_full_name
         cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
         cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
         cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
@@ -446,11 +445,9 @@ class ExaminationEventList:
         :param qap_event: CaseQapDiscussionEvent
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = qap_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': qap_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = qap_event.user_full_name
         cause_of_death.qap = MedicalTeamMember(
             name=qap_event.participant_name,
             role=qap_event.participant_role,
@@ -543,6 +540,9 @@ class CaseEvent:
         else:
             return None
 
+    def user_display_role(self):
+        return get_display_short_user_role(self.user_role)
+
 
 class CaseInitialEvent(CaseEvent):
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
@@ -553,6 +553,8 @@ class CaseInitialEvent(CaseEvent):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.user_role = user_role
         self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
@@ -575,6 +577,8 @@ class CaseOtherEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -598,6 +602,8 @@ class CasePreScrutinyEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('medicalExaminerThoughts')
         self.circumstances_of_death = obj_dict.get('circumstancesOfDeath')
@@ -629,6 +635,8 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.participant_full_name = obj_dict.get('participantFullName')
         self.participant_relationship = obj_dict.get('participantRelationship')
@@ -648,6 +656,9 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         form.event_id = None
         return form
 
+    def display_bereaved_discussion_outcome(self):
+        return get_display_bereaved_outcome(self.bereaved_discussion_outcome)
+
 
 class CaseMeoSummaryEvent(CaseEvent):
     form_type = 'MeoSummaryEventForm'
@@ -660,6 +671,8 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('summaryDetails')
         self.published = obj_dict.get('isFinal')
@@ -688,6 +701,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.participant_role = obj_dict.get('participantRoll')
         self.participant_organisation = obj_dict.get('participantOrganisation')
@@ -716,6 +731,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         form.event_id = None
         return form
 
+    def display_qap_discussion_outcome(self):
+        return get_display_qap_outcome(self.qap_discussion_outcome)
 
 class CaseMedicalHistoryEvent(CaseEvent):
     form_type = 'MedicalHistoryEventForm'
@@ -728,6 +745,8 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -751,6 +770,8 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('notes')
         self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))

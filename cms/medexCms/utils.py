@@ -8,6 +8,7 @@ API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
 API_DATE_FORMAT_3 = '%Y-%m-%dT%H:%M:%SZ'
 API_DATE_FORMAT_4 = '%Y-%m-%dT%H:%M:%S'
+API_DATE_FORMAT_5 = '%Y-%m-%dT%H:%M:%S.%f'
 
 NONE_TIME = "00:00:00"
 
@@ -45,8 +46,11 @@ def parse_datetime(datetime_string):
                     try:
                         return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_4)
                     except ValueError:
-                        print('Unknown date format received')
-                        return None
+                        try:
+                            return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_5)
+                        except ValueError:
+                            print('Unknown date format received: %s' % datetime_string)
+                            return None
     else:
         return None
 
