@@ -132,7 +132,7 @@ Form.prototype = {
 
         this.genderRadioButtons.change(
             function () {
-                if (this.value === "other") {
+                if (this.value === "Other") {
                     that.genderDetailArea.show()
                 } else {
                     that.genderDetailArea.hide()
