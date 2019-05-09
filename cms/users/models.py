@@ -169,16 +169,16 @@ class User:
 
     def get_permitted_locations(self):
         permitted_locations = []
-        location_data = location_request_handler.get_permitted_locations_list(self.auth_token)
+        location_data = Location.get_permitted_locations_for_user(self.auth_token)
         for location in location_data:
             permitted_locations.append(Location().set_values(location))
         return permitted_locations
 
     def get_permitted_trusts(self):
-        return Location.load_trusts_list(self.auth_token)
+        return Location.load_trusts_list_for_user(self.auth_token)
 
     def get_permitted_regions(self):
-        return Location.load_region_list(self.auth_token)
+        return Location.load_region_list_for_user(self.auth_token)
 
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
