@@ -25,11 +25,11 @@ def get_locations_list(auth_token):
         return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
 
 
-def get_me_offices_list(auth_token):
+def get_me_offices_list(auth_token, params):
     if settings.LOCAL:
         return LocationsMocks.get_me_office_location_list()
     else:
-        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
+        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL, params).json()['locations']
 
 
 def get_permitted_locations_list(auth_token):
