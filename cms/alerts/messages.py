@@ -36,6 +36,8 @@ NOT_PERMITTED = 'Your permissions do not allow you to access this page'
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 
+def ErrorSelectionRequiredMessage(field_name):
+    return ("Please select a value for %s") % field_name
 
 def ErrorFieldTooLong(character_max):
     return ("Please enter fewer than %d characters") % character_max

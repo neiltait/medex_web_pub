@@ -1,7 +1,7 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
-from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, date_is_valid_or_empty
 from people.models import BereavedRepresentative
 
 
@@ -1028,13 +1028,38 @@ class AdmissionNotesEventForm:
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
+        self.errors = {'count': 0}
+        if self.is_final:
+            self.check_valid_final()
+        else:
+            self.check_valid_draft()
         return True
+
+    def check_valid_final(self):
+        if validate_date(self.admission_year, self.admission_month,
+                         self.admission_day) is False and self.admission_date_unknown == '':
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
+
+        if self.admission_time == '' and self.admission_time_unknown == '':
+            self.errors['count'] += 1
+            self.errors['time_of_last_admission'] = messages.ErrorFieldRequiredMessage('time of last admission')
+
+        if self.coroner_referral == '':
+            self.errors['count'] += 1
+            self.errors['latest_admission_immediate_referral'] = messages.ErrorSelectionRequiredMessage('immediate referral')
+
+    def check_valid_draft(self):
+        if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
 
     def admission_date(self):
         if self.admission_date_unknown:

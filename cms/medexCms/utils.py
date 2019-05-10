@@ -3,7 +3,6 @@ from django.conf import settings
 import datetime
 import re
 
-
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
 API_DATE_FORMAT_3 = '%Y-%m-%dT%H:%M:%SZ'
@@ -26,6 +25,13 @@ def validate_date(year, month, day, hour='00', min='00'):
         return True
     except (ValueError, TypeError, AttributeError) as ex:
         return False
+
+
+def date_is_valid_or_empty(year, month, day, hour='00', min='00'):
+    if year == '' and month == '' and day == '':
+        return True
+    else:
+        return validate_date(year, month, day, hour, min)
 
 
 def parse_datetime(datetime_string):
