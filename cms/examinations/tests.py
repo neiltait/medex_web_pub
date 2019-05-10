@@ -1568,3 +1568,102 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    """
+    
+    PRE-SCRUTINY
+    
+    draft - no validation at all
+    
+    final - text in thoughts, text in 1a, 
+        radio-buttons: circumstances of death, outcome, and clinical governance selected 
+        clinical governance textbox filled in if clinical governance filled in
+    """
+
+    def valid_pre_scrutiny_final_data(self):
+        return {
+            'pre_scrutiny_id': 'any id',
+            'me-thoughts': 'any thoughts',
+            'cod': 'Unexpected',
+            'possible-cod-1a': 'any 1a comment',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'ReferToCoroner',
+            'gr': 'No',
+            'grt': '',
+            'add-event-to-timeline': True
+        }
+
+    def test_pre_scrutiny_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_pre_scrutiny_form_not_valid_when_me_thoughts_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['me-thoughts'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_1a_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['possible-cod-1a'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_cod_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_outcome_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['ops'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_is_yes_with_no_text(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_valid_when_governance_radio_button_is_yes_with_text_comments(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = 'any comments'
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
