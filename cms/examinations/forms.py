@@ -723,18 +723,19 @@ class PreScrutinyEventForm:
 
 class MeoSummaryEventForm:
     active = False
-    errors = {'count': 0}
 
     def __init__(self, form_data={}):
         self.event_id = form_data.get('meo_summary_id')
         self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
+        self.errors = {'count': 0}
         if self.is_final and self.meo_summary_notes.strip() == '':
             self.errors['count'] += 1
             self.errors['meo_summary_notes'] = messages.ErrorFieldRequiredMessage('summary notes')
