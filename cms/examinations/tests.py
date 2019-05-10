@@ -643,7 +643,6 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertGreater(len(medical_team.medical_examiner_lookup), 0)
         self.assertGreater(len(medical_team.medical_examiner_officer_lookup), 0)
 
-
     def test_medical_team_member_form_initialised_empty_returns_as_not_valid(self):
         form = MedicalTeamMembersForm()
         self.assertIsFalse(form.is_valid())
@@ -658,9 +657,6 @@ class ExaminationsFormsTests(MedExTestCase):
         form = MedicalTeamMembersForm(medical_team=medical_team)
 
         self.assertIsTrue(form.is_valid())
-
-
-
 
     def test_medical_team_member_form_without_consultant_1_is_not_valid(self):
         mock_data = ExaminationMocks.get_medical_team_tab_form_data()
@@ -1330,7 +1326,7 @@ class ExaminationsUtilsTests(MedExTestCase):
         result = event_form_parser(form_data)
         self.assertEqual(type(result), AdmissionNotesEventForm)
 
-    def test_event_form_parser_returns_a_meo_summary_form_when_given_admission_notes_form_data(self):
+    def test_event_form_parser_returns_a_meo_summary_form_when_given_meo_summary_form_data(self):
         form_data = {
             'meo_summary_notes': True,
             'add-event-to-timeline': 'meo-summary'
@@ -1347,3 +1343,41 @@ class ExaminationsUtilsTests(MedExTestCase):
 
         result = event_form_parser(form_data)
         self.assertEqual(type(result), OtherEventForm)
+
+
+class ExaminationsBreakdownValidationTests(MedExTestCase):
+    def test_meo_summary_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_meo_summary_form_not_valid_for_timeline_if_notes_are_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': '',
+            'add-event-to-timeline': True
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_meo_summary_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': '',
+            'add-event-to-timeline': False
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
