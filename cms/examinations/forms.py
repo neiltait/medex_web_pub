@@ -698,19 +698,19 @@ class PreScrutinyEventForm:
                 self.errors['count'] += 1
                 self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('pre-scrutiny thoughts')
 
-            if self.circumstances_of_death == '':
+            if self.circumstances_of_death == '' or self.circumstances_of_death is None:
                 self.errors['count'] += 1
-                self.errors['cod'] = messages.ErrorSelectionRequiredMessage('circumstance of death')
+                self.errors['circumstances_of_death'] = messages.ErrorSelectionRequiredMessage('circumstance of death')
 
             if self.possible_cod_1a.strip() == '':
                 self.errors['count'] += 1
                 self.errors['possible_cod'] = messages.ErrorFieldRequiredMessage('1a')
 
-            if self.overall_outcome == '':
+            if self.overall_outcome == '' or self.overall_outcome is None:
                 self.errors['count'] += 1
                 self.errors['overall_outcome'] = messages.ErrorSelectionRequiredMessage('overall outcome')
 
-            if self.governance_review == '':
+            if self.governance_review == '' or self.governance_review is None:
                 self.errors['count'] += 1
                 self.errors['governance_review'] = messages.ErrorSelectionRequiredMessage('clinical governance review')
             elif self.governance_review == 'Yes' and self.governance_review_text.strip() == '':
