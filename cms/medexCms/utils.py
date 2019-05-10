@@ -27,6 +27,11 @@ def validate_date(year, month, day, hour='00', min='00'):
         return False
 
 
+def pop_if_falsey(key, from_dict):
+    if key in from_dict and not from_dict[key]:
+        from_dict.pop(key)
+
+
 def all_not_blank(*args):
     return all(v is not '' for v in args)
 
@@ -35,7 +40,8 @@ def any_not_blank(*args):
     return any(v is not '' for v in args)
 
 
-def validate_date_time_field(field_name, errors, year, month, day, time, require_not_blank=False):
+def validate_date_time_field(field_name, errors, year, month, day, time, error_message=messages.INVALID_DATE,
+                             require_not_blank=False):
     valid = not require_not_blank
 
     if all_not_blank(year, month, day, time):
@@ -48,9 +54,18 @@ def validate_date_time_field(field_name, errors, year, month, day, time, require
 
     if not valid:
         errors['count'] += 1
-        errors[field_name] = messages.INVALID_DATE
+        errors[field_name] = error_message
 
     return valid
+
+
+def validate_is_not_blank(field_name, errors, value, error_message=messages.FIELD_MISSING):
+    if value is None or value == '':
+        errors['count'] += 1
+        errors[field_name] = error_message
+        return False
+    else:
+        return True
 
 
 def parse_datetime(datetime_string):

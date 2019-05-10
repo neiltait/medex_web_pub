@@ -18,7 +18,7 @@
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved_rep_type" type="radio"
                                        value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}"
-                                       {% if bereaved_form.use_existing_bereaved %}checked{% endif %}>
+                                       {% if form.use_existing_bereaved == True %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-existing-rep">
                                     {{ form.existing_representative.full_name }}
@@ -30,7 +30,7 @@
                                 <input class="nhsuk-radios__input" id="bereaved-new-rep"
                                        name="bereaved_rep_type"
                                        type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}"
-                                       {% if not bereaved_form.use_existing_bereaved %}checked{% endif %}>
+                                       {% if form.use_existing_bereaved == False %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-new-rep">
                                     Another representative

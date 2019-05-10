@@ -13,7 +13,6 @@ from examinations.utils import event_form_parser, event_form_submitter, get_tab_
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from locations.models import Location
-from people.models import DropdownPerson
 from users.models import User
 
 

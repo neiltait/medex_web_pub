@@ -1,7 +1,8 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
-from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
+    validate_is_not_blank, pop_if_falsey
 from people.models import BereavedRepresentative
 
 
@@ -1070,6 +1071,8 @@ class BereavedDiscussionEventForm:
     year_of_conversation = ''
     discussion_could_not_happen = False
 
+    errors = {'count': 0}
+
     def make_active(self):
         self.active = True
         return self
@@ -1086,6 +1089,8 @@ class BereavedDiscussionEventForm:
 
         self.__init_time_of_discussion(form_data)
         self.__init_discussion_details(form_data)
+
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def __init_representatives(self, representatives):
         self.existing_representative = representatives[0]
@@ -1148,7 +1153,20 @@ class BereavedDiscussionEventForm:
             'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
 
     def is_valid(self):
-        return True
+        if self.discussion_could_not_happen:
+            date_is_valid = True
+        else:
+            date_is_valid = validate_date_time_field('bereaved_time_of_conversation', self.errors,
+                                                     self.year_of_conversation, self.month_of_conversation,
+                                                     self.day_of_conversation, self.time_of_conversation, True)
+
+        if self.use_existing_bereaved:
+            name_is_valid = validate_is_not_blank('bereaved_participant_name', self.errors,
+                                                  self.existing_representative)
+        else:
+            name_is_valid = validate_is_not_blank('bereaved_participant_name', self.errors,
+                                                  self.alternate_representative.full_name)
+        return date_is_valid and name_is_valid
 
     def fill_from_draft(self, draft, default_representatives):
 
@@ -1219,7 +1237,6 @@ class BereavedDiscussionEventForm:
         else:
             if draft_participant.equals(self.existing_representative):
                 self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
-            else:
                 self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
                 self.alternate_representative = draft_participant
 
@@ -1230,12 +1247,9 @@ class BereavedDiscussionEventForm:
 
         participant = self.__participant_for_request()
 
-        return {
-            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
-            "userId": "WERGT-243TRGS-WE4TG-WERGT",
-            "isFinal": True,
+        request = {
+            "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
-            "created": "2019-03-13T10:30:43.019Z",
             "participantFullName": participant.full_name if participant else "",
             "participantRelationship": participant.relationship if participant else "",
             "participantPhoneNumber": participant.phone_number if participant else "",
@@ -1246,6 +1260,11 @@ class BereavedDiscussionEventForm:
             "discussionDetails": self.discussion_details,
             "bereavedDiscussionOutcome": self.__calculate_combined_outcome()
         }
+        pop_if_falsey("presentAtDeath", request)
+        pop_if_falsey("informedAtDeath", request)
+        pop_if_falsey("bereavedDiscussionOutcome", request)
+
+        return request
 
     def __calculate_combined_outcome(self):
         if self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS:
@@ -1258,7 +1277,7 @@ class BereavedDiscussionEventForm:
             elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED:
                 return BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED
 
-        return ''
+        return None
 
     def __participant_for_request(self):
         if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
