@@ -723,6 +723,7 @@ class PreScrutinyEventForm:
 
 class MeoSummaryEventForm:
     active = False
+    errors = {'count': 0}
 
     def __init__(self, form_data={}):
         self.event_id = form_data.get('meo_summary_id')
@@ -734,7 +735,12 @@ class MeoSummaryEventForm:
         return self
 
     def is_valid(self):
-        return True
+        if self.is_final and self.meo_summary_notes.strip() == '':
+            self.errors['count'] += 1
+            self.errors['meo_summary_notes'] = messages.ErrorFieldRequiredMessage('summary notes')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
