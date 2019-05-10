@@ -1040,7 +1040,7 @@ class AdmissionNotesEventForm:
             self.check_valid_final()
         else:
             self.check_valid_draft()
-        return True
+        return self.errors['count'] == 0
 
     def check_valid_final(self):
         if validate_date(self.admission_year, self.admission_month,
