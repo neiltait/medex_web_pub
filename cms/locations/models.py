@@ -33,10 +33,6 @@ class Location:
         return request_handler.get_locations_list(auth_token)
 
     @classmethod
-    def get_me_offices_list(cls, auth_token):
-        return request_handler.get_me_offices_list(auth_token)
-
-    @classmethod
     def load_trusts_list(cls, auth_token):
         return request_handler.load_trusts_list(auth_token)
 
@@ -46,4 +42,7 @@ class Location:
 
     @classmethod
     def load_me_offices(cls, auth_token):
-        return request_handler.get_me_offices_list(auth_token)
+        query_params = {
+            "AccessOnly": True
+        }
+        return request_handler.get_me_offices_list(auth_token, query_params)

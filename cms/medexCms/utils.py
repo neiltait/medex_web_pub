@@ -1,3 +1,5 @@
+from django.conf import settings
+
 import datetime
 import re
 
@@ -109,3 +111,7 @@ def is_empty_time(time_string):
 
 def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
+
+
+def get_code_version():
+    return settings.VERSION
