@@ -1297,6 +1297,7 @@ class BereavedDiscussionEventForm:
         else:
             if draft_participant.equals(self.existing_representative):
                 self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+            else:
                 self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
                 self.alternate_representative = draft_participant
 
