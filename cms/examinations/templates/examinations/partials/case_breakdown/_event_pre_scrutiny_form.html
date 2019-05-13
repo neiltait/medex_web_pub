@@ -1,7 +1,7 @@
 <div id="pre-scrutiny" class="event-form{% if form.active %} active{% endif %}">
     <input name="pre_scrutiny_id" value="{{ form.event_id }}" hidden>
 
-    <div class="nhsuk-form-group {% if form.errors.me_thoughts %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.me_thoughts %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="me-thoughts">
             Pre-scrutiny thoughts of the Medical Examiner assigned to this case
         </label>
@@ -13,7 +13,7 @@
                   aria-describedby="more-detail-hint">{{ form.me_thoughts }}</textarea>
     </div>
 
-    <div class="nhsuk-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
             <label class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
                 Overall circumstances of death
@@ -55,7 +55,7 @@
                                 Unexpected
                             </label>
                         </div>
-                        <div class="nhsuk-radios__item margin-bottom">
+                        <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-4" name="cod" type="radio"
                                    value="PartOfAnIndividualisedEndOfLifeCarePlan"
                                    {% if form.circumstances_of_death == 'PartOfAnIndividualisedEndOfLifeCarePlan' %}checked{% endif %}>
@@ -69,7 +69,7 @@
         </fieldset>
     </div>
 
-    <div class="nhsuk-form-group {% if form.errors.possible_cod %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.possible_cod %}nhsuk-form-group--error{% endif %}">
 
         <label class="nhsuk-label nhsuk-u-font-weight-bold">
             Possible cause of death established during scrutiny by Medical Examiner
@@ -99,12 +99,12 @@
         <label class="nhsuk-label" for="possible-cod-2">
             2
         </label>
-        <textarea class="nhsuk-textarea margin-bottom" id="possible-cod-2" name="possible-cod-2"
+        <textarea class="nhsuk-textarea" id="possible-cod-2" name="possible-cod-2"
                   rows="2"
                   aria-describedby="possible-cod-2">{{ form.possible_cod_2 }}</textarea>
     </div>
 
-    <div class="nhsuk-form-group  {% if form.errors.overall_outcome %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.overall_outcome %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="outcome-of-pre-scrutiny"
                id="outcome-of-pre-scrutiny">
             Overall outcome of pre-scrutiny
@@ -121,7 +121,7 @@
                     Issue an MCCD
                 </label>
             </div>
-            <div class="nhsuk-radios__item margin-bottom">
+            <div class="nhsuk-radios__item">
                 <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-2" name="ops"
                        type="radio"
                        value="ReferToCoroner" {% if form.overall_outcome == 'ReferToCoroner' %}checked{% endif %}>
@@ -132,7 +132,7 @@
         </div>
     </div>
 
-    <div class="nhsuk-form-group  {% if form.errors.governance_review %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.governance_review %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review"
                id="governance-review">
             Clinical governance review or learning opportunity
@@ -169,7 +169,7 @@
                     Unknown
                 </label>
             </div>
-            <textarea class="nhsuk-textarea text-area-margin margin-bottom"
+            <textarea class="nhsuk-textarea"
                       id="governance-review-text"
                       name="grt" rows="2" aria-describedby="gr">{{ form.governance_review_text }}</textarea>
         </div>
