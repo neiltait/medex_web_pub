@@ -35,7 +35,7 @@ def __get_index(user):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
 
-    form = IndexFilterForm()
+    form = IndexFilterForm(user.default_filter_options())
     locations = user.get_permitted_locations()
     user.load_examinations()
     user.index_overview.set_location_display_name(locations)
