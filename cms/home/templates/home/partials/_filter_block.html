@@ -10,7 +10,7 @@
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-one-half">
         <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}">
-          <option value="" disabled hidden selected>Select a location</option>
+          <option value="all">All</option>
           {% for location in filter_locations %}
             <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
               {{ location.name }}
@@ -22,7 +22,7 @@
       <div class="nhsuk-grid-column-one-half">
         <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}"
           {% if not filter_people %}disabled{% endif %}>
-          <option value="" disabled hidden selected>Select a person</option>
+          <option value="all">All</option>
           {% if filter_people %}
             {% for person in filter_people %}
               <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
