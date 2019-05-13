@@ -13,7 +13,6 @@ from examinations.utils import event_form_parser, event_form_submitter, get_tab_
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
 from locations.models import Location
-from people.models import DropdownPerson
 from users.models import User
 
 
@@ -68,7 +67,7 @@ def __post_create_examination(user, post_body):
 
 
 def __set_create_examination_context(user, form, add_another):
-    me_offices = Location.get_me_offices_list(user.auth_token)
+    me_offices = user.get_permitted_me_offices()
 
     return {
         "session_user": user,
@@ -77,7 +76,7 @@ def __set_create_examination_context(user, form, add_another):
         "me_offices": me_offices,
         "form": form,
         "errors": form.errors,
-        "add_another": add_another
+        "add_another": add_another,
     }
 
 
@@ -194,7 +193,7 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'error_count': error_count,
         'tab_modal': modal_config,
         "me_offices": me_offices,
-        "saved": saved
+        "saved": saved,
     }
 
 
@@ -225,7 +224,6 @@ def examination_medical_team(request, examination_id):
 
     # render the tab
     return render(request, template, context, status=status_code)
-
 
 
 def __get_medical_team_form(user, medical_team):
@@ -271,7 +269,7 @@ def __set_medical_team_context(user, medical_team, form, saved):
         'error_count': form.error_count,
         'errors': form.errors,
         'tab_modal': modal_config,
-        'saved': saved
+        'saved': saved,
     }
 
 
@@ -316,7 +314,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'case_breakdown': examination,
         'bereaved_form': {"use_default_bereaved": True},
         'patient': examination.case_header,
-        'form_data': form_data
+        'form_data': form_data,
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
@@ -482,6 +480,6 @@ def closed_examination_index(request):
         'filter_locations': locations,
         'filter_people': people,
         'form': form,
-        'closed_list': True
+        'closed_list': True,
     }
     return render(request, 'home/index.html', context)

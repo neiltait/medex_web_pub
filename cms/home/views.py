@@ -65,7 +65,7 @@ def __set_index_context(user, locations, people, form):
         'session_user': user,
         'filter_locations': locations,
         'filter_people': people,
-        'form': form
+        'form': form,
     }
 
 
@@ -92,7 +92,7 @@ def login(request):
             'base_uri': settings.OP_DOMAIN,
             'client_id': settings.OP_ID,
             'cms_url': settings.CMS_URL,
-            'issuer': settings.OP_ISSUER
+            'issuer': settings.OP_ISSUER,
         }
     else:
         log_unexpected_method(request.method, 'login')

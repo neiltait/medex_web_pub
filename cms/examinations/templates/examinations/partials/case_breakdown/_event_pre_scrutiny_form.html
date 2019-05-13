@@ -1,28 +1,35 @@
 <div id="pre-scrutiny" class="event-form{% if form.active %} active{% endif %}">
-    <input name="pre_scrutiny_id" value="{{form.event_id}}" hidden>
+    <input name="pre_scrutiny_id" value="{{ form.event_id }}" hidden>
 
-    <div class="nhsuk-form-group">
+    <div class="nhsuk-form-group {% if form.errors.me_thoughts %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="me-thoughts">
             Pre-scrutiny thoughts of the Medical Examiner assigned to this case
         </label>
+        {% if form.errors.me_thoughts %}
+        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.me_thoughts }}</span>{% endif %}
+
         <span class="nhsuk-hint" id="more-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom" id="me-thoughts" name="me-thoughts" rows="5"
-                  aria-describedby="more-detail-hint">{{form.me_thoughts}}</textarea>
+                  aria-describedby="more-detail-hint">{{ form.me_thoughts }}</textarea>
     </div>
 
-    <div class="nhsuk-form-group">
+    <div class="nhsuk-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
             <label class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
                 Overall circumstances of death
             </label>
+            {% if form.errors.circumstances_of_death %}
+            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.circumstances_of_death }}</span>
+            {% endif %}
+
             <span class="nhsuk-hint"
                   id="circumstances-of-death">Based on the information scrutinised, the death was:</span>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="cod-1" name="cod" type="radio" value="Expected"
-                            {% if form.circumstances_of_death == 'Expected' %} checked {% endif %}>
+                            <input class="nhsuk-radios__input" id="cod-1" name="cod" type="radio"
+                                   value="Expected" {% if form.circumstances_of_death == "Expected" %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-1">
                                 Expected
                             </label>
@@ -30,18 +37,20 @@
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-3" name="cod" type="radio"
                                    value="SuddenButNotUnexpected"
-                            {% if form.circumstances_of_death == 'SuddenButNotUnexpected' %} checked {% endif %}>
+                                   {% if form.circumstances_of_death == 'SuddenButNotUnexpected' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-3">
                                 Sudden but not unexpected
                             </label>
                         </div>
+
                     </div>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-radios">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="cod-2" name="cod" type="radio" value="Unexpected"
-                            {% if form.circumstances_of_death == 'Unexpected' %} checked {% endif %}>
+                            <input class="nhsuk-radios__input" id="cod-2" name="cod" type="radio"
+                                   value="Unexpected"
+                                   {% if form.circumstances_of_death == 'Unexpected' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-2">
                                 Unexpected
                             </label>
@@ -49,8 +58,7 @@
                         <div class="nhsuk-radios__item margin-bottom">
                             <input class="nhsuk-radios__input" id="cod-4" name="cod" type="radio"
                                    value="PartOfAnIndividualisedEndOfLifeCarePlan"
-                            {% if form.circumstances_of_death == 'PartOfAnIndividualisedEndOfLifeCarePlan' %}
-                            checked {% endif %}>
+                                   {% if form.circumstances_of_death == 'PartOfAnIndividualisedEndOfLifeCarePlan' %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-4">
                                 Part of an individualised end of life care plan
                             </label>
@@ -61,54 +69,61 @@
         </fieldset>
     </div>
 
+    <div class="nhsuk-form-group {% if form.errors.possible_cod %}nhsuk-form-group--error{% endif %}">
 
-    <div class="nhsuk-form-group">
         <label class="nhsuk-label nhsuk-u-font-weight-bold">
             Possible cause of death established during scrutiny by Medical Examiner
         </label>
+        {% if form.errors.possible_cod %}
+        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.possible_cod }}</span>{% endif %}
 
         <label class="nhsuk-label" for="possible-cod-1a">
             1a
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1a" name="possible-cod-1a" rows="2"
-                  aria-describedby="possible-cod-1a">{{form.possible_cod_1a}}</textarea>
+                  aria-describedby="possible-cod-1a">{{ form.possible_cod_1a }}</textarea>
 
         <label class="nhsuk-label" for="possible-cod-1b">
             1b
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1b" name="possible-cod-1b" rows="2"
-                  aria-describedby="possible-cod-1b">{{form.possible_cod_1b}}</textarea>
+                  aria-describedby="possible-cod-1b">{{ form.possible_cod_1b }}</textarea>
 
         <label class="nhsuk-label" for="possible-cod-1c">
             1c
         </label>
         <textarea class="nhsuk-textarea" id="possible-cod-1c" name="possible-cod-1c" rows="2"
-                  aria-describedby="possible-cod-1c">{{form.possible_cod_1c}}</textarea>
+                  aria-describedby="possible-cod-1c">{{ form.possible_cod_1c }}</textarea>
 
 
         <label class="nhsuk-label" for="possible-cod-2">
             2
         </label>
-        <textarea class="nhsuk-textarea margin-bottom" id="possible-cod-2" name="possible-cod-2" rows="2"
-                  aria-describedby="possible-cod-2">{{form.possible_cod_2}}</textarea>
+        <textarea class="nhsuk-textarea margin-bottom" id="possible-cod-2" name="possible-cod-2"
+                  rows="2"
+                  aria-describedby="possible-cod-2">{{ form.possible_cod_2 }}</textarea>
     </div>
 
-    <div class="nhsuk-form-group">
+    <div class="nhsuk-form-group  {% if form.errors.overall_outcome %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="outcome-of-pre-scrutiny"
                id="outcome-of-pre-scrutiny">
             Overall outcome of pre-scrutiny
         </label>
+        {% if form.errors.overall_outcome %}
+        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.overall_outcome }}</span>{% endif %}
         <span class="nhsuk-hint" id="outcome-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
         <div class="nhsuk-radios nhsuk-radios--inline">
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops" type="radio"
+                <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops"
+                       type="radio"
                        value="IssueAnMccd" {% if form.overall_outcome == 'IssueAnMccd' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-1">
                     Issue an MCCD
                 </label>
             </div>
             <div class="nhsuk-radios__item margin-bottom">
-                <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-2" name="ops" type="radio"
+                <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-2" name="ops"
+                       type="radio"
                        value="ReferToCoroner" {% if form.overall_outcome == 'ReferToCoroner' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-2">
                     Refer to coroner
@@ -117,53 +132,63 @@
         </div>
     </div>
 
-    <div class="nhsuk-form-group">
-        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review" id="governance-review">
+    <div class="nhsuk-form-group  {% if form.errors.governance_review %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review"
+               id="governance-review">
             Clinical governance review or learning opportunity
         </label>
+        {% if form.errors.governance_review %}
+        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.governance_review }}</span>{% endif %}
+
         <span class="nhsuk-hint"
               id="governance-hint">Is there any reason why this case should be referred for a review?</span>
         <div class="nhsuk-radios nhsuk-radios--inline">
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-1" name="gr" type="radio"
-                       value="Yes"> {% if form.governance_review == 'Yes' %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="governance-review-1">
+                <input class="nhsuk-radios__input" id="governance-review-1"
+                       name="gr" type="radio"
+                       value="Yes" {% if form.governance_review == 'Yes' %}checked{% endif %}>
+                <label class="nhsuk-label nhsuk-radios__label"
+                       for="governance-review-1">
                     Yes
                 </label>
             </div>
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-2" name="gr" type="radio"
+                <input class="nhsuk-radios__input" id="governance-review-2"
+                       name="gr" type="radio"
                        value="No" {% if form.governance_review == 'No' %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="governance-review-2">
+                <label class="nhsuk-label nhsuk-radios__label"
+                       for="governance-review-2">
                     No
                 </label>
             </div>
             <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-3" name="gr" type="radio"
+                <input class="nhsuk-radios__input" id="governance-review-3" name="gr"
+                       type="radio"
                        value="Unknown" {% if form.governance_review == 'Unknown' %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="governance-review-3">
                     Unknown
                 </label>
             </div>
-            <textarea class="nhsuk-textarea text-area-margin margin-bottom" id="governance-review-text"
-                      name="grt" rows="2" aria-describedby="gr">{{form.governance_review_text}}</textarea>
+            <textarea class="nhsuk-textarea text-area-margin margin-bottom"
+                      id="governance-review-text"
+                      name="grt" rows="2" aria-describedby="gr">{{ form.governance_review_text }}</textarea>
         </div>
     </div>
 
     <div class="nhsuk-warning-callout disclaimer-margin">
         <h3 class="nhsuk-warning-callout__label">Disclaimer</h3>
-        <p>The information submitted is an initial view on the cause of death. It conveys only part of the
-            Medical
-            Examiner's scrutiny and is by no means a confirmation of how an individual died.</p>
+        <p>The information submitted is an initial view on the cause of death. It conveys only
+            part of the Medical Examiner's scrutiny and is by no means a confirmation of how an individual
+            died.</p>
     </div>
-
     <div class="nhsuk-form-group margin-bottom">
         <div class="nhsuk-grid-row" id="other-notes-section">
             <div class="nhsuk-grid-column-full">
                 <button id="submit-btn" class="nhsuk-button" type="submit" value="pre-scrutiny"
                         name="add-event-to-timeline">Add event to timeline
                 </button>
-                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary"
+                        type="submit"
                         value="pre-scrutiny" name="save-as-draft">Save as draft
                 </button>
             </div>

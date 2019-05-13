@@ -1,3 +1,5 @@
+from django.conf import settings
+
 import datetime
 import re
 
@@ -5,6 +7,7 @@ API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
 API_DATE_FORMAT_3 = '%Y-%m-%dT%H:%M:%SZ'
 API_DATE_FORMAT_4 = '%Y-%m-%dT%H:%M:%S'
+API_DATE_FORMAT_5 = '%Y-%m-%dT%H:%M:%S.%f'
 
 NONE_TIME = "00:00:00"
 
@@ -22,6 +25,13 @@ def validate_date(year, month, day, hour='00', min='00'):
         return True
     except (ValueError, TypeError, AttributeError) as ex:
         return False
+
+
+def date_is_valid_or_empty(year, month, day, hour='00', min='00'):
+    if year == '' and month == '' and day == '':
+        return True
+    else:
+        return validate_date(year, month, day, hour, min)
 
 
 def parse_datetime(datetime_string):
@@ -42,8 +52,11 @@ def parse_datetime(datetime_string):
                     try:
                         return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_4)
                     except ValueError:
-                        print('Unknown date format received')
-                        return None
+                        try:
+                            return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_5)
+                        except ValueError:
+                            print('Unknown date format received: %s' % datetime_string)
+                            return None
     else:
         return None
 
@@ -62,3 +75,7 @@ def is_empty_time(time_string):
 
 def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
+
+
+def get_code_version():
+    return settings.VERSION

@@ -3,93 +3,97 @@
 @import './partials/case_breakdown_forms';
 
 #case-breakdown-section {
-    margin: 4rem 2rem 300px;
+  margin: 4rem 2rem 300px;
 
-    .section-title {
-        margin-top: 0px;
-        margin-bottom: 0px;
+  .section-title {
+    margin-top: 0px;
+    margin-bottom: 0px;
 
-        font-size: $nhs-heading-xl-size;
-        line-height: $nhs-heading-xl-line-height;
-    }
+    font-size: $nhs-heading-xl-size;
+    line-height: $nhs-heading-xl-line-height;
+  }
 
-    .section-sub-heading {
-        margin-top: 0px;
-        margin-bottom: 0px;
+  .section-sub-heading {
+    margin-top: 0px;
+    margin-bottom: 0px;
 
-        font-size: $nhs-heading-l-size;
-        line-height: $nhs-heading-l-line-height;
-    }
-
+    font-size: $nhs-heading-l-size;
+    line-height: $nhs-heading-l-line-height;
+  }
 }
 
- #submit-btn {
-        margin-right: 1.25rem;
-        width: 15.79rem;
-    }
+#submit-btn {
+  margin-right: 1.25rem;
+  width: 15.79rem;
+}
 
- #add-another-btn {
-    width: 15.79rem;
-    }
+#add-another-btn {
+  width: 15.79rem;
+}
 
- .more-detail {
-    margin-top: 1.25rem;
-    margin-bottom: 5rem;
- }
 
-  .inset-text-panel {
-    padding-top: 1rem;
-    padding-left: 2rem;
-    border-left: $nhs-light-grey 3px solid;
-  }
+.case-breakdown-form-group {
+  margin-bottom: 5rem;
+}
+
+.more-detail {
+  margin-top: 1.25rem;
+  margin-bottom: 5rem;
+}
+
+.inset-text-panel {
+  padding-top: 1rem;
+  padding-left: 2rem;
+  border-left: $nhs-light-grey 3px solid;
+}
 
 #pre-scrutiny {
 
- .margin-bottom {
+  .margin-bottom {
     margin-bottom: 7rem;
- }
+  }
 
- .text-area-margin {
+  .text-area-margin {
     margin-top: 1rem;
- }
+  }
 
- .disclaimer-margin {
+  .disclaimer-margin {
     margin-bottom: 4rem;
- }
+  }
 }
 
 #bereaved-discussion {
 
-    .margin-bottom {
-        margin-bottom: 1rem;
-    }
+  .margin-bottom {
+    margin-bottom: 1rem;
+  }
 
-    .margin-top {
-        margin-top: 1.25rem;
-    }
+  .margin-top {
+    margin-top: 1.25rem;
+  }
 
-    .margin-save-button {
-        margin-bottom: 7rem;
-    }
+  .margin-save-button {
+    margin-bottom: 7rem;
+  }
 
-    .margin-time {
-        margin-bottom: 2rem;
-    }
+  .margin-time {
+    margin-bottom: 2rem;
+  }
 }
 
 #bereavement-discussion__save-buttons {
- #submit-btn {
-        margin-right: 1.25rem;
-        width: 15.79rem;
-    }
-
- #add-another-btn {
+  #submit-btn {
+    margin-right: 1.25rem;
     width: 15.79rem;
-    }
+  }
 
- #more-detail {
+  #add-another-btn {
+    width: 15.79rem;
+  }
+
+  #more-detail {
     margin-top: 1.25rem;
     margin-bottom: 5rem;
- }
+  }
 
 }
