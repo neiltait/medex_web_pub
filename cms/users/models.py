@@ -120,7 +120,7 @@ class User:
         if person:
             user = person
         else:
-            user = self.user_id if self.is_me() else ''
+            user = self.default_filter_user()
         query_params = {
             "LocationId": location,
             "UserId": user,
@@ -182,6 +182,15 @@ class User:
 
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
+
+    def default_filter_user(self):
+        return self.user_id if self.is_me() else ''
+
+    def default_filter_options(self):
+        return {
+            'location': None,
+            'person': self.default_filter_user()
+        }
 
     def is_me(self):
         return self.role == self.ME_ROLE_TYPE
