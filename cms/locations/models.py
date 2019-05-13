@@ -28,8 +28,9 @@ class Location:
         return self
 
     def load_permitted_users(self, auth_token):
+        from users.models import User
         users = []
-        users_data = request_handler.get_permitted_users(auth_token, self.location_id)['users']
+        users_data = User.get_permitted_at_location(auth_token, self.location_id)['users']
         for user in users_data:
             users.append(DropdownPerson(user))
         return users

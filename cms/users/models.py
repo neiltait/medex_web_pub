@@ -98,6 +98,10 @@ class User:
     def create(cls, submission, auth_token):
         return request_handler.create_user(json.dumps(submission), auth_token)
 
+    @classmethod
+    def get_permitted_at_location(cls, auth_token, location_id):
+        return request_handler.get_permitted_users(auth_token, location_id)
+
     def add_permission(self, form, auth_token):
         return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
 
