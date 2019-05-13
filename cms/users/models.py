@@ -38,6 +38,9 @@ class User:
         self.examinations = []
         self.permissions = []
 
+    def __str__(self):
+        return self.full_name()
+
     @classmethod
     def initialise_with_token(cls, request):
         user = User()
@@ -50,9 +53,6 @@ class User:
             user.id_token = None
 
         return user
-
-    def __str__(self):
-        return self.full_name()
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name

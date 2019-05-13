@@ -36,8 +36,9 @@ def __get_index(user):
     status_code = status.HTTP_200_OK
 
     form = IndexFilterForm()
-    user.load_examinations()
     locations = user.get_permitted_locations()
+    user.load_examinations()
+    user.index_overview.set_location_display_name(locations)
 
     context = __set_index_context(user, locations, None, form)
 
@@ -49,8 +50,9 @@ def __post_index(user, post_body):
     status_code = status.HTTP_200_OK
 
     form = IndexFilterForm(post_body)
-    user.load_examinations(location=form.location, person=form.person)
     locations = user.get_permitted_locations()
+    user.load_examinations(location=form.location, person=form.person)
+    user.index_overview.set_location_display_name(locations)
     filter_location = Location.initialise_with_id(form.location)
     people = filter_location.load_permitted_users(user.auth_token)
 
