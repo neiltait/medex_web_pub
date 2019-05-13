@@ -39,8 +39,9 @@ def __get_index(user):
     locations = user.get_permitted_locations()
     user.load_examinations()
     user.index_overview.set_location_display_name(locations)
+    people = user.get_colleagues_for_dropdown()
 
-    context = __set_index_context(user, locations, None, form)
+    context = __set_index_context(user, locations, people, form)
 
     return template, context, status_code
 
