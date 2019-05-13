@@ -1346,6 +1346,9 @@ class ExaminationsUtilsTests(MedExTestCase):
 
 
 class ExaminationsBreakdownValidationTests(MedExTestCase):
+
+    # MEO Summary only requires notes to be non-blank for addition
+
     def test_meo_summary_form_valid_for_timeline_if_notes_are_not_blank(self):
         form_data = {
             'meo_summary_id': 'any id',
@@ -1378,6 +1381,289 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         }
 
         form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    """
+    LATEST ADMISSION FORM
+    
+    Draft - Date to be a valid date or blank
+    
+    Final - Date to be a valid date or unknown, Time or unknown, one of coroner referral radio buttons selected
+
+    """
+
+    def test_latest_admission_form_valid_for_draft_when_date_blank(self):
+        blank_form_data = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '',
+            'month_of_last_admission': '',
+            'year_of_last_admission': '',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=blank_form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_for_draft_when_date_is_real_date(self):
+        form_data_with_valid_date = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '9',
+            'month_of_last_admission': '5',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=form_data_with_valid_date)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_draft_when_date_is_not_real_date(self):
+        form_data_where_month_is_13 = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '1',
+            'month_of_last_admission': '13',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=form_data_where_month_is_13)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def valid_last_admission_final_data(self):
+        return {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '26',
+            'month_of_last_admission': '8',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '00:01',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': 'no',
+            'add-event-to-timeline': True
+        }
+
+    def test_latest_admission_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_last_admission_final_data()
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_final_when_date_fields_blank(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = ''
+        form_data['month_of_last_admission'] = ''
+        form_data['year_of_last_admission'] = ''
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_for_final_when_date_not_known_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = ''
+        form_data['month_of_last_admission'] = ''
+        form_data['year_of_last_admission'] = ''
+        form_data['date_of_last_admission_not_known'] = 'true'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_for_final_when_date_is_real(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = '26'
+        form_data['month_of_last_admission'] = '5'
+        form_data['year_of_last_admission'] = '2019'
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_final_when_date_is_not_real(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = '26'
+        form_data['month_of_last_admission'] = '13'
+        form_data['year_of_last_admission'] = '2019'
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_not_valid_when_no_time_fields_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = ''
+        form_data['time_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_when_time_field_filled(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = '00:55'
+        form_data['time_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_when_time_not_known_checked(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = ''
+        form_data['time_of_last_admission_not_known'] = 'true'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_when_no_coroner_choice_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_immediate_referral'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_when_coroner_choice_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_immediate_referral'] = 'yes'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    """
+    
+    PRE-SCRUTINY
+    
+    draft - no validation at all
+    
+    final - text in thoughts, text in 1a, 
+        radio-buttons: circumstances of death, outcome, and clinical governance selected 
+        clinical governance textbox filled in if clinical governance filled in
+    """
+
+    def valid_pre_scrutiny_final_data(self):
+        return {
+            'pre_scrutiny_id': 'any id',
+            'me-thoughts': 'any thoughts',
+            'cod': 'Unexpected',
+            'possible-cod-1a': 'any 1a comment',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'ReferToCoroner',
+            'gr': 'No',
+            'grt': '',
+            'add-event-to-timeline': True
+        }
+
+    def test_pre_scrutiny_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_pre_scrutiny_form_not_valid_when_me_thoughts_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['me-thoughts'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_1a_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['possible-cod-1a'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_cod_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_outcome_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['ops'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_is_yes_with_no_text(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_valid_when_governance_radio_button_is_yes_with_text_comments(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = 'any comments'
+
+        form = PreScrutinyEventForm(form_data=form_data)
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
