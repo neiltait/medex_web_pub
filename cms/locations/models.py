@@ -1,8 +1,14 @@
 from people.models import DropdownPerson
 from . import request_handler
+from .utils import filter_trusts, filter_regions
 
 
 class Location:
+
+    NATIONAL_TYPE = 'National'
+    REGIONAL_TYPE = 'Region'
+    TRUST_TYPE = 'Trust'
+    SITE_TYPE = 'Site'
 
     def __init__(self):
         self.location_id = ''
@@ -33,16 +39,25 @@ class Location:
         return request_handler.get_locations_list(auth_token)
 
     @classmethod
-    def load_trusts_list(cls, auth_token):
-        return request_handler.load_trusts_list(auth_token)
+    def get_permitted_locations_for_user(cls, auth_token):
+        locations_data = request_handler.get_permitted_locations_list(auth_token)
+        locations = []
+        for location in locations_data:
+            locations.append(Location().set_values(location))
+        return locations
 
     @classmethod
-    def load_region_list(cls, auth_token):
-        return request_handler.load_region_list(auth_token)
+    def load_trusts_list_for_user(cls, auth_token):
+        locations = request_handler.get_permitted_locations_list(auth_token)
+        trusts = filter_trusts(locations)
+        return trusts
+
+    @classmethod
+    def load_region_list_for_user(cls, auth_token):
+        locations = request_handler.get_permitted_locations_list(auth_token)
+        regions = filter_regions(locations)
+        return regions
 
     @classmethod
     def load_me_offices(cls, auth_token):
-        query_params = {
-            "AccessOnly": True
-        }
-        return request_handler.get_me_offices_list(auth_token, query_params)
+        return cls.get_permitted_locations_for_user(auth_token)

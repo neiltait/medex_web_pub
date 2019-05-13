@@ -2,7 +2,7 @@ from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
-    validate_is_not_blank, pop_if_falsey
+    validate_is_not_blank, pop_if_falsey, date_is_valid_or_empty
 from people.models import BereavedRepresentative
 
 
@@ -659,12 +659,39 @@ class PreScrutinyEventForm:
         self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
+        self.errors = {'count': 0}
+
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final:
+            if self.me_thoughts.strip() == '':
+                self.errors['count'] += 1
+                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('pre-scrutiny thoughts')
+
+            if self.circumstances_of_death == '' or self.circumstances_of_death is None:
+                self.errors['count'] += 1
+                self.errors['circumstances_of_death'] = messages.ErrorSelectionRequiredMessage('circumstance of death')
+
+            if self.possible_cod_1a.strip() == '':
+                self.errors['count'] += 1
+                self.errors['possible_cod'] = messages.ErrorFieldRequiredMessage('1a')
+
+            if self.overall_outcome == '' or self.overall_outcome is None:
+                self.errors['count'] += 1
+                self.errors['overall_outcome'] = messages.ErrorSelectionRequiredMessage('overall outcome')
+
+            if self.governance_review == '' or self.governance_review is None:
+                self.errors['count'] += 1
+                self.errors['governance_review'] = messages.ErrorSelectionRequiredMessage('clinical governance review')
+            elif self.governance_review == 'Yes' and self.governance_review_text.strip() == '':
+                self.errors['count'] += 1
+                self.errors['governance_review'] = messages.ErrorFieldRequiredMessage('governance review notes')
+
+        return self.errors['count'] == 0
 
     def for_request(self):
         return {
@@ -702,13 +729,20 @@ class MeoSummaryEventForm:
         self.event_id = form_data.get('meo_summary_id')
         self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.meo_summary_notes.strip() == '':
+            self.errors['count'] += 1
+            self.errors['meo_summary_notes'] = messages.ErrorFieldRequiredMessage('summary notes')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
@@ -995,13 +1029,39 @@ class AdmissionNotesEventForm:
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final:
+            self.check_valid_final()
+        else:
+            self.check_valid_draft()
+        return self.errors['count'] == 0
+
+    def check_valid_final(self):
+        if validate_date(self.admission_year, self.admission_month,
+                         self.admission_day) is False and self.admission_date_unknown == '':
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
+
+        if self.admission_time == '' and self.admission_time_unknown == '':
+            self.errors['count'] += 1
+            self.errors['time_of_last_admission'] = messages.ErrorFieldRequiredMessage('time of last admission')
+
+        if self.coroner_referral == '':
+            self.errors['count'] += 1
+            self.errors['latest_admission_immediate_referral'] = messages.ErrorSelectionRequiredMessage(
+                'immediate referral')
+
+    def check_valid_draft(self):
+        if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
 
     def admission_date(self):
         if self.admission_date_unknown:

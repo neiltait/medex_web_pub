@@ -2,7 +2,6 @@ from django.conf import settings
 
 import datetime
 import re
-
 from alerts import messages
 
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
@@ -68,6 +67,13 @@ def validate_is_not_blank(field_name, errors, value, error_message=messages.FIEL
         return False
     else:
         return True
+
+
+def date_is_valid_or_empty(year, month, day, hour='00', min='00'):
+    if year == '' and month == '' and day == '':
+        return True
+    else:
+        return validate_date(year, month, day, hour, min)
 
 
 def parse_datetime(datetime_string):

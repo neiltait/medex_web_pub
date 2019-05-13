@@ -12,11 +12,11 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group {% if errors.date_of_last_admission %}nhsuk-form-group--error{% endif %}">
+            <div class="nhsuk-form-group {% if form.errors.date_of_last_admission %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
                     <fieldset class="nhsuk-fieldset" role="group">
-                        {% if errors.date_of_last_admission %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_last_admission }}</span>
+                        {% if form.errors.date_of_last_admission %}
+                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.date_of_last_admission }}</span>
                         {% endif %}
                         <div class="nhsuk-date-input" id="date_of_last_admission">
                             <div class="nhsuk-date-input__item">
@@ -76,13 +76,13 @@
     <!-- Time of latest admission -->
     <div class="nhsuk-grid-row more-detail">
         <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_last_admission %}nhsuk-form-group--error{% endif %}">
+            <div class="nhsuk-form-group medex-text-checkbox-group {% if form.errors.time_of_last_admission %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox" id="time_of_last_admission_group">
                     <label class="nhsuk-label" for="time_of_last_admission">
                         Time
                     </label>
-                    {% if errors.time_of_last_admission %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.time_of_last_admission }}</span>
+                    {% if form.errors.time_of_last_admission %}
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.time_of_last_admission }}</span>
                     {% endif %}
                     <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_last_admission"
                            name="time_of_last_admission"
@@ -124,12 +124,15 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group">
+            <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.latest_admission_immediate_referral %}nhsuk-form-group--error{% endif %}">
                 <label class="nhsuk-label nhsuk-u-font-weight-bold" for="meo_summary_notes">
                     Do you suspect this case may need immediate coroner referral?
                 </label>
+                    {% if form.errors.latest_admission_immediate_referral %}
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.latest_admission_immediate_referral }}</span>
+                    {% endif %}
                 <span class="nhsuk-hint">This will fast track the case to ME pre scrutiny where they will be able to confirm the referral</span>
-                <fieldset class="nhsuk-fieldset  more-detail">
+                <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" name="latest_admission_immediate_referral"
