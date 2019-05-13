@@ -4,20 +4,6 @@ from medexCms.models import MedexRequest
 from medexCms.test.mocks import LocationsMocks, UserMocks
 
 
-def load_trusts_list(auth_token):
-    if settings.LOCAL:
-        return LocationsMocks.get_trust_location_list()
-    else:
-        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
-
-
-def load_region_list(auth_token):
-    if settings.LOCAL:
-        return LocationsMocks.get_region_location_list()
-    else:
-        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
-
-
 def get_locations_list(auth_token):
     if settings.LOCAL:
         return LocationsMocks.get_trust_location_list()
@@ -25,18 +11,14 @@ def get_locations_list(auth_token):
         return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
 
 
-def get_me_offices_list(auth_token, params):
-    if settings.LOCAL:
-        return LocationsMocks.get_me_office_location_list()
-    else:
-        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL, params).json()['locations']
-
-
 def get_permitted_locations_list(auth_token):
     if settings.LOCAL:
         return LocationsMocks.get_trust_location_list()
     else:
-        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL).json()['locations']
+        query_params = {
+            "AccessOnly": True
+        }
+        return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL, query_params).json()['locations']
 
 
 def get_permitted_users(auth_token, location_id):
