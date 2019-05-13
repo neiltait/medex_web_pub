@@ -13,6 +13,7 @@ from home.models import IndexOverview
 
 from locations import request_handler as location_request_handler
 from locations.models import Location
+from people.models import DropdownPerson
 
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission, PermittedActions
@@ -101,6 +102,16 @@ class User:
     @classmethod
     def get_permitted_at_location(cls, auth_token, location_id):
         return request_handler.get_permitted_users(auth_token, location_id)
+
+    def load_colleagues(self):
+        return request_handler.get_colleagues(self.auth_token)
+
+    def get_colleagues_for_dropdown(self):
+        users = []
+        users_data = self.load_colleagues()['users']
+        for user in users_data:
+            users.append(DropdownPerson(user))
+        return users
 
     def add_permission(self, form, auth_token):
         return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
