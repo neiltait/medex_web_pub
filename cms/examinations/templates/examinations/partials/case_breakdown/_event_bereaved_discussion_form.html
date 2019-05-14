@@ -18,7 +18,7 @@
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved_rep_type" type="radio"
                                        value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}"
-                                       {% if form.use_existing_bereaved == True %} checked{% endif %}>
+                                        {% if form.use_existing_bereaved == True %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-existing-rep">
                                     {{ form.existing_representative.full_name }}
@@ -30,7 +30,7 @@
                                 <input class="nhsuk-radios__input" id="bereaved-new-rep"
                                        name="bereaved_rep_type"
                                        type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}"
-                                       {% if form.use_existing_bereaved == False %} checked{% endif %}>
+                                        {% if form.use_existing_bereaved == False %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-new-rep">
                                     Another representative
@@ -56,7 +56,7 @@
                        value="{{ form.existing_representative.informed }}"/>
             {% endif %}
             <div id="bereavement-discussion-with-panel"
-                 class="inset-text-panel {% if form.use_existing_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
+                 class="inset-text-panel case-breakdown-form-group  {% if form.use_existing_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-one-half nhsuk-radios">
                         <fieldset class="nhsuk-fieldset">
@@ -108,8 +108,13 @@
         </div>
 
         <div id="bereaved-rep-form"
-             class="nhsuk-form-group {% if bereaved_form.use_default_bereaved == True %}{% endif %}">
+             class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_participant_name %}nhsuk-form-group--error{% endif %}">
             <div class="nhsuk-grid-row margin-top">
+                {% if form.errors.bereaved_participant_name %}
+                    <div class="nhsuk-grid-column-full">
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_participant_name }}</span>
+                    </div>
+                {% endif %}
                 <div class="nhsuk-grid-column-one-half">
                     <label class="nhsuk-label" for="bereavement-full-name">
                         Full name
@@ -218,60 +223,67 @@
             </div>
         </div>
 
+        <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.bereaved_time_of_conversation %}nhsuk-form-group--error{% endif %}">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                            Date of conversation
+                        </legend>
 
-        <div class="nhsuk-form-group margin-top">
-            <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
-                <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
-                    Date of conversation
-                </legend>
+                        {% if form.errors.bereaved_time_of_conversation %}
+                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_time_of_conversation }}</span>
+                        {% endif %}
+                        <div class="nhsuk-date-input margin-top" id="doc-day">
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
+                                        Day
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
+                                           id="doc-day"
+                                           name="bereaved_day_of_conversation" type="number" pattern="[0-9]*"
+                                           value="{{ form.day_of_conversation }}">>
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="doc-month">
+                                        Month
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
+                                           id="doc-month"
+                                           name="bereaved_month_of_conversation" type="number" pattern="[0-9]*"
+                                           value="{{ form.month_of_conversation }}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-date-input__item">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="doc-year">
+                                        Year
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4"
+                                           id="doc-year"
+                                           name="bereaved_year_of_conversation" type="number" pattern="[0-9]*"
+                                           value="{{ form.year_of_conversation }}">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
 
-                <div class="nhsuk-date-input margin-top" id="doc-day">
-                    <div class="nhsuk-date-input__item">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
-                                Day
-                            </label>
-                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
-                                   id="doc-day"
-                                   name="bereaved_day_of_conversation" type="number" pattern="[0-9]*"
-                                   value="{{ form.day_of_conversation }}">>
-                        </div>
-                    </div>
-                    <div class="nhsuk-date-input__item">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-month">
-                                Month
-                            </label>
-                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2"
-                                   id="doc-month"
-                                   name="bereaved_month_of_conversation" type="number" pattern="[0-9]*"
-                                   value="{{ form.month_of_conversation }}">>
-                        </div>
-                    </div>
-                    <div class="nhsuk-date-input__item">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-date-input__label" for="doc-year">
-                                Year
-                            </label>
-                            <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4"
-                                   id="doc-year"
-                                   name="bereaved_year_of_conversation" type="number" pattern="[0-9]*"
-                                   value="{{ form.year_of_conversation }}">
-                        </div>
-                    </div>
+
                 </div>
-            </fieldset>
-
-        </div>
-        <div id="beravement-discussion-time">
-            <div class="nhsuk-form-group">
-                <label class="nhsuk-label" for="input-width-4">
-                    Time
-                </label>
-                <input class="nhsuk-input nhsuk-input--width-4 margin-time" id="input-width-4"
-                       name="bereaved_time_of_conversation"
-                       type="time"
-                       value="{{ form.time_of_conversation }}">
+            </div>
+            <div id="beravement-discussion-time" class="nhsuk-grid-row margin-top">
+                <div class="nhsuk-grid-column-full">
+                    <label class="nhsuk-label" for="input-width-4">
+                        Time
+                    </label>
+                    <input class="nhsuk-input nhsuk-input--width-4" id="input-width-4"
+                           name="bereaved_time_of_conversation"
+                           type="time"
+                           value="{{ form.time_of_conversation }}">
+                </div>
             </div>
         </div>
 
@@ -306,13 +318,18 @@
         <div id="bereavement-discussion__details">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <label class="nhsuk-label nhsuk-u-font-weight-bold" for="bereavement-discussion-details"
-                           id="bereavement-discussion-details">
-                        Details of the discussion?
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea margin-save-button"
-                              name="bereaved_discussion_details"
-                              rows="6">{{ form.discussion_details }}</textarea>
+                    <div class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_discussion_details %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="bereavement-discussion-details"
+                               id="bereavement-discussion-details">
+                            Details of the discussion?
+                        </label>
+                        {% if form.errors.bereaved_discussion_details %}
+                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_details }}</span>
+                        {% endif %}
+                        <textarea class="nhsuk-textarea medex-textarea"
+                                  name="bereaved_discussion_details"
+                                  rows="6">{{ form.discussion_details }}</textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -322,13 +339,15 @@
             <div id="bereavement-discussion-outcome">
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full">
-                        <div class="nhsuk-form-group">
+                        <div class="nhsuk-form-group  {% if form.errors.bereaved_discussion_outcome %}nhsuk-form-group--error{% endif %}">
 
                             <fieldset class="nhsuk-fieldset">
                                 <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                                     Outcome
                                 </legend>
-
+                                {% if form.errors.bereaved_discussion_outcome %}
+                                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_outcome }}</span>
+                                {% endif %}
                                 <span class="nhsuk-hint" id="outcome-hint">
                                 What was the ultimate outcome of the conversation with the family member or representative?
                             </span>
@@ -366,7 +385,10 @@
                 <div id="bereavement-discussion-concerned-outcomes">
                     <div class="nhsuk-grid-row">
                         <div class="nhsuk-grid-column-full">
-                            <div class="inset-text-panel nhsuk-form-group">
+                            <div class="nhsuk-form-group {% if form.errors.bereaved_outcome_concerned_outcome %}nhsuk-form-group--error{% else %}inset-text-panel {% endif %}">
+                                {% if form.errors.bereaved_outcome_concerned_outcome %}
+                                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_outcome_concerned_outcome }}</span>
+                                {% endif %}
                                 <fieldset class="nhsuk-fieldset">
                                     <div class="nhsuk-radios">
                                         <div class="nhsuk-radios__item">
