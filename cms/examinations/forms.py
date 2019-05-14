@@ -1323,10 +1323,22 @@ class BereavedDiscussionEventForm:
         self.__set_use_existing_bereaved()
 
     def for_request(self):
+
+        if self.discussion_could_not_happen:
+            return self.__discussion_did_not_happen_request()
+        else:
+            return self.__full_discussion_request()
+
+    def __discussion_did_not_happen_request(self):
+        return {
+            "isFinal": self.is_final,
+            "eventType": "BereavedDiscussion",
+            "discussionUnableHappen": self.discussion_could_not_happen,
+        }
+
+    def __full_discussion_request(self):
         date_of_conversation = self.__calculate_full_date_of_conversation()
-
         participant = self.__participant_for_request()
-
         request = {
             "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
@@ -1343,7 +1355,6 @@ class BereavedDiscussionEventForm:
         pop_if_falsey("presentAtDeath", request)
         pop_if_falsey("informedAtDeath", request)
         pop_if_falsey("bereavedDiscussionOutcome", request)
-
         return request
 
     def __calculate_combined_outcome(self):
