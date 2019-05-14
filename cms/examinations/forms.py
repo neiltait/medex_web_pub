@@ -821,6 +821,16 @@ class MedicalHistoryEventForm:
 
 
 class QapDiscussionEventForm:
+    YES = "yes"
+    NO = "no"
+    QAP_PARTICIPANT = 'qap'
+    OTHER_PARTICIPANT = 'other'
+    MCCD = "mccd"
+    CORONER = "coroner"
+    MCCD_FROM_QAP = "outcome-decision-1"
+    MCCD_FROM_ME = "outcome-decision-2"
+    MCCD_AGREED_UPDATE = "outcome-decision-3"
+
     active = False
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
 
@@ -919,16 +929,19 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-1"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_FROM_QAP
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-2"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_FROM_ME
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-3"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_AGREED_UPDATE
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            self.outcome = "coroner"
+            self.outcome = self.CORONER
             self.outcome_decision = ""
 
     def __calculate_time_values(self, draft):
@@ -990,10 +1003,10 @@ class QapDiscussionEventForm:
         return name, role, organisation, phone_number
 
     def __calculate_discussion_outcome(self):
-        if self.outcome == 'mccd':
-            if self.outcome_decision == 'outcome-decision-1':
+        if self.outcome == self.MCCD:
+            if self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_QAP:
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP
-            elif self.outcome_decision == 'outcome-decision-2':
+            elif self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_ME:
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
             elif self.outcome_decision == 'outcome-decision-3':
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
