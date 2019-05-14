@@ -1347,6 +1347,44 @@ class ExaminationsUtilsTests(MedExTestCase):
 
 class ExaminationsBreakdownValidationTests(MedExTestCase):
 
+    # Other notes only requires notes to be non-blank for addition
+
+    def test_other_notes_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_other_notes_form_not_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': '',
+            'add-event-to-timeline': True
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_other_notes_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': '',
+            'add-event-to-timeline': False
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
     # MEO Summary only requires notes to be non-blank for addition
 
     def test_meo_summary_form_valid_for_timeline_if_notes_are_not_blank(self):
@@ -1360,6 +1398,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
 
     def test_meo_summary_form_not_valid_for_timeline_if_notes_are_blank(self):
         form_data = {

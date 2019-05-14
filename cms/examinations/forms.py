@@ -759,10 +759,11 @@ class MeoSummaryEventForm:
 
 class OtherEventForm:
     active = False
+    errors = {"count": 0}
 
     def __init__(self, form_data={}):
         self.event_id = fallback_to(form_data.get('other_notes_id'), '')
-        self.more_detail = fallback_to(form_data.get('other-text'), '')
+        self.more_detail = fallback_to(form_data.get('more_detail'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
@@ -770,7 +771,13 @@ class OtherEventForm:
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.more_detail.strip() == '':
+            self.errors['count'] += 1
+            self.errors['more_detail'] = messages.ErrorFieldRequiredMessage('more detail')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
