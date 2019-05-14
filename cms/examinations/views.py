@@ -243,7 +243,7 @@ def __get_medical_team_form(user, medical_team):
 def __post_medical_team_form(user, medical_team, post_body):
     template = 'examinations/edit_medical_team.html'
     saved = False
-    form = MedicalTeamMembersForm(medical_team=post_body)
+    form = MedicalTeamMembersForm(request=post_body)
     forms_valid = form.is_valid()
 
     if forms_valid:
