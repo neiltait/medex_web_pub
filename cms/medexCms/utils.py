@@ -2,6 +2,7 @@ from django.conf import settings
 
 import datetime
 import re
+from alerts import messages
 
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -25,6 +26,47 @@ def validate_date(year, month, day, hour='00', min='00'):
         return True
     except (ValueError, TypeError, AttributeError) as ex:
         return False
+
+
+def pop_if_falsey(key, from_dict):
+    if key in from_dict and not from_dict[key]:
+        from_dict.pop(key)
+
+
+def all_not_blank(*args):
+    return all(v is not '' for v in args)
+
+
+def any_not_blank(*args):
+    return any(v is not '' for v in args)
+
+
+def validate_date_time_field(field_name, errors, year, month, day, time, error_message=messages.INVALID_DATE,
+                             require_not_blank=False):
+    valid = not require_not_blank
+
+    if all_not_blank(year, month, day, time):
+        hours = time.split(':')[0]
+        mins = time.split(':')[1]
+        valid = validate_date(year, month, day, hours, mins)
+
+    elif any_not_blank(year, month, day, time):
+        valid = False
+
+    if not valid:
+        errors['count'] += 1
+        errors[field_name] = error_message
+
+    return valid
+
+
+def validate_is_not_blank(field_name, errors, value, error_message=messages.FIELD_MISSING):
+    if value is None or value == '':
+        errors['count'] += 1
+        errors[field_name] = error_message
+        return False
+    else:
+        return True
 
 
 def date_is_valid_or_empty(year, month, day, hour='00', min='00'):

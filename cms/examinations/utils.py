@@ -10,6 +10,7 @@ QAP_DISCUSSION_FORM = 'qap-discussion'
 BEREAVED_DISCUSSION_FORM = 'bereaved-discussion'
 MEDICAL_HISTORY_FORM = 'medical-history'
 
+
 def event_form_parser(form_data):
     event_type = form_data.get('add-event-to-timeline') if form_data.get('add-event-to-timeline') else \
         form_data.get('save-as-draft')
@@ -45,6 +46,7 @@ def event_form_submitter(auth_token, examination_id, form):
         return request_handler.create_bereaved_discussion_event(auth_token, examination_id, form.for_request())
     elif form_type == MedicalHistoryEventForm:
         return request_handler.create_medical_history_event(auth_token, examination_id, form.for_request())
+
 
 def get_tab_change_modal_config():
     return {

@@ -8,8 +8,8 @@ class BereavedRepresentative:
         self.full_name = obj_dict.get("fullName")
         self.relationship = obj_dict.get("relationship")
         self.phone_number = obj_dict.get("phoneNumber")
-        self.present_at_death = obj_dict.get("presentAtDeath")
-        self.informed = obj_dict.get("informed")
+        self.present_at_death =  obj_dict.get("presentAtDeath").lower() if obj_dict.get("presentAtDeath") else None
+        self.informed = obj_dict.get("informed").lower() if obj_dict.get("informed") else None
         self.appointment_time = obj_dict.get("appointmentTime")
 
         if not is_empty_date(obj_dict.get("appointmentDate")) and obj_dict.get("appointmentDate") is not None:
