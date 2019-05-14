@@ -7,7 +7,7 @@ from unittest.mock import patch
 from alerts import messages
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
     CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent
 from examinations.utils import event_form_parser
@@ -1347,6 +1347,44 @@ class ExaminationsUtilsTests(MedExTestCase):
 
 class ExaminationsBreakdownValidationTests(MedExTestCase):
 
+    # Medical and social history only requires notes to be non-blank for addition
+
+    def test_medical_history_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_medical_history_form_not_valid_for_timeline_if_notes_are_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': '',
+            'add-event-to-timeline': True
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_other_notes_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': '',
+            'add-event-to-timeline': False
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
     # Other notes only requires notes to be non-blank for addition
 
     def test_other_notes_form_valid_for_timeline_if_notes_are_not_blank(self):
@@ -1361,7 +1399,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
         self.assertEquals(form.errors['count'], 0)
 
-    def test_other_notes_form_not_valid_for_timeline_if_notes_are_not_blank(self):
+    def test_other_notes_form_not_valid_for_timeline_if_notes_are_blank(self):
         form_data = {
             'other_notes_id': 'any id',
             'more_detail': '',

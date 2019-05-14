@@ -193,7 +193,7 @@ class User:
                     'name': 'Latest hospital admission details'
                 },
                 {
-                    'id': 'history-notes',
+                    'id': 'medical-history',
                     'name': 'Medical and social history notes'
                 },
                 {
