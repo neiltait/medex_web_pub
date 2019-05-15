@@ -828,6 +828,16 @@ class MedicalHistoryEventForm:
 
 
 class QapDiscussionEventForm:
+    YES = "yes"
+    NO = "no"
+    QAP_PARTICIPANT = 'qap'
+    OTHER_PARTICIPANT = 'other'
+    MCCD = "mccd"
+    CORONER = "coroner"
+    MCCD_FROM_QAP = "outcome-decision-1"
+    MCCD_FROM_ME = "outcome-decision-2"
+    MCCD_AGREED_UPDATE = "outcome-decision-3"
+
     active = False
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
 
@@ -840,6 +850,7 @@ class QapDiscussionEventForm:
         self.event_id = form_data.get('qap_discussion_id')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'), self.NO)
 
         self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
         self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
@@ -912,9 +923,9 @@ class QapDiscussionEventForm:
         else:
             self.discussion_participant_type = "other"
             self.qap_discussion_name = draft.participant_name
-            self.qap_discussion_role = draft.participant_role
-            self.qap_discussion_organisation = draft.participant_organisation
-            self.qap_discussion_phone_number = draft.participant_phone_number
+            self.qap_discussion_role = fallback_to(draft.participant_role, '')
+            self.qap_discussion_organisation = fallback_to(draft.participant_organisation, '')
+            self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number,'')
 
     def __fill_default_qap_from_draft(self, default_qap):
         if default_qap:
@@ -926,16 +937,19 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-1"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_FROM_QAP
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-2"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_FROM_ME
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-3"
+            self.outcome = self.MCCD
+            self.outcome_decision = self.MCCD_AGREED_UPDATE
+
         elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            self.outcome = "coroner"
+            self.outcome = self.CORONER
             self.outcome_decision = ""
 
     def __calculate_time_values(self, draft):
@@ -966,13 +980,13 @@ class QapDiscussionEventForm:
 
         outcome = self.__calculate_discussion_outcome()
 
-        return {
+        result = {
             "eventId": self.event_id,
             "isFinal": self.is_final,
-            "participantRoll": role,
+            "participantRole": role,
             "participantOrganisation": organisation,
             "participantPhoneNumber": phone_number,
-            "discussionUnableHappen": False,
+            "discussionUnableHappen": self.discussion_could_not_happen == self.YES,
             "discussionDetails": self.discussion_details,
             "qapDiscussionOutcome": outcome,
             "participantName": name,
@@ -980,8 +994,10 @@ class QapDiscussionEventForm:
             "causeOfDeath1b": self.cause_of_death.section_1b,
             "causeOfDeath1c": self.cause_of_death.section_1c,
             "causeOfDeath2": self.cause_of_death.section_2,
-            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT)
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else None
         }
+        pop_if_falsey("dateOfConversation", result)
+        return result
 
     def __participant_for_request(self):
         if self.discussion_participant_type == 'other':
@@ -997,10 +1013,10 @@ class QapDiscussionEventForm:
         return name, role, organisation, phone_number
 
     def __calculate_discussion_outcome(self):
-        if self.outcome == 'mccd':
-            if self.outcome_decision == 'outcome-decision-1':
+        if self.outcome == self.MCCD:
+            if self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_QAP:
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP
-            elif self.outcome_decision == 'outcome-decision-2':
+            elif self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_ME:
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
             elif self.outcome_decision == 'outcome-decision-3':
                 return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
