@@ -1,4 +1,3 @@
-from people.models import DropdownPerson
 from . import request_handler
 from .utils import filter_trusts, filter_regions
 
@@ -26,14 +25,6 @@ class Location:
         self.name = obj_dict.get('name')
         self.parent_id = obj_dict.get('parentId')
         return self
-
-    def load_permitted_users(self, auth_token):
-        from users.models import User
-        users = []
-        users_data = User.get_permitted_at_location(auth_token, self.location_id)['users']
-        for user in users_data:
-            users.append(DropdownPerson(user))
-        return users
 
     @classmethod
     def get_locations_list(cls, auth_token):

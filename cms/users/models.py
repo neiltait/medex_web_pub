@@ -11,9 +11,7 @@ from examinations import request_handler as examination_request_handler
 from home import request_handler as home_request_handler
 from home.models import IndexOverview
 
-from locations import request_handler as location_request_handler
 from locations.models import Location
-from people.models import DropdownPerson
 
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission, PermittedActions
@@ -99,20 +97,6 @@ class User:
     def create(cls, submission, auth_token):
         return request_handler.create_user(json.dumps(submission), auth_token)
 
-    @classmethod
-    def get_permitted_at_location(cls, auth_token, location_id):
-        return request_handler.get_permitted_users(auth_token, location_id)
-
-    def load_colleagues(self):
-        return request_handler.get_colleagues(self.auth_token)
-
-    def get_colleagues_for_dropdown(self):
-        users = []
-        users_data = self.load_colleagues()['users']
-        for user in users_data:
-            users.append(DropdownPerson(user))
-        return users
-
     def add_permission(self, form, auth_token):
         return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
 
@@ -127,8 +111,8 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, location='', person=''):
-        if person:
+    def load_examinations(self, location=None, person=None):
+        if person is not None:
             user = person
         else:
             user = self.default_filter_user()
