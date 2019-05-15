@@ -843,6 +843,7 @@ class QapDiscussionEventForm:
         self.event_id = form_data.get('qap_discussion_id')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'), self.NO)
 
         self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
         self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
@@ -975,10 +976,10 @@ class QapDiscussionEventForm:
         return {
             "eventId": self.event_id,
             "isFinal": self.is_final,
-            "participantRoll": role,
+            "participantRole": role,
             "participantOrganisation": organisation,
             "participantPhoneNumber": phone_number,
-            "discussionUnableHappen": False,
+            "discussionUnableHappen": self.discussion_could_not_happen == self.YES,
             "discussionDetails": self.discussion_details,
             "qapDiscussionOutcome": outcome,
             "participantName": name,
