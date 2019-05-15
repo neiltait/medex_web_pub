@@ -923,9 +923,9 @@ class QapDiscussionEventForm:
         else:
             self.discussion_participant_type = "other"
             self.qap_discussion_name = draft.participant_name
-            self.qap_discussion_role = draft.participant_role
-            self.qap_discussion_organisation = draft.participant_organisation
-            self.qap_discussion_phone_number = draft.participant_phone_number
+            self.qap_discussion_role = fallback_to(draft.participant_role, '')
+            self.qap_discussion_organisation = fallback_to(draft.participant_organisation, '')
+            self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number,'')
 
     def __fill_default_qap_from_draft(self, default_qap):
         if default_qap:
@@ -980,7 +980,7 @@ class QapDiscussionEventForm:
 
         outcome = self.__calculate_discussion_outcome()
 
-        return {
+        result = {
             "eventId": self.event_id,
             "isFinal": self.is_final,
             "participantRole": role,
@@ -994,8 +994,10 @@ class QapDiscussionEventForm:
             "causeOfDeath1b": self.cause_of_death.section_1b,
             "causeOfDeath1c": self.cause_of_death.section_1c,
             "causeOfDeath2": self.cause_of_death.section_2,
-            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT)
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else None
         }
+        pop_if_falsey("dateOfConversation", result)
+        return result
 
     def __participant_for_request(self):
         if self.discussion_participant_type == 'other':
