@@ -1853,7 +1853,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         return {
             'qap_discussion_id': 'any id',
             'qap-discussion-doctor': QapDiscussionEventForm.OTHER_PARTICIPANT,
-            'qap_discussion_could_not_happen': QapDiscussionEventForm.YES,
+            'qap_discussion_could_not_happen': QapDiscussionEventForm.NO,
             'qap-default__full-name': '',
             'qap-default__role': '',
             'qap-default__organisation': '',
@@ -2005,3 +2005,35 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_discussion_could_not_happen(self):
+        form_data = {
+            'qap_discussion_id': 'any id',
+            'qap-discussion-doctor': '',
+            'qap_discussion_could_not_happen': QapDiscussionEventForm.YES,
+            'qap-default__full-name': '',
+            'qap-default__role': '',
+            'qap-default__organisation': '',
+            'qap-default__phone-number': '',
+            'qap-other__full-name': '',
+            'qap-other__role': '',
+            'qap-other__organisation': '',
+            'qap-other__phone-number': '',
+            'qap_discussion_revised_1a': '',
+            'qap_discussion_revised_1b': '',
+            'qap_discussion_revised_1c': '',
+            'qap_discussion_revised_1d': '',
+            'qap_discussion_details': '',
+            'qap-discussion-outcome': '',
+            'qap-discussion-outcome-decision': '',
+            'qap_day_of_conversation': '',
+            'qap_month_of_conversation': '',
+            'qap_year_of_conversation': '',
+            'qap_time_of_conversation': '',
+            'add-event-to-timeline': True
+        }
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)

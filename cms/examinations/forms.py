@@ -973,6 +973,10 @@ class QapDiscussionEventForm:
     def is_valid(self):
         self.errors = {'count': 0}
 
+        # if discussion could not happen then always valid
+        if self.discussion_could_not_happen == self.YES:
+            return True
+
         # validate date
         validate_date_time_field('time_of_conversation', self.errors,
                                  self.year_of_conversation, self.month_of_conversation, self.day_of_conversation,
