@@ -846,7 +846,7 @@ class QapDiscussionEventForm:
         return self
 
     def __init__(self, form_data={}):
-
+        self.errors = {'count': 0}
         self.event_id = form_data.get('qap_discussion_id')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
@@ -925,7 +925,7 @@ class QapDiscussionEventForm:
             self.qap_discussion_name = draft.participant_name
             self.qap_discussion_role = fallback_to(draft.participant_role, '')
             self.qap_discussion_organisation = fallback_to(draft.participant_organisation, '')
-            self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number,'')
+            self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number, '')
 
     def __fill_default_qap_from_draft(self, default_qap):
         if default_qap:
@@ -971,7 +971,44 @@ class QapDiscussionEventForm:
             self.time_of_conversation = ''
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+
+        # validate date
+        validate_date_time_field('time_of_conversation', self.errors,
+                                 self.year_of_conversation, self.month_of_conversation, self.day_of_conversation,
+                                 self.time_of_conversation,
+                                 messages.ErrorFieldRequiredMessage("date and time of conversation"),
+                                 require_not_blank=self.is_final)
+
+        # final submission only
+        if self.is_final:
+            # validate name
+            if self.qap_discussion_name == '':
+                self.errors['count'] += 1
+                self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
+
+            # validate details
+            if self.discussion_details == '':
+                self.errors['count'] += 1
+                self.errors['details'] = messages.ErrorFieldRequiredMessage('discussion details')
+
+            # validate outcomes
+            self.__validate_outcomes()
+
+        return self.errors['count'] == 0
+
+    def __validate_outcomes(self):
+        if self.outcome == '':
+            self.errors['count'] += 1
+            self.errors['outcome'] = messages.ErrorSelectionRequiredMessage('discussion outcome')
+        elif self.outcome == self.MCCD:
+            if self.outcome_decision == '':
+                self.errors['count'] += 1
+                self.errors['outcome_decision'] = messages.ErrorSelectionRequiredMessage('mccd outcome')
+            elif self.outcome_decision in [self.MCCD_AGREED_UPDATE,
+                                           self.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
+                self.errors['count'] += 1
+                self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
 
     def for_request(self):
         name, role, organisation, phone_number = self.__participant_for_request()
