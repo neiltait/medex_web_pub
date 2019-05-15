@@ -794,9 +794,10 @@ class OtherEventForm:
 
 class MedicalHistoryEventForm:
     active = False
+    errors = {'count': 0}
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('history_notes_id')
+        self.event_id = fallback_to(form_data.get('medical_history_id'), '')
         self.medical_history_details = fallback_to(form_data.get('medical-history-details'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
@@ -805,7 +806,13 @@ class MedicalHistoryEventForm:
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.medical_history_details.strip() == '':
+            self.errors['count'] += 1
+            self.errors['medical_history_details'] = messages.ErrorFieldRequiredMessage('medical history details')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {

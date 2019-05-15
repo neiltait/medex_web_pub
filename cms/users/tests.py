@@ -206,6 +206,6 @@ class UsersModelsTests(MedExTestCase):
         available_forms = user.get_forms_for_role()
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'admin-notes')
-        self.assertEquals(available_forms[1]['id'], 'history-notes')
+        self.assertEquals(available_forms[1]['id'], 'medical-history')
         self.assertEquals(available_forms[2]['id'], 'meo-summary')
         self.assertEquals(available_forms[3]['id'], 'other')
