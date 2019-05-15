@@ -720,10 +720,10 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def conversation_display_date(self):
-        return self.date_of_conversation.strftime(self.date_format)
+        return self.date_of_conversation.strftime(self.date_format) if self.date_of_conversation else ''
 
     def conversation_display_time(self):
-        return self.date_of_conversation.strftime(self.time_format)
+        return self.date_of_conversation.strftime(self.time_format) if self.date_of_conversation else ''
 
     def as_amendment_form(self, representatives):
         from examinations.forms import QapDiscussionEventForm
