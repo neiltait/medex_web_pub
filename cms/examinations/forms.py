@@ -1227,20 +1227,39 @@ class BereavedDiscussionEventForm:
             'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
 
     def is_valid(self):
-        if self.discussion_could_not_happen:
-            date_is_valid = True
-        else:
-            date_is_valid = validate_date_time_field('bereaved_time_of_conversation', self.errors,
-                                                     self.year_of_conversation, self.month_of_conversation,
-                                                     self.day_of_conversation, self.time_of_conversation, True)
+        self.errors = {'count': 0}
 
-        if self.use_existing_bereaved:
-            name_is_valid = validate_is_not_blank('bereaved_participant_name', self.errors,
-                                                  self.existing_representative)
-        else:
-            name_is_valid = validate_is_not_blank('bereaved_participant_name', self.errors,
-                                                  self.alternate_representative.full_name)
-        return date_is_valid and name_is_valid
+        if self.discussion_could_not_happen:
+            return True
+
+        # check date/time (this has to be valid whether it is a draft or not)
+        validate_date_time_field('bereaved_time_of_conversation', self.errors,
+                                 self.year_of_conversation, self.month_of_conversation,
+                                 self.day_of_conversation, self.time_of_conversation, require_not_blank=self.is_final,
+                                 error_message=messages.ErrorFieldRequiredMessage("date and time of discussion"))
+
+        # other validation is only relevant for complete posts
+        if self.is_final is False:
+            return True
+
+        # check bereaved name
+        if not self.use_existing_bereaved:
+            validate_is_not_blank('bereaved_participant_name', self.errors, self.alternate_representative.full_name,
+                                  error_message=messages.ErrorFieldRequiredMessage('participant name'))
+
+        # check outcome details
+        validate_is_not_blank('bereaved_discussion_details', self.errors, self.discussion_details,
+                              error_message=messages.ErrorFieldRequiredMessage('discussion details'))
+
+        # check outcome decision
+        validate_is_not_blank('bereaved_discussion_outcome', self.errors, self.discussion_outcome,
+                              error_message=messages.ErrorSelectionRequiredMessage('discussion outcome'))
+
+        if self.discussion_outcome == self.BEREAVED_OUTCOME_CONCERNS:
+            validate_is_not_blank('bereaved_outcome_concerned_outcome', self.errors, self.discussion_concerned_outcome,
+                                  error_message=messages.ErrorSelectionRequiredMessage('final outcome'))
+
+        return self.errors['count'] == 0
 
     def fill_from_draft(self, draft, default_representatives):
 
@@ -1318,10 +1337,22 @@ class BereavedDiscussionEventForm:
         self.__set_use_existing_bereaved()
 
     def for_request(self):
+
+        if self.discussion_could_not_happen:
+            return self.__discussion_did_not_happen_request()
+        else:
+            return self.__full_discussion_request()
+
+    def __discussion_did_not_happen_request(self):
+        return {
+            "isFinal": self.is_final,
+            "eventType": "BereavedDiscussion",
+            "discussionUnableHappen": self.discussion_could_not_happen,
+        }
+
+    def __full_discussion_request(self):
         date_of_conversation = self.__calculate_full_date_of_conversation()
-
         participant = self.__participant_for_request()
-
         request = {
             "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
@@ -1338,7 +1369,6 @@ class BereavedDiscussionEventForm:
         pop_if_falsey("presentAtDeath", request)
         pop_if_falsey("informedAtDeath", request)
         pop_if_falsey("bereavedDiscussionOutcome", request)
-
         return request
 
     def __calculate_combined_outcome(self):

@@ -1744,3 +1744,91 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    """
+
+    BEREAVED DISCUSSION
+
+    draft - date/time must be valid or empty
+
+    final - tick for cannot happen is valid
+          - otherwise:
+            name
+            date + time
+            details
+            radio buttons
+    """
+
+    def valid_bereaved_final_data(self):
+        return {
+            'bereaved_event_id': 'any id',
+            'bereaved_rep_type': BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE,
+            'bereaved_alternate_rep_name': 'Mrs Doe',
+            'bereaved_alternate_rep_relationship': '',
+            'bereaved_alternate_rep_phone_number': '',
+            'bereaved_alternate_rep_present_at_death': '',
+            'bereaved_alternate_rep_informed': '',
+            'bereaved_existing_rep_name': '',
+            'bereaved_existing_rep_relationship': '',
+            'bereaved_existing_rep_phone_number': '',
+            'bereaved_existing_rep_present_at_death': '',
+            'bereaved_existing_rep_informed': '',
+            'bereaved_discussion_could_not_happen': BereavedDiscussionEventForm.BEREAVED_RADIO_NO,
+            'bereaved_day_of_conversation': '2',
+            'bereaved_month_of_conversation': '2',
+            'bereaved_year_of_conversation': '2002',
+            'bereaved_time_of_conversation': '12:00',
+            'bereaved_discussion_details': 'some discussion',
+            'bereaved_discussion_outcome': BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS,
+            'bereaved_outcome_concerned_outcome': BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED,
+            'add-event-to-timeline': True
+        }
+
+    def test_bereaved_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_bereaved_final_data()
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_bereaved_form_not_valid_when_conversation_details_not_filled_in(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_details'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_for_draft_when_invalid_date_filled_in(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['bereaved_day_of_conversation'] = '2'
+        form_data['bereaved_month_of_conversation'] = '223'
+        form_data['bereaved_year_of_conversation'] = '2002'
+        form_data['bereaved_time_of_conversation'] = '12:00'
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_when_outcome_is_not_selected(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_outcome'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_when_concerns_exist_but_final_outcome_is_not_selected(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+        form_data['bereaved_outcome_concerned_outcome'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
