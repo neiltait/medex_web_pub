@@ -55,7 +55,7 @@ class HomeViewsTests(MedExTestCase):
         self.assertIsNot(context_user.examinations,  None)
         self.assertIs(type(context_user.examinations), list)
 
-        count = len(ExaminationMocks.get_case_index_response_content())
+        count = len(ExaminationMocks.get_case_index_response_content().get('examinations'))
         self.assertEqual(len(context_user.examinations), count)
 
     @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
@@ -74,7 +74,7 @@ class HomeViewsTests(MedExTestCase):
         self.assertIsNot(context_user.examinations, None)
         self.assertIs(type(context_user.examinations), list)
 
-        count = len(ExaminationMocks.get_case_index_response_content())
+        count = len(ExaminationMocks.get_case_index_response_content().get('examinations'))
         self.assertEqual(len(context_user.examinations), count)
 
         context_form = self.get_context_value(response.context, 'form')

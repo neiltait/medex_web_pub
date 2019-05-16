@@ -803,6 +803,10 @@ class ExaminationMocks:
                     "string"
                 ]
             },
+            "lookups": {
+                "LocationFilterLookup": LocationsMocks.get_trust_location_list(),
+                "UserFilterLookup": PeopleMocks.get_filter_user_list()
+            },
             "success": True
         }
 
@@ -1587,6 +1591,19 @@ class PeopleMocks:
             "appointmentDate": NONE_DATE,
             "appointmentTime": ""
         }
+
+    @classmethod
+    def get_filter_user_list(cls):
+        return [
+                    {
+                        "userId": "887b1f68-45d3-452f-8960-604bf8389ec6",
+                        "fullName": "Doctor Jones"
+                    },
+                    {
+                        "userId": "44dfd3b1-991e-4f7d-8818-986rdbec8b9c",
+                        "fullName": "Doctor Foster"
+                    }
+                ]
 
 
 class DatatypeMocks:

@@ -132,7 +132,7 @@ class User:
 
         if success:
             self.index_overview = IndexOverview(location, response.json())
-            for examination in response.json()['examinations']:
+            for examination in response.json().get('examinations'):
                 examination['open'] = True
                 self.examinations.append(ExaminationOverview(examination))
         else:
