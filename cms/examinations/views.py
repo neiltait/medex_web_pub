@@ -462,24 +462,41 @@ def closed_examination_index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    people = False
-
     if request.method == 'GET':
-        user.load_closed_examinations()
-        form = IndexFilterForm()
+        template, context, status_code = __get_closed_examination_index(user)
     elif request.method == 'POST':
-        form = IndexFilterForm(request.POST)
-        user.load_closed_examinations(location=form.location, person=form.person)
-        filter_location = Location.initialise_with_id(request.POST.get('location'))
-        people = filter_location.load_permitted_users(user.auth_token)
-    locations = user.get_permitted_locations()
+        template, context, status_code = __post_closed_examination_index(user, request.POST)
 
-    context = {
+    return render(request, template, context, status=status_code)
+
+
+def __get_closed_examination_index(user):
+    template = 'home/index.html'
+    status_code = status.HTTP_200_OK
+    form = IndexFilterForm()
+    user.load_examinations()
+
+    context = __set_closed_examination_index_context(user, form)
+
+    return template, context, status_code
+
+
+def __post_closed_examination_index(user, post_body):
+    template = 'home/index.html'
+    status_code = status.HTTP_200_OK
+
+    form = IndexFilterForm(post_body)
+    user.load_closed_examinations(location=form.location, person=form.person)
+
+    context = __set_closed_examination_index_context(user, form)
+
+    return template, context, status_code
+
+
+def __set_closed_examination_index_context(user, form):
+    return {
         'page_header': 'Closed Case Dashboard',
         'session_user': user,
-        'filter_locations': locations,
-        'filter_people': people,
         'form': form,
         'closed_list': True,
     }
-    return render(request, 'home/index.html', context)

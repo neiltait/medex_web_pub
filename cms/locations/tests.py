@@ -11,11 +11,3 @@ class LocationModelTests(MedExTestCase):
         location_id = 'afefwrgwr'
         result = Location.initialise_with_id(location_id)
         self.assertEqual(result.location_id, location_id)
-
-    def test_load_permitted_users_returns_a_list_of_users(self):
-        location_id = 'afefwrgwr'
-        location = Location.initialise_with_id(location_id)
-        result = location.load_permitted_users(SessionMocks.ACCESS_TOKEN)
-        self.assertEqual(type(result), list)
-        self.assertIsTrue(len(result) > 0)
-        self.assertEqual(type(result[0]), DropdownPerson)
