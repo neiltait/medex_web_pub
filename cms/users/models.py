@@ -11,7 +11,6 @@ from examinations import request_handler as examination_request_handler
 from home import request_handler as home_request_handler
 from home.models import IndexOverview
 
-from locations import request_handler as location_request_handler
 from locations.models import Location
 
 from permissions import request_handler as permissions_request_handler
@@ -38,6 +37,9 @@ class User:
         self.examinations = []
         self.permissions = []
 
+    def __str__(self):
+        return self.full_name()
+
     @classmethod
     def initialise_with_token(cls, request):
         user = User()
@@ -50,9 +52,6 @@ class User:
             user.id_token = None
 
         return user
-
-    def __str__(self):
-        return self.full_name()
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name
@@ -112,11 +111,11 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, location='', person=''):
-        if person:
+    def load_examinations(self, location=None, person=None):
+        if person is not None:
             user = person
         else:
-            user = self.user_id if self.is_me() else ''
+            user = self.default_filter_user()
         query_params = {
             "LocationId": location,
             "UserId": user,
@@ -133,7 +132,7 @@ class User:
 
         if success:
             self.index_overview = IndexOverview(location, response.json())
-            for examination in response.json()['examinations']:
+            for examination in response.json().get('examinations'):
                 examination['open'] = True
                 self.examinations.append(ExaminationOverview(examination))
         else:
@@ -178,6 +177,15 @@ class User:
 
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
+
+    def default_filter_user(self):
+        return self.user_id if self.is_me() else ''
+
+    def default_filter_options(self):
+        return {
+            'location': None,
+            'person': self.default_filter_user()
+        }
 
     def is_me(self):
         return self.role == self.ME_ROLE_TYPE

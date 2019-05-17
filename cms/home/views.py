@@ -6,7 +6,6 @@ from rest_framework import status
 from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
-from locations.models import Location
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
@@ -35,11 +34,10 @@ def __get_index(user):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
 
-    form = IndexFilterForm()
+    form = IndexFilterForm(user.default_filter_options())
     user.load_examinations()
-    locations = user.get_permitted_locations()
 
-    context = __set_index_context(user, locations, None, form)
+    context = __set_index_context(user, form)
 
     return template, context, status_code
 
@@ -50,21 +48,16 @@ def __post_index(user, post_body):
 
     form = IndexFilterForm(post_body)
     user.load_examinations(location=form.location, person=form.person)
-    locations = user.get_permitted_locations()
-    filter_location = Location.initialise_with_id(form.location)
-    people = filter_location.load_permitted_users(user.auth_token)
 
-    context = __set_index_context(user, locations, people, form)
+    context = __set_index_context(user, form)
 
     return template, context, status_code
 
 
-def __set_index_context(user, locations, people, form):
+def __set_index_context(user, form):
     return {
         'page_header': '%s Dashboard' % user.role,
         'session_user': user,
-        'filter_locations': locations,
-        'filter_people': people,
         'form': form,
     }
 
