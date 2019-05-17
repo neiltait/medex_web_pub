@@ -1015,6 +1015,20 @@ class QapDiscussionEventForm:
                 self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
 
     def for_request(self):
+
+        if self.discussion_could_not_happen == self.YES:
+            return self.__discussion_did_not_happen_request()
+        else:
+            return self.__full_discussion_request()
+
+    def __discussion_did_not_happen_request(self):
+        return {
+            "eventId": self.event_id,
+            "isFinal": self.is_final,
+            "discussionUnableHappen": self.discussion_could_not_happen,
+        }
+
+    def __full_discussion_request(self):
         name, role, organisation, phone_number = self.__participant_for_request()
 
         date_of_conversation = self.__calculate_full_date_of_conversation()
@@ -1023,6 +1037,7 @@ class QapDiscussionEventForm:
 
         result = {
             "eventId": self.event_id,
+            "eventType": "QapDiscussion",
             "isFinal": self.is_final,
             "participantRole": role,
             "participantOrganisation": organisation,
