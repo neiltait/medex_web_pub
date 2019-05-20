@@ -10,6 +10,12 @@ class APITrueFalseStrings:
     UNKNOWN = "unknown"
 
 
+class APIYesNoStrings:
+    YES = "Yes"
+    No = "No"
+    UNKNOWN = "Unknown"
+
+
 class APIFuneralArrangements:
     CREMATION = "Cremation"
     BURIAL = "Burial"
@@ -20,6 +26,7 @@ class APIFuneralArrangements:
 
 class APIStrings:
     true_false = APITrueFalseStrings()
+    yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
     funeral_arrangements = APIFuneralArrangements()
 
