@@ -736,7 +736,7 @@ class ExaminationsFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
-            'latest-admission-suspect-referral': coroner_referral,
+            'latest_admission_immediate_referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }
 
