@@ -149,7 +149,7 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("gender")
             self.errors["count"] += 1
 
-        if self.gender == 'other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
+        if self.gender == 'Other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
