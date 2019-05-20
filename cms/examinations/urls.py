@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
+from examinations.views import CreateExaminationView
 from . import views
 
 urlpatterns = [
-    url('create', views.create_examination, name='create_examination'),
+    url('create', CreateExaminationView.as_view(), name='create_examination'),
     url('closed', views.closed_examination_index, name='closed_examination_index'),
     url(r'(?P<examination_id>[\w\-]+)/patient-details', views.examination_patient_details,
         name='edit_examination_patient_details'),
