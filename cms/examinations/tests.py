@@ -297,7 +297,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertEqual(form.errors["gender"], messages.ErrorFieldRequiredMessage('gender'))
 
     def test_given_create_examination_with_gender_other_but_no_detail_when_submitted_does_not_validate(self):
-        form = PrimaryExaminationInformationForm(request={'gender': 'other'})
+        form = PrimaryExaminationInformationForm(request={'gender': 'Other'})
         form.is_valid()
         self.assertIsTrue("gender" in form.errors)
 
@@ -446,7 +446,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertEqual(form.errors["place_of_death"], messages.ErrorFieldRequiredMessage('place of death'))
 
     def test_place_of_death_does_validate_if_present(self):
-        form = PrimaryExaminationInformationForm({'place_of_death': 1})
+        form = PrimaryExaminationInformationForm({'place_of_death': "London"})
         form.is_valid()
         self.assertIsFalse("place_of_death" in form.errors)
 

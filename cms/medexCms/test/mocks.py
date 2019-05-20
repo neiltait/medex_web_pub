@@ -363,7 +363,7 @@ class ExaminationMocks:
             'date_of_birth_not_known': True,
             'time_of_death_not_known': True,
             'date_of_death_not_known': True,
-            'place_of_death': 1,
+            'place_of_death': "Mexico",
             'me_office': 1,
         }
 
