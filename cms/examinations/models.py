@@ -925,9 +925,9 @@ class MedicalTeam:
         self.nursing_team_information = obj_dict[
             'nursingTeamInformation'] if 'nursingTeamInformation' in obj_dict else ''
 
-        self.medical_examiner_id = obj_dict['medicalExaminerId'] if 'medicalExaminerId' in obj_dict else ''
+        self.medical_examiner_id = obj_dict['medicalExaminerUserId'] if 'medicalExaminerUserId' in obj_dict else ''
         self.medical_examiners_officer_id = obj_dict[
-            'medicalExaminerOfficer'] if 'medicalExaminerOfficer' in obj_dict else ''
+            'medicalExaminerOfficerUserId'] if 'medicalExaminerOfficerUserId' in obj_dict else ''
 
         if 'lookups' in obj_dict:
             lookups = obj_dict['lookups']
