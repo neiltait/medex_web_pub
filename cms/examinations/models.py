@@ -52,17 +52,6 @@ class Examination:
             self.out_of_hours = obj_dict.get('outOfHours')
 
     @classmethod
-    def load_by_id(cls, examination_id, auth_token):
-        response = request_handler.load_by_id(examination_id, auth_token)
-
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            return Examination(obj_dict=response.json(), examination_id=examination_id)
-        else:
-            return None
-
-    @classmethod
     def create(cls, submission, auth_token):
         return request_handler.post_new_examination(submission, auth_token)
 
