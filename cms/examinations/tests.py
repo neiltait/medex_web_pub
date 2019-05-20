@@ -1152,18 +1152,6 @@ class ExaminationsFormsTests(MedExTestCase):
 
 class ExaminationsModelsTests(MedExTestCase):
 
-    #### Examination tests
-
-    def test_load_by_id_returns_an_examination_instance_if_found(self):
-        examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-        self.assertEqual(type(examination), Examination)
-
-    @patch('examinations.request_handler.load_by_id',
-           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
-    def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
-        examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(examination)
-
     #### PatientDetails tests
 
     def test_initialising_with_the_none_date_results_in_no_dob(self):

@@ -17,13 +17,6 @@ def post_new_examination(examination_object, auth_token):
         return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
 
 
-def load_by_id(examination_id, auth_token):
-    if settings.LOCAL:
-        return ExaminationMocks.get_successful_case_load_response()
-    else:
-        return MedexRequest.get(auth_token, '%s/examinations/%s' % (settings.API_URL, examination_id))
-
-
 def load_examinations_index(params, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_index_response()
@@ -136,7 +129,7 @@ def load_case_outcome(auth_token, examination_id):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_outcome_response()
     else:
-        return MedexRequest.get(auth_token, '%s/examinations/%s/case_outcome' % (settings.API_URL, examination_id))
+        return MedexRequest.get(auth_token, '%s/examinations/%s' % (settings.API_URL, examination_id))
 
 
 def complete_case_scrutiny(auth_token, examination_id):
