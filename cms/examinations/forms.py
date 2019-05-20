@@ -149,7 +149,7 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("gender")
             self.errors["count"] += 1
 
-        if self.gender == 'other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
+        if self.gender == 'Other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
@@ -194,7 +194,7 @@ class PrimaryExaminationInformationForm:
             self.errors["date_of_death"] = DEATH_IS_NOT_AFTER_BIRTH
             self.errors["count"] += 1
 
-        if self.place_of_death is None:
+        if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
             self.errors["place_of_death"] = ErrorFieldRequiredMessage("place of death")
             self.errors["count"] += 1
 
