@@ -7,7 +7,8 @@ from unittest.mock import patch
 from alerts import messages
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, \
+    BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
     CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent
 from examinations.utils import event_form_parser
@@ -1437,7 +1438,6 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
         self.assertEquals(form.errors['count'], 0)
 
-
     def test_meo_summary_form_not_valid_for_timeline_if_notes_are_blank(self):
         form_data = {
             'meo_summary_id': 'any id',
@@ -1832,3 +1832,208 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 1)
+
+    """
+
+    QAP DISCUSSION
+
+    draft - date/time must be valid or empty
+
+    final - tick for cannot happen is valid
+          - otherwise:
+            name
+            date + time
+            details
+            radio buttons
+          - if new cause of death required
+            1a
+    """
+
+    def valid_qap_final_data(self):
+        return {
+            'qap_discussion_id': 'any id',
+            'qap-discussion-doctor': QapDiscussionEventForm.OTHER_PARTICIPANT,
+            'qap_discussion_could_not_happen': QapDiscussionEventForm.NO,
+            'qap-default__full-name': '',
+            'qap-default__role': '',
+            'qap-default__organisation': '',
+            'qap-default__phone-number': '',
+            'qap-other__full-name': 'Robert Wilson',
+            'qap-other__role': '',
+            'qap-other__organisation': '',
+            'qap-other__phone-number': '',
+            'qap_discussion_revised_1a': 'Revised 1a',
+            'qap_discussion_revised_1b': '',
+            'qap_discussion_revised_1c': '',
+            'qap_discussion_revised_1d': '',
+            'qap_discussion_details': 'Some details',
+            'qap-discussion-outcome': QapDiscussionEventForm.MCCD,
+            'qap-discussion-outcome-decision': QapDiscussionEventForm.MCCD_AGREED_UPDATE,
+            'qap_day_of_conversation': '3',
+            'qap_month_of_conversation': '6',
+            'qap_year_of_conversation': '2017',
+            'qap_time_of_conversation': '12:15',
+            'add-event-to-timeline': True
+        }
+
+    def test_qap_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_qap_final_data()
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_for_draft_if_date_invalid(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = '26'
+        form_data['qap_month_of_conversation'] = '262'
+        form_data['qap_year_of_conversation'] = '2019'
+        form_data['qap_time_of_conversation'] = '20:15'
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_for_draft_if_nothing_entered(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = ''
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = ''
+        form_data['qap_time_of_conversation'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_for_final_if_nothing_entered(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = True
+        form_data['qap_day_of_conversation'] = ''
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = ''
+        form_data['qap_time_of_conversation'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_for_draft_if_date_partial(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = '26'
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = '2019'
+        form_data['qap_time_of_conversation'] = '20:15'
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_for_other_participant_if_name_blank(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-doctor'] = QapDiscussionEventForm.OTHER_PARTICIPANT
+        form_data['qap-other__full-name'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_if_conversation_details_blank(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap_discussion_details'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_if_outcome_not_selected(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_coroner_as_outcome_but_no_outcome_decision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.CORONER
+        form_data['qap-discussion-outcome-decision'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_if_mccd_as_outcome_but_no_outcome_decision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
+        form_data['qap-discussion-outcome-decision'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_original_mccd_as_outcome_decision_and_no_revision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
+        form_data['qap-discussion-outcome-decision'] = QapDiscussionEventForm.MCCD_FROM_ME
+        form_data['qap_discussion_revised_1a'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_if_revised_mccd_as_outcome_decision_but_no_revision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
+        form_data['qap-discussion-outcome-decision'] = QapDiscussionEventForm.MCCD_AGREED_UPDATE
+        form_data['qap_discussion_revised_1a'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_discussion_could_not_happen(self):
+        form_data = {
+            'qap_discussion_id': 'any id',
+            'qap-discussion-doctor': '',
+            'qap_discussion_could_not_happen': QapDiscussionEventForm.YES,
+            'qap-default__full-name': '',
+            'qap-default__role': '',
+            'qap-default__organisation': '',
+            'qap-default__phone-number': '',
+            'qap-other__full-name': '',
+            'qap-other__role': '',
+            'qap-other__organisation': '',
+            'qap-other__phone-number': '',
+            'qap_discussion_revised_1a': '',
+            'qap_discussion_revised_1b': '',
+            'qap_discussion_revised_1c': '',
+            'qap_discussion_revised_1d': '',
+            'qap_discussion_details': '',
+            'qap-discussion-outcome': '',
+            'qap-discussion-outcome-decision': '',
+            'qap_day_of_conversation': '',
+            'qap_month_of_conversation': '',
+            'qap_year_of_conversation': '',
+            'qap_time_of_conversation': '',
+            'add-event-to-timeline': True
+        }
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)

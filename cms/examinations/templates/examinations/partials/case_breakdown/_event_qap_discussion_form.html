@@ -50,164 +50,158 @@
 
         <div id="qap-discussion-with-qap__panel"
              class="radio-toggle-group__panel inset-text-panel {% if form.discussion_participant_type != form.QAP_PARTICIPANT %}nhsuk-u-visually-hidden{% endif %}">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap-other__full-name-input">
-                                Role
-                            </label>
-                            <p class="nhsuk-body-m">{{ qap.role }}</p>
-                        </div>
-                    </fieldset>
-                </div>
+            <div class="case-breakdown-form-group">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap-other__full-name-input">
+                                    Role
+                                </label>
+                                <p class="nhsuk-body-m">{{ qap.role }}</p>
+                            </div>
+                        </fieldset>
+                    </div>
 
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_role">
-                                Organisation
-                            </label>
-                            <p class="nhsuk-body-m">{{ qap.organisation }}</p>
-                        </div>
-                    </fieldset>
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_role">
+                                    Organisation
+                                </label>
+                                <p class="nhsuk-body-m">{{ qap.organisation }}</p>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
-            </div>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_phone_number">
-                                Personal phone/ bleep number
-                            </label>
-                            <p class="nhsuk-body-m">{{ qap.phone_number }}</p>
-                        </div>
-                    </fieldset>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_phone_number">
+                                    Personal phone/ bleep number
+                                </label>
+                                <p class="nhsuk-body-m">{{ qap.phone_number }}</p>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
         </div>
         <div id="qap-discussion-with-other__panel"
              class="radio-toggle-group__panel {% if form.discussion_participant_type != form.OTHER_PARTICIPANT %}nhsuk-u-visually-hidden{% endif %}">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.qap_discussion_name %}nhsuk-form-group--error{% endif %}">
+            {% if form.errors.participant %}
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.participant }}</span>
+                    </div>
+                </div>{% endif %}
+
+            <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.participant %}nhsuk-form-group--error{% endif %}">
+                <div class="nhsuk-grid-row">
+
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
                             <label class="nhsuk-label" for="qap-other__full-name-input">
                                 Full name
                             </label>
-                            {% if errors.qap_discussion_full_name %}
-                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_discussion_name }}</span>{% endif %}
-                            <input class="nhsuk-input nhsuk-input--width-10 {% if errors.qap_discussion_name %}nhsuk-input--error{% endif %}"
+                            <input class="nhsuk-input nhsuk-input--width-10 {% if form.errors.participant %}nhsuk-input--error{% endif %}"
                                    id="qap-other__full-name-input" name="qap-other__full-name"
                                    value="{{ form.qap_discussion_name }}" type="text">
-                        </div>
-                    </fieldset>
-                </div>
+                        </fieldset>
+                    </div>
 
 
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
                             <label class="nhsuk-label" for="qap_discussion_role">
                                 Role
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10"
                                    id="qap_discussion_role" name="qap-other__role"
                                    value="{{ form.qap_discussion_role }}" type="text">
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
-            </div>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
                             <label class="nhsuk-label" for="qap_discussion_organisation">
                                 Organisation
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10"
                                    id="qap_discussion_organisation" name="qap-other__organisation"
                                    value="{{ form.qap_discussion_organisation }}" type="text">
-                        </div>
-                    </fieldset>
-                </div>
+                        </fieldset>
+                    </div>
 
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
                             <label class="nhsuk-label" for="qap_discussion_phone_number">
                                 Personal phone/ bleep number
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10"
                                    id="qap_discussion_phone_number" name="qap-other__phone-number"
                                    value="{{ form.qap_discussion_phone_number }}" type="text">
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="qap-discussion__date-time">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-form-group {% if errors.qap_date_of_conversation %}nhsuk-form-group--error{% endif %}">
+        <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.time_of_conversation %}nhsuk-form-group--error{% endif %}">
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
                     <div class="medex-text-checkbox-group__textbox">
                         <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
                             <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                                 Date of conversation
                             </legend>
-                            {% if errors.qap_date_of_conversation %}
-                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_date_of_conversation }}</span>{% endif %}
+                            {% if form.errors.time_of_conversation %}
+                                <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.time_of_conversation }}</span>{% endif %}
                             <div class="nhsuk-date-input" id="date_of_birth">
                                 <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label" for="day_of_birth">
-                                            Day
-                                        </label>
-                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                               id="qap_day_of_conversation" name="qap_day_of_conversation" type="number"
-                                               pattern="[0-9]*"
-                                               value="{{ form.day_of_conversation }}">
-                                    </div>
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="day_of_birth">
+                                        Day
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="qap_day_of_conversation" name="qap_day_of_conversation"
+                                           type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.day_of_conversation }}">
                                 </div>
                                 <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label"
-                                               for="qap_month_of_conversation">
-                                            Month
-                                        </label>
-                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                               id="qap_month_of_conversation" name="qap_month_of_conversation"
-                                               type="number"
-                                               pattern="[0-9]*"
-                                               value="{{ form.month_of_conversation }}">
-                                    </div>
+                                    <label class="nhsuk-label nhsuk-date-input__label"
+                                           for="qap_month_of_conversation">
+                                        Month
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                           id="qap_month_of_conversation" name="qap_month_of_conversation"
+                                           type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.month_of_conversation }}">
                                 </div>
                                 <div class="nhsuk-date-input__item">
-                                    <div class="nhsuk-form-group">
-                                        <label class="nhsuk-label nhsuk-date-input__label"
-                                               for="qap_year_of_conversation">
-                                            Year
-                                        </label>
-                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                               id="qap_year_of_conversation" name="qap_year_of_conversation"
-                                               type="number"
-                                               pattern="[0-9]*"
-                                               value="{{ form.year_of_conversation }}">
-                                    </div>
+                                    <label class="nhsuk-label nhsuk-date-input__label"
+                                           for="qap_year_of_conversation">
+                                        Year
+                                    </label>
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                           id="qap_year_of_conversation" name="qap_year_of_conversation"
+                                           type="number"
+                                           pattern="[0-9]*"
+                                           value="{{ form.year_of_conversation }}">
                                 </div>
                             </div>
                         </fieldset>
                     </div>
-                </div>
-                <div class="nhsuk-form-group medex-text-checkbox-group {% if errors.time_of_death %}nhsuk-form-group--error{% endif %}">
                     <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
                         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="time_of_conversation">
                             Time of conversation
                         </label>
-                        {% if errors.qap_time_of_conversation %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ errors.qap_time_of_conversation }}</span>{% endif %}
                         <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="qap_time_of_conversation"
                                name="qap_time_of_conversation"
                                type="time"
@@ -216,6 +210,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div id="qap-discussion__discussion-could-not-happen" class="nhsuk-grid-row">
@@ -245,26 +240,28 @@
     {% include "examinations/partials/case_breakdown/_cause_of_death.html" with prefix="qap" %}
 
     <div id="qap-discussion__details">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_details">
-                    Details of the discussion?
-                </label>
-                <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_details"
-                          rows="6">{{ form.discussion_details }}</textarea>
+        <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.details %}nhsuk-form-group--error{% endif %}">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_details">
+                        Details of the discussion?
+                    </label>
+                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.participant }}</span>
+                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_details"
+                              rows="6">{{ form.discussion_details }}</textarea>
+                </div>
             </div>
         </div>
     </div>
     <div id="qap-discussion__outcome">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-form-group">
-
+                <div class="nhsuk-form-group {% if form.errors.outcome %}nhsuk-form-group--error{% endif %}">
                     <fieldset class="nhsuk-fieldset">
                         <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                             Outcomes of discussion
                         </legend>
-
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.outcome }}</span>
                         <span class="nhsuk-hint" id="example-hint">
                           What was officially decided by the ME and QAP?
                     </span>
@@ -273,7 +270,8 @@
                                 <input class="nhsuk-radios__input qap-discussion-outcome-radio"
                                        id="qap-discussion-outcome-mccd"
                                        name="qap-discussion-outcome"
-                                       type="radio" value="{{ form.MCCD }}" {% if form.outcome == form.MCCD %}checked{% endif %}>
+                                       type="radio" value="{{ form.MCCD }}"
+                                       {% if form.outcome == form.MCCD %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-mccd">
                                     MCCD to be issued
                                 </label>
@@ -297,12 +295,13 @@
     <div id="qap-discussion__outcome-decision">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <div class="inset-text-panel nhsuk-form-group">
+                <div class="nhsuk-form-group {% if form.errors.outcome_decision %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
 
                     <fieldset class="nhsuk-fieldset">
                         <span class="nhsuk-hint" id="example-hint">
                           What was officially decided by the ME and QAP?
                     </span>
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.outcome_decision }}</span>
                         <div class="nhsuk-radios">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
@@ -310,25 +309,30 @@
                                        name="qap-discussion-outcome-decision"
                                        type="radio" value="outcome-decision-1"
                                        {% if form.outcome_decision == form.MCCD_FROM_QAP %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-1">
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="qap-discussion-outcome-decision-1">
                                     Cause of death provided by the QAP before scrutiny accepted without change
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
                                        id="qap-discussion-outcome-decision-2"
-                                       name="qap-discussion-outcome-decision" type="radio" value="{{ form.MCCD_FROM_ME }}"
+                                       name="qap-discussion-outcome-decision" type="radio"
+                                       value="{{ form.MCCD_FROM_ME }}"
                                        {% if form.outcome_decision == form.MCCD_FROM_ME %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-2">
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="qap-discussion-outcome-decision-2">
                                     Cause of death established by ME accepted by QAP
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
                                        id="qap-discussion-outcome-decision-3"
-                                       name="qap-discussion-outcome-decision" type="radio" value="{{ form.MCCD_AGREED_UPDATE }}"
+                                       name="qap-discussion-outcome-decision" type="radio"
+                                       value="{{ form.MCCD_AGREED_UPDATE }}"
                                        {% if form.outcome_decision == form.MCCD_AGREED_UPDATE %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-decision-3">
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="qap-discussion-outcome-decision-3">
                                     ME and QAP have agreed a new cause of death
                                 </label>
                             </div>
@@ -342,42 +346,45 @@
     <div id="qap-discussion__outcome-revised">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <label class="nhsuk-label nhsuk-u-font-weight-bold">
-                    Details of the discussion?
-                </label>
-
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1a">
-                        1a
+                <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.1a %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label nhsuk-u-font-weight-bold">
+                        Details of the discussion?
                     </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
-                              rows="2">{{ form.cause_of_death.section_1a }}</textarea>
-                </div>
+                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.1a }}</span>
 
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1b">
-                        1b
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
-                              rows="2">{{ form.cause_of_death.section_1b }}</textarea>
-                </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1a">
+                            1a
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
+                                  rows="2">{{ form.cause_of_death.section_1a }}</textarea>
+                    </div>
 
-
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_1c">
-                        1c
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
-                              rows="2">{{ form.cause_of_death.section_1c }}</textarea>
-                </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1b">
+                            1b
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
+                                  rows="2">{{ form.cause_of_death.section_1b }}</textarea>
+                    </div>
 
 
-                <div>
-                    <label class="nhsuk-label" for="qap_discussion_revised_2">
-                        2
-                    </label>
-                    <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
-                              rows="2">{{ form.cause_of_death.section_2 }}</textarea>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_1c">
+                            1c
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
+                                  rows="2">{{ form.cause_of_death.section_1c }}</textarea>
+                    </div>
+
+
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_revised_2">
+                            2
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
+                                  rows="2">{{ form.cause_of_death.section_2 }}</textarea>
+                    </div>
                 </div>
             </div>
         </div>
