@@ -1084,7 +1084,12 @@ class AdmissionNotesEventForm:
             return build_date(self.admission_year, self.admission_month, self.admission_day).strftime(self.date_format)
 
     def get_immediate_coroner_referral(self):
-        return True if self.coroner_referral == 'yes' else False
+        if self.coroner_referral == 'yes':
+            return True
+        elif self.coroner_referral == 'no':
+            return False
+        else:
+            return None
 
     def for_request(self):
         try:
@@ -1096,8 +1101,10 @@ class AdmissionNotesEventForm:
             "eventId": self.event_id,
             "notes": self.admission_notes,
             "isFinal": self.is_final,
-            "admittedDate": None if self.admission_date_unknown else admission_date_for_request,
-            "admittedTime": None if self.admission_time_unknown else self.admission_time,
+            "admittedDate": admission_date_for_request,
+            "admittedDateUnknown": self.admission_date_unknown,
+            "admittedTime": self.admission_time,
+            "admittedTimeUnknown": self.admission_time_unknown,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
