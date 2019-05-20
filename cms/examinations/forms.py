@@ -33,7 +33,6 @@ class PrimaryExaminationInformationForm:
         self.time_of_death = ""
         self.time_of_death_not_known = ""
         self.place_of_death = ""
-        self.out_of_hours = ""
 
     def initialise_form_from_data(self, request):
         self.last_name = request.get("last_name")
@@ -63,7 +62,6 @@ class PrimaryExaminationInformationForm:
         )
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
-        self.out_of_hours = True if "out_of_hours" in request else False
 
     def set_values_from_instance(self, examination):
         self.first_name = examination.given_names
@@ -86,7 +84,6 @@ class PrimaryExaminationInformationForm:
         self.time_of_death = examination.time_of_death
         self.time_of_death_not_known = True if not examination.time_of_death else False
         self.place_of_death = examination.death_occurred_location_id
-        self.out_of_hours = examination.out_of_hours
         self.me_office = examination.medical_examiner_office_responsible
         return self
 
@@ -227,7 +224,6 @@ class PrimaryExaminationInformationForm:
             "dateOfBirth": dob,
             "dateOfDeath": dod,
             "timeOfDeath": '00:00' if self.time_of_death_not_known else self.time_of_death,
-            "outOfHours": 'true' if self.out_of_hours else 'false',
         }
 
     def text_and_checkbox_group_is_valid(self, textboxes, checkbox):
