@@ -43,21 +43,21 @@
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-1" name="gender" type="radio" value="Male" {% if form.gender == 'Male' %}checked{% endif %}>
+                                   id="gender-1" name="gender" type="radio" value="{{ enums.gender.MALE }}" {% if form.gender == enums.gender.MALE %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-1">
                                 Male
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-2" name="gender" type="radio" value="Female" {% if form.gender == 'Female' %}checked{% endif %}>
+                                   id="gender-2" name="gender" type="radio" value="{{ enums.gender.FEMALE }}" {% if form.gender == enums.gender.FEMALE %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-2">
                                 Female
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input {% if errors.gender %}nhsuk-input--error{% endif %}"
-                                   id="gender-3" name="gender" type="radio" value="Other" {% if form.gender == 'Other' %}checked{% endif %}>
+                                   id="gender-3" name="gender" type="radio" value="{{ enums.gender.OTHER }}" {% if form.gender == enums.gender.OTHER %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="gender-3">
                                 Other
                             </label>
