@@ -1091,6 +1091,14 @@ class AdmissionNotesEventForm:
         else:
             return None
 
+    def set_immediate_coroner_referral(self, draft_value):
+        if draft_value is True:
+            return 'yes'
+        elif draft_value is None:
+            return ''
+        else:
+            return 'no'
+
     def for_request(self):
         try:
             admission_date_for_request = self.admission_date()
@@ -1117,7 +1125,7 @@ class AdmissionNotesEventForm:
         self.admission_time = draft.admitted_time
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
-        self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+        self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
 
 
