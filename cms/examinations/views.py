@@ -180,6 +180,7 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'error_count': error_count,
         'tab_modal': modal_config,
         "me_offices": me_offices,
+        "enums": enums,
         "saved": saved,
     }
 
