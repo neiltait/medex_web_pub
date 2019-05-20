@@ -1087,11 +1087,16 @@ class AdmissionNotesEventForm:
         return True if self.coroner_referral == 'yes' else False
 
     def for_request(self):
+        try:
+            admission_date_for_request = self.admission_date()
+        except ValueError:
+            admission_date_for_request = None
+
         return {
             "eventId": self.event_id,
             "notes": self.admission_notes,
             "isFinal": self.is_final,
-            "admittedDate": self.admission_date(),
+            "admittedDate": None if self.admission_date_unknown else admission_date_for_request,
             "admittedTime": None if self.admission_time_unknown else self.admission_time,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }

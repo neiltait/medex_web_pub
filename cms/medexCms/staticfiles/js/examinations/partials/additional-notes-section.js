@@ -33,3 +33,4 @@ AdditionalNotesSection.prototype = {
         }
     }
 };
+
