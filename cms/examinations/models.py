@@ -259,6 +259,7 @@ class PatientDetails:
             'month_of_appointment': form.month_of_appointment_1,
             'year_of_appointment': form.year_of_appointment_1,
             'time_of_appointment': form.time_of_appointment_1,
+            'appointment_notes': form.appointment_additional_details_1,
         }
         representative2 = {
             'bereaved_name': form.bereaved_name_2,
@@ -270,10 +271,10 @@ class PatientDetails:
             'month_of_appointment': form.month_of_appointment_2,
             'year_of_appointment': form.year_of_appointment_2,
             'time_of_appointment': form.time_of_appointment_2,
+            'appointment_notes': form.appointment_additional_details_2,
         }
         self.representatives.append(BereavedRepresentative().set_values_from_form(representative1))
         self.representatives.append(BereavedRepresentative().set_values_from_form(representative2))
-        self.appointment_additional_details = form.appointment_additional_details
         return self
 
     def set_urgency_info_values(self, form):

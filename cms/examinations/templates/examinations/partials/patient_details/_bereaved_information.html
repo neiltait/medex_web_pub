@@ -188,6 +188,28 @@
                 </div>
             </div>
         </div>
+
+        <!-- Additional details -->
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.appointment_additional_details_1 %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="appointment_additional_details_1">Enter details below</label>
+
+
+                            {% if errors.appointment_additional_details_1 %}
+                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_1 }}</span>
+                            {% endif %}
+
+                            <textarea id="appointment_additional_details_1"
+                                      class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details_1 %} nhsuk-textarea--error{% endif %}"
+                                      name="appointment_additional_details_1">{{form.appointment_additional_details_1}}</textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="second-bereaved" class="bereaved">
@@ -379,6 +401,30 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- Additional details -->
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.appointment_additional_details_2 %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="appointment_additional_details_2">Enter details below</label>
+
+
+                            {% if errors.appointment_additional_details_2 %}
+                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_2 }}</span>
+                            {% endif %}
+
+                            <textarea id="appointment_additional_details_2"
+                                      class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details_2 %} nhsuk-textarea--error{% endif %}"
+                                      name="appointment_additional_details_2">{{form.appointment_additional_details_2}}</textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="flex-row">
@@ -388,28 +434,6 @@
 
         <div id="remove-btn" class="nhsuk-button nhsuk-button--secondary">
             Remove last
-        </div>
-    </div>
-</div>
-
-<!-- Additional details -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-full">
-        <div class="nhsuk-form-group">
-            <fieldset class="nhsuk-fieldset">
-                <div class="nhsuk-form-group {% if errors.appointment_additional_details %}nhsuk-form-group--error{% endif %}">
-                    <label class="nhsuk-label" for="appointment_additional_details">Enter details below</label>
-
-
-                    {% if errors.appointment_additional_details %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details }}</span>
-                    {% endif %}
-
-                    <textarea id="appointment_additional_details"
-                              class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details %} nhsuk-textarea--error{% endif %}"
-                              name="appointment_additional_details">{{form.appointment_additional_details}}</textarea>
-                </div>
-            </fieldset>
         </div>
     </div>
 </div>

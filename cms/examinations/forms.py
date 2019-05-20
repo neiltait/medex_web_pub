@@ -349,6 +349,7 @@ class BereavedInformationForm:
             self.month_of_appointment_1 = request.get('month_of_appointment_1')
             self.year_of_appointment_1 = request.get('year_of_appointment_1')
             self.time_of_appointment_1 = request.get('time_of_appointment_1')
+            self.appointment_additional_details_1 = request.get('appointment_additional_details_1')
             self.bereaved_name_2 = request.get('bereaved_name_2')
             self.relationship_2 = request.get('relationship_2')
             self.present_death_2 = request.get('present_death_2')
@@ -358,7 +359,7 @@ class BereavedInformationForm:
             self.month_of_appointment_2 = request.get('month_of_appointment_2')
             self.year_of_appointment_2 = request.get('year_of_appointment_2')
             self.time_of_appointment_2 = request.get('time_of_appointment_2')
-            self.appointment_additional_details = request.get('appointment_additional_details')
+            self.appointment_additional_details_2 = request.get('appointment_additional_details_2')
         else:
             self.bereaved_name_1 = ''
             self.relationship_1 = ''
@@ -369,6 +370,7 @@ class BereavedInformationForm:
             self.month_of_appointment_1 = ''
             self.year_of_appointment_1 = ''
             self.time_of_appointment_1 = ''
+            self.appointment_additional_details_1 = ''
             self.bereaved_name_2 = ''
             self.relationship_2 = ''
             self.present_death_2 = ''
@@ -378,7 +380,7 @@ class BereavedInformationForm:
             self.month_of_appointment_2 = ''
             self.year_of_appointment_2 = ''
             self.time_of_appointment_2 = ''
-            self.appointment_additional_details = ''
+            self.appointment_additional_details_2 = ''
 
     def set_values_from_instance(self, examination):
         count = 1
@@ -392,9 +394,8 @@ class BereavedInformationForm:
             setattr(self, 'month_of_appointment_%s' % count, representative.appointment_month)
             setattr(self, 'year_of_appointment_%s' % count, representative.appointment_year)
             setattr(self, 'time_of_appointment_%s' % count, representative.appointment_time)
+            setattr(self, 'appointment_additional_details_%s' % count, representative.appointment_notes)
             count += 1
-        # TODO: appointment_additional_details is not currently in the examinations model
-        self.appointment_additional_details = ''
         return self
 
     def is_valid(self):
@@ -424,7 +425,8 @@ class BereavedInformationForm:
                 "presentAtDeath": self.present_death_1,
                 "informed": self.informed_1,
                 "appointmentDate": appointment_1_date,
-                "appointmentTime": self.time_of_appointment_1
+                "appointmentTime": self.time_of_appointment_1,
+                "notes": self.appointment_additional_details_1
             })
         if self.bereaved_name_2:
             appointment_2_date = None
@@ -438,7 +440,8 @@ class BereavedInformationForm:
                 "presentAtDeath": self.phone_number_2,
                 "informed": self.informed_2,
                 "appointmentDate": appointment_2_date,
-                "appointmentTime": self.time_of_appointment_2
+                "appointmentTime": self.time_of_appointment_2,
+                "notes": self.appointment_additional_details_2
             })
         return {
             'representatives': representatives,
