@@ -66,24 +66,24 @@
       {% for examination in session_user.examinations %}
         {% include 'examinations/partials/_case_card.html' with case=examination %}
       {% endfor %}
-    
+
       <div class="page-navigation">
         {% if session_user.index_overview.previous_page == 0 %}
-          <span>Previous</span>
+          <span class="disabled">Previous</span>
         {% else %}
           <a href="{% url pagination_url %}?page_number={{session_user.index_overview.previous_page}}">Previous</a>
         {% endif %}
 
         {% for i in session_user.index_overview.page_range %}
           {% if i|add:"1" == session_user.index_overview.page_number %}
-            {{ i|add:"1" }}
+            <span class="active">{{ i|add:"1" }}</span>
           {% else %}
             <a href="{% url pagination_url %}?page_number={{i|add:'1'}}">{{ i|add:"1" }}</a>
           {% endif %}
         {% endfor %}
 
         {% if session_user.index_overview.page_number == session_user.index_overview.page_count %}
-          <span>Next</span>
+          <span class="disabled">Next</span>
         {% else %}
           <a href="{% url pagination_url %}?page_number={{session_user.index_overview.next_page}}">Next</a>
         {% endif %}
