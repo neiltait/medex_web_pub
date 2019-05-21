@@ -53,13 +53,6 @@
 
     {% include 'home/partials/_filter_block.html' %}
 
-    <div class="sort-block">
-      <div style="text-align:right;">
-        <p style="margin: 0; border: 1px solid #000000;display: inline-block;padding: 3px 10px;">
-          Urgency v
-        </p>
-      </div>
-    </div>
 
     {% if session_user.examinations_count == 0 %}
       <h2>
@@ -73,6 +66,28 @@
       {% for examination in session_user.examinations %}
         {% include 'examinations/partials/_case_card.html' with case=examination %}
       {% endfor %}
+    
+      <div class="page-navigation">
+        {% if session_user.index_overview.previous_page == 0 %}
+          <span>Previous</span>
+        {% else %}
+          <a href="{% url pagination_url %}?page_number={{session_user.index_overview.previous_page}}">Previous</a>
+        {% endif %}
+
+        {% for i in session_user.index_overview.page_range %}
+          {% if i|add:"1" == session_user.index_overview.page_number %}
+            {{ i|add:"1" }}
+          {% else %}
+            <a href="{% url pagination_url %}?page_number={{i|add:'1'}}">{{ i|add:"1" }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if session_user.index_overview.page_number == session_user.index_overview.page_count %}
+          <span>Next</span>
+        {% else %}
+          <a href="{% url pagination_url %}?page_number={{session_user.index_overview.next_page}}">Next</a>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
 {% endblock %}
