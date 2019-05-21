@@ -13,6 +13,7 @@ from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, Case
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
+from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from users.models import User
 
@@ -60,6 +61,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "sub_heading": "Primary information",
             "me_offices": me_offices,
             "form": form,
+            "enums": enums,
             "errors": form.errors,
             "add_another": add_another,
         }
@@ -178,6 +180,7 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'error_count': error_count,
         'tab_modal': modal_config,
         "me_offices": me_offices,
+        "enums": enums,
         "saved": saved,
     }
 

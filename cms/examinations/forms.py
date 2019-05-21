@@ -1,6 +1,7 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
+from medexCms.api import enums
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
     validate_is_not_blank, pop_if_falsey, date_is_valid_or_empty
 from people.models import BereavedRepresentative
@@ -146,7 +147,7 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("gender")
             self.errors["count"] += 1
 
-        if self.gender == 'Other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
+        if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
