@@ -216,7 +216,6 @@ class PatientDetails:
         self.year_of_death = form.year_of_death
         self.time_of_death = form.time_of_death
         self.death_occurred_location_id = form.place_of_death
-        self.out_of_hours = form.out_of_hours
         return self
 
     def set_secondary_info_values(self, form):

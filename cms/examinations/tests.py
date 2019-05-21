@@ -502,7 +502,6 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIs(form.hospital_number_1, 'example hospital number 1')
         self.assertIs(form.hospital_number_2, 'example hospital number 2')
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
-        self.assertIs(form.out_of_hours, True)
 
     def test_form_correctly_passes_dob_and_dod_for_request_if_known(self):
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
