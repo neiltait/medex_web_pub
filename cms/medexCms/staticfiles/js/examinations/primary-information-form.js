@@ -55,6 +55,7 @@ Form.prototype = {
         this.errorAlert = this.form.find("#error_alert");
 
         this.initialiseFormWithData();
+
     },
     initialiseFormWithData: function() {
         for(inputGroup of this.inputGroups) {
@@ -226,7 +227,7 @@ Form.prototype = {
         this.validateAndHighlightGivenName();
         this.validateAndHighlightSurname();
         this.validateAndHighlightGenderRadioButtons();
-    }
+    },
 
 };
 
@@ -321,7 +322,10 @@ TextInputsCheckboxGroup.prototype = {
     }
 };
 
+
+
 $(function () // execute once the DOM has loaded
 {
     new Form($(".primary-info-form"));
+
 });

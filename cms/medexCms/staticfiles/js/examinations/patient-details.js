@@ -77,8 +77,8 @@
     for (var i = 0; i < patientDetailsPage.length; i++) {
       new PatientDetailsPage(patientDetailsPage[i]);
     }
-  }
 
+  }
 
   $(document).on('page:load', init);
   $(init)
