@@ -191,7 +191,7 @@ class PatientDetails:
 
         self.mode_of_disposal = ''
         for key, value in self.modes_of_disposal.items():
-            if value == obj_dict.get("modeOfDisposal"):
+            if key == obj_dict.get("modeOfDisposal"):
                 self.mode_of_disposal = key
 
         self.representatives = []

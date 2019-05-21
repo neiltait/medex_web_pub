@@ -1174,7 +1174,7 @@ class ExaminationsModelsTests(MedExTestCase):
     def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
         loaded_data = ExaminationMocks.get_patient_details_load_response_content()
         mode_of_disposal = list(DatatypeMocks.get_modes_of_disposal_list().keys())[0]
-        loaded_data['modeOfDisposal'] = DatatypeMocks.get_modes_of_disposal_list()[mode_of_disposal]
+        loaded_data['modeOfDisposal'] = mode_of_disposal
         patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
         self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
 
