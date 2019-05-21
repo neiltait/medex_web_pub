@@ -323,6 +323,7 @@ class CaseBreakdown:
             return handle_error(response, {'type': 'case', 'action': 'loading'})
 
 
+
 class ExaminationEventList:
     QAP_DISCUSSION_EVENT_KEY = 'qapDiscussion'
     OTHER_EVENT_KEY = 'otherEvents'
@@ -549,6 +550,7 @@ class CaseInitialEvent(CaseEvent):
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
+        self.published = False
 
     @property
     def display_type(self):

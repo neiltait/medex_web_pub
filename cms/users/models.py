@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework import status
 
 from errors.utils import log_api_error, log_internal_error
-from examinations.models import ExaminationOverview
+from examinations.models import ExaminationOverview, ExaminationEventList, CaseEvent
 from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
@@ -193,43 +193,53 @@ class User:
     def is_meo(self):
         return self.role == self.MEO_ROLE_TYPE
 
-    def get_forms_for_role(self):
+    def get_forms_for_role(self, case_breakdown):
+
+        existing_events = [event.event_type for event in case_breakdown.event_list.events if event.published]
         if self.is_meo():
             return [
                 {
                     'id': 'admin-notes',
-                    'name': 'Latest hospital admission details'
+                    'name': 'Latest hospital admission details',
+                    'enabled': 'false' if CaseEvent.ADMISSION_NOTES_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'medical-history',
-                    'name': 'Medical and social history notes'
+                    'name': 'Medical and social history notes',
+                    'enabled': 'false' if CaseEvent.MEDICAL_HISTORY_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'meo-summary',
-                    'name': 'MEO summary'
+                    'name': 'MEO summary',
+                    'enabled': 'false' if CaseEvent.MEO_SUMMARY_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'other',
-                    'name': 'Other case info'
+                    'name': 'Other case info',
+                    'enabled': 'true'
                 }
             ]
         elif self.is_me():
             return [
                 {
                     'id': 'pre-scrutiny',
-                    'name': 'ME pre-scrutiny'
+                    'name': 'ME pre-scrutiny',
+                    'enabled': 'false' if CaseEvent.PRE_SCRUTINY_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'qap-discussion',
-                    'name': 'QAP discussion'
+                    'name': 'QAP discussion',
+                    'enabled': 'false' if CaseEvent.QAP_DISCUSSION_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'bereaved-discussion',
-                    'name': 'Bereaved/representative discussion'
+                    'name': 'Bereaved/representative discussion',
+                    'enabled': 'false' if CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE in existing_events else 'true'
                 },
                 {
                     'id': 'other',
-                    'name': 'Other case info'
+                    'name': 'Other case info',
+                    'enabled': 'true'
                 }
             ]
         else:
