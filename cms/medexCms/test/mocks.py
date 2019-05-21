@@ -739,6 +739,16 @@ class ExaminationMocks:
     @classmethod
     def get_case_index_response_content(cls):
         return {
+            "countOfTotalCases": 3,
+            "countOfUrgentCases": 0,
+            "countOfCasesAdmissionNotesHaveBeenAdded": 0,
+            "countOfCasesReadyForMEScrutiny": 1,
+            "countOfCasesUnassigned": 1,
+            "countOfCasesHaveBeenScrutinisedByME": 0,
+            "countOfCasesPendingAdmissionNotes": 2,
+            "countOfCasesPendingDiscussionWithQAP": 0,
+            "countOfCasesPendingDiscussionWithRepresentative": 0,
+            "countOfCasesHaveFinalCaseOutstandingOutcomes": 0,
             "examinations": [
                 {
                     "urgencyScore": 1,
