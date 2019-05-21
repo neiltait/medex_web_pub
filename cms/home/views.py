@@ -17,11 +17,13 @@ def index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
+    page_number = int(request.GET.get('page_number')) if request.GET.get('page_number') else 1
+
     if request.method == 'GET':
-        template, context, status_code = __get_index(user)
+        template, context, status_code = __get_index(user, page_number)
 
     elif request.method == 'POST':
-        template, context, status_code = __post_index(user, request.POST)
+        template, context, status_code = __post_index(user, request.POST, page_number)
 
     else:
         log_unexpected_method(request.method, 'case index')
@@ -30,11 +32,10 @@ def index(request):
     return render(request, template, context, status=status_code)
 
 
-def __get_index(user):
+def __get_index(user, page_number):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
     page_size = 20
-    page_number = 1
 
     form = IndexFilterForm(user.default_filter_options())
     user.load_examinations(page_size, page_number)
@@ -44,11 +45,10 @@ def __get_index(user):
     return template, context, status_code
 
 
-def __post_index(user, post_body):
+def __post_index(user, post_body, page_number):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
     page_size = 20
-    page_number = 1
 
     form = IndexFilterForm(post_body)
     user.load_examinations(page_size, page_number, location=form.location, person=form.person)
@@ -63,6 +63,7 @@ def __set_index_context(user, form):
         'page_header': '%s Dashboard' % user.role,
         'session_user': user,
         'form': form,
+        'pagination_url': 'index',
     }
 
 
