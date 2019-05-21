@@ -33,9 +33,11 @@ def index(request):
 def __get_index(user):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
+    page_size = 20
+    page_number = 1
 
     form = IndexFilterForm(user.default_filter_options())
-    user.load_examinations()
+    user.load_examinations(page_size, page_number)
 
     context = __set_index_context(user, form)
 
@@ -45,9 +47,11 @@ def __get_index(user):
 def __post_index(user, post_body):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
+    page_size = 20
+    page_number = 1
 
     form = IndexFilterForm(post_body)
-    user.load_examinations(location=form.location, person=form.person)
+    user.load_examinations(page_size, page_number, location=form.location, person=form.person)
 
     context = __set_index_context(user, form)
 

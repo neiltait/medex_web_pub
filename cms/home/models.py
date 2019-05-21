@@ -4,7 +4,7 @@ from people.models import DropdownPerson
 
 class IndexOverview:
 
-    def __init__(self, location, response):
+    def __init__(self, location, response, page_size, page_number):
         self.location_name = None
         self.location_id = location
         self.total_cases = response.get('countOfTotalCases')
@@ -20,6 +20,9 @@ class IndexOverview:
         self.filter_locations = self.process_filter_locations(response.get('lookups').get('LocationFilterLookup'))
         self.filter_people = self.process_filter_people(response.get('lookups').get('UserFilterLookup'))
         self.set_location_display_name()
+        self.page_size = page_size
+        self.page_count = self.total_cases / page_size
+        self.page_number = page_number
 
     def set_location_display_name(self):
         if self.location_id:
