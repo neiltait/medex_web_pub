@@ -28,6 +28,16 @@ def get_display_qap_outcome(outcome):
     return __get_dictionary_value(outcome, outcomes)
 
 
+def get_display_qap_high_outcome(outcome):
+    outcomes = {
+        'MccdCauseOfDeathProvidedByQAP': 'Issue MCCD',
+        'MccdCauseOfDeathProvidedByME': 'Issue MCCD',
+        'MccdCauseOfDeathAgreedByQAPandME': 'Issue MCCD',
+        'ReferToCoroner': 'Refer case to coroner'
+    }
+    return __get_dictionary_value(outcome, outcomes)
+
+
 def __get_dictionary_value(key, dictionary, default=''):
     if key in dictionary:
         return dictionary[key]
