@@ -17,13 +17,8 @@ def index(request):
     if not user.check_logged_in():
         return redirect_to_login()
 
-    page_number = int(request.GET.get('page_number')) if request.GET.get('page_number') else 1
-
     if request.method == 'GET':
-        template, context, status_code = __get_index(user, page_number)
-
-    elif request.method == 'POST':
-        template, context, status_code = __post_index(user, request.POST, page_number)
+        template, context, status_code = __get_index(user, request.GET)
 
     else:
         log_unexpected_method(request.method, 'case index')
@@ -32,26 +27,14 @@ def index(request):
     return render(request, template, context, status=status_code)
 
 
-def __get_index(user, page_number):
+def __get_index(user, query_params):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
+    page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
     page_size = 20
 
-    form = IndexFilterForm(user.default_filter_options())
-    user.load_examinations(page_size, page_number)
-
-    context = __set_index_context(user, form)
-
-    return template, context, status_code
-
-
-def __post_index(user, post_body, page_number):
-    template = 'home/index.html'
-    status_code = status.HTTP_200_OK
-    page_size = 20
-
-    form = IndexFilterForm(post_body)
-    user.load_examinations(page_size, page_number, location=form.location, person=form.person)
+    form = IndexFilterForm(query_params, user.default_filter_options())
+    user.load_examinations(page_size, page_number, form.location, form.person)
 
     context = __set_index_context(user, form)
 

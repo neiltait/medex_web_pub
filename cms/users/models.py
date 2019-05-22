@@ -111,15 +111,10 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, page_size, page_number, location=None, person=None):
-        if person is not None:
-            user = person
-        else:
-            user = self.default_filter_user()
-
+    def load_examinations(self, page_size, page_number, location, person):
         query_params = {
             "LocationId": location,
-            "UserId": user,
+            "UserId": person,
             "CaseStatus": '',
             "OrderBy": "CaseCreated",
             "OpenCases": True,
@@ -180,7 +175,7 @@ class User:
         return Location.load_me_offices(self.auth_token)
 
     def default_filter_user(self):
-        return self.user_id if self.is_me() else ''
+        return self.user_id if self.is_me() else None
 
     def default_filter_options(self):
         return {
