@@ -1,7 +1,9 @@
 from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
-from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome
+from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
+    get_display_circumstances_of_death, get_display_scrutiny_outcome
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
 from errors.utils import handle_error, log_api_error
@@ -631,6 +633,12 @@ class CasePreScrutinyEvent(CaseEvent):
         form = PreScrutinyEventForm().fill_from_draft(self)
         form.event_id = None
         return form
+
+    def display_circumstances_of_death(self):
+        return get_display_circumstances_of_death(self.circumstances_of_death)
+
+    def display_scrutiny_outcome(self):
+        return get_display_scrutiny_outcome(self.outcome_of_pre_scrutiny)
 
 
 class CaseBereavedDiscussionEvent(CaseEvent):
