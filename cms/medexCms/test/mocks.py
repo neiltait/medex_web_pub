@@ -477,12 +477,12 @@ class ExaminationMocks:
             },
             'lookups': {
                 'medicalExaminers': [
-                    {'userId': '1', 'fullName':'Dr Foster'},
-                    {'userId': '2', 'fullName':'Dr Watson'}
+                    {'userId': '1', 'fullName': 'Dr Foster'},
+                    {'userId': '2', 'fullName': 'Dr Watson'}
                 ],
                 'medicalExaminerOfficers': [
-                    {'userId': '3', 'fullName':'Little Miss Chatterbox'},
-                    {'userId': '4', 'fullName':'Mr. Bump'}
+                    {'userId': '3', 'fullName': 'Little Miss Chatterbox'},
+                    {'userId': '4', 'fullName': 'Mr. Bump'}
                 ]
             }
         }
@@ -1284,6 +1284,84 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_empty_case_breakdown_response_content(cls):
+        return {
+            "header": {
+                "urgencyScore": 0,
+                "givenNames": "Andrew",
+                "surname": "Wilson",
+                "nhsNumber": None,
+                "examinationId": "e7b0caf9-2acb-406d-b7ec-87f69ce73806",
+                "timeOfDeath": "00:00:00",
+                "dateOfBirth": "0001-01-01T00:00:00",
+                "dateOfDeath": "0001-01-01T00:00:00",
+                "appointmentDate": None,
+                "appointmentTime": None,
+                "lastAdmission": None,
+                "caseCreatedDate": "2019-05-21T14:11:05.629",
+                "admissionNotesHaveBeenAdded": False,
+                "readyForMEScrutiny": False,
+                "unassigned": True,
+                "haveBeenScrutinisedByME": False,
+                "pendingAdmissionNotes": True,
+                "pendingDiscussionWithQAP": True,
+                "pendingDiscussionWithRepresentative": True,
+                "haveFinalCaseOutcomesOutstanding": True
+            },
+            "caseBreakdown": {
+                "patientDeathEvent": {
+                    "userFullName": "Tom Ridd",
+                    "usersRole": "MedicalExaminer",
+                    "eventId": "434c5c92-622c-495c-a8fb-88dec255e9a1",
+                    "userId": "a2982e7e-81d1-482f-aec7-d122a3957c8d",
+                    "isFinal": True,
+                    "eventType": "PatientDied",
+                    "dateOfDeath": "0001-01-01T00:00:00",
+                    "timeOfDeath": "00:00:00",
+                    "created": "2019-05-21T00:00:00"
+                },
+                "otherEvents": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "preScrutiny": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "bereavedDiscussion": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "meoSummary": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "qapDiscussion": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "medicalHistory": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "admissionNotes": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                }
+            },
+            "errors": {},
+            "lookups": None,
+            "success": True
+        }
+
+    @classmethod
     def get_mock_qap_discussion_form_data(cls):
         return {
             'qap_discussion_id': 1,
@@ -1595,15 +1673,15 @@ class PeopleMocks:
     @classmethod
     def get_filter_user_list(cls):
         return [
-                    {
-                        "userId": "887b1f68-45d3-452f-8960-604bf8389ec6",
-                        "fullName": "Doctor Jones"
-                    },
-                    {
-                        "userId": "44dfd3b1-991e-4f7d-8818-986rdbec8b9c",
-                        "fullName": "Doctor Foster"
-                    }
-                ]
+            {
+                "userId": "887b1f68-45d3-452f-8960-604bf8389ec6",
+                "fullName": "Doctor Jones"
+            },
+            {
+                "userId": "44dfd3b1-991e-4f7d-8818-986rdbec8b9c",
+                "fullName": "Doctor Foster"
+            }
+        ]
 
 
 class DatatypeMocks:
