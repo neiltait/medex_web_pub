@@ -1,8 +1,9 @@
 {% load staticfiles %}
 
 <div id="filter-block" class="filters-block">
-  <form id="index-filters-form" action="{% url 'index' %}" method="post">
-    {% csrf_token %}
+  <form id="index-filters-form" action="{% url 'index' %}" method="get">
+    <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden />
+
     <p>
       Filter cases by place and person
     </p>
@@ -10,7 +11,7 @@
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-one-half">
         <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}">
-          <option value="">All</option>
+          <option value="all">All</option>
           {% for location in session_user.index_overview.filter_locations %}
             <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
               {{ location.name }}
@@ -21,7 +22,7 @@
 
       <div class="nhsuk-grid-column-one-half">
         <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}">
-          <option value="">All</option>
+          <option value="all">All</option>
           {% for person in session_user.index_overview.filter_people %}
             <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
               {{ person.name }}

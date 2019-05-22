@@ -188,7 +188,7 @@ class UsersModelsTests(MedExTestCase):
         user = User(UserMocks.get_filled_user_dict())
         user.auth_token = SessionMocks.ACCESS_TOKEN
         user.permissions.append(Permission(PermissionMocks.get_me_permission_dict()))
-        user.load_examinations()
+        user.load_examinations(20, 1, None, None)
         self.assertEquals(type(user.examinations), list)
 
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_me(self):

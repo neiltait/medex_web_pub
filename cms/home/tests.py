@@ -64,10 +64,9 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
-    def test_posting_filters_to_the_landing_page_returns_the_correctly_set_filters(self):
+    def test_sending_filters_to_the_landing_page_returns_the_correctly_set_filters(self):
         self.set_auth_cookies()
-        filter_options = {"location": '1'}
-        response = self.client.post('/', filter_options)
+        response = self.client.get('/?page_number=1&location=1')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'home/index.html')
         context_user = self.get_context_value(response.context, 'session_user')

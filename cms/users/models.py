@@ -111,19 +111,15 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, location=None, person=None):
-        if person is not None:
-            user = person
-        else:
-            user = self.default_filter_user()
+    def load_examinations(self, page_size, page_number, location, person):
         query_params = {
             "LocationId": location,
-            "UserId": user,
+            "UserId": person,
             "CaseStatus": '',
             "OrderBy": "CaseCreated",
             "OpenCases": True,
-            "PageSize": 20,
-            "PageNumber": 1
+            "PageSize": page_size,
+            "PageNumber": page_number
         }
 
         response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
@@ -131,27 +127,22 @@ class User:
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            self.index_overview = IndexOverview(location, response.json())
+            self.index_overview = IndexOverview(location, response.json(), page_size, page_number)
             for examination in response.json().get('examinations'):
                 examination['open'] = True
                 self.examinations.append(ExaminationOverview(examination))
         else:
             log_api_error('permissions load', response.text)
 
-    def load_closed_examinations(self, location='', person=''):
-        if person:
-            user = person
-        else:
-            user = ''
-
+    def load_closed_examinations(self, page_size, page_number, location, person):
         query_params = {
             "LocationId": location,
-            "UserId": user,
+            "UserId": person,
             "CaseStatus": '',
             "OrderBy": "CaseCreated",
             "OpenCases": False,
-            "PageSize": 20,
-            "PageNumber": 1
+            "PageSize": page_size,
+            "PageNumber": page_number
         }
 
         response = examination_request_handler.load_examinations_index(query_params, self.auth_token)
@@ -159,7 +150,7 @@ class User:
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            self.index_overview = IndexOverview(location, response.json())
+            self.index_overview = IndexOverview(location, response.json(), page_size, page_number)
             for examination in response.json()['examinations']:
                 examination['open'] = False
                 self.examinations.append(ExaminationOverview(examination))
@@ -179,7 +170,7 @@ class User:
         return Location.load_me_offices(self.auth_token)
 
     def default_filter_user(self):
-        return self.user_id if self.is_me() else ''
+        return self.user_id if self.is_me() else None
 
     def default_filter_options(self):
         return {
