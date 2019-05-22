@@ -12,7 +12,7 @@ class APITrueFalseStrings:
 
 class APIYesNoStrings:
     YES = "Yes"
-    No = "No"
+    NO = "No"
     UNKNOWN = "Unknown"
 
 
