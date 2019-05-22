@@ -10,11 +10,11 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, \
     BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
-    CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent
+    CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent, CaseInitialEvent
 from examinations.utils import event_form_parser
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE, parse_datetime
+from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 from people.models import BereavedRepresentative
 
 
@@ -281,7 +281,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form.is_valid()
         self.assertIsTrue("first_name" in form.errors)
 
-    def test_given_create_examination_with_first_name_greater_than_150_characters_does_not_validate(self):
+    def test_given_create_examination_with_last_name_greater_than_150_characters_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'last_name': 'nicks' * 40})
         form.is_valid()
         self.assertIsTrue("last_name" in form.errors)
@@ -2024,3 +2024,35 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+
+class ExaminationsBreakdownTests(MedExTestCase):
+
+    def test_initial_event_does_display_date_in_correct_format(self):
+        data = {'dateOfDeath': '2019-05-12T00:00:00'}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_date(), '12.05.2019')
+
+    def test_initial_event_does_display_time_in_correct_format(self):
+        data = {'timeOfDeath': '00:55:00'}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_time(), '00:55:00')
+
+    def test_initial_event_does_display_unknown_for_default_none_date(self):
+        data = {'dateOfDeath': NONE_DATE}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_date(), CaseInitialEvent.UNKNOWN)
+
+
+    def test_initial_event_does_display_unknown_for_default_none_time(self):
+        data = {'timeOfDeath': NONE_TIME}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_time(), CaseInitialEvent.UNKNOWN)
