@@ -134,15 +134,10 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_closed_examinations(self, page_size, page_number, location='', person=''):
-        if person:
-            user = person
-        else:
-            user = ''
-
+    def load_closed_examinations(self, page_size, page_number, location, person):
         query_params = {
             "LocationId": location,
-            "UserId": user,
+            "UserId": person,
             "CaseStatus": '',
             "OrderBy": "CaseCreated",
             "OpenCases": False,

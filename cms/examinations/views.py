@@ -445,52 +445,28 @@ def __set_examination_case_outcome_context(user, case_outcome):
     }
 
 
-def closed_examination_index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    page_number = int(request.GET.get('page_number')) if request.GET.get('page_number') else 1
-
-    if request.method == 'GET':
-        template, context, status_code = __get_closed_examination_index(user, page_number)
-    elif request.method == 'POST':
-        template, context, status_code = __post_closed_examination_index(user, request.POST, page_number)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_closed_examination_index(user, page_number):
+class ClosedExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
-    status_code = status.HTTP_200_OK
-    page_size = 20
 
-    form = IndexFilterForm()
-    user.load_closed_examinations(page_size, page_number)
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        query_params = request.GET
 
-    context = __set_closed_examination_index_context(user, form)
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 20
 
-    return template, context, status_code
+        form = IndexFilterForm(query_params, self.user.default_filter_options())
+        self.user.load_closed_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
 
+        context = self.set_context(form)
 
-def __post_closed_examination_index(user, post_body, page_number):
-    template = 'home/index.html'
-    status_code = status.HTTP_200_OK
-    page_size = 20
-
-    form = IndexFilterForm(post_body)
-    user.load_closed_examinations(page_size, page_number, location=form.location, person=form.person)
-
-    context = __set_closed_examination_index_context(user, form)
-
-    return template, context, status_code
-
-
-def __set_closed_examination_index_context(user, form):
-    return {
-        'page_header': 'Closed Case Dashboard',
-        'session_user': user,
-        'form': form,
-        'closed_list': True,
-        'pagination_url': 'closed_examination_index',
-    }
+        return render(request, self.template, context, status=status_code)
+    
+    def set_context(self, form):
+        return {
+            'page_header': 'Closed Case Dashboard',
+            'session_user': self.user,
+            'form': form,
+            'closed_list': True,
+            'pagination_url': 'closed_examination_index',
+        }
