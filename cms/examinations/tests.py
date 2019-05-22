@@ -953,7 +953,7 @@ class ExaminationsFormsTests(MedExTestCase):
     @staticmethod
     def get_participant_from_draft(draft_data):
         return MedicalTeamMember(name=draft_data["participantName"],
-                                 role=draft_data["participantRoll"],
+                                 role=draft_data["participantRole"],
                                  organisation=draft_data["participantOrganisation"],
                                  phone_number=draft_data["participantPhoneNumber"])
 
