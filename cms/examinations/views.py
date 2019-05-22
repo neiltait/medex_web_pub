@@ -303,6 +303,7 @@ def edit_examination_case_breakdown(request, examination_id):
         'bereaved_form': {"use_default_bereaved": True},
         'patient': examination.case_header,
         'form_data': form_data,
+        'enums': enums,
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)

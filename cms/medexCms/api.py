@@ -24,11 +24,25 @@ class APIFuneralArrangements:
     UNKNOWN = "Unknown"
 
 
+class APICircumstancesOfDeath:
+    expected = "Expected"
+    sudden_but_not_unexpected = "SuddenButNotUnexpected"
+    unexpected = 'Unexpected'
+    part_of_life_care_plan = 'PartOfAnIndividualisedEndOfLifeCarePlan'
+
+
+class APIOutcomes:
+    issue_an_mccd = 'IssueAnMccd'
+    refer_to_coroner = 'ReferToCoroner'
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
     funeral_arrangements = APIFuneralArrangements()
+    cod = APICircumstancesOfDeath()
+    outcomes = APIOutcomes()
 
 
 enums = APIStrings()
