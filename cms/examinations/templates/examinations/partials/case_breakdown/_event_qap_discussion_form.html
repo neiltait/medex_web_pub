@@ -221,9 +221,9 @@
                         <div class="nhsuk-checkboxes__item">
                             <input class="nhsuk-checkboxes__input" id="qap-discussion-could-not-happen"
                                    name="qap_discussion_could_not_happen"
-                                   value="{{ form.YES }}"
+                                   value="{{ enums.yes_no.YES }}"
                                    type="checkbox"
-                                    {% if form.discussion_could_not_happen == form.YES %}
+                                    {% if form.discussion_could_not_happen == enums.yes_no.YES %}
                                    checked{% endif %}>
                             <label class="nhsuk-label nhsuk-checkboxes__label"
                                    for="qap_discussion_could_not_happen">
@@ -307,8 +307,8 @@
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
                                        id="qap-discussion-outcome-decision-1"
                                        name="qap-discussion-outcome-decision"
-                                       type="radio" value="outcome-decision-1"
-                                       {% if form.outcome_decision == form.MCCD_FROM_QAP %}checked{% endif %}>
+                                       type="radio" value="{{ enums.outcomes.MCCD_FROM_QAP }}"
+                                       {% if form.outcome_decision == enums.outcomes.MCCD_FROM_QAP %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-1">
                                     Cause of death provided by the QAP before scrutiny accepted without change
@@ -318,8 +318,8 @@
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
                                        id="qap-discussion-outcome-decision-2"
                                        name="qap-discussion-outcome-decision" type="radio"
-                                       value="{{ form.MCCD_FROM_ME }}"
-                                       {% if form.outcome_decision == form.MCCD_FROM_ME %}checked{% endif %}>
+                                       value="{{ enums.outcomes.MCCD_FROM_ME }}"
+                                       {% if form.outcome_decision == enums.outcomes.MCCD_FROM_ME %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-2">
                                     Cause of death established by ME accepted by QAP
@@ -329,8 +329,8 @@
                                 <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
                                        id="qap-discussion-outcome-decision-3"
                                        name="qap-discussion-outcome-decision" type="radio"
-                                       value="{{ form.MCCD_AGREED_UPDATE }}"
-                                       {% if form.outcome_decision == form.MCCD_AGREED_UPDATE %}checked{% endif %}>
+                                       value="{{ enums.outcomes.MCCD_FROM_QAP_AND_ME }}"
+                                       {% if form.outcome_decision == enums.outcomes.MCCD_FROM_QAP_AND_ME %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-3">
                                     ME and QAP have agreed a new cause of death

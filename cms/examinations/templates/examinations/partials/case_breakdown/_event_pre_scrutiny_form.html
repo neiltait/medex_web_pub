@@ -29,15 +29,15 @@
                     <div class="nhsuk-radios">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-1" name="cod" type="radio"
-                                   value="{{ enums.cod.expected }}" {% if form.circumstances_of_death == enums.cod.expected %}checked{% endif %}>
+                                   value="{{ enums.cod.EXPECTED }}" {% if form.circumstances_of_death == enums.cod.EXPECTED %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-1">
                                 Expected
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-3" name="cod" type="radio"
-                                   value="{{ enums.cod.sudden_but_not_unexpected }}"
-                                   {% if form.circumstances_of_death == enums.cod.sudden_but_not_unexpected %}checked{% endif %}>
+                                   value="{{ enums.cod.SUDDEN_NOT_UNEXPECTED }}"
+                                   {% if form.circumstances_of_death == enums.cod.SUDDEN_NOT_UNEXPECTED %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-3">
                                 Sudden but not unexpected
                             </label>
@@ -49,16 +49,16 @@
                     <div class="nhsuk-radios">
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-2" name="cod" type="radio"
-                                   value="{{ enums.cod.unexpected }}"
-                                   {% if form.circumstances_of_death == enums.cod.unexpected %}checked{% endif %}>
+                                   value="{{ enums.cod.UNEXPECTED }}"
+                                   {% if form.circumstances_of_death == enums.cod.UNEXPECTED %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-2">
                                 Unexpected
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
                             <input class="nhsuk-radios__input" id="cod-4" name="cod" type="radio"
-                                   value="{{ enums.cod.part_of_life_care_plan }}"
-                                   {% if form.circumstances_of_death == enums.cod.part_of_life_care_plan %}checked{% endif %}>
+                                   value="{{ enums.cod.END_OF_LIFE_CARE_PLAN }}"
+                                   {% if form.circumstances_of_death == enums.cod.END_OF_LIFE_CARE_PLAN %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="cod-4">
                                 Part of an individualised end of life care plan
                             </label>
@@ -116,7 +116,7 @@
             <div class="nhsuk-radios__item">
                 <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops"
                        type="radio"
-                       value="{{ enums.outcomes.issue_an_mccd }}" {% if form.overall_outcome == enums.outcomes.issue_an_mccd %}checked{% endif %}>
+                       value="{{ enums.outcomes.MCCD }}" {% if form.overall_outcome == enums.outcomes.MCCD %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-1">
                     Issue an MCCD
                 </label>
@@ -124,7 +124,7 @@
             <div class="nhsuk-radios__item">
                 <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-2" name="ops"
                        type="radio"
-                       value="{{ enums.outcomes.refer_to_coroner }}" {% if form.overall_outcome == enums.outcomes.refer_to_coroner %}checked{% endif %}>
+                       value="{{ enums.outcomes.CORONER }}" {% if form.overall_outcome == enums.outcomes.CORONER %}checked{% endif %}>
                 <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-2">
                     Refer to coroner
                 </label>

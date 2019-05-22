@@ -828,15 +828,8 @@ class MedicalHistoryEventForm:
 
 
 class QapDiscussionEventForm:
-    YES = "yes"
-    NO = "no"
     QAP_PARTICIPANT = 'qap'
     OTHER_PARTICIPANT = 'other'
-    MCCD = "mccd"
-    CORONER = "coroner"
-    MCCD_FROM_QAP = "outcome-decision-1"
-    MCCD_FROM_ME = "outcome-decision-2"
-    MCCD_AGREED_UPDATE = "outcome-decision-3"
 
     active = False
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -850,7 +843,8 @@ class QapDiscussionEventForm:
         self.event_id = form_data.get('qap_discussion_id')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
-        self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'), self.NO)
+        self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'),
+                                                       enums.yes_no.NO)
 
         self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
         self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
@@ -936,21 +930,12 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
-        if api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            self.outcome = self.MCCD
-            self.outcome_decision = self.MCCD_FROM_QAP
-
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            self.outcome = self.MCCD
-            self.outcome_decision = self.MCCD_FROM_ME
-
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            self.outcome = self.MCCD
-            self.outcome_decision = self.MCCD_AGREED_UPDATE
-
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            self.outcome = self.CORONER
+        if api_outcome == enums.outcomes.CORONER:
+            self.outcome = api_outcome
             self.outcome_decision = ""
+        else:
+            self.outcome = enums.outcomes.MCCD
+            self.outcome_decision = api_outcome
 
     def __calculate_time_values(self, draft):
         date_of_conversation = draft.date_of_conversation
@@ -974,7 +959,7 @@ class QapDiscussionEventForm:
         self.errors = {'count': 0}
 
         # if discussion could not happen then always valid
-        if self.discussion_could_not_happen == self.YES:
+        if self.discussion_could_not_happen == enums.yes_no.YES:
             return True
 
         # validate date
@@ -1005,18 +990,18 @@ class QapDiscussionEventForm:
         if self.outcome == '':
             self.errors['count'] += 1
             self.errors['outcome'] = messages.ErrorSelectionRequiredMessage('discussion outcome')
-        elif self.outcome == self.MCCD:
+        elif self.outcome == enums.outcomes.MCCD:
             if self.outcome_decision == '':
                 self.errors['count'] += 1
                 self.errors['outcome_decision'] = messages.ErrorSelectionRequiredMessage('mccd outcome')
-            elif self.outcome_decision in [self.MCCD_AGREED_UPDATE,
-                                           self.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
+            elif self.outcome_decision in [enums.outcomes.MCCD_FROM_QAP_AND_ME,
+                                           enums.outcomes.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
                 self.errors['count'] += 1
                 self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
 
     def for_request(self):
 
-        if self.discussion_could_not_happen == self.YES:
+        if self.discussion_could_not_happen == enums.yes_no.YES:
             return self.__discussion_did_not_happen_request()
         else:
             return self.__full_discussion_request()
@@ -1042,7 +1027,7 @@ class QapDiscussionEventForm:
             "participantRole": role,
             "participantOrganisation": organisation,
             "participantPhoneNumber": phone_number,
-            "discussionUnableHappen": self.discussion_could_not_happen == self.YES,
+            "discussionUnableHappen": self.discussion_could_not_happen == enums.yes_no.YES,
             "discussionDetails": self.discussion_details,
             "qapDiscussionOutcome": outcome,
             "participantName": name,
@@ -1069,15 +1054,10 @@ class QapDiscussionEventForm:
         return name, role, organisation, phone_number
 
     def __calculate_discussion_outcome(self):
-        if self.outcome == self.MCCD:
-            if self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_QAP:
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP
-            elif self.outcome_decision == QapDiscussionEventForm.MCCD_FROM_ME:
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
-            elif self.outcome_decision == 'outcome-decision-3':
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
-        elif self.outcome == 'coroner':
-            return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
+        if self.outcome == enums.outcomes.MCCD:
+            return self.outcome_decision
+        elif self.outcome == enums.outcomes.CORONER:
+            return self.outcome
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
