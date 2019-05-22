@@ -1,23 +1,17 @@
 class IndexFilterForm:
 
     def __init__(self, query_params, defaults):
-        self.location = ''
-        self.person = ''
-        self.set_location_value(query_params.get('location'), defaults.get('location'))
-        self.set_person_value(query_params.get('person'), defaults.get('person'))
+        self.location = query_params.get('location') if query_params.get('location') else defaults.get('location')
+        self.person = query_params.get('person') if query_params.get('person') else defaults.get('person')
 
-    def set_location_value(self, query_location, default_location):
-        if query_location and query_location == 'all':
-            self.location = None
-        elif query_location:
-            self.location = query_location
+    def get_location_value(self):
+        if self.location == 'all':
+            return None
         else:
-            self.location = default_location
+            return self.location
 
-    def set_person_value(self, query_person, default_person):
-        if query_person and query_person == 'all':
-            self.person = None
-        elif query_person:
-            self.person = query_person
+    def get_person_value(self):
+        if self.person == 'all':
+            return None
         else:
-            self.person = default_person
+            return self.person

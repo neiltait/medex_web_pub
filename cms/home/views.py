@@ -31,10 +31,10 @@ def __get_index(user, query_params):
     template = 'home/index.html'
     status_code = status.HTTP_200_OK
     page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-    page_size = 20
+    page_size = 1
 
     form = IndexFilterForm(query_params, user.default_filter_options())
-    user.load_examinations(page_size, page_number, form.location, form.person)
+    user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
 
     context = __set_index_context(user, form)
 
