@@ -9,7 +9,7 @@
                 <select class="nhsuk-select" id="event-form-picker">
                     <option value="" disabled hidden selected>Select an event</option>
                     {% for form in forms %}
-                        <option value={{ form.id }}>{{ form.name }}</option>
+                        <option value={{ form.id }} {% if form.enabled == 'false' %}disabled{% endif %}>{{ form.name }}</option>
                     {% endfor %}
                 </select>
             </div>

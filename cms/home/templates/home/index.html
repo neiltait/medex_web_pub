@@ -13,7 +13,7 @@
 
 {% block page %}
   <div class="case-index">
-    <h1 class="page-title">
+    <h1 class="page-title" automation-id="page-title">
       {{page_header}}
     </h1>
 
@@ -23,7 +23,7 @@
           Displaying cases at
         </p>
 
-        <p class="overview-body location">
+        <p class="overview-body location" automation-id="count-of-location-cases">
           {{session_user.index_overview.location_name}}
         </p>
       </div>
@@ -33,7 +33,7 @@
           Total number of cases
         </p>
 
-        <p class="overview-body">
+        <p class="overview-body" automation-id="count-of-total-cases">
           {{session_user.index_overview.total_cases}}
         </p>
       </div>
@@ -44,7 +44,7 @@
             Number of urgent cases
           </p>
 
-          <p class="overview-body">
+          <p class="overview-body" automation-id="count-of-urgent-cases">
             {{session_user.index_overview.urgent_cases}}
           </p>
         </div>
@@ -62,7 +62,7 @@
     </div>
 
     {% if session_user.examinations_count == 0 %}
-      <h2>
+      <h2  automation-id="filter-result-message">
         Currently there are no cases for these filters
       </h2>
 

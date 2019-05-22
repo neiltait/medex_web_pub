@@ -1,5 +1,6 @@
+from examinations.models import CaseBreakdown
 from medexCms.test.utils import MedExTestCase
-from medexCms.test.mocks import SessionMocks, UserMocks, PermissionMocks
+from medexCms.test.mocks import SessionMocks, UserMocks, PermissionMocks, ExaminationMocks
 
 from rest_framework import status
 
@@ -21,7 +22,8 @@ class UsersViewsTest(MedExTestCase):
         response = self.client.get('/users/new')
         self.assertTemplateUsed(response, 'users/new.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_user_creation_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
         response = self.client.get('/users/new')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -51,7 +53,8 @@ class UsersViewsTest(MedExTestCase):
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
         self.assertTemplateUsed(response, 'users/permission_builder.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_add_permission_page_redirects_to_login_if_not_logged_in(self, mock_auth_validation):
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -71,9 +74,10 @@ class UsersViewsTest(MedExTestCase):
         self.assertTemplateUsed(response, 'users/permission_builder.html')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch('permissions.request_handler.create_permission', return_value=PermissionMocks.get_unsuccessful_permission_creation_response())
+    @patch('permissions.request_handler.create_permission',
+           return_value=PermissionMocks.get_unsuccessful_permission_creation_response())
     def test_submitting_a_valid_form_that_errors_on_api_returns_the_status_from_server_and_an_error_message(self,
-                                                                                            mock_permission_creation):
+                                                                                                            mock_permission_creation):
         self.set_auth_cookies()
         submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
         response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
@@ -146,7 +150,6 @@ class UsersFormsTests(MedExTestCase):
 
 class UsersModelsTests(MedExTestCase):
 
-
     #### User tests
 
     def test_User_initialisation_correctly_sets_the_fields_from_dict(self):
@@ -192,7 +195,10 @@ class UsersModelsTests(MedExTestCase):
         user_data = UserMocks.get_filled_user_dict()
         user_data['role'] = User.ME_ROLE_TYPE
         user = User(user_data)
-        available_forms = user.get_forms_for_role()
+
+        available_forms = user.get_forms_for_role(
+            CaseBreakdown(obj_dict=ExaminationMocks.get_case_breakdown_response_content(), medical_team=None))
+
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'pre-scrutiny')
         self.assertEquals(available_forms[1]['id'], 'qap-discussion')
@@ -203,9 +209,36 @@ class UsersModelsTests(MedExTestCase):
         user_data = UserMocks.get_filled_user_dict()
         user_data['role'] = User.MEO_ROLE_TYPE
         user = User(user_data)
-        available_forms = user.get_forms_for_role()
+
+        available_forms = user.get_forms_for_role(
+            CaseBreakdown(obj_dict=ExaminationMocks.get_case_breakdown_response_content(), medical_team=None))
+
         self.assertEquals(type(available_forms), list)
         self.assertEquals(available_forms[0]['id'], 'admin-notes')
         self.assertEquals(available_forms[1]['id'], 'medical-history')
         self.assertEquals(available_forms[2]['id'], 'meo-summary')
         self.assertEquals(available_forms[3]['id'], 'other')
+
+    def test_get_forms_for_role_where_nothing_published_returns_form_with_enabled_true(self):
+        user_data = UserMocks.get_filled_user_dict()
+        user_data['role'] = User.MEO_ROLE_TYPE
+        user = User(user_data)
+
+        data = ExaminationMocks.get_empty_case_breakdown_response_content()
+        available_forms = user.get_forms_for_role(
+            CaseBreakdown(obj_dict=data, medical_team=None))
+
+        self.assertEquals(available_forms[0]['id'], 'admin-notes')
+        self.assertEquals(available_forms[0]['enabled'], 'true')
+
+    def test_get_forms_for_role_with_items_published_returns_form_with_enabled_false(self):
+        user_data = UserMocks.get_filled_user_dict()
+        user_data['role'] = User.MEO_ROLE_TYPE
+        user = User(user_data)
+
+        data = ExaminationMocks.get_case_breakdown_response_content()
+        available_forms = user.get_forms_for_role(
+            CaseBreakdown(obj_dict=data, medical_team=None))
+
+        self.assertEquals(available_forms[0]['id'], 'admin-notes')
+        self.assertEquals(available_forms[0]['enabled'], 'false')

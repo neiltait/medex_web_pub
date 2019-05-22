@@ -283,7 +283,7 @@ def edit_examination_case_breakdown(request, examination_id):
 
         return render(request, 'errors/base_error.html', context, status=examination.status_code)
 
-    forms = user.get_forms_for_role()
+    forms = user.get_forms_for_role(examination)
 
     medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
     patient_details = PatientDetails.load_by_id(examination_id, user.auth_token)

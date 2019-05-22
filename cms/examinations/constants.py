@@ -38,6 +38,24 @@ def get_display_qap_high_outcome(outcome):
     return __get_dictionary_value(outcome, outcomes)
 
 
+def get_display_circumstances_of_death(circumstance):
+    circumstances_of_death = {
+        'Expected': 'Expected',
+        'Unexpected': 'Unexpected',
+        'SuddenButNotUnexpected': 'Sudden but not unexpected',
+        'PartOfAnIndividualisedEndOfLifeCarePlan': 'Part of an individualised end of life care plan'
+    }
+    return __get_dictionary_value(circumstance, circumstances_of_death)
+
+
+def get_display_scrutiny_outcome(outcome):
+    outcomes = {
+        'IssueAnMccd': 'Issue an MCCD',
+        'ReferToCoroner': 'Refer case to coroner'
+    }
+    return __get_dictionary_value(outcome, outcomes)
+
+
 def __get_dictionary_value(key, dictionary, default=''):
     if key in dictionary:
         return dictionary[key]

@@ -2,8 +2,9 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
-    get_display_qap_high_outcome
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
+    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
+    NONE_DATE
 from errors.utils import handle_error, log_api_error
 
 from people.models import BereavedRepresentative
@@ -535,6 +536,10 @@ class CaseEvent:
 
 
 class CaseInitialEvent(CaseEvent):
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+    UNKNOWN = 'Unknown'
+
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
     event_type = CaseEvent().INITIAL_EVENT_TYPE
     css_type = 'initial'
@@ -550,10 +555,24 @@ class CaseInitialEvent(CaseEvent):
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
+        self.published = False
 
     @property
     def display_type(self):
         return '%s died' % self.patient_name
+
+    def display_date(self):
+        if self.dod == NONE_DATE:
+            return self.UNKNOWN
+        else:
+            date = parse_datetime(self.dod)
+            return date.strftime(self.date_format)
+
+    def display_time(self):
+        if self.tod == NONE_TIME:
+            return self.UNKNOWN
+        else:
+            return self.tod
 
 
 class CaseOtherEvent(CaseEvent):
@@ -612,6 +631,12 @@ class CasePreScrutinyEvent(CaseEvent):
         form = PreScrutinyEventForm().fill_from_draft(self)
         form.event_id = None
         return form
+
+    def display_circumstances_of_death(self):
+        return get_display_circumstances_of_death(self.circumstances_of_death)
+
+    def display_scrutiny_outcome(self):
+        return get_display_scrutiny_outcome(self.outcome_of_pre_scrutiny)
 
 
 class CaseBereavedDiscussionEvent(CaseEvent):
