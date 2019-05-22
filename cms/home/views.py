@@ -1,53 +1,43 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.views.generic.base import View
 
 from rest_framework import status
 
 from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
+from medexCms.mixins import LoginRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
 from users.models import User
 
 
-def index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    if request.method == 'GET':
-        template, context, status_code = __get_index(user, request.GET)
-
-    else:
-        log_unexpected_method(request.method, 'case index')
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_index(user, query_params):
+class ExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
-    status_code = status.HTTP_200_OK
-    page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-    page_size = 1
 
-    form = IndexFilterForm(query_params, user.default_filter_options())
-    user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        query_params = request.GET
 
-    context = __set_index_context(user, form)
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 20
 
-    return template, context, status_code
+        form = IndexFilterForm(query_params, self.user.default_filter_options())
+        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
 
+        context = self.set_context(form)
 
-def __set_index_context(user, form):
-    return {
-        'page_header': '%s Dashboard' % user.role,
-        'session_user': user,
-        'form': form,
-        'pagination_url': 'index',
-    }
+        return render(request, self.template, context, status=status_code)
+
+    def set_context(self, form):
+        return {
+            'page_header': '%s Dashboard' % self.user.role,
+            'session_user': self.user,
+            'form': form,
+            'pagination_url': 'index',
+        }
 
 
 def login_callback(request):
