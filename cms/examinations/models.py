@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
     get_display_circumstances_of_death, get_display_scrutiny_outcome
+from medexCms.api import enums
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
@@ -469,13 +470,13 @@ class ExaminationEventList:
         outcome_from_event = qap_event.qap_discussion_outcome
         if qap_event.discussion_unable_happen is True:
             cause_of_death.status = CauseOfDeathProposal.STATUS__DISCUSSION_NOT_POSSIBLE
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP:
             cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_ME:
             cause_of_death.status = CauseOfDeathProposal.STATUS__MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP_AND_ME:
             cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
+        elif outcome_from_event == enums.outcomes.CORONER:
             cause_of_death.status = CauseOfDeathProposal.STATUS__CORONER
 
 
@@ -704,10 +705,6 @@ class CaseMeoSummaryEvent(CaseEvent):
 
 class CaseQapDiscussionEvent(CaseEvent):
     form_type = 'QapDiscussionEventForm'
-    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
-    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
-    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
-    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
 
     event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
