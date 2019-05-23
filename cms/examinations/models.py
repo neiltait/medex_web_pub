@@ -1015,7 +1015,7 @@ class MedicalTeamMember:
         organisation = obj_dict['organisation'] if 'organisation' in obj_dict else ''
         phone_number = obj_dict['phone'] if 'phone' in obj_dict else ''
         notes = obj_dict['notes'] if 'notes' in obj_dict else ''
-        gmc_number = obj_dict['gmc'] if 'gmc' in obj_dict else ''
+        gmc_number = obj_dict['gmcNumber'] if 'gmcNumber' in obj_dict else ''
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
                                  notes=notes, gmc_number=gmc_number)
 
