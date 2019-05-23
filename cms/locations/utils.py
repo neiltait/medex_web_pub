@@ -37,8 +37,17 @@ def filter_trusts(locations):
     return trusts
 
 
-def filter_sites(location):
-    if location.get('type') == 'Site':
-        return True
-    else:
-        return False
+def filter_sites(locations):
+    from locations.models import Location
+
+    def is_site(location):
+        if location.get('type') == 'Site':
+            return True
+        else:
+            return False
+
+    site_data = filter(is_site, locations)
+    sites = []
+    for site in site_data:
+        sites.append(Location().set_values(site))
+    return sites
