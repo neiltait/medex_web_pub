@@ -647,7 +647,7 @@ class PreScrutinyEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('pre_scrutiny_id')
+        self.event_id = fallback_to(form_data.get('pre_scrutiny_id'), '')
         self.me_thoughts = fallback_to(form_data.get('me-thoughts'), '')
         self.circumstances_of_death = form_data.get('cod')
         self.possible_cod_1a = fallback_to(form_data.get('possible-cod-1a'), '')
@@ -726,7 +726,7 @@ class MeoSummaryEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('meo_summary_id')
+        self.event_id = fallback_to(form_data.get('meo_summary_id'), '')
         self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
         self.errors = {'count': 0}
@@ -840,7 +840,7 @@ class QapDiscussionEventForm:
 
     def __init__(self, form_data={}):
         self.errors = {'count': 0}
-        self.event_id = form_data.get('qap_discussion_id')
+        self.event_id = fallback_to(form_data.get('qap_discussion_id'), '')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
         self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'),

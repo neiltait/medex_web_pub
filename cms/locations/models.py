@@ -1,5 +1,5 @@
 from . import request_handler
-from .utils import filter_trusts, filter_regions
+from .utils import filter_trusts, filter_regions, filter_sites
 
 
 class Location:
@@ -39,6 +39,12 @@ class Location:
         return locations
 
     @classmethod
+    def load_site_list_for_user(cls, auth_token):
+        locations = request_handler.get_permitted_locations_list(auth_token)
+        sites = filter_sites(locations)
+        return sites
+
+    @classmethod
     def load_trusts_list_for_user(cls, auth_token):
         locations = request_handler.get_permitted_locations_list(auth_token)
         trusts = filter_trusts(locations)
@@ -52,4 +58,4 @@ class Location:
 
     @classmethod
     def load_me_offices(cls, auth_token):
-        return cls.get_permitted_locations_for_user(auth_token)
+        return cls.load_site_list_for_user(auth_token)
