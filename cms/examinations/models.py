@@ -2,8 +2,7 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
-    get_display_circumstances_of_death, get_display_scrutiny_outcome
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
+    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
 from errors.utils import handle_error, log_api_error
@@ -324,7 +323,6 @@ class CaseBreakdown:
             return CaseBreakdown(response.json(), medical_team)
         else:
             return handle_error(response, {'type': 'case', 'action': 'loading'})
-
 
 
 class ExaminationEventList:
@@ -721,7 +719,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.user_full_name = obj_dict.get('userFullName')
         self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
-        self.participant_role = obj_dict.get('participantRoll')
+        self.participant_full_name = obj_dict.get('participantName')
+        self.participant_role = obj_dict.get('participantRole')
         self.participant_organisation = obj_dict.get('participantOrganisation')
         self.participant_phone_number = obj_dict.get('participantPhoneNumber')
         self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
@@ -748,8 +747,17 @@ class CaseQapDiscussionEvent(CaseEvent):
         form.event_id = None
         return form
 
-    def display_qap_discussion_outcome(self):
+    def display_qap_discussion_high_outcome(self):
+        return get_display_qap_high_outcome(self.qap_discussion_outcome)
+
+    def display_qap_discussion_mccd_outcome(self):
         return get_display_qap_outcome(self.qap_discussion_outcome)
+
+    def hide_mccd_section(self):
+        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
+
+    def hide_new_cause_of_death_section(self):
+        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
 
 
 class CaseMedicalHistoryEvent(CaseEvent):

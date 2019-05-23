@@ -121,6 +121,15 @@
             font-weight: bold;
             font-size: $default-font-size;
         }
+        .cause-of-death-list {
+            list-style-type: none;
+            padding: 0;
+            font-size: $default-font-size;
+
+            li {
+                margin-bottom: 0;
+            }
+        }
     }
 
     &.pre-scrutiny {
@@ -128,16 +137,6 @@
             .content {
                 .collapsed {
                     @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
-                }
-
-                .cause-of-death-list {
-                    list-style-type: none;
-                    padding: 0;
-                    font-size: $default-font-size;
-
-                    li {
-                        margin-bottom: 0;
-                    }
                 }
             }
         }
