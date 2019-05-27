@@ -80,21 +80,14 @@ class ExaminationOverview:
         self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
 
     def display_dod(self):
-        return self.date_of_death.strftime(self.date_format) if self.date_of_death else 'D.O.D unknown'
+        return self.date_of_death.strftime(self.date_format) if self.date_of_death else 'Unknown'
 
     def display_dob(self):
-        return self.date_of_birth.strftime(self.date_format) if self.date_of_birth else 'D.O.B unknown'
+        return self.date_of_birth.strftime(self.date_format) if self.date_of_birth else 'Unknown'
 
     def display_appointment_date(self):
         return self.appointment_date.strftime(self.date_format) if self.appointment_date else None
 
-    def calc_age(self):
-        if self.date_of_birth and self.date_of_death:
-            return self.date_of_death.year - self.date_of_birth.year - (
-                    (self.date_of_death.month, self.date_of_death.day) < (
-                self.date_of_birth.month, self.date_of_birth.day))
-        else:
-            return 0
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
