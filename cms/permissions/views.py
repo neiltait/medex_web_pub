@@ -2,6 +2,7 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
+from locations.models import Location
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
 from users.views import ManageUserBaseView
@@ -45,6 +46,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
     def __set_add_permission_context(self, form, invalid):
         trusts = self.user.get_permitted_trusts()
         regions = self.user.get_permitted_regions()
+        national = Location.get_national_location_id(self.user.auth_token)
 
         return {
             'session_user': self.user,
@@ -54,5 +56,6 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
             'invalid': invalid,
             'trusts': trusts,
             'regions': regions,
+            'national': national,
             'managed_user': self.managed_user,
         }

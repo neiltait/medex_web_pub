@@ -1,8 +1,22 @@
-def filter_national(location):
-    if location.get('type') == 'National':
-        return True
+from errors.utils import log_internal_error
+
+
+def filter_national(locations):
+    from locations.models import Location
+
+    def is_national(location):
+        if location.get('type') == 'National':
+            return True
+        else:
+            return False
+
+    national_data = list(filter(is_national, locations))
+    if len(national_data) != 1:
+        log_internal_error('loading national location',
+                           'Expected to find 1 national location instead found %s' % len(national_data))
+        return Location()
     else:
-        return False
+        return Location().set_values(national_data[0])
 
 
 def filter_regions(locations):
