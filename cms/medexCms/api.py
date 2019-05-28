@@ -39,6 +39,16 @@ class APIOutcomes:
     MCCD_FROM_QAP_AND_ME = 'MccdCauseOfDeathAgreedByQAPandME'
 
 
+class APICauseOfDeathStatuses:
+    NOT_DISCUSSED = 'NotDiscussed'
+    DISCUSSION_NOT_POSSIBLE = 'NotPossible'
+    MCCD = 'IssueAnMccd'
+    CORONER = 'ReferToCoroner'
+    MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
+    MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
+    MCCD_FROM_QAP_AND_ME = 'MccdCauseOfDeathAgreedByQAPandME'
+
+
 class APIDiscussionOutcomes:
     COD_ACCEPTED = 'CauseOfDeathAccepted'
     CONCERNS_CORONER = 'ConcernsCoronerInvestigation'
@@ -60,6 +70,7 @@ class APIStrings:
     outcomes = APIOutcomes()
     discussion = APIDiscussionOutcomes()
     people = APIPeopleStrings()
+    cod_status = APICauseOfDeathStatuses()
 
 
 enums = APIStrings()
