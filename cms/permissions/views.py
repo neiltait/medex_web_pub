@@ -21,6 +21,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
     def post(self, request, user_id):
         post_body = request.POST
         status_code = status.HTTP_200_OK
+        invalid = False
         form = PermissionBuilderForm(post_body)
         add_another = True if post_body.get('add_another') == "true" else False
 
@@ -33,13 +34,15 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
                 else:
                     return redirect('/settings')
             else:
+                invalid = True
                 log_api_error('permission creation', response.text)
                 status_code = response.status_code
 
         else:
+            invalid = True
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_add_permission_context(form, True)
+        context = self.__set_add_permission_context(form, invalid)
 
         return render(request, self.template, context, status=status_code)
 
