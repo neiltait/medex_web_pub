@@ -20,11 +20,8 @@ def case_card_presenter(case):
         return time_string if time_string and time_string != '00:00:00' else fallback
 
     def display_age(case, fallback=None):
-        if case.date_of_death and case.date_of_birth:
-            return case.date_of_death.year - case.date_of_birth.year - (
-                    (case.date_of_death.month, case.date_of_death.day) < (case.date_of_birth.month, case.date_of_birth.day))
-        else:
-            return fallback
+        calculated_age = case.calc_age()
+        return calculated_age if calculated_age else fallback
 
     def display(value, fallback=None):
         return value if value else fallback
@@ -43,6 +40,6 @@ def case_card_presenter(case):
         'created_days_ago': case.calc_created_days_ago(),
         'urgent': case.urgent(),
         'nhs_number': display(case.nhs_number, fallback='Unknown'),
-        'appointment_date': display_date(case.appointment_time, fallback='-'),
+        'appointment_date': display_date(case.appointment_date, fallback='-'),
         'appointment_time': case.appointment_time if case.appointment_time and case.appointment_time != '00:00:00' else '-'
     }

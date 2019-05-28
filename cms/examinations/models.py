@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
     get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
 
-from medexCms.api import enums
+from medexCms.api import enums, APIOutcomes
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
@@ -100,6 +100,13 @@ class ExaminationOverview:
             return delta.days
         else:
             return 0
+
+    def calc_age(self):
+        if self.date_of_death and self.date_of_birth:
+            return self.date_of_death.year - self.date_of_birth.year - (
+                    (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+        else:
+            return None
 
     def urgent(self):
         return True if self.urgency_score and self.urgency_score > 0 and self.open else False
@@ -736,10 +743,10 @@ class CaseQapDiscussionEvent(CaseEvent):
         return get_display_qap_outcome(self.qap_discussion_outcome)
 
     def hide_mccd_section(self):
-        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
+        return self.qap_discussion_outcome == APIOutcomes.CORONER
 
     def hide_new_cause_of_death_section(self):
-        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
+        return self.qap_discussion_outcome == APIOutcomes.MCCD_FROM_ME
 
 
 class CaseMedicalHistoryEvent(CaseEvent):

@@ -11,6 +11,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
     CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent, CaseInitialEvent
+from examinations.templatetags.examination_filters import case_card_presenter
 from examinations.utils import event_form_parser
 from medexCms.api import enums
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
@@ -1189,30 +1190,40 @@ class ExaminationsModelsTests(MedExTestCase):
 
     #### ExaminationOverview tests
 
-    def test_display_dod_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_dod_if_date_present(self):
+
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
+
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_death = parse_datetime(given_date)
-        result = examination_overview.display_dod()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['banner_dod']
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
-    def test_display_dob_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_dob_if_date_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = parse_datetime(given_date)
-        result = examination_overview.display_dob()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['banner_dob']
+
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
-    def test_display_appointment_date_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_appointment_date_if_date_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.appointment_date = parse_datetime(given_date)
-        result = examination_overview.display_appointment_date()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['appointment_date']
+
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
@@ -1227,34 +1238,33 @@ class ExaminationsModelsTests(MedExTestCase):
         expected_age = 1
         self.assertEqual(result, expected_age)
 
-    def test_calc_age_returns_0_if_date_of_birth_missing(self):
+    def test_calc_age_returns_none_if_date_of_birth_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         death_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = None
         examination_overview.date_of_death = parse_datetime(death_date)
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
 
-    def test_calc_age_returns_0_if_date_of_death_missing(self):
+        self.assertIsNone(result)
+
+    def test_calc_age_returns_none_if_date_of_death_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         birth_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = parse_datetime(birth_date)
         examination_overview.date_of_death = None
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
+        self.assertIsNone(result)
 
-    def test_calc_age_returns_0_if__both_dates_missing(self):
+    def test_calc_age_returns_none_if__both_dates_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         examination_overview.date_of_birth = None
         examination_overview.date_of_death = None
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
+
+        self.assertIsNone(result)
 
     def test_calc_last_admission_days_ago_returns_correct_number_of_days_if_date_of_admission_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
