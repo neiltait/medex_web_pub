@@ -3,6 +3,9 @@ from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
     get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
+
+from medexCms.api import enums
+
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
 from errors.utils import handle_error, log_api_error
@@ -463,18 +466,22 @@ class ExaminationEventList:
         :param qap_event: CaseQapDiscussionEvent
         :return:
         """
-        cause_of_death.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
+        cause_of_death.status = enums.cod_status.NOT_DISCUSSED
         outcome_from_event = qap_event.qap_discussion_outcome
         if qap_event.discussion_unable_happen is True:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__DISCUSSION_NOT_POSSIBLE
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__CORONER
+            cause_of_death.status = enums.cod_status.DISCUSSION_NOT_POSSIBLE
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_ME:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_ME
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP_AND_ME:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP_AND_ME
+
+        elif outcome_from_event == enums.outcomes.CORONER:
+            cause_of_death.status = enums.cod_status.CORONER
 
 
 class CaseEvent:
@@ -702,10 +709,6 @@ class CaseMeoSummaryEvent(CaseEvent):
 
 class CaseQapDiscussionEvent(CaseEvent):
     form_type = 'QapDiscussionEventForm'
-    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
-    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
-    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
-    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
 
     event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
@@ -754,10 +757,10 @@ class CaseQapDiscussionEvent(CaseEvent):
         return get_display_qap_outcome(self.qap_discussion_outcome)
 
     def hide_mccd_section(self):
-        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
+        return self.qap_discussion_outcome == enums.outcomes.CORONER
 
     def hide_new_cause_of_death_section(self):
-        return self.qap_discussion_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
+        return self.qap_discussion_outcome == enums.outcomes.MCCD_FROM_ME
 
 
 class CaseMedicalHistoryEvent(CaseEvent):
@@ -892,12 +895,6 @@ class CaseBreakdownQAPDiscussion:
 
 
 class CauseOfDeathProposal:
-    STATUS__NOT_DISCUSSED = "Not discussed"
-    STATUS__DISCUSSION_NOT_POSSIBLE = "QAP discussion not possible"
-    STATUS__MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME"
-    STATUS__QAP_PROPOSAL = "agreed proposal by QAP"
-    STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME and QAP"
-    STATUS__CORONER = "agreed to send to coroner"
 
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
@@ -907,7 +904,7 @@ class CauseOfDeathProposal:
 
         self.medical_examiner = User()
         self.qap = None
-        self.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
+        self.status = enums.cod_status.NOT_DISCUSSED
         self.creation_date = ''
         self.section_1a = ''
         self.section_1b = ''

@@ -12,6 +12,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
     CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent, CaseInitialEvent
 from examinations.utils import event_form_parser
+from medexCms.api import enums
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
@@ -809,53 +810,53 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_qap_discussion__request__maps_mccd_and_qap_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-1'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 1 - qap updates the decision
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP)
 
     def test_qap_discussion__request__maps_mccd_and_me_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-2'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_ME
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 2 - me's first decision
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_ME)
 
     def test_qap_discussion__request__maps_mccd_and_agreement_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-3'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP_AND_ME
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 3 - agreement
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP_AND_ME)
 
     def test_qap_discussion__request__maps_refer_to_coroner_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'coroner'
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER)
 
     def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
         # Given form data with the Default Qap radio button selected
@@ -1840,7 +1841,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         return {
             'qap_discussion_id': 'any id',
             'qap-discussion-doctor': QapDiscussionEventForm.OTHER_PARTICIPANT,
-            'qap_discussion_could_not_happen': QapDiscussionEventForm.NO,
+            'qap_discussion_could_not_happen': enums.yes_no.NO,
             'qap-default__full-name': '',
             'qap-default__role': '',
             'qap-default__organisation': '',
@@ -1854,8 +1855,8 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'qap_discussion_revised_1c': '',
             'qap_discussion_revised_1d': '',
             'qap_discussion_details': 'Some details',
-            'qap-discussion-outcome': QapDiscussionEventForm.MCCD,
-            'qap-discussion-outcome-decision': QapDiscussionEventForm.MCCD_AGREED_UPDATE,
+            'qap-discussion-outcome': enums.outcomes.MCCD,
+            'qap-discussion-outcome-decision': enums.outcomes.MCCD_FROM_QAP_AND_ME,
             'qap_day_of_conversation': '3',
             'qap_month_of_conversation': '6',
             'qap_year_of_conversation': '2017',
@@ -1953,7 +1954,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
     def test_qap_form_valid_if_coroner_as_outcome_but_no_outcome_decision(self):
         form_data = self.valid_qap_final_data()
-        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.CORONER
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
         form_data['qap-discussion-outcome-decision'] = ''
 
         form = QapDiscussionEventForm(form_data=form_data)
@@ -1963,7 +1964,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
     def test_qap_form_not_valid_if_mccd_as_outcome_but_no_outcome_decision(self):
         form_data = self.valid_qap_final_data()
-        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
         form_data['qap-discussion-outcome-decision'] = ''
 
         form = QapDiscussionEventForm(form_data=form_data)
@@ -1973,8 +1974,8 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
     def test_qap_form_valid_if_original_mccd_as_outcome_decision_and_no_revision(self):
         form_data = self.valid_qap_final_data()
-        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
-        form_data['qap-discussion-outcome-decision'] = QapDiscussionEventForm.MCCD_FROM_ME
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_ME
         form_data['qap_discussion_revised_1a'] = ''
 
         form = QapDiscussionEventForm(form_data=form_data)
@@ -1984,8 +1985,8 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
     def test_qap_form_not_valid_if_revised_mccd_as_outcome_decision_but_no_revision(self):
         form_data = self.valid_qap_final_data()
-        form_data['qap-discussion-outcome'] = QapDiscussionEventForm.MCCD
-        form_data['qap-discussion-outcome-decision'] = QapDiscussionEventForm.MCCD_AGREED_UPDATE
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP_AND_ME
         form_data['qap_discussion_revised_1a'] = ''
 
         form = QapDiscussionEventForm(form_data=form_data)
@@ -1997,7 +1998,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form_data = {
             'qap_discussion_id': 'any id',
             'qap-discussion-doctor': '',
-            'qap_discussion_could_not_happen': QapDiscussionEventForm.YES,
+            'qap_discussion_could_not_happen': enums.yes_no.YES,
             'qap-default__full-name': '',
             'qap-default__role': '',
             'qap-default__organisation': '',
