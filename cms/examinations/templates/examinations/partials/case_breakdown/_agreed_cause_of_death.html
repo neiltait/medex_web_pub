@@ -22,28 +22,15 @@
                 <div class="nhsuk-grid-column-full">
                     <div>
                         <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
-{#                    I have prepared this section for various content scenarios #}
-                        {% if agreed_cause_of_death.status == agreed_cause_of_death.STATUS__NOT_DISCUSSED %}
+                        {% if agreed_cause_of_death.status == enums.cod_status.NOT_DISCUSSED %}
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Pending discussion with QAP</span>
                             </p>
-                        {% elif agreed_cause_of_death.status == agreed_cause_of_death.STATUS__DISCUSSION_NOT_POSSIBLE %}
+                        {% elif agreed_cause_of_death.status == enums.cod_status.NOT_POSSIBLE %}
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Discussion with QAP was not possible</span>
-                            </p>
-                        {% elif agreed_cause_of_death.status == agreed_cause_of_death.AGREED_QAP_PROPOSAL %}
-                            <p class="nhsuk-body"><span
-                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span> and <span
-                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.qap.name }}</span>
-                                on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }}</span>
-                            </p>
-                        {% elif agreed_cause_of_death.status == agreed_cause_of_death.AGREED_QAP_AND_MEDICAL_EXAMINER_PROPOSAL %}
-                            <p class="nhsuk-body"><span
-                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span> and <span
-                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.qap.name }}</span>
-                                on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }}</span>
                             </p>
                         {% else %}
                             <p class="nhsuk-body"><span
