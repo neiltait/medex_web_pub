@@ -19,6 +19,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
 
     def post(self, request, user_id):
         post_body = request.POST
+        status_code = status.HTTP_200_OK
         form = PermissionBuilderForm(post_body)
         add_another = True if post_body.get('add_another') == "true" else False
 
@@ -27,7 +28,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
 
             if response.ok:
                 if add_another:
-                    return redirect('add_permission', user_id=self.managed_user.user_id)
+                    form = PermissionBuilderForm()
                 else:
                     return redirect('/settings')
             else:
