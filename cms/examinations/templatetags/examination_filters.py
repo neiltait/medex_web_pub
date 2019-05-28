@@ -29,7 +29,6 @@ def case_card_presenter(case):
     def display(value, fallback=None):
         return value if value else fallback
 
-
     return {
         'id': case.id,
         'full_name': "%s %s" % (case.given_names, case.surname),
