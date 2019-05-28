@@ -1,0 +1,59 @@
+@import '../variables';
+
+
+.phase-banner {
+    padding-top: 2rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #bfc1c3;
+    margin-left: 20px;
+
+
+    &__content {
+        font-family: "nta",Arial,sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 400;
+        font-size: 14px;
+        font-size: .875rem;
+        line-height: 1.14286;
+        color: #0b0c0c;
+        display: table;
+
+        &__tag {
+            font-family: "nta",Arial,sans-serif;
+            font-weight: 700;
+            display: inline-block;
+            padding: 4px 8px;
+            outline: 2px solid transparent;
+            outline-offset: -2px;
+            color: #fff;
+            background-color: #005ea5;
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: uppercase;
+            margin-right: 10px;
+
+            &__text {
+                font-size: 1rem;
+                display: table-cell;
+                vertical-align: baseline;
+                margin: 2rem;
+                line-height: 1.25;
+            }
+        }
+    }
+}
+
+.phase-tag {
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.phase-margin {
+    margin-bottom: 1px;
+}
+
+
+
+
+
