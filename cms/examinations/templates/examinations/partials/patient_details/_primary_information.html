@@ -5,7 +5,7 @@
             <fieldset class="nhsuk-fieldset">
                 <div class="nhsuk-form-group {% if errors.first_name %}nhsuk-form-group--error{% endif %}">
                     <label class="nhsuk-label" for="first_name">
-                        First name
+                        Given name(s)
                     </label>
                     {% if errors.first_name %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.first_name }}</span>{% endif %}
                     <input class="nhsuk-input nhsuk-input--width-10 {% if errors.first_name %}nhsuk-input--error{% endif %}"
@@ -310,7 +310,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
                 <label class="nhsuk-label" for="me_office">
-                    Select an office
+                    ME office responsible for case
                 </label>
                 {% if errors.me_office %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.me_office }}</span>{% endif %}
                 <select class="nhsuk-select" id="me_office" name="me_office" value="{{ form.me_office }}">

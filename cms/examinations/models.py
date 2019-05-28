@@ -1093,6 +1093,7 @@ class CaseOutcome:
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
+        self.me_id = obj_dict.get('caseMedicalExaminerId')
         self.mccd_issued = obj_dict.get("mccdIssed")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifedStatus")
@@ -1142,6 +1143,10 @@ class CaseOutcome:
             return response.status_code
         else:
             return handle_error(response, {'type': 'case', 'action': 'closing'})
+
+    def scrutiny_actions_complete(self):
+        return not self.case_header.pending_scrutiny_notes and not self.case_header.pending_discussion_with_qap and \
+               not self.case_header.pending_discussion_with_representative and self.case_header.admission_notes_added
 
     def show_coroner_referral(self):
         return self.is_coroner_referral() and self.scrutiny_confirmed
@@ -1208,6 +1213,7 @@ class PatientHeader:
         self.pending_admission_notes = ''
         self.pending_discussion_with_qap = ''
         self.pending_discussion_with_representative = ''
+        self.pending_scrutiny_notes = ''
         self.have_final_case_outstanding_outcomes = ''
 
         if obj_dict:
@@ -1230,6 +1236,7 @@ class PatientHeader:
             self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
             self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
             self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+            self.pending_scrutiny_notes = obj_dict.get("pendingScrutinyNotes")
             self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
 
     @property
