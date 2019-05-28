@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
     get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
 
-from medexCms.api import enums, APIOutcomes
+from medexCms.api import enums
 
 from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
     NONE_DATE
