@@ -147,7 +147,7 @@
               <select class="nhsuk-select" id="region" name="region" value="{{ form.region }}">
                 <option value="" disabled hidden selected>Select an region</option>
                 {% for region in regions %}
-                  <option value={{ region.id }} {% if region.id == form.region %}selected{% endif %}>{{ region.name }}</option>
+                  <option value="{{ region.location_id }}" {% if region.location_id == form.region %}selected{% endif %}>{{ region.name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -173,7 +173,7 @@
                 <div class="options-list">
                   <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
                   {% for trust in trusts %}
-                    <option value="{{trust.id}}">{{trust.name}}</option>
+                    <option value="{{trust.location_id}}">{{trust.name}}</option>
                   {% endfor %}
                 </div>
               </div>
