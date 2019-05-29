@@ -61,6 +61,13 @@ class APIPeopleStrings:
     OTHER = 'other'
 
 
+class UserRoleTypes:
+    ME = 'Medical Examiner'
+    MEO = 'Medical Examiner Officer'
+    SERVICE_ADMIN = 'Service Administrator'
+    SERVICE_OWNER = 'Service Owner'
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -71,6 +78,7 @@ class APIStrings:
     discussion = APIDiscussionOutcomes()
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
+    role_types = UserRoleTypes()
 
 
 enums = APIStrings()
