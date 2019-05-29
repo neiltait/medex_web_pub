@@ -197,10 +197,10 @@ class UsersModelsTests(MedExTestCase):
         user.auth_token = SessionMocks.ACCESS_TOKEN
         user.id_token = SessionMocks.ID_TOKEN_NAME
         user.permitted_actions = PermittedActions({"BereavedDiscussionEvent": True,
-                                                "QapDiscussionEvent": True,
-                                                "OtherEvent": True,
-                                                "PreScrutinyEvent": True
-                                                })
+                                                   "QapDiscussionEvent": True,
+                                                   "OtherEvent": True,
+                                                   "PreScrutinyEvent": True
+                                                   })
 
         available_forms = user.get_forms_for_role(
             CaseBreakdown(obj_dict=ExaminationMocks.get_case_breakdown_response_content(), medical_team=None))
