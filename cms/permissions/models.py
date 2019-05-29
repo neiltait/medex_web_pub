@@ -56,6 +56,20 @@ class PermittedActions:
         self.can_get_profile = obj_dict.get("GetProfile") if obj_dict else False
         self.can_update_profile = obj_dict.get("UpdateProfile") if obj_dict else False
         self.can_get_profile_permissions = obj_dict.get("GetProfilePermissions") if obj_dict else False
+        self.permitted_forms = PermittedForms(obj_dict) if obj_dict else None
 
     def can_access_settings_index(self):
         return self.can_get_users
+
+
+class PermittedForms:
+
+    def __init__(self, obj_dict):
+        print(obj_dict)
+        self.bereavedDiscussionEvent = obj_dict.get("BereavedDiscussionEvent")
+        self.meoSummaryEvent = obj_dict.get("MeoSummaryEvent")
+        self.qapDiscussionEvent = obj_dict.get("QapDiscussionEvent")
+        self.otherEvent = obj_dict.get("OtherEvent")
+        self.admissionEvent = obj_dict.get("AdmissionEvent")
+        self.medicalHistoryEvent = obj_dict.get("MedicalHistoryEvent")
+        self.preScrutinyEvent = obj_dict.get("PreScrutinyEvent")
