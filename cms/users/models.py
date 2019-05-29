@@ -5,7 +5,7 @@ from django.conf import settings
 from rest_framework import status
 
 from errors.utils import log_api_error, log_internal_error
-from examinations.models import ExaminationOverview, ExaminationEventList, CaseEvent
+from examinations.models import ExaminationOverview, CaseEvent
 from examinations import request_handler as examination_request_handler
 
 from home import request_handler as home_request_handler
@@ -24,18 +24,21 @@ class User:
     MEO_ROLE_TYPE = 'MedicalExaminerOfficer'
 
     def __init__(self, obj_dict=None):
+        self.auth_token = None
+        self.id_token = None
+        self.index_overview = None
+        self.examinations = []
+        self.permissions = []
         if obj_dict:
             self.user_id = obj_dict.get('userId')
             self.first_name = obj_dict.get('firstName')
             self.last_name = obj_dict.get('lastName')
             self.email_address = obj_dict.get('email')
             self.role = obj_dict.get('role')
-            self.permitted_actions = PermittedActions(obj_dict.get('permissions'))
-        self.auth_token = None
-        self.id_token = None
-        self.index_overview = None
-        self.examinations = []
-        self.permissions = []
+            if type(obj_dict.get('permissions')) == list:
+                self.permissions = obj_dict.get('permissions')
+            else:
+                self.permitted_actions = PermittedActions(obj_dict.get('permissions'))
 
     def __str__(self):
         return self.full_name()

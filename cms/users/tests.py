@@ -91,13 +91,14 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/settings')
 
-    def test_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_permissions_page_if_add_another_selected(
-            self):
+    def test_a_valid_form_that_succeeds_on_api_returns_a_blank_permissions_page_if_add_another_selected(self):
         self.set_auth_cookies()
         submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': '', 'add_another': 'true'}
         response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/users/%s/add_permission' % UserMocks.USER_ID)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        context_form = self.get_context_value(response.context, 'form')
+        self.assertIsNone(context_form.permission_level)
+        self.assertIsNone(context_form.role)
 
 
 class UsersFormsTests(MedExTestCase):

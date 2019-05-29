@@ -2,6 +2,7 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
+from locations.models import Location
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
 from users.views import ManageUserBaseView
@@ -19,6 +20,8 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
 
     def post(self, request, user_id):
         post_body = request.POST
+        status_code = status.HTTP_200_OK
+        invalid = False
         form = PermissionBuilderForm(post_body)
         add_another = True if post_body.get('add_another') == "true" else False
 
@@ -27,23 +30,26 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
 
             if response.ok:
                 if add_another:
-                    return redirect('add_permission', user_id=self.managed_user.user_id)
+                    form = PermissionBuilderForm()
                 else:
                     return redirect('/settings')
             else:
+                invalid = True
                 log_api_error('permission creation', response.text)
                 status_code = response.status_code
 
         else:
+            invalid = True
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_add_permission_context(form, True)
+        context = self.__set_add_permission_context(form, invalid)
 
         return render(request, self.template, context, status=status_code)
 
     def __set_add_permission_context(self, form, invalid):
         trusts = self.user.get_permitted_trusts()
         regions = self.user.get_permitted_regions()
+        national = Location.get_national_location_id(self.user.auth_token)
 
         return {
             'session_user': self.user,
@@ -53,5 +59,6 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
             'invalid': invalid,
             'trusts': trusts,
             'regions': regions,
+            'national': national,
             'managed_user': self.managed_user,
         }

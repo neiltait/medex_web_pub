@@ -1,5 +1,5 @@
 from . import request_handler
-from .utils import filter_trusts, filter_regions, filter_sites
+from .utils import filter_trusts, filter_regions, filter_sites, filter_national
 
 
 class Location:
@@ -59,3 +59,9 @@ class Location:
     @classmethod
     def load_me_offices(cls, auth_token):
         return cls.load_site_list_for_user(auth_token)
+
+    @classmethod
+    def get_national_location_id(cls, auth_token):
+        locations_data = cls.get_locations_list(auth_token)
+        national = filter_national(locations_data)
+        return national.location_id
