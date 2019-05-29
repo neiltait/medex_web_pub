@@ -128,7 +128,7 @@
         },
         showHideOutcome() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
-            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'IssueAnMccd') {
                 this.outcomeDecisionPanel.show();
             } else {
                 this.outcomeDecisionPanel.hide();
@@ -136,7 +136,7 @@
         },
         showHideOutcomeDecision() {
             let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
-            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
+            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'MccdCauseOfDeathProvidedByME') {
                 this.revisedCauseOfDeathPanel.show();
             } else {
                 this.revisedCauseOfDeathPanel.hide();
@@ -145,7 +145,7 @@
         startWatchers() {
             let that = this;
             $('input[type=radio][name=qap-discussion-outcome]').change(function () {
-                if (this.value === 'mccd') {
+                if (this.value === 'IssueAnMccd') {
                     that.outcomeDecisionPanel.show();
                 } else {
                     that.outcomeDecisionPanel.hide();
@@ -153,7 +153,7 @@
             });
 
             $('input[type=radio][name=qap-discussion-outcome-decision]').change(function () {
-                if (this.value === 'outcome-decision-2') {
+                if (this.value === 'MccdCauseOfDeathProvidedByME') {
                     that.revisedCauseOfDeathPanel.hide();
                 } else {
                     that.revisedCauseOfDeathPanel.show();
