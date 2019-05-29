@@ -664,7 +664,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
 
     def as_amendment_form(self, representatives):
         from examinations.forms import BereavedDiscussionEventForm
-        form = BereavedDiscussionEventForm(representatives=representatives).fill_from_draft(self)
+        form = BereavedDiscussionEventForm().fill_from_draft(self, default_representatives=representatives)
         form.event_id = None
         return form
 
@@ -734,9 +734,9 @@ class CaseQapDiscussionEvent(CaseEvent):
     def conversation_display_time(self):
         return self.date_of_conversation.strftime(self.time_format) if self.date_of_conversation else ''
 
-    def as_amendment_form(self, representatives):
+    def as_amendment_form(self, default_qap):
         from examinations.forms import QapDiscussionEventForm
-        form = QapDiscussionEventForm().fill_from_draft(self)
+        form = QapDiscussionEventForm().fill_from_draft(self, default_qap=default_qap)
         form.event_id = None
         return form
 

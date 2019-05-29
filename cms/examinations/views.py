@@ -359,7 +359,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
     if amend_type and not form:
         latest_for_type = event_list.get_latest_of_type(amend_type)
         if latest_for_type:
-            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(patient_details.representatives).make_active()
+            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap).make_active()
 
     if form:
         form_data[type(form).__name__] = form.make_active()
