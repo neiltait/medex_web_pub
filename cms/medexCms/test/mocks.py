@@ -65,7 +65,14 @@ class SessionMocks:
                 "GetExaminationEvent": True,
                 "GetProfile": True,
                 "UpdateProfile": True,
-                "GetProfilePermissions": True
+                "GetProfilePermissions": True,
+                "BereavedDiscussionEvent": False,
+                "MeoSummaryEvent": True,
+                "QapDiscussionEvent": False,
+                "OtherEvent": True,
+                "AdmissionEvent": True,
+                "MedicalHistoryEvent": True,
+                "PreScrutinyEvent": False
             },
             "errors": {},
             "lookups": None,

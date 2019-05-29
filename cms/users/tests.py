@@ -7,7 +7,7 @@ from rest_framework import status
 from unittest.mock import patch
 
 from alerts import messages
-from permissions.models import Permission
+from permissions.models import Permission, PermittedActions
 
 from .models import User
 from .forms import CreateUserForm
@@ -193,9 +193,14 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(type(user.examinations), list)
 
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_me(self):
-        user_data = UserMocks.get_filled_user_dict()
-        user_data['role'] = User.ME_ROLE_TYPE
-        user = User(user_data)
+        user = User()
+        user.auth_token = SessionMocks.ACCESS_TOKEN
+        user.id_token = SessionMocks.ID_TOKEN_NAME
+        user.permitted_actions = PermittedActions({"BereavedDiscussionEvent": True,
+                                                "QapDiscussionEvent": True,
+                                                "OtherEvent": True,
+                                                "PreScrutinyEvent": True
+                                                })
 
         available_forms = user.get_forms_for_role(
             CaseBreakdown(obj_dict=ExaminationMocks.get_case_breakdown_response_content(), medical_team=None))
@@ -207,9 +212,10 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(available_forms[3]['id'], 'other')
 
     def test_get_forms_for_role_returns_the_correct_list_of_forms_for_an_meo(self):
-        user_data = UserMocks.get_filled_user_dict()
-        user_data['role'] = User.MEO_ROLE_TYPE
-        user = User(user_data)
+        user = User()
+        user.auth_token = SessionMocks.ACCESS_TOKEN
+        user.id_token = SessionMocks.ID_TOKEN_NAME
+        user.check_logged_in()
 
         available_forms = user.get_forms_for_role(
             CaseBreakdown(obj_dict=ExaminationMocks.get_case_breakdown_response_content(), medical_team=None))
@@ -221,9 +227,10 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(available_forms[3]['id'], 'other')
 
     def test_get_forms_for_role_where_nothing_published_returns_form_with_enabled_true(self):
-        user_data = UserMocks.get_filled_user_dict()
-        user_data['role'] = User.MEO_ROLE_TYPE
-        user = User(user_data)
+        user = User()
+        user.auth_token = SessionMocks.ACCESS_TOKEN
+        user.id_token = SessionMocks.ID_TOKEN_NAME
+        user.check_logged_in()
 
         data = ExaminationMocks.get_empty_case_breakdown_response_content()
         available_forms = user.get_forms_for_role(
@@ -233,9 +240,10 @@ class UsersModelsTests(MedExTestCase):
         self.assertEquals(available_forms[0]['enabled'], 'true')
 
     def test_get_forms_for_role_with_items_published_returns_form_with_enabled_false(self):
-        user_data = UserMocks.get_filled_user_dict()
-        user_data['role'] = User.MEO_ROLE_TYPE
-        user = User(user_data)
+        user = User()
+        user.auth_token = SessionMocks.ACCESS_TOKEN
+        user.id_token = SessionMocks.ID_TOKEN_NAME
+        user.check_logged_in()
 
         data = ExaminationMocks.get_case_breakdown_response_content()
         available_forms = user.get_forms_for_role(
