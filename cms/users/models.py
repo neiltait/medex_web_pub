@@ -211,72 +211,66 @@ class User:
             return ''
 
     def get_forms_for_role(self, case_breakdown):
-
         existing_events = [event.event_type for event in case_breakdown.event_list.events if event.published]
-        if self.is_meo():
-            return [
-                {
+        forms_list = []
+        if self.permitted_actions.permitted_forms.admissionEvent:
+            forms_list.append({
                     'id': 'admin-notes',
                     'name': 'Latest hospital admission details',
                     'enabled': 'false' if CaseEvent.ADMISSION_NOTES_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'medical-history',
-                    'name': 'Medical and social history notes',
-                    'enabled': 'false' if CaseEvent.MEDICAL_HISTORY_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'meo-summary',
-                    'name': 'MEO summary',
-                    'enabled': 'false' if CaseEvent.MEO_SUMMARY_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'other',
-                    'name': 'Other case info',
-                    'enabled': 'true'
-                }
-            ]
-        elif self.is_me():
-            return [
-                {
-                    'id': 'pre-scrutiny',
-                    'name': 'ME pre-scrutiny',
-                    'enabled': 'false' if CaseEvent.PRE_SCRUTINY_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'qap-discussion',
-                    'name': 'QAP discussion',
-                    'enabled': 'false' if CaseEvent.QAP_DISCUSSION_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'bereaved-discussion',
-                    'name': 'Bereaved/representative discussion',
-                    'enabled': 'false' if CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE in existing_events else 'true'
-                },
-                {
-                    'id': 'other',
-                    'name': 'Other case info',
-                    'enabled': 'true'
-                }
-            ]
-        else:
-            log_internal_error('(User) get_form_for_role', 'Unknown role type')
+                })
+        if self.permitted_actions.permitted_forms.medicalHistoryEvent:
+            forms_list.append({
+                'id': 'medical-history',
+                'name': 'Medical and social history notes',
+                'enabled': 'false' if CaseEvent.MEDICAL_HISTORY_EVENT_TYPE in existing_events else 'true'
+            })
+        if self.permitted_actions.permitted_forms.meoSummaryEvent:
+            forms_list.append({
+                'id': 'meo-summary',
+                'name': 'MEO summary',
+                'enabled': 'false' if CaseEvent.MEO_SUMMARY_EVENT_TYPE in existing_events else 'true'
+            })
+        if self.permitted_actions.permitted_forms.preScrutinyEvent:
+            forms_list.append({
+                'id': 'pre-scrutiny',
+                'name': 'ME pre-scrutiny',
+                'enabled': 'false' if CaseEvent.PRE_SCRUTINY_EVENT_TYPE in existing_events else 'true'
+            })
+        if self.permitted_actions.permitted_forms.qapDiscussionEvent:
+            forms_list.append({
+                'id': 'qap-discussion',
+                'name': 'QAP discussion',
+                'enabled': 'false' if CaseEvent.QAP_DISCUSSION_EVENT_TYPE in existing_events else 'true'
+            })
+        if self.permitted_actions.permitted_forms.bereavedDiscussionEvent:
+            forms_list.append({
+                'id': 'bereaved-discussion',
+                'name': 'Bereaved/representative discussion',
+                'enabled': 'false' if CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE in existing_events else 'true'
+            })
+        if self.permitted_actions.permitted_forms.otherEvent:
+            forms_list.append({
+                'id': 'other',
+                'name': 'Other case info',
+                'enabled': 'true'
+            })
+        return forms_list
 
     def editable_event_types(self):
-        if self.is_meo():
-            return [
-                'admission-notes',
-                'medical-history',
-                'meo-summary',
-                'other',
-            ]
-        elif self.is_me():
-            return [
-                'pre-scrutiny',
-                'qap-discussion',
-                'bereaved-discussion',
-                'other',
-            ]
-        else:
-            log_internal_error('(User) get_form_for_role', 'Unknown role type')
-            return []
+        forms_list = []
+        if self.permitted_actions.permitted_forms.admissionEvent:
+            forms_list.append('admin-notes')
+        if self.permitted_actions.permitted_forms.medicalHistoryEvent:
+            forms_list.append('medical-history')
+        if self.permitted_actions.permitted_forms.meoSummaryEvent:
+            forms_list.append('meo-summary')
+        if self.permitted_actions.permitted_forms.preScrutinyEvent:
+            forms_list.append('pre-scrutiny')
+        if self.permitted_actions.permitted_forms.qapDiscussionEvent:
+            forms_list.append('qap-discussion')
+        if self.permitted_actions.permitted_forms.bereavedDiscussionEvent:
+            forms_list.append('bereaved-discussion')
+        if self.permitted_actions.permitted_forms.otherEvent:
+            forms_list.append('other')
+        return forms_list
