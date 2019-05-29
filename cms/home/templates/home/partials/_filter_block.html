@@ -1,7 +1,11 @@
 {% load staticfiles %}
 
 <div id="filter-block" class="filters-block">
+{% if closed_list %}
+    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get">
+{% else %}
   <form id="index-filters-form" action="{% url 'index' %}" method="get">
+{% endif %}
     <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden />
 
     <p>

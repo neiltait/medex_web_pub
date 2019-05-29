@@ -1079,12 +1079,12 @@ class CaseOutcome:
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
-        self.case_open = obj_dict.get("caseOpen")
+        self.case_open = True if not obj_dict.get("caseCompleted") else False
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.me_id = obj_dict.get('caseMedicalExaminerId')
-        self.mccd_issued = obj_dict.get("mccdIssed")
+        self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifedStatus")
 
@@ -1154,7 +1154,7 @@ class CaseOutcome:
         return self.coroner_referral and self.mccd_issued and self.cremation_form_status and self.gp_notified_status
 
     def outstanding_items_active(self):
-        return True if self.coroner_referral and self.case_open else False
+        return True if self.case_open else False
 
     def can_close(self):
         return True if self.case_open and \
