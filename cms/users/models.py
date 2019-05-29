@@ -13,6 +13,8 @@ from home.models import IndexOverview
 
 from locations.models import Location
 
+from medexCms.api import enums
+
 from permissions import request_handler as permissions_request_handler
 from permissions.models import Permission, PermittedActions
 
@@ -22,6 +24,8 @@ from . import request_handler
 class User:
     ME_ROLE_TYPE = 'MedicalExaminer'
     MEO_ROLE_TYPE = 'MedicalExaminerOfficer'
+    SERVICE_ADMIN_ROLE_TYPE = 'ServiceAdministrator'
+    SERVICE_OWNER_ROLE_TYPE = 'ServiceOwner'
 
     def __init__(self, obj_dict=None):
         self.auth_token = None
@@ -34,7 +38,7 @@ class User:
             self.first_name = obj_dict.get('firstName')
             self.last_name = obj_dict.get('lastName')
             self.email_address = obj_dict.get('email')
-            self.role = obj_dict.get('role')
+            self.roles = obj_dict.get('role')
             if type(obj_dict.get('permissions')) == list:
                 self.permissions = obj_dict.get('permissions')
             else:
@@ -71,7 +75,7 @@ class User:
                 self.first_name = response_data.get('firstName')
                 self.last_name = response_data.get('lastName')
                 self.email_address = response_data.get('emailAddress')
-                self.role = response_data.get('role')
+                self.roles = response_data.get('role')
                 self.permitted_actions = PermittedActions(response_data.get('permissions'))
 
             return authenticated
@@ -173,7 +177,7 @@ class User:
         return Location.load_me_offices(self.auth_token)
 
     def default_filter_user(self):
-        return self.user_id if self.is_me() else None
+        return self.user_id if self.is_me() and not self.is_meo() else None
 
     def default_filter_options(self):
         return {
@@ -182,10 +186,29 @@ class User:
         }
 
     def is_me(self):
-        return self.role == self.ME_ROLE_TYPE
+        return self.ME_ROLE_TYPE in self.roles
 
     def is_meo(self):
-        return self.role == self.MEO_ROLE_TYPE
+        return self.MEO_ROLE_TYPE in self.roles
+
+    def is_service_admin(self):
+        return self.SERVICE_ADMIN_ROLE_TYPE in self.roles
+
+    def is_service_owner(self):
+        return self.SERVICE_OWNER_ROLE_TYPE in self.roles
+
+    def display_role(self):
+        if self.is_me():
+            return enums.role_types.ME
+        elif self.is_meo():
+            return enums.role_types.MEO
+        elif self.is_service_admin():
+            return enums.role_types.SERVICE_ADMIN
+        elif self.is_service_owner():
+            return enums.role_types.SERVICE_OWNER
+        else:
+            log_internal_error('user display role', 'Unknown role type or no role type present for user')
+            return ''
 
     def get_forms_for_role(self, case_breakdown):
 

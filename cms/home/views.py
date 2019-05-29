@@ -33,7 +33,7 @@ class ExaminationIndexView(LoginRequiredMixin, View):
 
     def set_context(self, form):
         return {
-            'page_header': '%s Dashboard' % self.user.role,
+            'page_header': '%s Dashboard' % self.user.display_role(),
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
