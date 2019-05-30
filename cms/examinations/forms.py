@@ -866,6 +866,7 @@ class QapDiscussionEventForm:
 
         self.outcome = fallback_to(form_data.get('qap-discussion-outcome'), '')
         self.outcome_decision = fallback_to(form_data.get('qap-discussion-outcome-decision'), '')
+        self.coroner_decision = fallback_to(form_data.get('qap-coroner-outcome-decision'), '')
 
         self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
         self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
@@ -998,6 +999,10 @@ class QapDiscussionEventForm:
                                            enums.outcomes.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
                 self.errors['count'] += 1
                 self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
+        elif self.outcome == enums.outcomes.CORONER:
+            if self.coroner_decision == '':
+                self.errors['count'] += 1
+                self.errors['coroner_decision'] = messages.ErrorSelectionRequiredMessage('coroner outcome')
 
     def for_request(self):
 
@@ -1057,7 +1062,7 @@ class QapDiscussionEventForm:
         if self.outcome == enums.outcomes.MCCD:
             return self.outcome_decision
         elif self.outcome == enums.outcomes.CORONER:
-            return self.outcome
+            return self.coroner_decision
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':

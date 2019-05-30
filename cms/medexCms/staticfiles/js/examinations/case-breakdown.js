@@ -120,6 +120,7 @@
     QAPDiscussionForm.prototype = {
         setup: function () {
             this.outcomeDecisionPanel = this.form.find("#qap-discussion__outcome-decision");
+            this.coronerDecisionPanel = this.form.find("#qap-discussion__coroner-decision");
             this.revisedCauseOfDeathPanel = this.form.find("#qap-discussion__outcome-revised");
             this.showHideOutcome();
             this.showHideOutcomeDecision();
@@ -128,10 +129,16 @@
         },
         showHideOutcome() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
+
             if (selectedOutcome.length > 0 && selectedOutcome.val() === 'IssueAnMccd') {
                 this.outcomeDecisionPanel.show();
+                this.coronerDecisionPanel.hide();
+            } else if (selectedOutcome.length > 0 && selectedOutcome.val() === 'ReferToCoroner') {
+                this.outcomeDecisionPanel.hide();
+                this.coronerDecisionPanel.show();
             } else {
                 this.outcomeDecisionPanel.hide();
+                this.coronerDecisionPanel.hide();
             }
         },
         showHideOutcomeDecision() {
@@ -147,7 +154,9 @@
             $('input[type=radio][name=qap-discussion-outcome]').change(function () {
                 if (this.value === 'IssueAnMccd') {
                     that.outcomeDecisionPanel.show();
+                    that.coronerDecisionPanel.hide();
                 } else {
+                    that.coronerDecisionPanel.show();
                     that.outcomeDecisionPanel.hide();
                 }
             });
