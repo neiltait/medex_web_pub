@@ -8,9 +8,10 @@ class BereavedRepresentative:
         self.full_name = obj_dict.get("fullName")
         self.relationship = obj_dict.get("relationship")
         self.phone_number = obj_dict.get("phoneNumber")
-        self.present_at_death = obj_dict.get("presentAtDeath")
-        self.informed = obj_dict.get("informed")
+        self.present_at_death =  obj_dict.get("presentAtDeath").lower() if obj_dict.get("presentAtDeath") else None
+        self.informed = obj_dict.get("informed").lower() if obj_dict.get("informed") else None
         self.appointment_time = obj_dict.get("appointmentTime")
+        self.appointment_notes = obj_dict.get("notes")
 
         if not is_empty_date(obj_dict.get("appointmentDate")) and obj_dict.get("appointmentDate") is not None:
             self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
@@ -33,6 +34,7 @@ class BereavedRepresentative:
         self.appointment_day = obj_dict.get('day_of_appointment')
         self.appointment_month = obj_dict.get('month_of_appointment')
         self.appointment_year = obj_dict.get('year_of_appointment')
+        self.appointment_notes = obj_dict.get('appointment_notes')
 
     def equals(self, representative):
         return representative is not None and \
@@ -45,7 +47,10 @@ class DropdownPerson:
 
     def __init__(self, obj_dict):
         self.person_id = obj_dict.get('userId')
-        self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')
+        if 'fullName' in obj_dict:
+            self.name = obj_dict.get('fullName')
+        else:
+            self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')
 
     @classmethod
     def get_medical_examiners(cls, auth_token, examination_id):

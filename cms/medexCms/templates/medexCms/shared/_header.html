@@ -23,11 +23,13 @@
             </a>
           </div>
 
-          <div class="nav-list--item">
-            <a href="/cases/create">
-              New Case
-            </a>
-          </div>
+          {% if session_user.permitted_actions.can_create_examination %}
+            <div class="nav-list--item">
+              <a href="/cases/create">
+                New Case
+              </a>
+            </div>
+          {% endif %}
 
           <div class="nav-list--item">
             <a href="/cases/closed">
@@ -48,17 +50,19 @@
             </a>
 
             <div class="nav-dropdown--content">
-              <div class="nav-dropdown--item">
+              {% if session_user.permitted_actions.can_access_settings_index %}
                 <a href="/settings">
-                  Settings
+                  <div class="nav-dropdown--item">
+                    Settings
+                  </div>
                 </a>
-              </div>
-              
-              <div class="nav-dropdown--item">
-                <a href="/logout">
+              {% endif %}
+
+              <a href="/logout">
+                <div class="nav-dropdown--item">
                   Logout
-                </a>
-              </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>

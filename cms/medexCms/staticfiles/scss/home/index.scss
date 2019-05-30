@@ -46,4 +46,18 @@ body {
   .sort-block {
     margin-bottom: 1rem;
   }
+
+  .page-navigation {
+    margin: 25px 0px 30px;
+    text-align: right;
+
+    .disabled {
+        cursor: not-allowed;
+        color: $nhs-light-grey;
+    }
+
+    .active {
+        cursor: pointer;
+    }
+  }
 }

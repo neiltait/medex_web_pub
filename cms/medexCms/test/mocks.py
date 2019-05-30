@@ -33,10 +33,50 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            'userId': '1',
-            'firstName': 'Test',
-            'lastName': 'User',
-            'emailAddress': 'test.user@email.com',
+            "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+            "firstName": "Joe",
+            "lastName": "Bloggs",
+            "emailAddress": "joe.bloggs@nhs.uk",
+            "role": "MedicalExaminerOfficer",
+            "permissions": {
+                "GetUsers": True,
+                "GetUser": True,
+                "InviteUser": True,
+                "SuspendUser": True,
+                "EnableUser": True,
+                "DeleteUser": True,
+                "UpdateUser": False,
+                "CreateUser": False,
+                "GetUserPermissions": True,
+                "GetUserPermission": True,
+                "CreateUserPermission": True,
+                "UpdateUserPermission": True,
+                "DeleteUserPermission": True,
+                "GetLocations": True,
+                "GetLocation": True,
+                "GetExaminations": True,
+                "GetExamination": True,
+                "CreateExamination": True,
+                "AssignExaminationToMedicalExaminer": True,
+                "UpdateExamination": True,
+                "UpdateExaminationState": True,
+                "AddEventToExamination": True,
+                "GetExaminationEvents": True,
+                "GetExaminationEvent": True,
+                "GetProfile": True,
+                "UpdateProfile": True,
+                "GetProfilePermissions": True,
+                "BereavedDiscussionEvent": False,
+                "MeoSummaryEvent": True,
+                "QapDiscussionEvent": False,
+                "OtherEvent": True,
+                "AdmissionEvent": True,
+                "MedicalHistoryEvent": True,
+                "PreScrutinyEvent": False
+            },
+            "errors": {},
+            "lookups": None,
+            "success": True
         }
 
     @classmethod
@@ -330,7 +370,7 @@ class ExaminationMocks:
             'date_of_birth_not_known': True,
             'time_of_death_not_known': True,
             'date_of_death_not_known': True,
-            'place_of_death': 1,
+            'place_of_death': "Mexico",
             'me_office': 1,
         }
 
@@ -441,6 +481,16 @@ class ExaminationMocks:
                 'firstName': 'Janet',
                 'lastName': 'Matthews',
                 'email': 'j.matthews@methods.co.uk'
+            },
+            'lookups': {
+                'medicalExaminers': [
+                    {'userId': '1', 'fullName': 'Dr Foster'},
+                    {'userId': '2', 'fullName': 'Dr Watson'}
+                ],
+                'medicalExaminerOfficers': [
+                    {'userId': '3', 'fullName': 'Little Miss Chatterbox'},
+                    {'userId': '4', 'fullName': 'Mr. Bump'}
+                ]
             }
         }
 
@@ -696,6 +746,16 @@ class ExaminationMocks:
     @classmethod
     def get_case_index_response_content(cls):
         return {
+            "countOfTotalCases": 3,
+            "countOfUrgentCases": 0,
+            "countOfCasesAdmissionNotesHaveBeenAdded": 0,
+            "countOfCasesReadyForMEScrutiny": 1,
+            "countOfCasesUnassigned": 1,
+            "countOfCasesHaveBeenScrutinisedByME": 0,
+            "countOfCasesPendingAdmissionNotes": 2,
+            "countOfCasesPendingDiscussionWithQAP": 0,
+            "countOfCasesPendingDiscussionWithRepresentative": 0,
+            "countOfCasesHaveFinalCaseOutstandingOutcomes": 0,
             "examinations": [
                 {
                     "urgencyScore": 1,
@@ -759,6 +819,10 @@ class ExaminationMocks:
                 "additionalProp3": [
                     "string"
                 ]
+            },
+            "lookups": {
+                "LocationFilterLookup": LocationsMocks.get_trust_location_list(),
+                "UserFilterLookup": PeopleMocks.get_filter_user_list()
             },
             "success": True
         }
@@ -1064,7 +1128,7 @@ class ExaminationMocks:
                             "isFinal": True,
                             "eventType": "QapDiscussion",
                             "created": "2019-03-13T10:30:43.019Z",
-                            "participantRoll": "Consultant",
+                            "participantRole": "Consultant",
                             "participantOrganisation": "A Hospital",
                             "participantPhoneNumber": "01234 567890",
                             "dateOfConversation": "2019-04-08T08:31:43.019Z",
@@ -1089,7 +1153,7 @@ class ExaminationMocks:
                         "isFinal": True,
                         "eventType": "QapDiscussion",
                         "created": "2019-03-13T10:30:43.019Z",
-                        "participantRoll": "Consultant",
+                        "participantRole": "Consultant",
                         "participantOrganisation": "A Hospital",
                         "participantPhoneNumber": "01234 567890",
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
@@ -1113,7 +1177,7 @@ class ExaminationMocks:
                         "isFinal": False,
                         "eventType": "QapDiscussion",
                         "created": "2019-03-13T10:30:43.019Z",
-                        "participantRoll": "Consultant",
+                        "participantRole": "Consultant",
                         "participantOrganisation": "A Hospital",
                         "participantPhoneNumber": "01234 567890",
                         "dateOfConversation": "2019-04-08T08:31:43.019Z",
@@ -1237,6 +1301,84 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_empty_case_breakdown_response_content(cls):
+        return {
+            "header": {
+                "urgencyScore": 0,
+                "givenNames": "Andrew",
+                "surname": "Wilson",
+                "nhsNumber": None,
+                "examinationId": "e7b0caf9-2acb-406d-b7ec-87f69ce73806",
+                "timeOfDeath": "00:00:00",
+                "dateOfBirth": "0001-01-01T00:00:00",
+                "dateOfDeath": "0001-01-01T00:00:00",
+                "appointmentDate": None,
+                "appointmentTime": None,
+                "lastAdmission": None,
+                "caseCreatedDate": "2019-05-21T14:11:05.629",
+                "admissionNotesHaveBeenAdded": False,
+                "readyForMEScrutiny": False,
+                "unassigned": True,
+                "haveBeenScrutinisedByME": False,
+                "pendingAdmissionNotes": True,
+                "pendingDiscussionWithQAP": True,
+                "pendingDiscussionWithRepresentative": True,
+                "haveFinalCaseOutcomesOutstanding": True
+            },
+            "caseBreakdown": {
+                "patientDeathEvent": {
+                    "userFullName": "Tom Ridd",
+                    "usersRole": "MedicalExaminer",
+                    "eventId": "434c5c92-622c-495c-a8fb-88dec255e9a1",
+                    "userId": "a2982e7e-81d1-482f-aec7-d122a3957c8d",
+                    "isFinal": True,
+                    "eventType": "PatientDied",
+                    "dateOfDeath": "0001-01-01T00:00:00",
+                    "timeOfDeath": "00:00:00",
+                    "created": "2019-05-21T00:00:00"
+                },
+                "otherEvents": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "preScrutiny": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "bereavedDiscussion": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "meoSummary": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "qapDiscussion": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "medicalHistory": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                },
+                "admissionNotes": {
+                    "history": [],
+                    "latest": None,
+                    "usersDraft": None
+                }
+            },
+            "errors": {},
+            "lookups": None,
+            "success": True
+        }
+
+    @classmethod
     def get_mock_qap_discussion_form_data(cls):
         return {
             'qap_discussion_id': 1,
@@ -1267,7 +1409,7 @@ class ExaminationMocks:
             "isFinal": True,
             "eventType": "QapDiscussion",
             "created": "2019-03-13T10:30:43.019Z",
-            "participantRoll": "Consultant",
+            "participantRole": "Consultant",
             "participantOrganisation": "A Hospital",
             "participantPhoneNumber": "01234 567890",
             "dateOfConversation": "2019-04-08T08:31:43.019Z",
@@ -1544,6 +1686,19 @@ class PeopleMocks:
             "appointmentDate": NONE_DATE,
             "appointmentTime": ""
         }
+
+    @classmethod
+    def get_filter_user_list(cls):
+        return [
+            {
+                "userId": "887b1f68-45d3-452f-8960-604bf8389ec6",
+                "fullName": "Doctor Jones"
+            },
+            {
+                "userId": "44dfd3b1-991e-4f7d-8818-986rdbec8b9c",
+                "fullName": "Doctor Foster"
+            }
+        ]
 
 
 class DatatypeMocks:

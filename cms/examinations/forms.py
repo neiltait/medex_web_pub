@@ -1,7 +1,9 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
-from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to
+from medexCms.api import enums
+from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
+    validate_is_not_blank, pop_if_falsey, date_is_valid_or_empty
 from people.models import BereavedRepresentative
 
 
@@ -32,7 +34,6 @@ class PrimaryExaminationInformationForm:
         self.time_of_death = ""
         self.time_of_death_not_known = ""
         self.place_of_death = ""
-        self.out_of_hours = ""
 
     def initialise_form_from_data(self, request):
         self.last_name = request.get("last_name")
@@ -62,7 +63,6 @@ class PrimaryExaminationInformationForm:
         )
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
-        self.out_of_hours = True if "out_of_hours" in request else False
 
     def set_values_from_instance(self, examination):
         self.first_name = examination.given_names
@@ -85,7 +85,6 @@ class PrimaryExaminationInformationForm:
         self.time_of_death = examination.time_of_death
         self.time_of_death_not_known = True if not examination.time_of_death else False
         self.place_of_death = examination.death_occurred_location_id
-        self.out_of_hours = examination.out_of_hours
         self.me_office = examination.medical_examiner_office_responsible
         return self
 
@@ -148,7 +147,7 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("gender")
             self.errors["count"] += 1
 
-        if self.gender == 'other' and (self.gender_details is None or len(self.gender_details.strip()) == 0):
+        if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
@@ -193,7 +192,7 @@ class PrimaryExaminationInformationForm:
             self.errors["date_of_death"] = DEATH_IS_NOT_AFTER_BIRTH
             self.errors["count"] += 1
 
-        if self.place_of_death is None:
+        if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
             self.errors["place_of_death"] = ErrorFieldRequiredMessage("place of death")
             self.errors["count"] += 1
 
@@ -226,7 +225,6 @@ class PrimaryExaminationInformationForm:
             "dateOfBirth": dob,
             "dateOfDeath": dod,
             "timeOfDeath": '00:00' if self.time_of_death_not_known else self.time_of_death,
-            "outOfHours": 'true' if self.out_of_hours else 'false',
         }
 
     def text_and_checkbox_group_is_valid(self, textboxes, checkbox):
@@ -348,6 +346,7 @@ class BereavedInformationForm:
             self.month_of_appointment_1 = request.get('month_of_appointment_1')
             self.year_of_appointment_1 = request.get('year_of_appointment_1')
             self.time_of_appointment_1 = request.get('time_of_appointment_1')
+            self.appointment_additional_details_1 = request.get('appointment_additional_details_1')
             self.bereaved_name_2 = request.get('bereaved_name_2')
             self.relationship_2 = request.get('relationship_2')
             self.present_death_2 = request.get('present_death_2')
@@ -357,7 +356,7 @@ class BereavedInformationForm:
             self.month_of_appointment_2 = request.get('month_of_appointment_2')
             self.year_of_appointment_2 = request.get('year_of_appointment_2')
             self.time_of_appointment_2 = request.get('time_of_appointment_2')
-            self.appointment_additional_details = request.get('appointment_additional_details')
+            self.appointment_additional_details_2 = request.get('appointment_additional_details_2')
         else:
             self.bereaved_name_1 = ''
             self.relationship_1 = ''
@@ -368,6 +367,7 @@ class BereavedInformationForm:
             self.month_of_appointment_1 = ''
             self.year_of_appointment_1 = ''
             self.time_of_appointment_1 = ''
+            self.appointment_additional_details_1 = ''
             self.bereaved_name_2 = ''
             self.relationship_2 = ''
             self.present_death_2 = ''
@@ -377,7 +377,7 @@ class BereavedInformationForm:
             self.month_of_appointment_2 = ''
             self.year_of_appointment_2 = ''
             self.time_of_appointment_2 = ''
-            self.appointment_additional_details = ''
+            self.appointment_additional_details_2 = ''
 
     def set_values_from_instance(self, examination):
         count = 1
@@ -391,45 +391,17 @@ class BereavedInformationForm:
             setattr(self, 'month_of_appointment_%s' % count, representative.appointment_month)
             setattr(self, 'year_of_appointment_%s' % count, representative.appointment_year)
             setattr(self, 'time_of_appointment_%s' % count, representative.appointment_time)
+            setattr(self, 'appointment_additional_details_%s' % count, representative.appointment_notes)
             count += 1
-        # TODO: appointment_additional_details is not currently in the examinations model
-        self.appointment_additional_details = ''
         return self
 
     def is_valid(self):
-        valid_date_1 = True
-        valid_date_2 = True
-
-        if all(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                     self.day_of_appointment_1, self.time_of_appointment_1]):
-            hours = self.time_of_appointment_1.split(':')[0]
-            mins = self.time_of_appointment_1.split(':')[1]
-            valid_date_1 = validate_date(self.year_of_appointment_1, self.month_of_appointment_1,
-                                         self.day_of_appointment_1, hours, mins)
-
-        elif any(v is not '' for v in [self.year_of_appointment_1, self.month_of_appointment_1,
-                                       self.day_of_appointment_1, self.time_of_appointment_1]):
-            valid_date_1 = False
-
-        if not valid_date_1:
-            self.errors['count'] += 1
-            self.errors['date_of_appointment_1'] = messages.INVALID_DATE
-
-        if all(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                     self.day_of_appointment_2, self.time_of_appointment_2]):
-            hours = self.time_of_appointment_2.split(':')[0]
-            mins = self.time_of_appointment_2.split(':')[1]
-            valid_date_2 = validate_date(self.year_of_appointment_2, self.month_of_appointment_2,
-                                         self.day_of_appointment_2, hours, mins)
-
-        elif any(v is not '' for v in [self.year_of_appointment_2, self.month_of_appointment_2,
-                                       self.day_of_appointment_2, self.time_of_appointment_2]):
-            valid_date_2 = False
-
-        if not valid_date_2:
-            self.errors['count'] += 1
-            self.errors['date_of_appointment_2'] = messages.INVALID_DATE
-
+        valid_date_1 = validate_date_time_field('date_of_appointment_1', self.errors, self.year_of_appointment_1,
+                                                self.month_of_appointment_1, self.day_of_appointment_1,
+                                                self.time_of_appointment_1)
+        valid_date_2 = validate_date_time_field('date_of_appointment_2', self.errors, self.year_of_appointment_2,
+                                                self.month_of_appointment_2, self.day_of_appointment_2,
+                                                self.time_of_appointment_2)
         return True if valid_date_1 and valid_date_2 else False
 
     @property
@@ -450,7 +422,8 @@ class BereavedInformationForm:
                 "presentAtDeath": self.present_death_1,
                 "informed": self.informed_1,
                 "appointmentDate": appointment_1_date,
-                "appointmentTime": self.time_of_appointment_1
+                "appointmentTime": self.time_of_appointment_1,
+                "notes": self.appointment_additional_details_1
             })
         if self.bereaved_name_2:
             appointment_2_date = None
@@ -464,7 +437,8 @@ class BereavedInformationForm:
                 "presentAtDeath": self.phone_number_2,
                 "informed": self.informed_2,
                 "appointmentDate": appointment_2_date,
-                "appointmentTime": self.time_of_appointment_2
+                "appointmentTime": self.time_of_appointment_2,
+                "notes": self.appointment_additional_details_2
             })
         return {
             'representatives': representatives,
@@ -673,7 +647,7 @@ class PreScrutinyEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('pre_scrutiny_id')
+        self.event_id = fallback_to(form_data.get('pre_scrutiny_id'), '')
         self.me_thoughts = fallback_to(form_data.get('me-thoughts'), '')
         self.circumstances_of_death = form_data.get('cod')
         self.possible_cod_1a = fallback_to(form_data.get('possible-cod-1a'), '')
@@ -685,12 +659,39 @@ class PreScrutinyEventForm:
         self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
+        self.errors = {'count': 0}
+
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final:
+            if self.me_thoughts.strip() == '':
+                self.errors['count'] += 1
+                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('pre-scrutiny thoughts')
+
+            if self.circumstances_of_death == '' or self.circumstances_of_death is None:
+                self.errors['count'] += 1
+                self.errors['circumstances_of_death'] = messages.ErrorSelectionRequiredMessage('circumstance of death')
+
+            if self.possible_cod_1a.strip() == '':
+                self.errors['count'] += 1
+                self.errors['possible_cod'] = messages.ErrorFieldRequiredMessage('1a')
+
+            if self.overall_outcome == '' or self.overall_outcome is None:
+                self.errors['count'] += 1
+                self.errors['overall_outcome'] = messages.ErrorSelectionRequiredMessage('overall outcome')
+
+            if self.governance_review == '' or self.governance_review is None:
+                self.errors['count'] += 1
+                self.errors['governance_review'] = messages.ErrorSelectionRequiredMessage('clinical governance review')
+            elif self.governance_review == 'Yes' and self.governance_review_text.strip() == '':
+                self.errors['count'] += 1
+                self.errors['governance_review'] = messages.ErrorFieldRequiredMessage('governance review notes')
+
+        return self.errors['count'] == 0
 
     def for_request(self):
         return {
@@ -725,16 +726,23 @@ class MeoSummaryEventForm:
     active = False
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('meo_summary_id')
+        self.event_id = fallback_to(form_data.get('meo_summary_id'), '')
         self.meo_summary_notes = fallback_to(form_data.get('meo_summary_notes'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.meo_summary_notes.strip() == '':
+            self.errors['count'] += 1
+            self.errors['meo_summary_notes'] = messages.ErrorFieldRequiredMessage('summary notes')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
@@ -751,10 +759,11 @@ class MeoSummaryEventForm:
 
 class OtherEventForm:
     active = False
+    errors = {"count": 0}
 
     def __init__(self, form_data={}):
         self.event_id = fallback_to(form_data.get('other_notes_id'), '')
-        self.more_detail = fallback_to(form_data.get('other-text'), '')
+        self.more_detail = fallback_to(form_data.get('more_detail'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def make_active(self):
@@ -762,7 +771,13 @@ class OtherEventForm:
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.more_detail.strip() == '':
+            self.errors['count'] += 1
+            self.errors['more_detail'] = messages.ErrorFieldRequiredMessage('more detail')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
@@ -779,9 +794,10 @@ class OtherEventForm:
 
 class MedicalHistoryEventForm:
     active = False
+    errors = {'count': 0}
 
     def __init__(self, form_data={}):
-        self.event_id = form_data.get('history_notes_id')
+        self.event_id = fallback_to(form_data.get('medical_history_id'), '')
         self.medical_history_details = fallback_to(form_data.get('medical-history-details'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
 
@@ -790,7 +806,13 @@ class MedicalHistoryEventForm:
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final and self.medical_history_details.strip() == '':
+            self.errors['count'] += 1
+            self.errors['medical_history_details'] = messages.ErrorFieldRequiredMessage('medical history details')
+            return False
+        else:
+            return True
 
     def for_request(self):
         return {
@@ -806,6 +828,9 @@ class MedicalHistoryEventForm:
 
 
 class QapDiscussionEventForm:
+    QAP_PARTICIPANT = 'qap'
+    OTHER_PARTICIPANT = 'other'
+
     active = False
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
 
@@ -814,10 +839,12 @@ class QapDiscussionEventForm:
         return self
 
     def __init__(self, form_data={}):
-
-        self.event_id = form_data.get('qap_discussion_id')
+        self.errors = {'count': 0}
+        self.event_id = fallback_to(form_data.get('qap_discussion_id'), '')
 
         self.discussion_participant_type = fallback_to(form_data.get('qap-discussion-doctor'), '')
+        self.discussion_could_not_happen = fallback_to(form_data.get('qap_discussion_could_not_happen'),
+                                                       enums.yes_no.NO)
 
         self.qap_default_qap_name = fallback_to(form_data.get('qap-default__full-name'), '')
         self.qap_default_qap_role = fallback_to(form_data.get('qap-default__role'), '')
@@ -890,9 +917,9 @@ class QapDiscussionEventForm:
         else:
             self.discussion_participant_type = "other"
             self.qap_discussion_name = draft.participant_name
-            self.qap_discussion_role = draft.participant_role
-            self.qap_discussion_organisation = draft.participant_organisation
-            self.qap_discussion_phone_number = draft.participant_phone_number
+            self.qap_discussion_role = fallback_to(draft.participant_role, '')
+            self.qap_discussion_organisation = fallback_to(draft.participant_organisation, '')
+            self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number, '')
 
     def __fill_default_qap_from_draft(self, default_qap):
         if default_qap:
@@ -903,18 +930,12 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
-        if api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-1"
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-2"
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            self.outcome = "mccd"
-            self.outcome_decision = "outcome-decision-3"
-        elif api_outcome == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            self.outcome = "coroner"
+        if api_outcome == enums.outcomes.CORONER:
+            self.outcome = api_outcome
             self.outcome_decision = ""
+        else:
+            self.outcome = enums.outcomes.MCCD
+            self.outcome_decision = api_outcome
 
     def __calculate_time_values(self, draft):
         date_of_conversation = draft.date_of_conversation
@@ -935,22 +956,78 @@ class QapDiscussionEventForm:
             self.time_of_conversation = ''
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+
+        # if discussion could not happen then always valid
+        if self.discussion_could_not_happen == enums.yes_no.YES:
+            return True
+
+        # validate date
+        validate_date_time_field('time_of_conversation', self.errors,
+                                 self.year_of_conversation, self.month_of_conversation, self.day_of_conversation,
+                                 self.time_of_conversation,
+                                 messages.ErrorFieldRequiredMessage("date and time of conversation"),
+                                 require_not_blank=self.is_final)
+
+        # final submission only
+        if self.is_final:
+            # validate name
+            if self.qap_discussion_name == '':
+                self.errors['count'] += 1
+                self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
+
+            # validate details
+            if self.discussion_details == '':
+                self.errors['count'] += 1
+                self.errors['details'] = messages.ErrorFieldRequiredMessage('discussion details')
+
+            # validate outcomes
+            self.__validate_outcomes()
+
+        return self.errors['count'] == 0
+
+    def __validate_outcomes(self):
+        if self.outcome == '':
+            self.errors['count'] += 1
+            self.errors['outcome'] = messages.ErrorSelectionRequiredMessage('discussion outcome')
+        elif self.outcome == enums.outcomes.MCCD:
+            if self.outcome_decision == '':
+                self.errors['count'] += 1
+                self.errors['outcome_decision'] = messages.ErrorSelectionRequiredMessage('mccd outcome')
+            elif self.outcome_decision in [enums.outcomes.MCCD_FROM_QAP_AND_ME,
+                                           enums.outcomes.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
+                self.errors['count'] += 1
+                self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
 
     def for_request(self):
+
+        if self.discussion_could_not_happen == enums.yes_no.YES:
+            return self.__discussion_did_not_happen_request()
+        else:
+            return self.__full_discussion_request()
+
+    def __discussion_did_not_happen_request(self):
+        return {
+            "eventId": self.event_id,
+            "isFinal": self.is_final,
+            "discussionUnableHappen": self.discussion_could_not_happen,
+        }
+
+    def __full_discussion_request(self):
         name, role, organisation, phone_number = self.__participant_for_request()
 
         date_of_conversation = self.__calculate_full_date_of_conversation()
 
         outcome = self.__calculate_discussion_outcome()
 
-        return {
+        result = {
             "eventId": self.event_id,
+            "eventType": "QapDiscussion",
             "isFinal": self.is_final,
-            "participantRoll": role,
+            "participantRole": role,
             "participantOrganisation": organisation,
             "participantPhoneNumber": phone_number,
-            "discussionUnableHappen": False,
+            "discussionUnableHappen": self.discussion_could_not_happen == enums.yes_no.YES,
             "discussionDetails": self.discussion_details,
             "qapDiscussionOutcome": outcome,
             "participantName": name,
@@ -958,8 +1035,10 @@ class QapDiscussionEventForm:
             "causeOfDeath1b": self.cause_of_death.section_1b,
             "causeOfDeath1c": self.cause_of_death.section_1c,
             "causeOfDeath2": self.cause_of_death.section_2,
-            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT)
+            "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else None
         }
+        pop_if_falsey("dateOfConversation", result)
+        return result
 
     def __participant_for_request(self):
         if self.discussion_participant_type == 'other':
@@ -975,15 +1054,10 @@ class QapDiscussionEventForm:
         return name, role, organisation, phone_number
 
     def __calculate_discussion_outcome(self):
-        if self.outcome == 'mccd':
-            if self.outcome_decision == 'outcome-decision-1':
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP
-            elif self.outcome_decision == 'outcome-decision-2':
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME
-            elif self.outcome_decision == 'outcome-decision-3':
-                return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE
-        elif self.outcome == 'coroner':
-            return CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER
+        if self.outcome == enums.outcomes.MCCD:
+            return self.outcome_decision
+        elif self.outcome == enums.outcomes.CORONER:
+            return self.outcome
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
@@ -1021,13 +1095,39 @@ class AdmissionNotesEventForm:
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
+        self.errors = {'count': 0}
 
     def make_active(self):
         self.active = True
         return self
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+        if self.is_final:
+            self.check_valid_final()
+        else:
+            self.check_valid_draft()
+        return self.errors['count'] == 0
+
+    def check_valid_final(self):
+        if validate_date(self.admission_year, self.admission_month,
+                         self.admission_day) is False and self.admission_date_unknown == '':
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
+
+        if self.admission_time == '' and self.admission_time_unknown == '':
+            self.errors['count'] += 1
+            self.errors['time_of_last_admission'] = messages.ErrorFieldRequiredMessage('time of last admission')
+
+        if self.coroner_referral == '':
+            self.errors['count'] += 1
+            self.errors['latest_admission_immediate_referral'] = messages.ErrorSelectionRequiredMessage(
+                'immediate referral')
+
+    def check_valid_draft(self):
+        if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
+            self.errors['count'] += 1
+            self.errors['date_of_last_admission'] = messages.INVALID_DATE
 
     def admission_date(self):
         if self.admission_date_unknown:
@@ -1036,15 +1136,35 @@ class AdmissionNotesEventForm:
             return build_date(self.admission_year, self.admission_month, self.admission_day).strftime(self.date_format)
 
     def get_immediate_coroner_referral(self):
-        return True if self.coroner_referral == 'yes' else False
+        if self.coroner_referral == 'yes':
+            return True
+        elif self.coroner_referral == 'no':
+            return False
+        else:
+            return None
+
+    def set_immediate_coroner_referral(self, draft_value):
+        if draft_value is True:
+            return 'yes'
+        elif draft_value is None:
+            return ''
+        else:
+            return 'no'
 
     def for_request(self):
+        try:
+            admission_date_for_request = self.admission_date()
+        except ValueError:
+            admission_date_for_request = None
+
         return {
             "eventId": self.event_id,
             "notes": self.admission_notes,
             "isFinal": self.is_final,
-            "admittedDate": self.admission_date(),
-            "admittedTime": None if self.admission_time_unknown else self.admission_time,
+            "admittedDate": admission_date_for_request,
+            "admittedDateUnknown": self.admission_date_unknown,
+            "admittedTime": self.admission_time,
+            "admittedTimeUnknown": self.admission_time_unknown,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
@@ -1057,7 +1177,7 @@ class AdmissionNotesEventForm:
         self.admission_time = draft.admitted_time
         self.admission_time_unknown = False if draft.admitted_time else True
         self.admission_notes = draft.body
-        self.coroner_referral = 'yes' if draft.immediate_coroner_referral else 'no'
+        self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
 
 
@@ -1097,6 +1217,8 @@ class BereavedDiscussionEventForm:
     year_of_conversation = ''
     discussion_could_not_happen = False
 
+    errors = {'count': 0}
+
     def make_active(self):
         self.active = True
         return self
@@ -1113,6 +1235,8 @@ class BereavedDiscussionEventForm:
 
         self.__init_time_of_discussion(form_data)
         self.__init_discussion_details(form_data)
+
+        self.is_final = True if form_data.get('add-event-to-timeline') else False
 
     def __init_representatives(self, representatives):
         self.existing_representative = representatives[0]
@@ -1175,7 +1299,39 @@ class BereavedDiscussionEventForm:
             'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
 
     def is_valid(self):
-        return True
+        self.errors = {'count': 0}
+
+        if self.discussion_could_not_happen:
+            return True
+
+        # check date/time (this has to be valid whether it is a draft or not)
+        validate_date_time_field('bereaved_time_of_conversation', self.errors,
+                                 self.year_of_conversation, self.month_of_conversation,
+                                 self.day_of_conversation, self.time_of_conversation, require_not_blank=self.is_final,
+                                 error_message=messages.ErrorFieldRequiredMessage("date and time of discussion"))
+
+        # other validation is only relevant for complete posts
+        if self.is_final is False:
+            return True
+
+        # check bereaved name
+        if not self.use_existing_bereaved:
+            validate_is_not_blank('bereaved_participant_name', self.errors, self.alternate_representative.full_name,
+                                  error_message=messages.ErrorFieldRequiredMessage('participant name'))
+
+        # check outcome details
+        validate_is_not_blank('bereaved_discussion_details', self.errors, self.discussion_details,
+                              error_message=messages.ErrorFieldRequiredMessage('discussion details'))
+
+        # check outcome decision
+        validate_is_not_blank('bereaved_discussion_outcome', self.errors, self.discussion_outcome,
+                              error_message=messages.ErrorSelectionRequiredMessage('discussion outcome'))
+
+        if self.discussion_outcome == self.BEREAVED_OUTCOME_CONCERNS:
+            validate_is_not_blank('bereaved_outcome_concerned_outcome', self.errors, self.discussion_concerned_outcome,
+                                  error_message=messages.ErrorSelectionRequiredMessage('final outcome'))
+
+        return self.errors['count'] == 0
 
     def fill_from_draft(self, draft, default_representatives):
 
@@ -1253,16 +1409,25 @@ class BereavedDiscussionEventForm:
         self.__set_use_existing_bereaved()
 
     def for_request(self):
-        date_of_conversation = self.__calculate_full_date_of_conversation()
 
-        participant = self.__participant_for_request()
+        if self.discussion_could_not_happen:
+            return self.__discussion_did_not_happen_request()
+        else:
+            return self.__full_discussion_request()
 
+    def __discussion_did_not_happen_request(self):
         return {
-            "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
-            "userId": "WERGT-243TRGS-WE4TG-WERGT",
-            "isFinal": True,
+            "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
-            "created": "2019-03-13T10:30:43.019Z",
+            "discussionUnableHappen": self.discussion_could_not_happen,
+        }
+
+    def __full_discussion_request(self):
+        date_of_conversation = self.__calculate_full_date_of_conversation()
+        participant = self.__participant_for_request()
+        request = {
+            "isFinal": self.is_final,
+            "eventType": "BereavedDiscussion",
             "participantFullName": participant.full_name if participant else "",
             "participantRelationship": participant.relationship if participant else "",
             "participantPhoneNumber": participant.phone_number if participant else "",
@@ -1273,6 +1438,10 @@ class BereavedDiscussionEventForm:
             "discussionDetails": self.discussion_details,
             "bereavedDiscussionOutcome": self.__calculate_combined_outcome()
         }
+        pop_if_falsey("presentAtDeath", request)
+        pop_if_falsey("informedAtDeath", request)
+        pop_if_falsey("bereavedDiscussionOutcome", request)
+        return request
 
     def __calculate_combined_outcome(self):
         if self.discussion_outcome == BereavedDiscussionEventForm.BEREAVED_OUTCOME_NO_CONCERNS:
@@ -1285,7 +1454,7 @@ class BereavedDiscussionEventForm:
             elif self.discussion_concerned_outcome == BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED:
                 return BereavedDiscussionEventForm.REQUEST_OUTCOME_ADDRESSED
 
-        return ''
+        return None
 
     def __participant_for_request(self):
         if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:

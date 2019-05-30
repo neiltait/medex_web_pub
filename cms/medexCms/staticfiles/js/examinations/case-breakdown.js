@@ -128,7 +128,7 @@
         },
         showHideOutcome() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
-            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'mccd') {
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'IssueAnMccd') {
                 this.outcomeDecisionPanel.show();
             } else {
                 this.outcomeDecisionPanel.hide();
@@ -136,7 +136,7 @@
         },
         showHideOutcomeDecision() {
             let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
-            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'outcome-decision-2') {
+            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'MccdCauseOfDeathProvidedByME') {
                 this.revisedCauseOfDeathPanel.show();
             } else {
                 this.revisedCauseOfDeathPanel.hide();
@@ -145,7 +145,7 @@
         startWatchers() {
             let that = this;
             $('input[type=radio][name=qap-discussion-outcome]').change(function () {
-                if (this.value === 'mccd') {
+                if (this.value === 'IssueAnMccd') {
                     that.outcomeDecisionPanel.show();
                 } else {
                     that.outcomeDecisionPanel.hide();
@@ -153,7 +153,7 @@
             });
 
             $('input[type=radio][name=qap-discussion-outcome-decision]').change(function () {
-                if (this.value === 'outcome-decision-2') {
+                if (this.value === 'MccdCauseOfDeathProvidedByME') {
                     that.revisedCauseOfDeathPanel.hide();
                 } else {
                     that.revisedCauseOfDeathPanel.show();
@@ -208,6 +208,7 @@
 
         initQAPDiscussion();
         initBereavementDiscussion();
+        initLatestAdmissionForm();
     }
 
     function initQAPDiscussion() {
@@ -283,6 +284,102 @@
         new BereavementDiscussionForm($('#bereaved-discussion'));
         var causeOfDeath = new ChevronExpandable($('#bereavement-cause-of-death-panel'))
         causeOfDeath.expand();
+    }
+
+    var LatestAdmissionCheckboxGroup = function (textboxes, checkbox) {
+        this.textboxes = textboxes;
+        this.checkbox = checkbox;
+        this.setup();
+    };
+
+    LatestAdmissionCheckboxGroup.prototype = {
+        setup: function () {
+            this.setupCheckboxHandler();
+            this.enabledOrDisable();
+            this.setupTextboxesHandler();
+        },
+
+        setupCheckboxHandler: function () {
+            var that = this;
+            this.checkbox.change(
+                function () {
+                    $.each(that.textboxes, function (index, textInput) {
+
+                        if (that.checkbox.prop('checked')) {
+                            textInput[0].disabled = true
+                        } else {
+                            textInput[0].disabled = false
+                        }
+                    });
+                }
+            );
+        },
+
+        enabledOrDisable: function () {
+            var that = this;
+            if (this.checkbox.prop('checked')) {
+                $.each(that.textboxes, function (index, textInput) {
+                    textInput[0].disabled = true
+                })
+            } else {
+                var textboxesAreEmpty = true;
+                $.each(that.textboxes, function (index, textInput) {
+                    if(textInput.val() !== '') {
+                        textboxesAreEmpty = false;
+                    }
+                });
+                if(textboxesAreEmpty === false) {
+                    that.checkbox.prop("disabled", true);
+                }
+            }
+        },
+
+        setupTextboxesHandler: function () {
+        var that = this;
+        for (textInput of that.textboxes) {
+            textInput.on('change keyup paste mouseup', function () {
+                that.checkbox.prop("disabled", that.anyTextBoxesHaveContent(that.textboxes));
+            })
+        }
+    },
+
+        anyTextBoxesHaveContent: function () {
+            for (textInput of this.textboxes) {
+                if (textInput.val() !== '') {
+                    return true
+                }
+            }
+            return false
+        },
+
+    };
+
+
+
+    var LatestAdmissionForm = function (form) {
+        this.form = form;
+        this.setup();
+    };
+
+    LatestAdmissionForm.prototype = {
+        setup: function () {
+            this.dateGroup = new LatestAdmissionCheckboxGroup([this.form.find("#day_of_last_admission"), this.form.find("#month_of_last_admission"), this.form.find("#year_of_last_admission")], this.form.find("#date_of_last_admission_not_known"));
+            this.timeGroup = new LatestAdmissionCheckboxGroup([this.form.find("#time_of_last_admission")], this.form.find("#time_of_last_admission_not_known"));
+            this.inputGroups = [this.dateGroup, this.timeGroup];
+            this.initialiseFormWithData();
+    },
+
+    initialiseFormWithData: function() {
+        for(inputGroup of this.inputGroups) {
+            inputGroup.enabledOrDisable();
+        }
+    },
+
+
+  }
+
+   function initLatestAdmissionForm() {
+        new LatestAdmissionForm($('#admin-notes'));
     }
 
     $(document).on('page:load', init);

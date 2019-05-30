@@ -7,13 +7,16 @@ from unittest.mock import patch
 from alerts import messages
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, \
-    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
+    AdmissionNotesEventForm, MeoSummaryEventForm, OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, \
+    BereavedDiscussionEventForm
 from examinations.models import Examination, PatientDetails, ExaminationOverview, MedicalTeam, CaseOutcome, CaseEvent, \
-    CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent
+    CaseQapDiscussionEvent, MedicalTeamMember, CaseBereavedDiscussionEvent, CaseInitialEvent
+from examinations.templatetags.examination_filters import case_card_presenter
 from examinations.utils import event_form_parser
+from medexCms.api import enums
 from medexCms.test.mocks import SessionMocks, ExaminationMocks, PeopleMocks, DatatypeMocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE, parse_datetime
+from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 from people.models import BereavedRepresentative
 
 
@@ -280,7 +283,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form.is_valid()
         self.assertIsTrue("first_name" in form.errors)
 
-    def test_given_create_examination_with_first_name_greater_than_150_characters_does_not_validate(self):
+    def test_given_create_examination_with_last_name_greater_than_150_characters_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'last_name': 'nicks' * 40})
         form.is_valid()
         self.assertIsTrue("last_name" in form.errors)
@@ -296,7 +299,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertEqual(form.errors["gender"], messages.ErrorFieldRequiredMessage('gender'))
 
     def test_given_create_examination_with_gender_other_but_no_detail_when_submitted_does_not_validate(self):
-        form = PrimaryExaminationInformationForm(request={'gender': 'other'})
+        form = PrimaryExaminationInformationForm(request={'gender': 'Other'})
         form.is_valid()
         self.assertIsTrue("gender" in form.errors)
 
@@ -445,7 +448,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertEqual(form.errors["place_of_death"], messages.ErrorFieldRequiredMessage('place of death'))
 
     def test_place_of_death_does_validate_if_present(self):
-        form = PrimaryExaminationInformationForm({'place_of_death': 1})
+        form = PrimaryExaminationInformationForm({'place_of_death': "London"})
         form.is_valid()
         self.assertIsFalse("place_of_death" in form.errors)
 
@@ -501,7 +504,6 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIs(form.hospital_number_1, 'example hospital number 1')
         self.assertIs(form.hospital_number_2, 'example hospital number 2')
         self.assertIs(form.hospital_number_3, 'example hospital number 3')
-        self.assertIs(form.out_of_hours, True)
 
     def test_form_correctly_passes_dob_and_dod_for_request_if_known(self):
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
@@ -637,6 +639,11 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertIsTrue(form.is_valid())
 
     #### Medical Team Form tests
+    def test_medical_team_member_initialised_with_valid_medical_team_contains_lookups(self):
+        medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
+
+        self.assertGreater(len(medical_team.medical_examiner_lookup), 0)
+        self.assertGreater(len(medical_team.medical_examiner_officer_lookup), 0)
 
     def test_medical_team_member_form_initialised_empty_returns_as_not_valid(self):
         form = MedicalTeamMembersForm()
@@ -731,7 +738,7 @@ class ExaminationsFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
-            'latest-admission-suspect-referral': coroner_referral,
+            'latest_admission_immediate_referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }
 
@@ -804,53 +811,53 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_qap_discussion__request__maps_mccd_and_qap_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-1'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 1 - qap updates the decision
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP)
 
     def test_qap_discussion__request__maps_mccd_and_me_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-2'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_ME
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 2 - me's first decision
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_ME)
 
     def test_qap_discussion__request__maps_mccd_and_agreement_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'mccd'
-        form_data['qap-discussion-outcome-decision'] = 'outcome-decision-3'
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP_AND_ME
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to option 3 - agreement
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP_AND_ME)
 
     def test_qap_discussion__request__maps_refer_to_coroner_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
-        form_data['qap-discussion-outcome'] = 'coroner'
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER)
 
     def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
         # Given form data with the Default Qap radio button selected
@@ -948,7 +955,7 @@ class ExaminationsFormsTests(MedExTestCase):
     @staticmethod
     def get_participant_from_draft(draft_data):
         return MedicalTeamMember(name=draft_data["participantName"],
-                                 role=draft_data["participantRoll"],
+                                 role=draft_data["participantRole"],
                                  organisation=draft_data["participantOrganisation"],
                                  phone_number=draft_data["participantPhoneNumber"])
 
@@ -1146,18 +1153,6 @@ class ExaminationsFormsTests(MedExTestCase):
 
 class ExaminationsModelsTests(MedExTestCase):
 
-    #### Examination tests
-
-    def test_load_by_id_returns_an_examination_instance_if_found(self):
-        examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-        self.assertEqual(type(examination), Examination)
-
-    @patch('examinations.request_handler.load_by_id',
-           return_value=ExaminationMocks.get_unsuccessful_case_load_response())
-    def test_load_by_id_returns_none_if_not_found(self, mock_case_load):
-        examination = Examination.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(examination)
-
     #### PatientDetails tests
 
     def test_initialising_with_the_none_date_results_in_no_dob(self):
@@ -1181,7 +1176,7 @@ class ExaminationsModelsTests(MedExTestCase):
     def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
         loaded_data = ExaminationMocks.get_patient_details_load_response_content()
         mode_of_disposal = list(DatatypeMocks.get_modes_of_disposal_list().keys())[0]
-        loaded_data['modeOfDisposal'] = DatatypeMocks.get_modes_of_disposal_list()[mode_of_disposal]
+        loaded_data['modeOfDisposal'] = mode_of_disposal
         patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
         self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
 
@@ -1195,30 +1190,40 @@ class ExaminationsModelsTests(MedExTestCase):
 
     #### ExaminationOverview tests
 
-    def test_display_dod_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_dod_if_date_present(self):
+
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
+
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_death = parse_datetime(given_date)
-        result = examination_overview.display_dod()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['banner_dod']
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
-    def test_display_dob_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_dob_if_date_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = parse_datetime(given_date)
-        result = examination_overview.display_dob()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['banner_dob']
+
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
-    def test_display_appointment_date_returns_a_correctly_formatted_string_if_date_present(self):
+    def test_card_presenter_returns_a_correctly_formatted_appointment_date_if_date_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         given_date = '2019-02-02T02:02:02.000Z'
         examination_overview.appointment_date = parse_datetime(given_date)
-        result = examination_overview.display_appointment_date()
+
+        presenter = case_card_presenter(examination_overview)
+        result = presenter['appointment_date']
+
         expected_date = '02.02.2019'
         self.assertEqual(result, expected_date)
 
@@ -1233,34 +1238,33 @@ class ExaminationsModelsTests(MedExTestCase):
         expected_age = 1
         self.assertEqual(result, expected_age)
 
-    def test_calc_age_returns_0_if_date_of_birth_missing(self):
+    def test_calc_age_returns_none_if_date_of_birth_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         death_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = None
         examination_overview.date_of_death = parse_datetime(death_date)
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
 
-    def test_calc_age_returns_0_if_date_of_death_missing(self):
+        self.assertIsNone(result)
+
+    def test_calc_age_returns_none_if_date_of_death_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         birth_date = '2019-02-02T02:02:02.000Z'
         examination_overview.date_of_birth = parse_datetime(birth_date)
         examination_overview.date_of_death = None
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
+        self.assertIsNone(result)
 
-    def test_calc_age_returns_0_if__both_dates_missing(self):
+    def test_calc_age_returns_none_if__both_dates_missing(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
                                                    ['examinations'][0])
         examination_overview.date_of_birth = None
         examination_overview.date_of_death = None
         result = examination_overview.calc_age()
-        expected_age = 0
-        self.assertEqual(result, expected_age)
+
+        self.assertIsNone(result)
 
     def test_calc_last_admission_days_ago_returns_correct_number_of_days_if_date_of_admission_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
@@ -1321,7 +1325,7 @@ class ExaminationsUtilsTests(MedExTestCase):
         result = event_form_parser(form_data)
         self.assertEqual(type(result), AdmissionNotesEventForm)
 
-    def test_event_form_parser_returns_a_meo_summary_form_when_given_admission_notes_form_data(self):
+    def test_event_form_parser_returns_a_meo_summary_form_when_given_meo_summary_form_data(self):
         form_data = {
             'meo_summary_notes': True,
             'add-event-to-timeline': 'meo-summary'
@@ -1338,3 +1342,728 @@ class ExaminationsUtilsTests(MedExTestCase):
 
         result = event_form_parser(form_data)
         self.assertEqual(type(result), OtherEventForm)
+
+
+class ExaminationsBreakdownValidationTests(MedExTestCase):
+
+    # Medical and social history only requires notes to be non-blank for addition
+
+    def test_medical_history_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_medical_history_form_not_valid_for_timeline_if_notes_are_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': '',
+            'add-event-to-timeline': True
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_other_notes_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'medical_history_id': 'any id',
+            'medical-history-details': '',
+            'add-event-to-timeline': False
+        }
+
+        form = MedicalHistoryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    # Other notes only requires notes to be non-blank for addition
+
+    def test_other_notes_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_other_notes_form_not_valid_for_timeline_if_notes_are_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': '',
+            'add-event-to-timeline': True
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_other_notes_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'other_notes_id': 'any id',
+            'more_detail': '',
+            'add-event-to-timeline': False
+        }
+
+        form = OtherEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    # MEO Summary only requires notes to be non-blank for addition
+
+    def test_meo_summary_form_valid_for_timeline_if_notes_are_not_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': 'any content',
+            'add-event-to-timeline': True
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_meo_summary_form_not_valid_for_timeline_if_notes_are_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': '',
+            'add-event-to-timeline': True
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_meo_summary_form_valid_for_draft_even_if_notes_are_blank(self):
+        form_data = {
+            'meo_summary_id': 'any id',
+            'meo_summary_notes': '',
+            'add-event-to-timeline': False
+        }
+
+        form = MeoSummaryEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    """
+    LATEST ADMISSION FORM
+    
+    Draft - Date to be a valid date or blank
+    
+    Final - Date to be a valid date or unknown, Time or unknown, one of coroner referral radio buttons selected
+
+    """
+
+    def test_latest_admission_form_valid_for_draft_when_date_blank(self):
+        blank_form_data = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '',
+            'month_of_last_admission': '',
+            'year_of_last_admission': '',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=blank_form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_for_draft_when_date_is_real_date(self):
+        form_data_with_valid_date = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '9',
+            'month_of_last_admission': '5',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=form_data_with_valid_date)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_draft_when_date_is_not_real_date(self):
+        form_data_where_month_is_13 = {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '1',
+            'month_of_last_admission': '13',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': '',
+            'add-event-to-timeline': False
+        }
+
+        form = AdmissionNotesEventForm(form_data=form_data_where_month_is_13)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def valid_last_admission_final_data(self):
+        return {
+            'admission_notes_id': 'any id',
+            'day_of_last_admission': '26',
+            'month_of_last_admission': '8',
+            'year_of_last_admission': '2019',
+            'date_of_last_admission_not_known': '',
+            'time_of_last_admission': '00:01',
+            'time_of_last_admission_not_known': '',
+            'latest_admission_notes': '',
+            'latest_admission_immediate_referral': 'no',
+            'add-event-to-timeline': True
+        }
+
+    def test_latest_admission_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_last_admission_final_data()
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_final_when_date_fields_blank(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = ''
+        form_data['month_of_last_admission'] = ''
+        form_data['year_of_last_admission'] = ''
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_for_final_when_date_not_known_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = ''
+        form_data['month_of_last_admission'] = ''
+        form_data['year_of_last_admission'] = ''
+        form_data['date_of_last_admission_not_known'] = 'true'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_for_final_when_date_is_real(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = '26'
+        form_data['month_of_last_admission'] = '5'
+        form_data['year_of_last_admission'] = '2019'
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_for_final_when_date_is_not_real(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['day_of_last_admission'] = '26'
+        form_data['month_of_last_admission'] = '13'
+        form_data['year_of_last_admission'] = '2019'
+        form_data['date_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_not_valid_when_no_time_fields_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = ''
+        form_data['time_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_when_time_field_filled(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = '00:55'
+        form_data['time_of_last_admission_not_known'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_when_time_not_known_checked(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['time_of_last_admission'] = ''
+        form_data['time_of_last_admission_not_known'] = 'true'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_when_no_coroner_choice_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_immediate_referral'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_latest_admission_form_valid_when_coroner_choice_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_immediate_referral'] = 'yes'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    """
+    
+    PRE-SCRUTINY
+    
+    draft - no validation at all
+    
+    final - text in thoughts, text in 1a, 
+        radio-buttons: circumstances of death, outcome, and clinical governance selected 
+        clinical governance textbox filled in if clinical governance filled in
+    """
+
+    def valid_pre_scrutiny_final_data(self):
+        return {
+            'pre_scrutiny_id': 'any id',
+            'me-thoughts': 'any thoughts',
+            'cod': 'Unexpected',
+            'possible-cod-1a': 'any 1a comment',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'ReferToCoroner',
+            'gr': 'No',
+            'grt': '',
+            'add-event-to-timeline': True
+        }
+
+    def test_pre_scrutiny_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_pre_scrutiny_form_not_valid_when_me_thoughts_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['me-thoughts'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_1a_not_filled_in(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['possible-cod-1a'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_cod_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_outcome_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['ops'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_not_selected(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['cod'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_not_valid_when_governance_radio_button_is_yes_with_no_text(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = ''
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_pre_scrutiny_form_valid_when_governance_radio_button_is_yes_with_text_comments(self):
+        form_data = self.valid_pre_scrutiny_final_data()
+        form_data['gr'] = 'Yes'
+        form_data['grt'] = 'any comments'
+
+        form = PreScrutinyEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    """
+
+    BEREAVED DISCUSSION
+
+    draft - date/time must be valid or empty
+
+    final - tick for cannot happen is valid
+          - otherwise:
+            name
+            date + time
+            details
+            radio buttons
+    """
+
+    def valid_bereaved_final_data(self):
+        return {
+            'bereaved_event_id': 'any id',
+            'bereaved_rep_type': BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE,
+            'bereaved_alternate_rep_name': 'Mrs Doe',
+            'bereaved_alternate_rep_relationship': '',
+            'bereaved_alternate_rep_phone_number': '',
+            'bereaved_alternate_rep_present_at_death': '',
+            'bereaved_alternate_rep_informed': '',
+            'bereaved_existing_rep_name': '',
+            'bereaved_existing_rep_relationship': '',
+            'bereaved_existing_rep_phone_number': '',
+            'bereaved_existing_rep_present_at_death': '',
+            'bereaved_existing_rep_informed': '',
+            'bereaved_discussion_could_not_happen': BereavedDiscussionEventForm.BEREAVED_RADIO_NO,
+            'bereaved_day_of_conversation': '2',
+            'bereaved_month_of_conversation': '2',
+            'bereaved_year_of_conversation': '2002',
+            'bereaved_time_of_conversation': '12:00',
+            'bereaved_discussion_details': 'some discussion',
+            'bereaved_discussion_outcome': BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS,
+            'bereaved_outcome_concerned_outcome': BereavedDiscussionEventForm.BEREAVED_CONCERNED_OUTCOME_ADDRESSED,
+            'add-event-to-timeline': True
+        }
+
+    def test_bereaved_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_bereaved_final_data()
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_bereaved_form_not_valid_when_conversation_details_not_filled_in(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_details'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_for_draft_when_invalid_date_filled_in(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['bereaved_day_of_conversation'] = '2'
+        form_data['bereaved_month_of_conversation'] = '223'
+        form_data['bereaved_year_of_conversation'] = '2002'
+        form_data['bereaved_time_of_conversation'] = '12:00'
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_when_outcome_is_not_selected(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_outcome'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_bereaved_form_not_valid_when_concerns_exist_but_final_outcome_is_not_selected(self):
+        form_data = self.valid_bereaved_final_data()
+        form_data['bereaved_discussion_outcome'] = BereavedDiscussionEventForm.BEREAVED_OUTCOME_CONCERNS
+        form_data['bereaved_outcome_concerned_outcome'] = ''
+
+        form = BereavedDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    """
+
+    QAP DISCUSSION
+
+    draft - date/time must be valid or empty
+
+    final - tick for cannot happen is valid
+          - otherwise:
+            name
+            date + time
+            details
+            radio buttons
+          - if new cause of death required
+            1a
+    """
+
+    def valid_qap_final_data(self):
+        return {
+            'qap_discussion_id': 'any id',
+            'qap-discussion-doctor': QapDiscussionEventForm.OTHER_PARTICIPANT,
+            'qap_discussion_could_not_happen': enums.yes_no.NO,
+            'qap-default__full-name': '',
+            'qap-default__role': '',
+            'qap-default__organisation': '',
+            'qap-default__phone-number': '',
+            'qap-other__full-name': 'Robert Wilson',
+            'qap-other__role': '',
+            'qap-other__organisation': '',
+            'qap-other__phone-number': '',
+            'qap_discussion_revised_1a': 'Revised 1a',
+            'qap_discussion_revised_1b': '',
+            'qap_discussion_revised_1c': '',
+            'qap_discussion_revised_1d': '',
+            'qap_discussion_details': 'Some details',
+            'qap-discussion-outcome': enums.outcomes.MCCD,
+            'qap-discussion-outcome-decision': enums.outcomes.MCCD_FROM_QAP_AND_ME,
+            'qap_day_of_conversation': '3',
+            'qap_month_of_conversation': '6',
+            'qap_year_of_conversation': '2017',
+            'qap_time_of_conversation': '12:15',
+            'add-event-to-timeline': True
+        }
+
+    def test_qap_form_valid_for_mock_valid_final_data(self):
+        form_data = self.valid_qap_final_data()
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_for_draft_if_date_invalid(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = '26'
+        form_data['qap_month_of_conversation'] = '262'
+        form_data['qap_year_of_conversation'] = '2019'
+        form_data['qap_time_of_conversation'] = '20:15'
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_for_draft_if_nothing_entered(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = ''
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = ''
+        form_data['qap_time_of_conversation'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_for_final_if_nothing_entered(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = True
+        form_data['qap_day_of_conversation'] = ''
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = ''
+        form_data['qap_time_of_conversation'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_for_draft_if_date_partial(self):
+        form_data = self.valid_qap_final_data()
+        form_data['add-event-to-timeline'] = False
+        form_data['qap_day_of_conversation'] = '26'
+        form_data['qap_month_of_conversation'] = ''
+        form_data['qap_year_of_conversation'] = '2019'
+        form_data['qap_time_of_conversation'] = '20:15'
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_for_other_participant_if_name_blank(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-doctor'] = QapDiscussionEventForm.OTHER_PARTICIPANT
+        form_data['qap-other__full-name'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_if_conversation_details_blank(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap_discussion_details'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_not_valid_if_outcome_not_selected(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_coroner_as_outcome_but_no_outcome_decision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
+        form_data['qap-discussion-outcome-decision'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_if_mccd_as_outcome_but_no_outcome_decision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_original_mccd_as_outcome_decision_and_no_revision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_ME
+        form_data['qap_discussion_revised_1a'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_if_revised_mccd_as_outcome_decision_but_no_revision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.MCCD
+        form_data['qap-discussion-outcome-decision'] = enums.outcomes.MCCD_FROM_QAP_AND_ME
+        form_data['qap_discussion_revised_1a'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
+
+    def test_qap_form_valid_if_discussion_could_not_happen(self):
+        form_data = {
+            'qap_discussion_id': 'any id',
+            'qap-discussion-doctor': '',
+            'qap_discussion_could_not_happen': enums.yes_no.YES,
+            'qap-default__full-name': '',
+            'qap-default__role': '',
+            'qap-default__organisation': '',
+            'qap-default__phone-number': '',
+            'qap-other__full-name': '',
+            'qap-other__role': '',
+            'qap-other__organisation': '',
+            'qap-other__phone-number': '',
+            'qap_discussion_revised_1a': '',
+            'qap_discussion_revised_1b': '',
+            'qap_discussion_revised_1c': '',
+            'qap_discussion_revised_1d': '',
+            'qap_discussion_details': '',
+            'qap-discussion-outcome': '',
+            'qap-discussion-outcome-decision': '',
+            'qap_day_of_conversation': '',
+            'qap_month_of_conversation': '',
+            'qap_year_of_conversation': '',
+            'qap_time_of_conversation': '',
+            'add-event-to-timeline': True
+        }
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 0)
+
+
+class ExaminationsBreakdownTests(MedExTestCase):
+
+    def test_initial_event_does_display_date_in_correct_format(self):
+        data = {'dateOfDeath': '2019-05-12T00:00:00'}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_date(), '12.05.2019')
+
+    def test_initial_event_does_display_time_in_correct_format(self):
+        data = {'timeOfDeath': '00:55:00'}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_time(), '00:55:00')
+
+    def test_initial_event_does_display_unknown_for_default_none_date(self):
+        data = {'dateOfDeath': NONE_DATE}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_date(), CaseInitialEvent.UNKNOWN)
+
+
+    def test_initial_event_does_display_unknown_for_default_none_time(self):
+        data = {'timeOfDeath': NONE_TIME}
+
+        event = CaseInitialEvent(data, None, None)
+
+        self.assertEquals(event.display_time(), CaseInitialEvent.UNKNOWN)

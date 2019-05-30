@@ -1,7 +1,13 @@
 from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
-from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to
+from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
+    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
+
+from medexCms.api import enums
+
+from medexCms.utils import parse_datetime, is_empty_date, bool_to_string, is_empty_time, fallback_to, NONE_TIME, \
+    NONE_DATE
 from errors.utils import handle_error, log_api_error
 
 from people.models import BereavedRepresentative
@@ -12,9 +18,9 @@ from . import request_handler
 
 class Examination:
 
-    def __init__(self, obj_dict=None):
+    def __init__(self, obj_dict=None, examination_id=None):
         if obj_dict:
-            self.id = obj_dict.get("id")
+            self.id = examination_id if examination_id else obj_dict.get("id")
             self.time_of_death = obj_dict.get("timeOfDeath")
             self.given_names = obj_dict.get("givenNames")
             self.surname = obj_dict.get("surname")
@@ -51,17 +57,6 @@ class Examination:
             self.out_of_hours = obj_dict.get('outOfHours')
 
     @classmethod
-    def load_by_id(cls, examination_id, auth_token):
-        response = request_handler.load_by_id(examination_id, auth_token)
-
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            return Examination(response.json())
-        else:
-            return None
-
-    @classmethod
     def create(cls, submission, auth_token):
         return request_handler.post_new_examination(submission, auth_token)
 
@@ -83,23 +78,6 @@ class ExaminationOverview:
         self.appointment_time = obj_dict.get("appointmentTime")
         self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
         self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
-
-    def display_dod(self):
-        return self.date_of_death.strftime(self.date_format) if self.date_of_death else 'D.O.D unknown'
-
-    def display_dob(self):
-        return self.date_of_birth.strftime(self.date_format) if self.date_of_birth else 'D.O.B unknown'
-
-    def display_appointment_date(self):
-        return self.appointment_date.strftime(self.date_format) if self.appointment_date else None
-
-    def calc_age(self):
-        if self.date_of_birth and self.date_of_death:
-            return self.date_of_death.year - self.date_of_birth.year - (
-                    (self.date_of_death.month, self.date_of_death.day) < (
-                self.date_of_birth.month, self.date_of_birth.day))
-        else:
-            return 0
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
@@ -123,16 +101,23 @@ class ExaminationOverview:
         else:
             return 0
 
+    def calc_age(self):
+        if self.date_of_death and self.date_of_birth:
+            return self.date_of_death.year - self.date_of_birth.year - (
+                    (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+        else:
+            return None
+
     def urgent(self):
         return True if self.urgency_score and self.urgency_score > 0 and self.open else False
 
 
 class PatientDetails:
 
-    def __init__(self, obj_dict={}, modes_of_disposal={}):
+    def __init__(self, obj_dict={}, modes_of_disposal={}, examination_id=None):
         self.modes_of_disposal = modes_of_disposal
 
-        self.id = obj_dict.get("id")
+        self.id = examination_id if examination_id else obj_dict.get("id")
         self.case_header = PatientHeader(obj_dict.get("header"))
 
         self.completed = obj_dict.get("completed")
@@ -201,7 +186,7 @@ class PatientDetails:
 
         self.mode_of_disposal = ''
         for key, value in self.modes_of_disposal.items():
-            if value == obj_dict.get("modeOfDisposal"):
+            if key == obj_dict.get("modeOfDisposal"):
                 self.mode_of_disposal = key
 
         self.representatives = []
@@ -226,7 +211,6 @@ class PatientDetails:
         self.year_of_death = form.year_of_death
         self.time_of_death = form.time_of_death
         self.death_occurred_location_id = form.place_of_death
-        self.out_of_hours = form.out_of_hours
         return self
 
     def set_secondary_info_values(self, form):
@@ -258,6 +242,7 @@ class PatientDetails:
             'month_of_appointment': form.month_of_appointment_1,
             'year_of_appointment': form.year_of_appointment_1,
             'time_of_appointment': form.time_of_appointment_1,
+            'appointment_notes': form.appointment_additional_details_1,
         }
         representative2 = {
             'bereaved_name': form.bereaved_name_2,
@@ -269,10 +254,10 @@ class PatientDetails:
             'month_of_appointment': form.month_of_appointment_2,
             'year_of_appointment': form.year_of_appointment_2,
             'time_of_appointment': form.time_of_appointment_2,
+            'appointment_notes': form.appointment_additional_details_2,
         }
         self.representatives.append(BereavedRepresentative().set_values_from_form(representative1))
         self.representatives.append(BereavedRepresentative().set_values_from_form(representative2))
-        self.appointment_additional_details = form.appointment_additional_details
         return self
 
     def set_urgency_info_values(self, form):
@@ -292,7 +277,7 @@ class PatientDetails:
 
         if authenticated:
             modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
-            return PatientDetails(response.json(), modes_of_disposal)
+            return PatientDetails(response.json(), modes_of_disposal, examination_id)
         else:
             log_api_error('patient details load', response.text)
             return None
@@ -428,11 +413,9 @@ class ExaminationEventList:
         :param me_scrutiny_event:
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = me_scrutiny_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': me_scrutiny_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = me_scrutiny_event.user_full_name
         cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
         cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
         cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
@@ -446,11 +429,9 @@ class ExaminationEventList:
         :param qap_event: CaseQapDiscussionEvent
         :return: CauseOfDeathProposal
         """
-        from users.models import User
         cause_of_death = CauseOfDeathProposal()
         cause_of_death.creation_date = qap_event.created_date
-        cause_of_death.medical_examiner = User(
-            {'userId': qap_event.user_id, 'firstName': '', 'lastName': '', 'email': ''})
+        cause_of_death.medical_examiner = qap_event.user_full_name
         cause_of_death.qap = MedicalTeamMember(
             name=qap_event.participant_name,
             role=qap_event.participant_role,
@@ -475,18 +456,22 @@ class ExaminationEventList:
         :param qap_event: CaseQapDiscussionEvent
         :return:
         """
-        cause_of_death.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
+        cause_of_death.status = enums.cod_status.NOT_DISCUSSED
         outcome_from_event = qap_event.qap_discussion_outcome
         if qap_event.discussion_unable_happen is True:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__DISCUSSION_NOT_POSSIBLE
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_QAP:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_FROM_ME:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL
-        elif outcome_from_event == CaseQapDiscussionEvent.DISCUSSION_OUTCOME_CORONER:
-            cause_of_death.status = CauseOfDeathProposal.STATUS__CORONER
+            cause_of_death.status = enums.cod_status.DISCUSSION_NOT_POSSIBLE
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_ME:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_ME
+
+        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP_AND_ME:
+            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP_AND_ME
+
+        elif outcome_from_event == enums.outcomes.CORONER:
+            cause_of_death.status = enums.cod_status.CORONER
 
 
 class CaseEvent:
@@ -543,8 +528,15 @@ class CaseEvent:
         else:
             return None
 
+    def user_display_role(self):
+        return get_display_short_user_role(self.user_role)
+
 
 class CaseInitialEvent(CaseEvent):
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+    UNKNOWN = 'Unknown'
+
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_initial_event_body.html'
     event_type = CaseEvent().INITIAL_EVENT_TYPE
     css_type = 'initial'
@@ -553,15 +545,31 @@ class CaseInitialEvent(CaseEvent):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.user_role = user_role
         self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
+        self.published = False
 
     @property
     def display_type(self):
         return '%s died' % self.patient_name
+
+    def display_date(self):
+        if self.dod == NONE_DATE:
+            return self.UNKNOWN
+        else:
+            date = parse_datetime(self.dod)
+            return date.strftime(self.date_format)
+
+    def display_time(self):
+        if self.tod == NONE_TIME:
+            return self.UNKNOWN
+        else:
+            return self.tod
 
 
 class CaseOtherEvent(CaseEvent):
@@ -575,6 +583,8 @@ class CaseOtherEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -598,6 +608,8 @@ class CasePreScrutinyEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('medicalExaminerThoughts')
         self.circumstances_of_death = obj_dict.get('circumstancesOfDeath')
@@ -617,6 +629,12 @@ class CasePreScrutinyEvent(CaseEvent):
         form.event_id = None
         return form
 
+    def display_circumstances_of_death(self):
+        return get_display_circumstances_of_death(self.circumstances_of_death)
+
+    def display_scrutiny_outcome(self):
+        return get_display_scrutiny_outcome(self.outcome_of_pre_scrutiny)
+
 
 class CaseBereavedDiscussionEvent(CaseEvent):
     form_type = 'BereavedDiscussionEventForm'
@@ -629,6 +647,8 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.participant_full_name = obj_dict.get('participantFullName')
         self.participant_relationship = obj_dict.get('participantRelationship')
@@ -644,9 +664,12 @@ class CaseBereavedDiscussionEvent(CaseEvent):
 
     def as_amendment_form(self, representatives):
         from examinations.forms import BereavedDiscussionEventForm
-        form = BereavedDiscussionEventForm(representatives=representatives).fill_from_draft(self)
+        form = BereavedDiscussionEventForm().fill_from_draft(self, default_representatives=representatives)
         form.event_id = None
         return form
+
+    def display_bereaved_discussion_outcome(self):
+        return get_display_bereaved_outcome(self.bereaved_discussion_outcome)
 
 
 class CaseMeoSummaryEvent(CaseEvent):
@@ -660,6 +683,8 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('summaryDetails')
         self.published = obj_dict.get('isFinal')
@@ -674,10 +699,6 @@ class CaseMeoSummaryEvent(CaseEvent):
 
 class CaseQapDiscussionEvent(CaseEvent):
     form_type = 'QapDiscussionEventForm'
-    DISCUSSION_OUTCOME_MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
-    DISCUSSION_OUTCOME_MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
-    DISCUSSION_OUTCOME_MCCD_AGREED_UPDATE = 'MccdCauseOfDeathAgreedByQAPandME'
-    DISCUSSION_OUTCOME_CORONER = 'ReferToCoroner'
 
     event_type = CaseEvent().QAP_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_qap_discussion_event_body.html'
@@ -688,8 +709,11 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
-        self.participant_role = obj_dict.get('participantRoll')
+        self.participant_full_name = obj_dict.get('participantName')
+        self.participant_role = obj_dict.get('participantRole')
         self.participant_organisation = obj_dict.get('participantOrganisation')
         self.participant_phone_number = obj_dict.get('participantPhoneNumber')
         self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
@@ -705,16 +729,28 @@ class CaseQapDiscussionEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def conversation_display_date(self):
-        return self.date_of_conversation.strftime(self.date_format)
+        return self.date_of_conversation.strftime(self.date_format) if self.date_of_conversation else ''
 
     def conversation_display_time(self):
-        return self.date_of_conversation.strftime(self.time_format)
+        return self.date_of_conversation.strftime(self.time_format) if self.date_of_conversation else ''
 
-    def as_amendment_form(self, representatives):
+    def as_amendment_form(self, default_qap):
         from examinations.forms import QapDiscussionEventForm
-        form = QapDiscussionEventForm().fill_from_draft(self)
+        form = QapDiscussionEventForm().fill_from_draft(self, default_qap=default_qap)
         form.event_id = None
         return form
+
+    def display_qap_discussion_high_outcome(self):
+        return get_display_qap_high_outcome(self.qap_discussion_outcome)
+
+    def display_qap_discussion_mccd_outcome(self):
+        return get_display_qap_outcome(self.qap_discussion_outcome)
+
+    def hide_mccd_section(self):
+        return self.qap_discussion_outcome == enums.outcomes.CORONER
+
+    def hide_new_cause_of_death_section(self):
+        return self.qap_discussion_outcome == enums.outcomes.MCCD_FROM_ME
 
 
 class CaseMedicalHistoryEvent(CaseEvent):
@@ -728,6 +764,8 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
@@ -751,6 +789,8 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.number = None
         self.event_id = obj_dict.get('eventId')
         self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('notes')
         self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))
@@ -845,12 +885,6 @@ class CaseBreakdownQAPDiscussion:
 
 
 class CauseOfDeathProposal:
-    STATUS__NOT_DISCUSSED = "Not discussed"
-    STATUS__DISCUSSION_NOT_POSSIBLE = "QAP discussion not possible"
-    STATUS__MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME"
-    STATUS__QAP_PROPOSAL = "agreed proposal by QAP"
-    STATUS__QAP_AND_MEDICAL_EXAMINER_PROPOSAL = "agreed proposal by ME and QAP"
-    STATUS__CORONER = "agreed to send to coroner"
 
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
@@ -860,7 +894,7 @@ class CauseOfDeathProposal:
 
         self.medical_examiner = User()
         self.qap = None
-        self.status = CauseOfDeathProposal.STATUS__NOT_DISCUSSED
+        self.status = enums.cod_status.NOT_DISCUSSED
         self.creation_date = ''
         self.section_1a = ''
         self.section_1b = ''
@@ -914,9 +948,23 @@ class MedicalTeam:
         self.nursing_team_information = obj_dict[
             'nursingTeamInformation'] if 'nursingTeamInformation' in obj_dict else ''
 
-        self.medical_examiner_id = obj_dict['medicalExaminerId'] if 'medicalExaminerId' in obj_dict else ''
+        self.medical_examiner_id = obj_dict['medicalExaminerUserId'] if 'medicalExaminerUserId' in obj_dict else ''
         self.medical_examiners_officer_id = obj_dict[
-            'medicalExaminerOfficer'] if 'medicalExaminerOfficer' in obj_dict else ''
+            'medicalExaminerOfficerUserId'] if 'medicalExaminerOfficerUserId' in obj_dict else ''
+
+        if 'lookups' in obj_dict:
+            lookups = obj_dict['lookups']
+            self.medical_examiner_lookup = self.get_lookup(
+                lookups['medicalExaminers']) if 'medicalExaminers' in lookups else []
+            self.medical_examiner_officer_lookup = self.get_lookup(
+                lookups['medicalExaminerOfficers']) if 'medicalExaminerOfficers' in lookups else []
+        else:
+            self.medical_examiner_lookup = []
+            self.medical_examiner_officer_lookup = []
+
+    @classmethod
+    def get_lookup(cls, user_list):
+        return [{'display_name': user['fullName'], 'user_id': user['userId']} for user in user_list]
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
@@ -954,7 +1002,7 @@ class MedicalTeamMember:
         organisation = obj_dict['organisation'] if 'organisation' in obj_dict else ''
         phone_number = obj_dict['phone'] if 'phone' in obj_dict else ''
         notes = obj_dict['notes'] if 'notes' in obj_dict else ''
-        gmc_number = obj_dict['gmc'] if 'gmc' in obj_dict else ''
+        gmc_number = obj_dict['gmcNumber'] if 'gmcNumber' in obj_dict else ''
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
                                  notes=notes, gmc_number=gmc_number)
 
@@ -1031,11 +1079,12 @@ class CaseOutcome:
         self.case_representative_outcome = obj_dict.get("outcomeOfRepresentativeDiscussion")
         self.case_pre_scrutiny_outcome = obj_dict.get("outcomeOfPrescrutiny")
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
-        self.case_open = obj_dict.get("caseOpen")
+        self.case_open = True if not obj_dict.get("caseCompleted") else False
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
         self.coroner_referral = obj_dict.get("coronerReferral")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
-        self.mccd_issued = obj_dict.get("mccdIssed")
+        self.me_id = obj_dict.get('caseMedicalExaminerId')
+        self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifedStatus")
 
@@ -1085,6 +1134,10 @@ class CaseOutcome:
         else:
             return handle_error(response, {'type': 'case', 'action': 'closing'})
 
+    def scrutiny_actions_complete(self):
+        return not self.case_header.pending_scrutiny_notes and not self.case_header.pending_discussion_with_qap and \
+               not self.case_header.pending_discussion_with_representative and self.case_header.admission_notes_added
+
     def show_coroner_referral(self):
         return self.is_coroner_referral() and self.scrutiny_confirmed
 
@@ -1101,12 +1154,12 @@ class CaseOutcome:
         return self.coroner_referral and self.mccd_issued and self.cremation_form_status and self.gp_notified_status
 
     def outstanding_items_active(self):
-        return True if self.coroner_referral and self.case_open else False
+        return True if self.case_open else False
 
     def can_close(self):
         return True if self.case_open and \
-                       (self.investigation_referral_complete() or self.outstanding_items_complete())\
-                       else False
+                       (self.investigation_referral_complete() or self.outstanding_items_complete()) \
+            else False
 
     def coroner_referral_disclaimer(self):
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
@@ -1150,6 +1203,7 @@ class PatientHeader:
         self.pending_admission_notes = ''
         self.pending_discussion_with_qap = ''
         self.pending_discussion_with_representative = ''
+        self.pending_scrutiny_notes = ''
         self.have_final_case_outstanding_outcomes = ''
 
         if obj_dict:
@@ -1172,6 +1226,7 @@ class PatientHeader:
             self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
             self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
             self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+            self.pending_scrutiny_notes = obj_dict.get("pendingScrutinyNotes")
             self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
 
     @property

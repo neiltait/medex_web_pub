@@ -97,8 +97,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_1 %}nhsuk-input--error{% endif %}"
-                                           id="informed_1-1" name="informed_1" type="radio" value="Yes"
-                                           {% if form.informed_1 == 'Yes' %}checked{% endif %}>
+                                           id="informed_1-1" name="informed_1" type="radio" value="{{ enums.yes_no.YES }}"
+                                           {% if form.informed_1 == enums.yes_no.YES %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_1-1">
                                         Yes
                                     </label>
@@ -106,8 +106,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_1 %}nhsuk-input--error{% endif %}"
-                                           id="informed_1-2" name="informed_1" type="radio" value="No"
-                                           {% if form.informed_1 == 'No' %}checked{% endif %}>
+                                           id="informed_1-2" name="informed_1" type="radio" value="{{ enums.yes_no.NO }}"
+                                           {% if form.informed_1 == enums.yes_no.NO %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_1-2">
                                         No
                                     </label>
@@ -115,8 +115,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_1 %}nhsuk-input--error{% endif %}"
-                                           id="informed_1-3" name="informed_1" type="radio" value="Unknown"
-                                           {% if form.informed_1 == 'Unknown' %}checked{% endif %}>
+                                           id="informed_1-3" name="informed_1" type="radio" value="{{ enums.yes_no.UNKNOWN }}"
+                                           {% if form.informed_1 == enums.yes_no.UNKNOWN %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_1-3">
                                         Unknown
                                     </label>
@@ -183,6 +183,28 @@
                                            name="time_of_appointment_1" type="time" value="{{ form.time_of_appointment_1 }}">
                                 </div>
                             </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional details -->
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.appointment_additional_details_1 %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="appointment_additional_details_1">Enter details below</label>
+
+
+                            {% if errors.appointment_additional_details_1 %}
+                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_1 }}</span>
+                            {% endif %}
+
+                            <textarea id="appointment_additional_details_1"
+                                      class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details_1 %} nhsuk-textarea--error{% endif %}"
+                                      name="appointment_additional_details_1">{{form.appointment_additional_details_1}}</textarea>
                         </div>
                     </fieldset>
                 </div>
@@ -288,8 +310,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_2 %}nhsuk-input--error{% endif %}"
-                                           id="informed_2-1" name="informed_2" type="radio" value="Yes"
-                                           {% if form.informed_2 == 'Yes' %}checked{% endif %}>
+                                           id="informed_2-1" name="informed_2" type="radio" value="{{ enums.yes_no.YES }}"
+                                           {% if form.informed_2 == enums.yes_no.YES %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_2-1">
                                         Yes
                                     </label>
@@ -297,8 +319,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_2 %}nhsuk-input--error{% endif %}"
-                                           id="informed_2-2" name="informed_2" type="radio" value="No"
-                                           {% if form.informed_2 == 'No' %}checked{% endif %}>
+                                           id="informed_2-2" name="informed_2" type="radio" value="{{ enums.yes_no.NO }}"
+                                           {% if form.informed_2 == enums.yes_no.NO %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_2-2">
                                         No
                                     </label>
@@ -306,8 +328,8 @@
 
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_2 %}nhsuk-input--error{% endif %}"
-                                           id="informed_2-3" name="informed_2" type="radio" value="Unknown"
-                                           {% if form.informed_2 == 'Unknown' %}checked{% endif %}>
+                                           id="informed_2-3" name="informed_2" type="radio" value="{{ enums.yes_no.UNKNOWN }}"
+                                           {% if form.informed_2 == enums.yes_no.UNKNOWN %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label" for="informed_2-3">
                                         Unknown
                                     </label>
@@ -379,6 +401,30 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- Additional details -->
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.appointment_additional_details_2 %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="appointment_additional_details_2">Enter details below</label>
+
+
+                            {% if errors.appointment_additional_details_2 %}
+                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_2 }}</span>
+                            {% endif %}
+
+                            <textarea id="appointment_additional_details_2"
+                                      class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details_2 %} nhsuk-textarea--error{% endif %}"
+                                      name="appointment_additional_details_2">{{form.appointment_additional_details_2}}</textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="flex-row">
@@ -388,28 +434,6 @@
 
         <div id="remove-btn" class="nhsuk-button nhsuk-button--secondary">
             Remove last
-        </div>
-    </div>
-</div>
-
-<!-- Additional details -->
-<div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-full">
-        <div class="nhsuk-form-group">
-            <fieldset class="nhsuk-fieldset">
-                <div class="nhsuk-form-group {% if errors.appointment_additional_details %}nhsuk-form-group--error{% endif %}">
-                    <label class="nhsuk-label" for="appointment_additional_details">Enter details below</label>
-
-
-                    {% if errors.appointment_additional_details %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details }}</span>
-                    {% endif %}
-
-                    <textarea id="appointment_additional_details"
-                              class="nhsuk-textarea medex-textarea{% if errors.appointment_additional_details %} nhsuk-textarea--error{% endif %}"
-                              name="appointment_additional_details">{{form.appointment_additional_details}}</textarea>
-                </div>
-            </fieldset>
         </div>
     </div>
 </div>

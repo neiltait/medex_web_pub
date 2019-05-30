@@ -24,6 +24,15 @@ class MethodNotAllowedError:
         return self.error_message
 
 
+class NotPermittedError:
+    http_code = status.HTTP_401_UNAUTHORIZED
+    status_code = messages.NOT_PERMITTED_HEADER
+    error_message = messages.NOT_PERMITTED
+
+    def get_message(self):
+        return self.error_message
+
+
 class GenericError:
     error_message = messages.GENERAL_ERROR
 

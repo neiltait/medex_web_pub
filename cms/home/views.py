@@ -1,72 +1,43 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.views.generic.base import View
 
 from rest_framework import status
 
 from errors.utils import log_unexpected_method
-from errors.views import __handle_method_not_allowed_error
+from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
-from locations.models import Location
+from medexCms.mixins import LoginRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
 from users.models import User
 
 
-def index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    if request.method == 'GET':
-        template, context, status_code = __get_index(user)
-
-    elif request.method == 'POST':
-        template, context, status_code = __post_index(user, request.POST)
-
-    else:
-        log_unexpected_method(request.method, 'case index')
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_index(user):
+class ExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
-    status_code = status.HTTP_200_OK
 
-    form = IndexFilterForm()
-    user.load_examinations()
-    locations = user.get_permitted_locations()
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        query_params = request.GET
 
-    context = __set_index_context(user, locations, None, form)
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 20
 
-    return template, context, status_code
+        form = IndexFilterForm(query_params, self.user.default_filter_options())
+        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
 
+        context = self.set_context(form)
 
-def __post_index(user, post_body):
-    template = 'home/index.html'
-    status_code = status.HTTP_200_OK
+        return render(request, self.template, context, status=status_code)
 
-    form = IndexFilterForm(post_body)
-    user.load_examinations(location=form.location, person=form.person)
-    locations = user.get_permitted_locations()
-    filter_location = Location.initialise_with_id(form.location)
-    people = filter_location.load_permitted_users(user.auth_token)
-
-    context = __set_index_context(user, locations, people, form)
-
-    return template, context, status_code
-
-
-def __set_index_context(user, locations, people, form):
-    return {
-        'page_header': '%s Dashboard' % user.role_type,
-        'session_user': user,
-        'filter_locations': locations,
-        'filter_people': people,
-        'form': form
-    }
+    def set_context(self, form):
+        return {
+            'page_header': '%s Dashboard' % self.user.display_role(),
+            'session_user': self.user,
+            'form': form,
+            'pagination_url': 'index',
+        }
 
 
 def login_callback(request):
@@ -92,7 +63,7 @@ def login(request):
             'base_uri': settings.OP_DOMAIN,
             'client_id': settings.OP_ID,
             'cms_url': settings.CMS_URL,
-            'issuer': settings.OP_ISSUER
+            'issuer': settings.OP_ISSUER,
         }
     else:
         log_unexpected_method(request.method, 'login')
@@ -115,8 +86,10 @@ def settings_index(request):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
+    if not user.permitted_actions.can_access_settings_index():
+        template, context, status_code = __handle_not_permitted_error(user)
 
-    if request.method == 'GET':
+    elif request.method == 'GET':
         template = 'home/settings_index.html'
         status_code = status.HTTP_200_OK
         context = {

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.generic.base import View
 from rest_framework import status
 
 from errors.models import GenericError, BadRequestResponse
@@ -12,75 +13,58 @@ from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, Case
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
-from locations.models import Location
-from people.models import DropdownPerson
+from medexCms.api import enums
+from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from users.models import User
 
 
-def create_examination(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    if request.method == 'GET':
-        template, context, status_code = __get_create_examination(user)
-
-    elif request.POST:
-        template, context, status_code, redirect_response = __post_create_examination(user, request.POST)
-        if redirect_response:
-            return redirect_response
-
-    else:
-        log_unexpected_method(request.method, 'create examination')
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_create_examination(user):
+class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_create_examination'
     template = "examinations/create.html"
-    status_code = status.HTTP_200_OK
-    context = __set_create_examination_context(user, PrimaryExaminationInformationForm(), False)
-    return template, context, status_code
 
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False)
+        return render(request, self.template, context, status=status_code)
 
-def __post_create_examination(user, post_body):
-    template = "examinations/create.html"
-    add_another = False
-    form = PrimaryExaminationInformationForm(post_body)
-    if form.is_valid():
-        response = Examination.create(form.to_object(), user.auth_token)
-        if response.ok:
-            if form.CREATE_AND_CONTINUE_FLAG in post_body:
-                examination_id = response.json()['examinationId']
-                return None, None, None, redirect_to_examination(examination_id)
+    def post(self, request):
+        add_another = False
+        post_body = request.POST
+        form = PrimaryExaminationInformationForm(post_body)
+
+        if form.is_valid():
+            response = Examination.create(form.to_object(), self.user.auth_token)
+
+            if response.ok:
+                if form.CREATE_AND_CONTINUE_FLAG in post_body:
+                    examination_id = response.json()['examinationId']
+                    return redirect_to_examination(examination_id)
+                else:
+                    add_another = True
+                    form = PrimaryExaminationInformationForm()
+                    status_code = status.HTTP_200_OK
             else:
-                add_another = True
-                form = PrimaryExaminationInformationForm()
-                status_code = status.HTTP_200_OK
+                log_api_error('case creation', response.text)
+                status_code = response.status_code
         else:
-            log_api_error('case creation', response.text)
-            status_code = response.status_code
-    else:
-        status_code = status.HTTP_400_BAD_REQUEST
-    context = __set_create_examination_context(user, form, add_another)
-    return template, context, status_code, None
+            status_code = status.HTTP_400_BAD_REQUEST
 
+        context = self.__set_create_examination_context(form, add_another)
+        return render(request, self.template, context, status=status_code)
 
-def __set_create_examination_context(user, form, add_another):
-    locations = Location.get_locations_list(user.auth_token)
-    me_offices = Location.get_me_offices_list(user.auth_token)
+    def __set_create_examination_context(self, form, add_another):
+        me_offices = self.user.get_permitted_me_offices()
 
-    return {
-        "session_user": user,
-        "page_heading": "Add a new case",
-        "sub_heading": "Primary information",
-        "locations": locations,
-        "me_offices": me_offices,
-        "form": form,
-        "errors": form.errors,
-        "add_another": add_another
-    }
+        return {
+            "session_user": self.user,
+            "page_heading": "Add a new case",
+            "sub_heading": "Primary information",
+            "me_offices": me_offices,
+            "form": form,
+            "enums": enums,
+            "errors": form.errors,
+            "add_another": add_another,
+        }
 
 
 def edit_examination(request, examination_id):
@@ -181,7 +165,6 @@ def __validate_patient_details_forms(primary_info_form, secondary_info_form, ber
 def __set_examination_patient_details_context(user, examination, primary_form, secondary_form, bereaved_form,
                                               urgency_form, saved):
     modal_config = get_tab_change_modal_config()
-    locations = user.get_permitted_locations()
     me_offices = user.get_permitted_me_offices()
 
     error_count = primary_form.error_count + secondary_form.error_count + bereaved_form.error_count + \
@@ -196,9 +179,9 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         'urgency_info_form': urgency_form,
         'error_count': error_count,
         'tab_modal': modal_config,
-        "locations": locations,
         "me_offices": me_offices,
-        "saved": saved
+        "enums": enums,
+        "saved": saved,
     }
 
 
@@ -231,7 +214,6 @@ def examination_medical_team(request, examination_id):
     return render(request, template, context, status=status_code)
 
 
-
 def __get_medical_team_form(user, medical_team):
     template = 'examinations/edit_medical_team.html'
     status_code = status.HTTP_200_OK
@@ -249,7 +231,7 @@ def __get_medical_team_form(user, medical_team):
 def __post_medical_team_form(user, medical_team, post_body):
     template = 'examinations/edit_medical_team.html'
     saved = False
-    form = MedicalTeamMembersForm(medical_team=post_body)
+    form = MedicalTeamMembersForm(request=post_body)
     forms_valid = form.is_valid()
 
     if forms_valid:
@@ -264,20 +246,18 @@ def __post_medical_team_form(user, medical_team, post_body):
 
 
 def __set_medical_team_context(user, medical_team, form, saved):
-    medical_examiners = DropdownPerson.get_medical_examiners(user.auth_token,  medical_team.examination_id)
-    medical_examiners_officers = DropdownPerson.get_meos(user.auth_token,  medical_team.examination_id)
     modal_config = get_tab_change_modal_config()
     return {
         'session_user': user,
         'examination_id': medical_team.examination_id,
         'patient': medical_team.case_header,
         'form': form,
-        'medical_examiners': medical_examiners,
-        'medical_examiners_officers': medical_examiners_officers,
+        'medical_examiners': medical_team.medical_examiner_lookup,
+        'medical_examiners_officers': medical_team.medical_examiner_officer_lookup,
         'error_count': form.error_count,
         'errors': form.errors,
         'tab_modal': modal_config,
-        'saved': saved
+        'saved': saved,
     }
 
 
@@ -303,7 +283,7 @@ def edit_examination_case_breakdown(request, examination_id):
 
         return render(request, 'errors/base_error.html', context, status=examination.status_code)
 
-    forms = user.get_forms_for_role()
+    forms = user.get_forms_for_role(examination)
 
     medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
     patient_details = PatientDetails.load_by_id(examination_id, user.auth_token)
@@ -322,7 +302,8 @@ def edit_examination_case_breakdown(request, examination_id):
         'case_breakdown': examination,
         'bereaved_form': {"use_default_bereaved": True},
         'patient': examination.case_header,
-        'form_data': form_data
+        'form_data': form_data,
+        'enums': enums,
     }
 
     return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
@@ -378,7 +359,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
     if amend_type and not form:
         latest_for_type = event_list.get_latest_of_type(amend_type)
         if latest_for_type:
-            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(patient_details.representatives).make_active()
+            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap).make_active()
 
     if form:
         form_data[type(form).__name__] = form.make_active()
@@ -465,29 +446,28 @@ def __set_examination_case_outcome_context(user, case_outcome):
     }
 
 
-def closed_examination_index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
+class ClosedExaminationIndexView(LoginRequiredMixin, View):
+    template = 'home/index.html'
 
-    people = False
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        query_params = request.GET
 
-    if request.method == 'GET':
-        user.load_closed_examinations()
-        form = IndexFilterForm()
-    elif request.method == 'POST':
-        form = IndexFilterForm(request.POST)
-        user.load_closed_examinations(location=form.location, person=form.person)
-        filter_location = Location.initialise_with_id(request.POST.get('location'))
-        people = filter_location.load_permitted_users(user.auth_token)
-    locations = user.get_permitted_locations()
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 20
 
-    context = {
-        'page_header': 'Closed Case Dashboard',
-        'session_user': user,
-        'filter_locations': locations,
-        'filter_people': people,
-        'form': form,
-        'closed_list': True
-    }
-    return render(request, 'home/index.html', context)
+        form = IndexFilterForm(query_params, self.user.default_filter_options())
+        self.user.load_closed_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
+
+        context = self.set_context(form)
+
+        return render(request, self.template, context, status=status_code)
+    
+    def set_context(self, form):
+        return {
+            'page_header': 'Closed Case Dashboard',
+            'session_user': self.user,
+            'form': form,
+            'closed_list': True,
+            'pagination_url': 'closed_examination_index',
+        }

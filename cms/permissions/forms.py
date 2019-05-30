@@ -15,11 +15,13 @@ class PermissionBuilderForm:
             self.permission_level = request.get('permission_level')
             self.region = request.get('region')
             self.trust = request.get('trust')
+            self.national = request.get('national')
         else:
             self.role = None
             self.permission_level = None
             self.region = None
             self.trust = None
+            self.national = None
 
     def is_valid(self):
 
@@ -50,7 +52,7 @@ class PermissionBuilderForm:
         elif self.trust_present():
             return self.trust
         else:
-            return None
+            return self.national
 
     def to_dict(self, user_id):
         return {

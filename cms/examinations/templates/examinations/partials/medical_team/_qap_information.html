@@ -39,7 +39,7 @@
                             <label class="nhsuk-label" for="qap_organisation">
                                 Organisation
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10" id="qap_information"
+                            <input class="nhsuk-input nhsuk-input--width-10" id="qap_organisation"
                                    name="qap_organisation"
                                    value="{{ form.qap.organisation }}" type="text">
                         </div>
@@ -64,7 +64,7 @@
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_qap"
                                    name="gmc_number_qap"
-                                   value="" type="text">
+                                   value="{{form.qap.gmc_number}}" type="text">
                         </div>
                     </fieldset>
                 </div>

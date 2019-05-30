@@ -1,8 +1,13 @@
 {% load staticfiles %}
 
 <div id="filter-block" class="filters-block">
-  <form id="index-filters-form" action="{% url 'index' %}" method="post">
-    {% csrf_token %}
+{% if closed_list %}
+    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get">
+{% else %}
+  <form id="index-filters-form" action="{% url 'index' %}" method="get">
+{% endif %}
+    <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden />
+
     <p>
       Filter cases by place and person
     </p>
@@ -10,8 +15,8 @@
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-one-half">
         <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}">
-          <option value="" disabled hidden selected>Select a location</option>
-          {% for location in filter_locations %}
+          <option value="all">All</option>
+          {% for location in session_user.index_overview.filter_locations %}
             <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
               {{ location.name }}
             </option>
@@ -20,22 +25,15 @@
       </div>
 
       <div class="nhsuk-grid-column-one-half">
-        <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}"
-          {% if not filter_people %}disabled{% endif %}>
-          <option value="" disabled hidden selected>Select a person</option>
-          {% if filter_people %}
-            {% for person in filter_people %}
-              <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
-                {{ person.name }}
-              </option>
-            {% endfor %}
-          {% endif %}
+        <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}">
+          <option value="all">All</option>
+          {% for person in session_user.index_overview.filter_people %}
+            <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
+              {{ person.name }}
+            </option>
+          {% endfor %}
         </select>
       </div>
     </div>
   </form>
-
-  <!--{% if not closed_list %}-->
-    <!--<img style="width:100%;" class='logo__icon' src="{% static 'images/placeholder_MEO_filters.png' %}" alt="">-->
-  <!--{% endif %}-->
 </div>
