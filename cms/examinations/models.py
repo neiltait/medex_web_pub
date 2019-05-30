@@ -1042,7 +1042,9 @@ class CaseOutcome:
 
     date_format = '%d.%m.%Y %H:%M'
     CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
-    REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, 'IssueMCCDWith100a']
+    MCCD_100A_KEY = 'IssueMCCDWith100a'
+    MCCD_KEY = 'IssueMCCD'
+    REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, MCCD_100A_KEY]
 
     QAP_OUTCOMES = {
         'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
@@ -1062,14 +1064,14 @@ class CaseOutcome:
     }
 
     OUTCOME_SUMMARIES = {
-        'ReferToCoroner': {'heading': 'Refer to coroner', 'details': 'For investigation'},
-        'IssueMCCDWith100a': {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
-        'IssueMCCD': {'heading': 'MCCD to be issued'}
+        CORONER_INVESTIGATION_KEY: {'heading': 'Refer to coroner', 'details': 'For investigation'},
+        MCCD_100A_KEY: {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
+        MCCD_KEY: {'heading': 'MCCD to be issued'}
     }
 
     CORONER_DISCLAIMERS = {
-        'ReferToCoroner': 'This case has been submitted to the coroner for an investigation.',
-        'IssueMCCDWith100a': 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
+        CORONER_INVESTIGATION_KEY: 'This case has been submitted to the coroner for an investigation.',
+        MCCD_100A_KEY: 'This case has been submitted to the coroner for permission to issue an MCCD with 100a.',
     }
 
     def __init__(self, obj_dict, examination_id):
@@ -1081,7 +1083,7 @@ class CaseOutcome:
         self.case_qap_outcome = obj_dict.get("outcomeQapDiscussion")
         self.case_open = True if not obj_dict.get("caseCompleted") else False
         self.scrutiny_confirmed = parse_datetime(obj_dict.get("scrutinyConfirmedOn"))
-        self.coroner_referral = obj_dict.get("coronerReferral")
+        self.coroner_referral = obj_dict.get("coronerReferralSent")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.me_id = obj_dict.get('caseMedicalExaminerId')
         self.mccd_issued = obj_dict.get("mccdIssued")
@@ -1128,7 +1130,6 @@ class CaseOutcome:
     @classmethod
     def close_case(cls, auth_token, examination_id):
         response = request_handler.close_case(auth_token, examination_id)
-
         if response.status_code == status.HTTP_200_OK:
             return response.status_code
         else:
@@ -1138,27 +1139,35 @@ class CaseOutcome:
         return not self.case_header.pending_scrutiny_notes and not self.case_header.pending_discussion_with_qap and \
                not self.case_header.pending_discussion_with_representative and self.case_header.admission_notes_added
 
-    def show_coroner_referral(self):
-        return self.is_coroner_referral() and self.scrutiny_confirmed
+    def is_coroner_investigation(self):
+        return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
 
     def is_coroner_referral(self):
         return True if self.case_outcome_summary in self.REFER_TO_CORONER_KEYS else False
 
-    def is_coroner_investigation(self):
-        return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False
+    def show_coroner_referral(self):
+        return self.is_coroner_referral()
 
-    def investigation_referral_complete(self):
-        return self.coroner_referral and self.is_coroner_investigation()
+    def show_outstanding_items(self):
+        return not self.is_coroner_investigation()
+
+    def coroner_referral_enabled(self):
+        return True if self.scrutiny_confirmed and not self.coroner_referral else False
+
+    def outstanding_items_enabled(self):
+        return True if self.scrutiny_confirmed and self.coroner_referral_complete() and self.case_open else False
+
+    def coroner_referral_complete(self):
+        return self.coroner_referral or not self.is_coroner_referral()
 
     def outstanding_items_complete(self):
-        return self.coroner_referral and self.mccd_issued and self.cremation_form_status and self.gp_notified_status
-
-    def outstanding_items_active(self):
-        return True if self.case_open else False
+        if self.show_outstanding_items():
+            return self.mccd_issued and self.cremation_form_status and self.gp_notified_status
+        else:
+            return True
 
     def can_close(self):
-        return True if self.case_open and \
-                       (self.investigation_referral_complete() or self.outstanding_items_complete()) \
+        return True if self.case_open and self.coroner_referral_complete() and self.outstanding_items_complete() \
             else False
 
     def coroner_referral_disclaimer(self):
