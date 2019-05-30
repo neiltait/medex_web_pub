@@ -1088,7 +1088,7 @@ class CaseOutcome:
         self.me_id = obj_dict.get('caseMedicalExaminerId')
         self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
-        self.gp_notified_status = obj_dict.get("gpNotifedStatus")
+        self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
 
     @classmethod
     def load_by_id(cls, auth_token, examination_id):
