@@ -270,8 +270,8 @@
                                 <input class="nhsuk-radios__input qap-discussion-outcome-radio"
                                        id="qap-discussion-outcome-mccd"
                                        name="qap-discussion-outcome"
-                                       type="radio" value="{{ form.MCCD }}"
-                                       {% if form.outcome == form.MCCD %}checked{% endif %}>
+                                       type="radio" value="{{ enums.outcomes.MCCD }}"
+                                       {% if form.outcome == enums.outcomes.MCCD %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-mccd">
                                     MCCD to be issued
                                 </label>
@@ -279,8 +279,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input qap-discussion-outcome-radio"
                                        id="qap-discussion-outcome-coroner"
-                                       name="qap-discussion-outcome" type="radio" value="{{ form.CORONER }}"
-                                       {% if form.outcome == form.CORONER %}checked{% endif %}>
+                                       name="qap-discussion-outcome" type="radio" value="{{ enums.outcomes.CORONER }}"
+                                       {% if form.outcome == enums.outcomes.CORONER %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-coroner">
                                     Refer to coroner
                                 </label>
