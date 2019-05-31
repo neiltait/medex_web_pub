@@ -171,6 +171,38 @@
         }
     };
 
+    var PreScrutinyForm = function (form) {
+        this.form = form;
+        this.setup();
+    };
+
+    PreScrutinyForm.prototype = {
+        setup: function () {
+            this.coronerDecisionPanel = this.form.find("#pre-scrutiny__coroner-decision");
+            this.showHideCoronerPanel();
+
+            this.startWatchers();
+        },
+        showHideCoronerPanel() {
+            let selectedOutcome = this.form.find('input[name=ops]:checked');
+
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'ReferToCoroner') {
+                this.coronerDecisionPanel.show();
+            } else {
+                this.coronerDecisionPanel.hide();
+            }
+        },
+        startWatchers() {
+            let that = this;
+            $('input[type=radio][name=ops]').change(function () {
+                if (this.value === 'IssueAnMccd') {
+                    that.coronerDecisionPanel.hide();
+                } else {
+                    that.coronerDecisionPanel.show();
+                }
+            });
+        }
+    };
 
     var ChevronExpandable = function (wrapper) {
         this.wrapper = wrapper;
@@ -215,9 +247,15 @@
             new RadioTogglePanelGroup(radioToggleGroups)
         }
 
+        initPreScrutiny();
         initQAPDiscussion();
         initBereavementDiscussion();
         initLatestAdmissionForm();
+    }
+
+
+    function initPreScrutiny() {
+        new PreScrutinyForm($('#pre-scrutiny'));
     }
 
     function initQAPDiscussion() {

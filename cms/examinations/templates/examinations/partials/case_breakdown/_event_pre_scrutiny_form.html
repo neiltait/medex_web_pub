@@ -146,7 +146,7 @@
                                            id="pre-scrutiny-coroner-outcome-decision-1"
                                            name="coroner-outcome"
                                            type="radio" value="{{ enums.outcomes.CORONER_100A }}"
-                                           {% if form.coroner_decision == enums.outcomes.CORONER_100A %}checked{% endif %}>
+                                           {% if form.coroner_outcome == enums.outcomes.CORONER_100A %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label"
                                            for="pre-scrutiny-coroner-outcome-decision-1">
                                         For permission to issue an MCCD with 100a
@@ -157,7 +157,7 @@
                                            id="pre-scrutiny-coroner-outcome-decision-2"
                                            name="coroner-outcome" type="radio"
                                            value="{{ enums.outcomes.CORONER_INVESTIGATION }}"
-                                           {% if form.coroner_decision == enums.outcomes.CORONER_INVESTIGATION %}checked{% endif %}>
+                                           {% if form.coroner_outcome == enums.outcomes.CORONER_INVESTIGATION %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label"
                                            for="pre-scrutiny-coroner-outcome-decision-2">
                                         For an investigation

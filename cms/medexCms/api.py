@@ -33,7 +33,7 @@ class APICircumstancesOfDeath:
 
 class APIOutcomes:
     MCCD = 'IssueAnMccd'
-    CORONER_100A = 'ReferToCoroner100a'
+    CORONER_100A = 'ReferToCoronerFor100a'
     CORONER_INVESTIGATION = 'ReferToCoronerInvestigation'
     CORONER = 'ReferToCoroner'
     MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'

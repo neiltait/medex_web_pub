@@ -1679,7 +1679,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'possible-cod-1c': '',
             'possible-cod-2': '',
             'ops': 'ReferToCoroner',
-            'coroner-outcome': 'ReferToCoroner100a',
+            'coroner-outcome': 'ReferToCoronerFor100a',
             'gr': 'No',
             'grt': '',
             'add-event-to-timeline': True
