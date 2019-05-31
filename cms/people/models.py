@@ -1,17 +1,17 @@
-from medexCms.utils import is_empty_date, parse_datetime
+from medexCms.utils import is_empty_date, parse_datetime, fallback_to
 from people import request_handler
 
 
 class BereavedRepresentative:
 
     def __init__(self, obj_dict={}):
-        self.full_name = obj_dict.get("fullName")
-        self.relationship = obj_dict.get("relationship")
-        self.phone_number = obj_dict.get("phoneNumber")
+        self.full_name = fallback_to(obj_dict.get("fullName"), '')
+        self.relationship = fallback_to(obj_dict.get("relationship"), '')
+        self.phone_number = fallback_to(obj_dict.get("phoneNumber"), '')
         self.present_at_death =  obj_dict.get("presentAtDeath").lower() if obj_dict.get("presentAtDeath") else None
         self.informed = obj_dict.get("informed").lower() if obj_dict.get("informed") else None
         self.appointment_time = obj_dict.get("appointmentTime")
-        self.appointment_notes = obj_dict.get("notes")
+        self.appointment_notes = fallback_to(obj_dict.get("notes"), '')
 
         if not is_empty_date(obj_dict.get("appointmentDate")) and obj_dict.get("appointmentDate") is not None:
             self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
