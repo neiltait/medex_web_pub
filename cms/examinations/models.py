@@ -747,10 +747,10 @@ class CaseQapDiscussionEvent(CaseEvent):
         return get_display_qap_outcome(self.qap_discussion_outcome)
 
     def hide_mccd_section(self):
-        return self.qap_discussion_outcome == enums.outcomes.CORONER
+        return self.qap_discussion_outcome in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]
 
     def hide_new_cause_of_death_section(self):
-        return self.qap_discussion_outcome == enums.outcomes.MCCD_FROM_ME
+        return self.qap_discussion_outcome in [enums.outcomes.MCCD_FROM_ME, enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]
 
 
 class CaseMedicalHistoryEvent(CaseEvent):

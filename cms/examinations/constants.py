@@ -23,7 +23,8 @@ def get_display_qap_outcome(outcome):
         'MccdCauseOfDeathProvidedByQAP': 'Issue MCCD. New cause of death from QAP',
         'MccdCauseOfDeathProvidedByME': 'Issue MCCD. Original cause of death from ME',
         'MccdCauseOfDeathAgreedByQAPandME': 'Issue MCCD. New cause of death agreed between QAP and ME',
-        'ReferToCoroner': 'Refer case to coroner'
+        'ReferToCoronerFor100a': '',
+        'ReferToCoronerInvestigation': ''
     }
     return __get_dictionary_value(outcome, outcomes)
 
@@ -33,7 +34,8 @@ def get_display_qap_high_outcome(outcome):
         'MccdCauseOfDeathProvidedByQAP': 'Issue MCCD',
         'MccdCauseOfDeathProvidedByME': 'Issue MCCD',
         'MccdCauseOfDeathAgreedByQAPandME': 'Issue MCCD',
-        'ReferToCoroner': 'Refer case to coroner'
+        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an MCCD with 100a',
+        'ReferToCoronerInvestigation': 'Refer case for coroner investigation'
     }
     return __get_dictionary_value(outcome, outcomes)
 
