@@ -53,7 +53,8 @@ def get_display_circumstances_of_death(circumstance):
 def get_display_scrutiny_outcome(outcome):
     outcomes = {
         'IssueAnMccd': 'Issue an MCCD',
-        'ReferToCoroner': 'Refer case to coroner'
+        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an MCCD with 100a',
+        'ReferToCoronerInvestigation': 'Refer case to coroner for an investigation'
     }
     return __get_dictionary_value(outcome, outcomes)
 
