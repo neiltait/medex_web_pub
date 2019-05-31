@@ -1521,7 +1521,7 @@ class OutstandingItemsForm:
 
     def for_request(self):
         return {
-            "mccdIssed": True if self.mccd_issued == 'true' else False,
+            "mccdIssued": True if self.mccd_issued == 'true' else False,
             "cremationFormStatus": self.cremation_form,
-            "gpNotifedStatus": self.gp_notified
+            "gpNotifiedStatus": self.gp_notified
         }

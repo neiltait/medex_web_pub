@@ -125,8 +125,36 @@
     }
 
     BereavedTimelineEvent.prototype = {
-        setup: function() {
-            console.info('initialising BereavedTimelineEvent');
+       setup: function() {
+            this.toggleBtn = this.eventBox.find('.event-toggle');
+            this.contentSpace = this.eventBox.find('.event-body .content');
+            this.details = this.eventBox.find('.event-body .content .details-body');
+            this.hideableSection = this.eventBox.find('.event-body .content .hideable-content');
+
+            this.setInitialView();
+            this.startWatcher();
+        },
+
+        setInitialView: function() {
+            if (this.contentSpace.height() > 56) {
+                this.details.addClass('collapsed');
+                this.toggleBtn.addClass('down');
+                this.hideableSection.hide();
+            }
+        },
+
+        startWatcher: function() {
+            var that = this;
+            this.toggleBtn.click(function() {
+                that.toggleContentShow();
+            });
+        },
+
+        toggleContentShow: function() {
+            this.toggleBtn.toggleClass('down');
+            this.toggleBtn.toggleClass('up');
+            this.details.toggleClass('collapsed');
+            this.hideableSection.toggle();
         }
     }
 
