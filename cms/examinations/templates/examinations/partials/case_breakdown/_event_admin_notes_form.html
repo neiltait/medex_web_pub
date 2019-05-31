@@ -60,7 +60,8 @@
                         <div class="nhsuk-checkboxes__item">
                             <input class="nhsuk-checkboxes__input" id="date_of_last_admission_not_known"
                                    name="date_of_last_admission_not_known" type="checkbox"
-                                   value="{{ form.admission_date_unknown }}">
+                                   value="{{ enums.true_false.TRUE }}"
+                                    {% if form.admission_date_unknown %}checked{% endif %}>
                             <label class="nhsuk-label nhsuk-checkboxes__label"
                                    for="date_of_last_admission_not_known">
                                 Unknown
@@ -95,7 +96,7 @@
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="time_of_last_admission_not_known"
                                        name="time_of_last_admission_not_known" type="checkbox"
-                                       value="{{ form.admission_time_unknown }}">
+                                       value="{{ enums.true_false.TRUE }}" {% if form.admission_time_unknown %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
                                        for="time_of_last_admission_not_known">
                                     Unknown

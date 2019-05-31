@@ -794,7 +794,9 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.created_date = obj_dict.get('created')
         self.body = obj_dict.get('notes')
         self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))
+        self.admitted_date_unknown = obj_dict.get('admittedDateUnknown')
         self.admitted_time = obj_dict.get('admittedTime')
+        self.admitted_time_unknown = obj_dict.get('admittedTimeUnknown')
         self.immediate_coroner_referral = obj_dict.get('immediateCoronerReferral')
         self.published = obj_dict.get('isFinal')
         self.dod = dod

@@ -1089,9 +1089,9 @@ class AdmissionNotesEventForm:
         self.admission_day = fallback_to(form_data.get('day_of_last_admission'), '')
         self.admission_month = fallback_to(form_data.get('month_of_last_admission'), '')
         self.admission_year = fallback_to(form_data.get('year_of_last_admission'), '')
-        self.admission_date_unknown = fallback_to(form_data.get('date_of_last_admission_not_known'), '')
+        self.admission_date_unknown = True if form_data.get('date_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
-        self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
+        self.admission_time_unknown = True if form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
@@ -1111,11 +1111,11 @@ class AdmissionNotesEventForm:
 
     def check_valid_final(self):
         if validate_date(self.admission_year, self.admission_month,
-                         self.admission_day) is False and self.admission_date_unknown == '':
+                         self.admission_day) is False and self.admission_date_unknown is False:
             self.errors['count'] += 1
             self.errors['date_of_last_admission'] = messages.INVALID_DATE
 
-        if self.admission_time == '' and self.admission_time_unknown == '':
+        if self.admission_time == '' and self.admission_time_unknown is False:
             self.errors['count'] += 1
             self.errors['time_of_last_admission'] = messages.ErrorFieldRequiredMessage('time of last admission')
 
@@ -1162,9 +1162,9 @@ class AdmissionNotesEventForm:
             "notes": self.admission_notes,
             "isFinal": self.is_final,
             "admittedDate": admission_date_for_request,
-            "admittedDateUnknown": self.admission_date_unknown,
-            "admittedTime": self.admission_time,
-            "admittedTimeUnknown": self.admission_time_unknown,
+            "admittedDateUnknown": True if self.admission_date_unknown else None,
+            "admittedTime": self.admission_time if self.admission_time else None,
+            "admittedTimeUnknown": True if self.admission_time_unknown else None,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
@@ -1173,9 +1173,9 @@ class AdmissionNotesEventForm:
         self.admission_day = draft.admitted_date.day if draft.admitted_date else ''
         self.admission_month = draft.admitted_date.month if draft.admitted_date else ''
         self.admission_year = draft.admitted_date.year if draft.admitted_date else ''
-        self.admission_date_unknown = False if draft.admitted_date else True
+        self.admission_date_unknown = draft.admitted_date_unknown
         self.admission_time = draft.admitted_time
-        self.admission_time_unknown = False if draft.admitted_time else True
+        self.admission_time_unknown = draft.admitted_time_unknown
         self.admission_notes = draft.body
         self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
