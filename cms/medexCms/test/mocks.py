@@ -873,7 +873,7 @@ class ExaminationMocks:
             "outcomeQapDiscussion": "MccdCauseOfDeathProvidedByQAP",
             "caseOpen": True,
             "scrutinyConfirmedOn": "2019-04-15T11:37:01.174Z",
-            "coronerReferral": True,
+            "coronerReferralSent": True,
             "caseMedicalExaminerFullName": "Dr Bob Smith",
             "mccdIssed": False,
             "cremationFormStatus": "",

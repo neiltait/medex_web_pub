@@ -443,6 +443,7 @@ def __set_examination_case_outcome_context(user, case_outcome):
         'case_outcome': case_outcome,
         'patient': case_outcome.case_header,
         'tab_modal': modal_config,
+        'enums': enums,
     }
 
 

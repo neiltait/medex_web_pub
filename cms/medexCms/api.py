@@ -68,6 +68,12 @@ class UserRoleTypes:
     SERVICE_OWNER = 'Service Owner'
 
 
+class APIGPNotifiedStatus:
+    NOTIFIED = 'GPNotified'
+    NOT_NOTIFIED = 'GPUnabledToBeNotified'
+    NA = 'NA'
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -79,6 +85,7 @@ class APIStrings:
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
     role_types = UserRoleTypes()
+    gp_notified_status = APIGPNotifiedStatus()
 
 
 enums = APIStrings()
