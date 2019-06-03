@@ -388,7 +388,7 @@ class ExaminationEventList:
         return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
 
     def get_latest_of_type(self, event_type):
-        return self.latests[event_type]
+        return self.latests.get(event_type)
 
     def get_latest_me_scrutiny_cause_of_death(self):
         events = [event for event in self.events if
