@@ -999,10 +999,11 @@ class QapDiscussionEventForm:
 
         # final submission only
         if self.is_final:
-            # validate name
-            if self.qap_discussion_name == '':
-                self.errors['count'] += 1
-                self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
+            if self.discussion_participant_type == enums.people.OTHER:
+                # validate name
+                if self.qap_discussion_name == '':
+                    self.errors['count'] += 1
+                    self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
 
             # validate details
             if self.discussion_details == '':
