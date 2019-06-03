@@ -8,7 +8,7 @@
                         <label class="nhsuk-label" for="bereaved_name_1">Full name</label>
 
                         {% if errors.bereaved_name_1 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.bereaved_name_1 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_name_1">{{ errors.bereaved_name_1 }}</span>
                         {% endif %}
 
                         <input id="bereaved_name_1" type="text" name="bereaved_name_1" value="{{form.bereaved_name_1}}"
@@ -25,7 +25,7 @@
                         <label class="nhsuk-label" for="relationship_1">Relationship</label>
 
                         {% if errors.relationship_1 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.relationship_1 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override"  automation-id="ve_relationship_1">{{ errors.relationship_1 }}</span>
                         {% endif %}
 
                         <input id="relationship_1" type="text" name="relationship_1" value="{{form.relationship_1}}"
@@ -80,7 +80,7 @@
                     <div class="nhsuk-form-group {% if errors.phone_number_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="phone_number_1">Phone number</label>
 
-                        {% if errors.phone_number_1 %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.phone_number_1 }}</span>{% endif %}
+                        {% if errors.phone_number_1 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_phone_number_1">{{ errors.phone_number_1 }}</span>{% endif %}
 
                         <input id="phone_number_1" type="text" name="phone_number_1" value="{{form.phone_number_1}}"
                                class="nhsuk-input nhsuk-input--width-10 {% if errors.phone_number_1 %}nhsuk-input--error{% endif %}">
@@ -138,7 +138,7 @@
                         </legend>
 
                         {% if errors.date_of_appointment_1 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_appointment_1 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_date_of_appointment_1">{{ errors.date_of_appointment_1 }}</span>
                         {% endif %}
 
                         <div class="nhsuk-date-input" id="date_of_appointment_1">
@@ -199,7 +199,7 @@
 
 
                             {% if errors.appointment_additional_details_1 %}
-                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_1 }}</span>
+                                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_1">{{ errors.appointment_additional_details_1 }}</span>
                             {% endif %}
 
                             <textarea id="appointment_additional_details_1"
@@ -221,7 +221,7 @@
                         <label class="nhsuk-label" for="bereaved_name_2">Full name</label>
 
                         {% if errors.bereaved_name_2 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.bereaved_name_2 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_name_2">{{ errors.bereaved_name_2 }}</span>
                         {% endif %}
 
                         <input id="bereaved_name_2" type="text" name="bereaved_name_2" value="{{form.bereaved_name_2}}"
@@ -238,7 +238,7 @@
                         <label class="nhsuk-label" for="relationship_2">Relationship</label>
 
                         {% if errors.relationship_2 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.relationship_2 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_relationship_2">{{ errors.relationship_2 }}</span>
                         {% endif %}
 
                         <input id="relationship_2" type="text" name="relationship_2" value="{{form.relationship_2}}"
@@ -293,7 +293,7 @@
                     <div class="nhsuk-form-group {% if errors.phone_number_2 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="phone_number_2">Phone number</label>
 
-                        {% if errors.phone_number_2 %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.phone_number_2 }}</span>{% endif %}
+                        {% if errors.phone_number_2 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_phone_number_2">{{ errors.phone_number_2 }}</span>{% endif %}
 
                         <input id="phone_number_2" type="text" name="phone_number_2" value="{{form.phone_number_2}}"
                                class="nhsuk-input nhsuk-input--width-10 {% if errors.phone_number_2 %}nhsuk-input--error{% endif %}">
@@ -351,7 +351,7 @@
                         </legend>
 
                         {% if errors.date_of_appointment_2 %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ errors.date_of_appointment_2 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_date_of_appointment_2">{{ errors.date_of_appointment_2 }}</span>
                         {% endif %}
 
                         <div class="nhsuk-date-input" id="date_of_appointment_2">
@@ -414,7 +414,7 @@
 
 
                             {% if errors.appointment_additional_details_2 %}
-                                <span class="nhsuk-error-message medex-font-default-override">{{ errors.appointment_additional_details_2 }}</span>
+                                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_2">{{ errors.appointment_additional_details_2 }}</span>
                             {% endif %}
 
                             <textarea id="appointment_additional_details_2"
