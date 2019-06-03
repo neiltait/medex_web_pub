@@ -7,3 +7,4 @@ djangorestframework
 requests
 applicationinsights
 gunicorn==19.6.0
+whitenoise==3.2.2
