@@ -655,6 +655,7 @@ class PreScrutinyEventForm:
         self.possible_cod_1c = fallback_to(form_data.get('possible-cod-1c'), '')
         self.possible_cod_2 = fallback_to(form_data.get('possible-cod-2'), '')
         self.overall_outcome = form_data.get('ops')
+        self.coroner_outcome = form_data.get('coroner-outcome')
         self.governance_review = form_data.get('gr')
         self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
@@ -684,6 +685,11 @@ class PreScrutinyEventForm:
                 self.errors['count'] += 1
                 self.errors['overall_outcome'] = messages.ErrorSelectionRequiredMessage('overall outcome')
 
+            if self.overall_outcome == enums.outcomes.CORONER and \
+                    (self.coroner_outcome == '' or self.coroner_outcome is None):
+                self.errors['count'] += 1
+                self.errors['coroner_outcome'] = messages.ErrorSelectionRequiredMessage('coroner outcome')
+
             if self.governance_review == '' or self.governance_review is None:
                 self.errors['count'] += 1
                 self.errors['governance_review'] = messages.ErrorSelectionRequiredMessage('clinical governance review')
@@ -703,10 +709,28 @@ class PreScrutinyEventForm:
             "causeOfDeath1b": self.possible_cod_1b,
             "causeOfDeath1c": self.possible_cod_1c,
             "causeOfDeath2": self.possible_cod_2,
-            "outcomeOfPreScrutiny": self.overall_outcome,
+            "outcomeOfPreScrutiny": self.calc_outcome_of_pre_scrutiny(),
             "clinicalGovernanceReview": self.governance_review,
             "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+    def calc_outcome_of_pre_scrutiny(self):
+        if self.overall_outcome == enums.outcomes.CORONER:
+            return self.coroner_outcome
+        else:
+            return self.overall_outcome
+
+    def calc_overall_outcome(self, outcome_of_pre_scrutiny):
+        if outcome_of_pre_scrutiny in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]:
+            return enums.outcomes.CORONER
+        else:
+            return outcome_of_pre_scrutiny
+
+    def calc_coroner_outcome(self, outcome_of_pre_scrutiny):
+        if outcome_of_pre_scrutiny in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]:
+            return outcome_of_pre_scrutiny
+        else:
+            return ''
 
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
@@ -716,7 +740,8 @@ class PreScrutinyEventForm:
         self.possible_cod_1b = draft.cause_of_death_1b
         self.possible_cod_1c = draft.cause_of_death_1c
         self.possible_cod_2 = draft.cause_of_death_2
-        self.overall_outcome = draft.outcome_of_pre_scrutiny
+        self.overall_outcome = self.calc_overall_outcome(draft.outcome_of_pre_scrutiny)
+        self.coroner_outcome = self.calc_coroner_outcome(draft.outcome_of_pre_scrutiny)
         self.governance_review = draft.clinical_governance_review
         self.governance_review_text = draft.clinical_governance_review_text
         return self
@@ -866,6 +891,7 @@ class QapDiscussionEventForm:
 
         self.outcome = fallback_to(form_data.get('qap-discussion-outcome'), '')
         self.outcome_decision = fallback_to(form_data.get('qap-discussion-outcome-decision'), '')
+        self.coroner_decision = fallback_to(form_data.get('qap-coroner-outcome-decision'), '')
 
         self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
         self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
@@ -931,11 +957,13 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome == enums.outcomes.CORONER:
-            self.outcome = api_outcome
+            self.outcome = enums.outcomes.CORONER
+            self.coroner_decision = api_outcome
             self.outcome_decision = ""
         else:
             self.outcome = enums.outcomes.MCCD
             self.outcome_decision = api_outcome
+            self.coroner_decision = ""
 
     def __calculate_time_values(self, draft):
         date_of_conversation = draft.date_of_conversation
@@ -998,6 +1026,10 @@ class QapDiscussionEventForm:
                                            enums.outcomes.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
                 self.errors['count'] += 1
                 self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
+        elif self.outcome == enums.outcomes.CORONER:
+            if self.coroner_decision == '':
+                self.errors['count'] += 1
+                self.errors['coroner_decision'] = messages.ErrorSelectionRequiredMessage('coroner outcome')
 
     def for_request(self):
 
@@ -1057,7 +1089,7 @@ class QapDiscussionEventForm:
         if self.outcome == enums.outcomes.MCCD:
             return self.outcome_decision
         elif self.outcome == enums.outcomes.CORONER:
-            return self.outcome
+            return self.coroner_decision
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
