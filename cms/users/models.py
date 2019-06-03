@@ -260,7 +260,7 @@ class User:
     def editable_event_types(self):
         forms_list = []
         if self.permitted_actions.permitted_forms.admissionEvent:
-            forms_list.append('admin-notes')
+            forms_list.append('admission-notes')
         if self.permitted_actions.permitted_forms.medicalHistoryEvent:
             forms_list.append('medical-history')
         if self.permitted_actions.permitted_forms.meoSummaryEvent:
