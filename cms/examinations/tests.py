@@ -755,9 +755,9 @@ class ExaminationsFormsTests(MedExTestCase):
         admission_day = ''
         admission_month = ''
         admission_year = ''
-        admission_date_unknown = True
+        admission_date_unknown = enums.true_false.TRUE
         admission_time = '10:00'
-        admission_time_unknown = False
+        admission_time_unknown = enums.true_false.FALSE
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
         coroner_referral = 'no'
         add_event_to_timeline = 'admission-notes'
