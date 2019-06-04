@@ -919,7 +919,9 @@ class QapDiscussionEventForm:
 
         self.__calculate_time_values(draft)
 
-        self.discussion_details = draft.discussion_details
+        self.discussion_details = fallback_to(draft.discussion_details, '')
+
+        self.discussion_could_not_happen = enums.yes_no.YES if draft.discussion_unable_happen else enums.yes_no.NO
 
         self.__calculate_discussion_outcome_radio_button_combination(draft)
 
@@ -942,7 +944,7 @@ class QapDiscussionEventForm:
             self.discussion_participant_type = "qap"
         else:
             self.discussion_participant_type = "other"
-            self.qap_discussion_name = draft.participant_name
+            self.qap_discussion_name = fallback_to(draft.participant_name, '')
             self.qap_discussion_role = fallback_to(draft.participant_role, '')
             self.qap_discussion_organisation = fallback_to(draft.participant_organisation, '')
             self.qap_discussion_phone_number = fallback_to(draft.participant_phone_number, '')
@@ -956,14 +958,15 @@ class QapDiscussionEventForm:
 
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
-        if api_outcome == enums.outcomes.CORONER:
-            self.outcome = enums.outcomes.CORONER
-            self.coroner_decision = api_outcome
-            self.outcome_decision = ""
-        else:
-            self.outcome = enums.outcomes.MCCD
-            self.outcome_decision = api_outcome
-            self.coroner_decision = ""
+        if api_outcome is not None:
+            if api_outcome == enums.outcomes.CORONER:
+                self.outcome = enums.outcomes.CORONER
+                self.coroner_decision = api_outcome
+                self.outcome_decision = ""
+            else:
+                self.outcome = enums.outcomes.MCCD
+                self.outcome_decision = api_outcome
+                self.coroner_decision = ""
 
     def __calculate_time_values(self, draft):
         date_of_conversation = draft.date_of_conversation
