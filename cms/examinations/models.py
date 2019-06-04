@@ -1057,7 +1057,9 @@ class CaseOutcome:
 
     REPRESENTATIVE_OUTCOMES = {
         'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
-        'ConcernsRaised': 'Refer to coroner, concerns raised'
+        'ConcernsCoronerInvestigation': 'Refer to coroner for investigation, concerns raised',
+        "ConcernsRequires100a": 'Refer to coroner for 100a, concerns raised',
+        "ConcernsAddressedWithoutCoroner": 'MCCD to be issued, concerns addressed without coroner',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
