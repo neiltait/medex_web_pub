@@ -655,6 +655,7 @@ class PreScrutinyEventForm:
         self.possible_cod_1c = fallback_to(form_data.get('possible-cod-1c'), '')
         self.possible_cod_2 = fallback_to(form_data.get('possible-cod-2'), '')
         self.overall_outcome = form_data.get('ops')
+        self.coroner_outcome = form_data.get('coroner-outcome')
         self.governance_review = form_data.get('gr')
         self.governance_review_text = fallback_to(form_data.get('grt'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
@@ -684,6 +685,11 @@ class PreScrutinyEventForm:
                 self.errors['count'] += 1
                 self.errors['overall_outcome'] = messages.ErrorSelectionRequiredMessage('overall outcome')
 
+            if self.overall_outcome == enums.outcomes.CORONER and \
+                    (self.coroner_outcome == '' or self.coroner_outcome is None):
+                self.errors['count'] += 1
+                self.errors['coroner_outcome'] = messages.ErrorSelectionRequiredMessage('coroner outcome')
+
             if self.governance_review == '' or self.governance_review is None:
                 self.errors['count'] += 1
                 self.errors['governance_review'] = messages.ErrorSelectionRequiredMessage('clinical governance review')
@@ -703,10 +709,28 @@ class PreScrutinyEventForm:
             "causeOfDeath1b": self.possible_cod_1b,
             "causeOfDeath1c": self.possible_cod_1c,
             "causeOfDeath2": self.possible_cod_2,
-            "outcomeOfPreScrutiny": self.overall_outcome,
+            "outcomeOfPreScrutiny": self.calc_outcome_of_pre_scrutiny(),
             "clinicalGovernanceReview": self.governance_review,
             "clinicalGovernanceReviewText": self.governance_review_text
         }
+
+    def calc_outcome_of_pre_scrutiny(self):
+        if self.overall_outcome == enums.outcomes.CORONER:
+            return self.coroner_outcome
+        else:
+            return self.overall_outcome
+
+    def calc_overall_outcome(self, outcome_of_pre_scrutiny):
+        if outcome_of_pre_scrutiny in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]:
+            return enums.outcomes.CORONER
+        else:
+            return outcome_of_pre_scrutiny
+
+    def calc_coroner_outcome(self, outcome_of_pre_scrutiny):
+        if outcome_of_pre_scrutiny in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]:
+            return outcome_of_pre_scrutiny
+        else:
+            return ''
 
     def fill_from_draft(self, draft):
         self.event_id = draft.event_id
@@ -716,7 +740,8 @@ class PreScrutinyEventForm:
         self.possible_cod_1b = draft.cause_of_death_1b
         self.possible_cod_1c = draft.cause_of_death_1c
         self.possible_cod_2 = draft.cause_of_death_2
-        self.overall_outcome = draft.outcome_of_pre_scrutiny
+        self.overall_outcome = self.calc_overall_outcome(draft.outcome_of_pre_scrutiny)
+        self.coroner_outcome = self.calc_coroner_outcome(draft.outcome_of_pre_scrutiny)
         self.governance_review = draft.clinical_governance_review
         self.governance_review_text = draft.clinical_governance_review_text
         return self
@@ -866,6 +891,7 @@ class QapDiscussionEventForm:
 
         self.outcome = fallback_to(form_data.get('qap-discussion-outcome'), '')
         self.outcome_decision = fallback_to(form_data.get('qap-discussion-outcome-decision'), '')
+        self.coroner_decision = fallback_to(form_data.get('qap-coroner-outcome-decision'), '')
 
         self.day_of_conversation = fallback_to(form_data.get('qap_day_of_conversation'), '')
         self.month_of_conversation = fallback_to(form_data.get('qap_month_of_conversation'), '')
@@ -931,11 +957,13 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome == enums.outcomes.CORONER:
-            self.outcome = api_outcome
+            self.outcome = enums.outcomes.CORONER
+            self.coroner_decision = api_outcome
             self.outcome_decision = ""
         else:
             self.outcome = enums.outcomes.MCCD
             self.outcome_decision = api_outcome
+            self.coroner_decision = ""
 
     def __calculate_time_values(self, draft):
         date_of_conversation = draft.date_of_conversation
@@ -971,10 +999,11 @@ class QapDiscussionEventForm:
 
         # final submission only
         if self.is_final:
-            # validate name
-            if self.qap_discussion_name == '':
-                self.errors['count'] += 1
-                self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
+            if self.discussion_participant_type == enums.people.OTHER:
+                # validate name
+                if self.qap_discussion_name == '':
+                    self.errors['count'] += 1
+                    self.errors['participant'] = messages.ErrorFieldRequiredMessage('QAP name')
 
             # validate details
             if self.discussion_details == '':
@@ -998,6 +1027,10 @@ class QapDiscussionEventForm:
                                            enums.outcomes.MCCD_FROM_QAP] and self.cause_of_death.section_1a == '':
                 self.errors['count'] += 1
                 self.errors['1a'] = messages.ErrorFieldRequiredMessage('revised cause of death')
+        elif self.outcome == enums.outcomes.CORONER:
+            if self.coroner_decision == '':
+                self.errors['count'] += 1
+                self.errors['coroner_decision'] = messages.ErrorSelectionRequiredMessage('coroner outcome')
 
     def for_request(self):
 
@@ -1057,7 +1090,7 @@ class QapDiscussionEventForm:
         if self.outcome == enums.outcomes.MCCD:
             return self.outcome_decision
         elif self.outcome == enums.outcomes.CORONER:
-            return self.outcome
+            return self.coroner_decision
 
     def __calculate_full_date_of_conversation(self):
         if self.day_of_conversation != '' and self.month_of_conversation != '' and self.year_of_conversation != '':
@@ -1089,9 +1122,9 @@ class AdmissionNotesEventForm:
         self.admission_day = fallback_to(form_data.get('day_of_last_admission'), '')
         self.admission_month = fallback_to(form_data.get('month_of_last_admission'), '')
         self.admission_year = fallback_to(form_data.get('year_of_last_admission'), '')
-        self.admission_date_unknown = fallback_to(form_data.get('date_of_last_admission_not_known'), '')
+        self.admission_date_unknown = True if form_data.get('date_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
-        self.admission_time_unknown = fallback_to(form_data.get('time_of_last_admission_not_known'), '')
+        self.admission_time_unknown = True if form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
@@ -1111,11 +1144,11 @@ class AdmissionNotesEventForm:
 
     def check_valid_final(self):
         if validate_date(self.admission_year, self.admission_month,
-                         self.admission_day) is False and self.admission_date_unknown == '':
+                         self.admission_day) is False and self.admission_date_unknown is False:
             self.errors['count'] += 1
             self.errors['date_of_last_admission'] = messages.INVALID_DATE
 
-        if self.admission_time == '' and self.admission_time_unknown == '':
+        if self.admission_time == '' and self.admission_time_unknown is False:
             self.errors['count'] += 1
             self.errors['time_of_last_admission'] = messages.ErrorFieldRequiredMessage('time of last admission')
 
@@ -1162,9 +1195,9 @@ class AdmissionNotesEventForm:
             "notes": self.admission_notes,
             "isFinal": self.is_final,
             "admittedDate": admission_date_for_request,
-            "admittedDateUnknown": self.admission_date_unknown,
-            "admittedTime": self.admission_time,
-            "admittedTimeUnknown": self.admission_time_unknown,
+            "admittedDateUnknown": True if self.admission_date_unknown else None,
+            "admittedTime": self.admission_time if self.admission_time else None,
+            "admittedTimeUnknown": True if self.admission_time_unknown else None,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
@@ -1173,9 +1206,9 @@ class AdmissionNotesEventForm:
         self.admission_day = draft.admitted_date.day if draft.admitted_date else ''
         self.admission_month = draft.admitted_date.month if draft.admitted_date else ''
         self.admission_year = draft.admitted_date.year if draft.admitted_date else ''
-        self.admission_date_unknown = False if draft.admitted_date else True
+        self.admission_date_unknown = draft.admitted_date_unknown
         self.admission_time = draft.admitted_time
-        self.admission_time_unknown = False if draft.admitted_time else True
+        self.admission_time_unknown = draft.admitted_time_unknown
         self.admission_notes = draft.body
         self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
@@ -1489,7 +1522,7 @@ class OutstandingItemsForm:
 
     def for_request(self):
         return {
-            "mccdIssed": True if self.mccd_issued == 'true' else False,
+            "mccdIssued": True if self.mccd_issued == 'true' else False,
             "cremationFormStatus": self.cremation_form,
-            "gpNotifedStatus": self.gp_notified
+            "gpNotifiedStatus": self.gp_notified
         }

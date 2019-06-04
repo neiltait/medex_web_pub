@@ -1,12 +1,12 @@
 from django.conf import settings
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from http.cookies import SimpleCookie
 
 from medexCms.test.mocks import SessionMocks
 
 
-class MedExTestCase(TestCase):
+class MedExTestCase(SimpleTestCase):
 
     def setUp(self):
         settings.LOCAL = True

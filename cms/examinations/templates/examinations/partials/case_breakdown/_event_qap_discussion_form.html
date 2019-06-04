@@ -299,7 +299,7 @@
 
                     <fieldset class="nhsuk-fieldset">
                         <span class="nhsuk-hint" id="example-hint">
-                          What was officially decided by the ME and QAP?
+                          What was decided about the cause of death?
                     </span>
                         <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.outcome_decision }}</span>
                         <div class="nhsuk-radios">
@@ -334,6 +334,43 @@
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-3">
                                     ME and QAP have agreed a new cause of death
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="qap-discussion__coroner-decision">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group {% if form.errors.coroner_decision %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
+
+                    <fieldset class="nhsuk-fieldset">
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.coroner_decision }}</span>
+                        <div class="nhsuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input qap-coroner-outcome-decision-radio"
+                                       id="qap-coroner-outcome-decision-1"
+                                       name="qap-coroner-outcome-decision"
+                                       type="radio" value="{{ enums.outcomes.CORONER_100A }}"
+                                       {% if form.coroner_decision == enums.outcomes.CORONER_100A %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="qap-coroner-outcome-decision-1">
+                                    For permission to issue an MCCD with 100a
+                                </label>
+                            </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input qap-coroner-outcome-decision-radio"
+                                       id="qap-coroner-outcome-decision-2"
+                                       name="qap-coroner-outcome-decision" type="radio"
+                                       value="{{ enums.outcomes.CORONER_INVESTIGATION }}"
+                                       {% if form.coroner_decision == enums.outcomes.CORONER_INVESTIGATION %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="qap-coroner-outcome-decision-2">
+                                    For an investigation
                                 </label>
                             </div>
                         </div>

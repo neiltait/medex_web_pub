@@ -755,9 +755,9 @@ class ExaminationsFormsTests(MedExTestCase):
         admission_day = ''
         admission_month = ''
         admission_year = ''
-        admission_date_unknown = True
+        admission_date_unknown = enums.true_false.TRUE
         admission_time = '10:00'
-        admission_time_unknown = False
+        admission_time_unknown = enums.true_false.FALSE
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
         coroner_referral = 'no'
         add_event_to_timeline = 'admission-notes'
@@ -847,17 +847,31 @@ class ExaminationsFormsTests(MedExTestCase):
         # then the outcome is mapped to option 3 - agreement
         self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP_AND_ME)
 
-    def test_qap_discussion__request__maps_refer_to_coroner_to_single_field(self):
+    def test_qap_discussion__request__maps_refer_to_coroner_and_100a_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
         form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
         form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
+        form_data['qap-coroner-outcome-decision'] = enums.outcomes.CORONER_100A
         form = QapDiscussionEventForm(form_data=form_data)
 
         # when we call for an api request
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER)
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER_100A)
+
+    def test_qap_discussion__request__maps_refer_to_coroner_and_investigation_combination_to_single_field(self):
+        # Given form data with outcome that mccd is to be produced with decision version 1
+        form_data = ExaminationMocks.get_mock_qap_discussion_form_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
+        form_data['qap-coroner-outcome-decision'] = enums.outcomes.CORONER_INVESTIGATION
+        form = QapDiscussionEventForm(form_data=form_data)
+
+        # when we call for an api request
+        request = form.for_request()
+
+        # then the outcome is mapped to coroner referral
+        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER_INVESTIGATION)
 
     def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
         # Given form data with the Default Qap radio button selected
@@ -1665,6 +1679,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'possible-cod-1c': '',
             'possible-cod-2': '',
             'ops': 'ReferToCoroner',
+            'coroner-outcome': 'ReferToCoronerFor100a',
             'gr': 'No',
             'grt': '',
             'add-event-to-timeline': True
@@ -1962,15 +1977,25 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
         self.assertEquals(form.errors['count'], 1)
 
-    def test_qap_form_valid_if_coroner_as_outcome_but_no_outcome_decision(self):
+    def test_qap_form_valid_if_coroner_as_outcome_with_coroner_action_decision(self):
         form_data = self.valid_qap_final_data()
         form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
-        form_data['qap-discussion-outcome-decision'] = ''
+        form_data['qap-coroner-outcome-decision'] = enums.outcomes.CORONER_INVESTIGATION
 
         form = QapDiscussionEventForm(form_data=form_data)
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    def test_qap_form_not_valid_if_coroner_as_outcome_but_no_coroner_decision(self):
+        form_data = self.valid_qap_final_data()
+        form_data['qap-discussion-outcome'] = enums.outcomes.CORONER
+        form_data['qap-coroner-outcome-decision'] = ''
+
+        form = QapDiscussionEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEquals(form.errors['count'], 1)
 
     def test_qap_form_not_valid_if_mccd_as_outcome_but_no_outcome_decision(self):
         form_data = self.valid_qap_final_data()

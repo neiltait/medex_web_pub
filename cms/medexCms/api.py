@@ -33,6 +33,8 @@ class APICircumstancesOfDeath:
 
 class APIOutcomes:
     MCCD = 'IssueAnMccd'
+    CORONER_100A = 'ReferToCoronerFor100a'
+    CORONER_INVESTIGATION = 'ReferToCoronerInvestigation'
     CORONER = 'ReferToCoroner'
     MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
     MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
@@ -68,6 +70,12 @@ class UserRoleTypes:
     SERVICE_OWNER = 'Service Owner'
 
 
+class APIGPNotifiedStatus:
+    NOTIFIED = 'GPNotified'
+    NOT_NOTIFIED = 'GPUnabledToBeNotified'
+    NA = 'NA'
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -79,6 +87,7 @@ class APIStrings:
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
     role_types = UserRoleTypes()
+    gp_notified_status = APIGPNotifiedStatus()
 
 
 enums = APIStrings()
