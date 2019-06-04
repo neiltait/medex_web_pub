@@ -342,7 +342,8 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
     if event_list.get_qap_discussion_draft():
         qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
     if event_list.get_bereaved_discussion_draft():
-        bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(), patient_details.representatives)
+        bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(),
+                                                 patient_details.representatives)
     if event_list.get_medical_history_draft():
         medical_history_form.fill_from_draft(event_list.get_medical_history_draft())
 
@@ -359,7 +360,9 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
     if amend_type and not form:
         latest_for_type = event_list.get_latest_of_type(amend_type)
         if latest_for_type:
-            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap).make_active()
+            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
+                                                                                     patient_details.representatives)\
+                .make_active()
 
     if form:
         form_data[type(form).__name__] = form.make_active()
