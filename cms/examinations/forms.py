@@ -1043,7 +1043,7 @@ class QapDiscussionEventForm:
         return {
             "eventId": self.event_id,
             "isFinal": self.is_final,
-            "discussionUnableHappen": self.discussion_could_not_happen,
+            "discussionUnableHappen": True if self.discussion_could_not_happen == enums.yes_no.YES else False,
         }
 
     def __full_discussion_request(self):
