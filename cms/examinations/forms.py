@@ -360,9 +360,9 @@ class BereavedInformationForm:
         else:
             self.bereaved_name_1 = ''
             self.relationship_1 = ''
-            self.present_death_1 = ''
+            self.present_death_1 = enums.yes_no.UNKNOWN
             self.phone_number_1 = ''
-            self.informed_1 = ''
+            self.informed_1 = enums.yes_no.UNKNOWN
             self.day_of_appointment_1 = ''
             self.month_of_appointment_1 = ''
             self.year_of_appointment_1 = ''
@@ -370,9 +370,9 @@ class BereavedInformationForm:
             self.appointment_additional_details_1 = ''
             self.bereaved_name_2 = ''
             self.relationship_2 = ''
-            self.present_death_2 = ''
+            self.present_death_2 = enums.yes_no.UNKNOWN
             self.phone_number_2 = ''
-            self.informed_2 = ''
+            self.informed_2 = enums.yes_no.UNKNOWN
             self.day_of_appointment_2 = ''
             self.month_of_appointment_2 = ''
             self.year_of_appointment_2 = ''
