@@ -71,3 +71,14 @@ steps:
   env:
     pswd: $(ContainerRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '_templates'
+    Contents: '**/*.json'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/templates'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
