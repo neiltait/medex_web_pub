@@ -404,7 +404,19 @@ class ExaminationEventList:
         if len(events) == 0:
             return None
         else:
-            return self.get_agreed_cause_of_death(events[0])
+            latest = self.get_agreed_cause_of_death(events[0])
+            if latest.status == enums.cod_status.MCCD_FROM_ME:
+                self.__get_cause_of_death_from_me_scrutiny(latest)
+            return latest
+
+    def __get_cause_of_death_from_me_scrutiny(self, latest):
+        latest_me_scrutiny = self.get_latest_me_scrutiny_cause_of_death()
+        if latest_me_scrutiny:
+            latest.medical_examiner = latest_me_scrutiny.medical_examiner
+            latest.section_1a = latest_me_scrutiny.section_1a
+            latest.section_1b = latest_me_scrutiny.section_1b
+            latest.section_1c = latest_me_scrutiny.section_1c
+            latest.section_2 = latest_me_scrutiny.section_2
 
     @staticmethod
     def get_scrutiny_cause_of_death(me_scrutiny_event):
