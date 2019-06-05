@@ -360,9 +360,9 @@ class BereavedInformationForm:
         else:
             self.bereaved_name_1 = ''
             self.relationship_1 = ''
-            self.present_death_1 = ''
+            self.present_death_1 = enums.yes_no.UNKNOWN
             self.phone_number_1 = ''
-            self.informed_1 = ''
+            self.informed_1 = enums.yes_no.UNKNOWN
             self.day_of_appointment_1 = ''
             self.month_of_appointment_1 = ''
             self.year_of_appointment_1 = ''
@@ -370,9 +370,9 @@ class BereavedInformationForm:
             self.appointment_additional_details_1 = ''
             self.bereaved_name_2 = ''
             self.relationship_2 = ''
-            self.present_death_2 = ''
+            self.present_death_2 = enums.yes_no.UNKNOWN
             self.phone_number_2 = ''
-            self.informed_2 = ''
+            self.informed_2 = enums.yes_no.UNKNOWN
             self.day_of_appointment_2 = ''
             self.month_of_appointment_2 = ''
             self.year_of_appointment_2 = ''
@@ -433,8 +433,8 @@ class BereavedInformationForm:
             representatives.append({
                 "fullName": self.bereaved_name_2,
                 "relationship": self.relationship_2,
-                "phoneNumber": self.present_death_2,
-                "presentAtDeath": self.phone_number_2,
+                "phoneNumber": self.phone_number_2,
+                "presentAtDeath": self.present_death_2,
                 "informed": self.informed_2,
                 "appointmentDate": appointment_2_date,
                 "appointmentTime": self.time_of_appointment_2,
