@@ -46,7 +46,7 @@ LOCAL = os.environ.get('LOCAL', False)
 
 ALLOWED_HOSTS = [
     'localhost',
-    'medex-cms-sandbox.azurewebsites.net',
+    'medical-examiners-cms-sandbox.azurewebsites.net',
     'medical-examiners-cms-staging.azurewebsites.net',
 ]
 
@@ -81,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'applicationinsights.django.ApplicationInsightsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'medexCms.urls'
@@ -169,7 +170,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "medexCms/staticfiles"),
 ]
-
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
 if not DEBUG:
