@@ -433,8 +433,8 @@ class BereavedInformationForm:
             representatives.append({
                 "fullName": self.bereaved_name_2,
                 "relationship": self.relationship_2,
-                "phoneNumber": self.present_death_2,
-                "presentAtDeath": self.phone_number_2,
+                "phoneNumber": self.phone_number_2,
+                "presentAtDeath": self.present_death_2,
                 "informed": self.informed_2,
                 "appointmentDate": appointment_2_date,
                 "appointmentTime": self.time_of_appointment_2,
