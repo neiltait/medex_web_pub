@@ -33,7 +33,7 @@
       var consultantCount = $('#consultant-count').val();
       var optionalConsultantCount = consultantCount && parseInt(consultantCount) > 1 ? parseInt(consultantCount) - 1 : 0;
 
-      new AddRemovePanelList(addRemovePanelSection, optionalConsultantCount)
+      new AddRemovePanelList(addRemovePanelSection, optionalConsultantCount);
     },
 
     initialiseInputs: function () {

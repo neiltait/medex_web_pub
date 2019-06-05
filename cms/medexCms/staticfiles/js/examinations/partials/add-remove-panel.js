@@ -26,7 +26,6 @@ AddRemovePanelList.prototype = {
                 that.refreshVisible();
             }
         });
-
         this.refreshVisible();
     },
 
@@ -41,6 +40,8 @@ AddRemovePanelList.prototype = {
                 this.panels[i].classList.remove("medex-hidden");
             } else {
                 this.panels[i].classList.add("medex-hidden");
+                $(this.panels[i]).find("input").val("");
+
             }
         }
     },
