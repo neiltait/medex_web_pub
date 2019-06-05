@@ -84,7 +84,9 @@
             </div>
         </div>
     </div>
-{% else  %}
+{% elif proposed_cause_of_death  %}
+    {% include "examinations/partials/case_breakdown/_cause_of_death.html" with prefix="bereavement" %}
+{% else %}
     <div id="{{ prefix }}-cause-of-death-panel" class="cause-of-death-expandable">
         <div class="expandable-header">
             <div class="nhsuk-grid-row">
