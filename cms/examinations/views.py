@@ -363,6 +363,9 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
             form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
                                                                                      patient_details.representatives)\
                 .make_active()
+        else:
+            form_type = '%sEventForm' % amend_type
+            form_data[form_type] = form_data[form_type].make_active()
 
     if form:
         form_data[type(form).__name__] = form.make_active()

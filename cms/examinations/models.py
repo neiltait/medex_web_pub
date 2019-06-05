@@ -388,7 +388,7 @@ class ExaminationEventList:
         return self.drafts.get(self.PRE_SCRUTINY_EVENT_KEY)
 
     def get_latest_of_type(self, event_type):
-        return self.latests[event_type]
+        return self.latests.get(event_type)
 
     def get_latest_me_scrutiny_cause_of_death(self):
         events = [event for event in self.events if
@@ -1057,7 +1057,9 @@ class CaseOutcome:
 
     REPRESENTATIVE_OUTCOMES = {
         'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
-        'ConcernsRaised': 'Refer to coroner, concerns raised'
+        'ConcernsCoronerInvestigation': 'Refer to coroner for investigation, concerns raised',
+        "ConcernsRequires100a": 'Refer to coroner for 100a, concerns raised',
+        "ConcernsAddressedWithoutCoroner": 'MCCD to be issued, concerns addressed without coroner',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
