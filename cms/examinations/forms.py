@@ -1450,6 +1450,7 @@ class BereavedDiscussionEventForm:
 
     def __discussion_did_not_happen_request(self):
         return {
+            "eventId": self.event_id,
             "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
             "discussionUnableHappen": self.discussion_could_not_happen,
@@ -1459,6 +1460,7 @@ class BereavedDiscussionEventForm:
         date_of_conversation = self.__calculate_full_date_of_conversation()
         participant = self.__participant_for_request()
         request = {
+            "eventId": self.event_id,
             "isFinal": self.is_final,
             "eventType": "BereavedDiscussion",
             "participantFullName": participant.full_name if participant else "",
