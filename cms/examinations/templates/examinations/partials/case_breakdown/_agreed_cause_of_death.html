@@ -4,7 +4,7 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-two-thirds">
                     <h3 class="nhsuk-heading-s">
-                        Proposed cause of death
+                        Agreed cause of death
                     </h3>
                 </div>
 
@@ -21,18 +21,20 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <div>
-                        <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
                         {% if agreed_cause_of_death.status == enums.cod_status.NOT_DISCUSSED %}
+                            <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Pending discussion with QAP</span>
                             </p>
                         {% elif agreed_cause_of_death.status == enums.cod_status.NOT_POSSIBLE %}
+                            <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Discussion with QAP was not possible</span>
                             </p>
                         {% else %}
+                            <h3 class="nhsuk-heading-s">Cause of death agreed by Medical Examiner and QAP</h3>
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span> and <span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.qap.name }}</span>
@@ -40,6 +42,7 @@
                             </p>
                         {% endif %}
                     </div>
+
 
                     <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
                         It is proposed that {{ patient.full_name }} died from
@@ -81,13 +84,13 @@
             </div>
         </div>
     </div>
-{% else %}
-    <div id="qap-cause-of-death-panel" class="cause-of-death-expandable">
+{% else  %}
+    <div id="{{ prefix }}-cause-of-death-panel" class="cause-of-death-expandable">
         <div class="expandable-header">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-two-thirds">
                     <h3 class="nhsuk-heading-s">
-                        Agreed cause of death
+                        Proposed cause of death
                     </h3>
                 </div>
             </div>
