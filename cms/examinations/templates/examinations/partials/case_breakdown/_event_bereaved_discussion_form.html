@@ -295,9 +295,9 @@
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
                                        name="bereaved_discussion_could_not_happen"
-                                       value="{{ form.BEREAVED_RADIO_YES }}"
+                                       value="{{ enums.true_false.TRUE }}"
                                        type="checkbox"
-                                        {% if form.discussion_could_not_happen == form.BEREAVED_RADIO_YES %}
+                                        {% if form.discussion_could_not_happen == enums.true_false.TRUE %}
                                        checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
                                        for="bereaved_discussion_could_not_happen">
