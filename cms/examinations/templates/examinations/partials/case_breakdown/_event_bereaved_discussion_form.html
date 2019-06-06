@@ -1,5 +1,5 @@
 <div id="bereaved-discussion" class="event-form{% if form.active %} active{% endif %}">
-    <input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>
+    {% if form.event_id %}<input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>{% endif %}
     <div class="nhs-form-group">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
