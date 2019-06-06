@@ -1219,8 +1219,6 @@ class AdmissionNotesEventForm:
 
 class BereavedDiscussionEventForm:
     # constants
-    REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
-    REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
 
     BEREAVED_OUTCOME_NO_CONCERNS = 'no concerns'
     BEREAVED_OUTCOME_CONCERNS = 'concerns'
@@ -1228,10 +1226,6 @@ class BereavedDiscussionEventForm:
     BEREAVED_CONCERNED_OUTCOME_CORONER = 'coroner'
     BEREAVED_CONCERNED_OUTCOME_100A = '100a'
     BEREAVED_CONCERNED_OUTCOME_ADDRESSED = 'addressed'
-
-    BEREAVED_RADIO_YES = 'yes'
-    BEREAVED_RADIO_NO = 'no'
-    BEREAVED_RADIO_UNKNOWN = 'unknown'
 
     REQUEST_OUTCOME_NO_CONCERNS = "CauseOfDeathAccepted"
     REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
@@ -1276,7 +1270,7 @@ class BereavedDiscussionEventForm:
 
     def __init_representatives(self, representatives):
         self.existing_representative = representatives[0]
-        self.discussion_representative_type = self.REPRESENTATIVE_TYPE_EXISTING
+        self.discussion_representative_type = enums.people.BEREAVED_REP
         self.use_existing_bereaved = True
 
     def __init_representatives_from_draft(self, form_data):
@@ -1289,9 +1283,9 @@ class BereavedDiscussionEventForm:
         self.__set_use_existing_bereaved()
 
     def __set_use_existing_bereaved(self):
-        if self.discussion_representative_type == self.REPRESENTATIVE_TYPE_EXISTING:
+        if self.discussion_representative_type == enums.people.BEREAVED_REP:
             self.use_existing_bereaved = True
-        elif self.discussion_representative_type == self.REPRESENTATIVE_TYPE_ALTERNATE:
+        elif self.discussion_representative_type == enums.people.OTHER:
             self.use_existing_bereaved = False
         elif self.existing_representative:
             self.use_existing_bereaved = True
@@ -1432,14 +1426,14 @@ class BereavedDiscussionEventForm:
             })
         if draft_participant is None:
             if self.existing_representative is not None:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+                self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.discussion_representative_type = enums.people.OTHER
         else:
             if draft_participant.equals(self.existing_representative):
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+                self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.discussion_representative_type = enums.people.OTHER
                 self.alternate_representative = draft_participant
 
         self.__set_use_existing_bereaved()
@@ -1495,7 +1489,7 @@ class BereavedDiscussionEventForm:
         return None
 
     def __participant_for_request(self):
-        if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
+        if self.discussion_representative_type == enums.people.BEREAVED_REP:
             return self.existing_representative
         else:
             return self.alternate_representative
