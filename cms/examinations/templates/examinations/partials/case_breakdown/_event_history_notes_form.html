@@ -1,5 +1,5 @@
 <div id="medical-history" class="event-form{% if form.active %} active{% endif %}">
-    <input name="medical_history_id" value="{{ form.event_id }}" hidden>
+    {% if form.event_id %}<input name="medical_history_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.medical_history_details %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="medical-history-details">

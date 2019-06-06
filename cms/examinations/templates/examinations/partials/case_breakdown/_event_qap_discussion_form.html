@@ -1,5 +1,5 @@
 <div id="qap-discussion" class="event-form{% if form.active %} active{% endif %}">
-    <input name="qap_discussion_id" value="{{ form.event_id }}" hidden>
+    {% if form.event_id %}<input name="qap_discussion_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
