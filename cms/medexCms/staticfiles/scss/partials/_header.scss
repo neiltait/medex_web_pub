@@ -10,7 +10,7 @@
   }
 
   &__nav {
-    padding: 1rem;
+    padding: 0 1rem;
 
     background-color: $nhs-blue;
     color: $white;
@@ -35,8 +35,8 @@
       border-color: $nhs-bright-blue;
       border-style: solid;
       border-width: 1px;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .menu {
