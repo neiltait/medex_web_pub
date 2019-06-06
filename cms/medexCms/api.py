@@ -60,6 +60,7 @@ class APIDiscussionOutcomes:
 
 class APIPeopleStrings:
     QAP = 'qap'
+    BEREAVED_REP = 'bereaved-representative'
     OTHER = 'other'
 
 

@@ -662,14 +662,15 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.user_full_name = obj_dict.get('userFullName')
         self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
-        self.participant_full_name = obj_dict.get('participantFullName')
-        self.participant_relationship = obj_dict.get('participantRelationship')
-        self.participant_phone_number = obj_dict.get('participantPhoneNumber')
+        self.participant_full_name = fallback_to(obj_dict.get('participantFullName'), '')
+        self.participant_relationship = fallback_to(obj_dict.get('participantRelationship'), '')
+        self.participant_phone_number = fallback_to(obj_dict.get('participantPhoneNumber'), '')
         self.present_at_death = obj_dict.get('presentAtDeath')
         self.informed_at_death = obj_dict.get('informedAtDeath')
         self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
-        self.discussion_unable_happen = obj_dict.get('discussionUnableHappen')
-        self.discussion_details = obj_dict.get('discussionDetails')
+        self.discussion_unable_happen = enums.true_false.TRUE if obj_dict.get(
+            'discussionUnableHappen') else enums.true_false.FALSE
+        self.discussion_details = fallback_to(obj_dict.get('discussionDetails'), '')
         self.bereaved_discussion_outcome = obj_dict.get('bereavedDiscussionOutcome')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id

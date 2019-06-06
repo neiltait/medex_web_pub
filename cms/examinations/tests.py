@@ -1058,7 +1058,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_bereaved_discussion__request__maps_existing_rep_to_participant_if_existing_rep_selected(self):
         # Given form data with the Default Qap radio button selected
         form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
-        form_data['bereaved_rep_type'] = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+        form_data['bereaved_rep_type'] = enums.people.BEREAVED_REP
         form_data['bereaved_existing_rep_name'] = 'Existing rep'
         form_data['bereaved_alternate_rep_name'] = 'Alternate rep'
         form = BereavedDiscussionEventForm(form_data=form_data)
@@ -1072,7 +1072,7 @@ class ExaminationsFormsTests(MedExTestCase):
     def test_bereaved_discussion__request__maps_alternate_rep_to_participant_if_alternate_rep_selected(self):
         # Given form data with the Default Qap radio button selected
         form_data = ExaminationMocks.get_mock_bereaved_discussion_form_data()
-        form_data['bereaved_rep_type'] = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+        form_data['bereaved_rep_type'] = enums.people.OTHER
         form_data['bereaved_existing_rep_name'] = 'Existing rep'
         form_data['bereaved_alternate_rep_name'] = 'Alternate rep'
         form = BereavedDiscussionEventForm(form_data=form_data)
@@ -1775,7 +1775,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
     def valid_bereaved_final_data(self):
         return {
             'bereaved_event_id': 'any id',
-            'bereaved_rep_type': BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE,
+            'bereaved_rep_type': enums.people.OTHER,
             'bereaved_alternate_rep_name': 'Mrs Doe',
             'bereaved_alternate_rep_relationship': '',
             'bereaved_alternate_rep_phone_number': '',
@@ -1786,7 +1786,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'bereaved_existing_rep_phone_number': '',
             'bereaved_existing_rep_present_at_death': '',
             'bereaved_existing_rep_informed': '',
-            'bereaved_discussion_could_not_happen': BereavedDiscussionEventForm.BEREAVED_RADIO_NO,
+            'bereaved_discussion_could_not_happen': enums.yes_no.NO,
             'bereaved_day_of_conversation': '2',
             'bereaved_month_of_conversation': '2',
             'bereaved_year_of_conversation': '2002',
