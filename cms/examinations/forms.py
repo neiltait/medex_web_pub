@@ -1326,7 +1326,7 @@ class BereavedDiscussionEventForm:
         self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
         self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
         self.discussion_could_not_happen = True if form_data.get(
-            'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
+            'bereaved_discussion_could_not_happen') == enums.yes_no.YES else False
 
     def is_valid(self):
         self.errors = {'count': 0}
