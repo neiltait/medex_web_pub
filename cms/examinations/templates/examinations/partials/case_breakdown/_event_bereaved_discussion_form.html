@@ -51,7 +51,7 @@
                 <input type="hidden" name="bereaved_existing_rep_phone_number"
                        value="{{ form.existing_representative.phone_number }}"/>
                 <input type="hidden" name="bereaved_existing_rep_present_at_death"
-                       value="{{ form.existing_representative.present_death }}"/>
+                       value="{{ form.existing_representative.present_at_death }}"/>
                 <input type="hidden" name="bereaved_existing_rep_informed"
                        value="{{ form.existing_representative.informed }}"/>
             {% endif %}
@@ -75,7 +75,7 @@
                                        id="rep-present-at-death">
                                     Present at death
                                 </label>
-                                <p class="nhsuk-body-m">{{ form.existing_representative.present_death }}</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.present_at_death }}</p>
                             </div>
                         </fieldset>
                     </div>
