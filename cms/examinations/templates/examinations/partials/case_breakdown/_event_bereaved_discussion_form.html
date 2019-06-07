@@ -75,7 +75,7 @@
                                        id="rep-present-at-death">
                                     Present at death
                                 </label>
-                                <p class="nhsuk-body-m">No</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.present_death }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -88,7 +88,7 @@
                                        for="rep-phone-number" id="rep-phone-number">
                                     Phone number
                                 </label>
-                                <p class="nhsuk-body-m">07812 345 678</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.phone_number }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -99,7 +99,7 @@
                                        for="rep-informed-of-death" id="rep-informed-of-death">
                                     Informed of death
                                 </label>
-                                <p class="nhsuk-body-m">Yes</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.informed }}</p>
                             </div>
                         </fieldset>
                     </div>
