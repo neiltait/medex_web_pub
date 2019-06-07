@@ -48,6 +48,8 @@ ALLOWED_HOSTS = [
     'localhost',
     'medical-examiners-cms-sandbox.azurewebsites.net',
     'medical-examiners-cms-staging.azurewebsites.net',
+    'medex-web-pre.pre.medex.cloud',
+    'medex-web-prd.prd.medex.cloud',
 ]
 
 
