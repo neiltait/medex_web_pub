@@ -50,6 +50,8 @@ ALLOWED_HOSTS = [
     'medical-examiners-cms-staging.azurewebsites.net',
     'medex-web-pre.frontend.pre.medex.cloud',
     'medex-web-prd.frontend.prd.medex.cloud',
+    'medex-uat.methods.co.uk',
+    'medex.methods.co.uk',
 ]
 
 
