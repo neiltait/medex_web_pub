@@ -64,7 +64,7 @@ steps:
 
 - script: |
     pushd '$(projectRoot)'
-    docker build -f Dockerfile -t $(ContainerRegistryName).azurecr.io/$(imageName) .
+    docker build -f ./deploy_files/Dockerfile -t $(ContainerRegistryName).azurecr.io/$(imageName) .
     docker login -u $(ContainerRegistryName) -p $pswd $(ContainerRegistryName).azurecr.io
     docker push $(ContainerRegistryName).azurecr.io/$(imageName)
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
