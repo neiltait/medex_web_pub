@@ -246,6 +246,7 @@ class UsersModelsTests(MedExTestCase):
         user.check_logged_in()
 
         data = ExaminationMocks.get_case_breakdown_response_content()
+        data['caseBreakdown']['admissionNotes']['usersDraft'] = None
         available_forms = user.get_forms_for_role(
             CaseBreakdown(obj_dict=data, medical_team=None))
 
