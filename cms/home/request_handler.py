@@ -17,9 +17,8 @@ def create_session(code):
     return requests.post('%s%s/v1/token' % (settings.OP_DOMAIN, settings.OP_ISSUER),
                          headers=headers,
                          data=urllib.parse.urlencode(data),
-                         auth=(settings.OP_ID, settings.OP_SECRET),
-                         verify=False)
+                         auth=(settings.OP_ID, settings.OP_SECRET))
 
 
 def end_session(cookie):
-    return requests.get('%s%s/v1/logout?id_token_hint=%s' % (settings.OP_DOMAIN, settings.OP_ISSUER, cookie), verify=False)
+    return requests.get('%s%s/v1/logout?id_token_hint=%s' % (settings.OP_DOMAIN, settings.OP_ISSUER, cookie))
