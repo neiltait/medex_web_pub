@@ -210,11 +210,11 @@ if not DEBUG:
         'version': 1,
         'disable_existing_loggers': False,
         'handlers': {
-            # 'file': {
-            #     'level': 'DEBUG',
-            #     'class': 'logging.FileHandler',
-            #     'filename': './debug.log',
-            # },
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': './debug.log',
+            },
             'appinsights': {
                 'class': 'applicationinsights.django.LoggingHandler',
                 'level': 'WARNING'
