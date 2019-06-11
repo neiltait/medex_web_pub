@@ -218,6 +218,11 @@ if not DEBUG:
             'appinsights': {
                 'class': 'applicationinsights.django.LoggingHandler',
                 'level': 'WARNING'
+            },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'stream': sys.stdout
             }
         },
         'loggers': {
