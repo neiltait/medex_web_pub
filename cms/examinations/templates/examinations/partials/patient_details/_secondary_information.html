@@ -77,7 +77,7 @@
         <div class="nhsuk-form-group {% if errors.relevant_occupation %}nhsuk-form-group--error{% endif %}">
           <label class="nhsuk-label" for="relevant_occupation">Relevant occupation</label>
 
-          <p class="small-print">Add any information about the patient's work history that could have contributed to their death</p>
+          <p class="nhsuk-hint">Add any information about the patient's work history that could have contributed to their death</p>
 
           {% if errors.relevant_occupation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_relevant_occupation">{{ errors.relevant_occupation }}</span>{% endif %}
 
@@ -257,7 +257,7 @@
             Personal effects
           </legend>
 
-          <p class="small-print">Is there any property to collect from the ward?</p>
+          <p class="nhsuk-hint">Is there any property to collect from the ward?</p>
 
           <div class="nhsuk-grid-row">
               <div class="nhsuk-grid-column-one-third">
