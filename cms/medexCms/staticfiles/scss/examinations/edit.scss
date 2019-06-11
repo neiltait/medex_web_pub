@@ -72,7 +72,8 @@
       }
 
       &:hover {
-        box-shadow: none !important;
+        z-index: 1000;
+        border:none;
       }
 
       &.active {
