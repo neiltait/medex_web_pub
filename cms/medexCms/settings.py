@@ -227,7 +227,7 @@ if not DEBUG:
         },
         'loggers': {
             'django': {
-                'handlers': ['appinsights'],
+                'handlers': ['appinsights', 'file', 'console'],
                 'level': 'DEBUG',
                 'propagate': True,
             },
