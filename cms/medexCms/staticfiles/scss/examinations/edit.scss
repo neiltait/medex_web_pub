@@ -71,7 +71,7 @@
         border: none;
       }
 
-      &:hover {
+      &:hover, &:focus {
         z-index: 1000;
         border:none;
       }
