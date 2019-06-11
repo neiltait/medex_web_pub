@@ -38,6 +38,7 @@
             this.addBtn.click(function() {
                 that.representatives[that.additionalShowing].show();
                 that.removeBtn.show();
+                $(that.addBtn).text("Add another");
                 that.additionalShowing++;
 
                 if (that.additionalShowing === that.representatives.length) {
@@ -48,6 +49,7 @@
             this.removeBtn.click(function() {
                 that.additionalShowing--;
                 that.addBtn.show();
+                $(that.addBtn).text("Add a person");
                 that.representatives[that.additionalShowing].hide();
                 that.representatives[that.additionalShowing].clearContent();
                 if (that.additionalShowing === 0) {
