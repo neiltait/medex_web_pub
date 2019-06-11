@@ -217,7 +217,7 @@ if not DEBUG:
             },
             'appinsights': {
                 'class': 'applicationinsights.django.LoggingHandler',
-                'level': 'WARNING'
+                'level': 'DEBUG'
             },
             'console': {
                 'level': 'DEBUG',
