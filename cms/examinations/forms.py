@@ -959,7 +959,7 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome is not None:
-            if api_outcome == enums.outcomes.CORONER:
+            if api_outcome in [enums.outcomes.CORONER_INVESTIGATION, enums.outcomes.CORONER_100A]:
                 self.outcome = enums.outcomes.CORONER
                 self.coroner_decision = api_outcome
                 self.outcome_decision = ""
