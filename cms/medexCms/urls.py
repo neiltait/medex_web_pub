@@ -2,10 +2,10 @@ from django.conf.urls import url
 from django.urls import include, path
 
 from home import views
-from home.views import ExaminationIndexView
+from home.views import DashboardView
 
 urlpatterns = [
-  path('', ExaminationIndexView.as_view(), name='index'),
+  path('', DashboardView.as_view(), name='index'),
   path('login', views.login, name='login'),
   path('login-callback', views.login_callback, name='login_callback'),
   path('logout', views.logout, name='logout'),

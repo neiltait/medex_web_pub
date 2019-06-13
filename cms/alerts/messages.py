@@ -32,6 +32,11 @@ NOT_PERMITTED_HEADER = 'Not Permitted'
 
 NOT_PERMITTED = 'Your permissions do not allow you to access this page'
 
+NO_ROLES_HEADER = 'No Roles Assigned'
+
+NO_ROLES = 'You do not currently have roles assigned to your account, please contact your service lead to request' \
+           ' assignment'
+
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name

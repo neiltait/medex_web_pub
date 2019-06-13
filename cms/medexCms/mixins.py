@@ -1,7 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 
 from errors.utils import log_unexpected_method
-from errors.views import handle_method_not_allowed_error, handle_not_permitted_error
+from errors.views import handle_method_not_allowed_error, handle_not_permitted_error, handle_no_role_error
 from home.utils import redirect_to_login
 from users.models import User
 
@@ -12,6 +12,9 @@ class LoginRequiredMixin:
         self.user = User.initialise_with_token(request)
         if not self.user.check_logged_in():
             return redirect_to_login()
+
+        if self.user.roles is None:
+            return handle_no_role_error(request, self.user)
         return super().dispatch(request, *args, **kwargs)
 
     def http_method_not_allowed(self, request, *args, **kwargs):
