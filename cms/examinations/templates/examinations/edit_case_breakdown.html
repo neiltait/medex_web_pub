@@ -15,6 +15,7 @@
 <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
       action="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}" method="post"
       data-error-count="{{ error_count }}">
+
     {% csrf_token %}
 
     <div class="form-tab" id="case-breakdown-section">
