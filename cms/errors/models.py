@@ -33,6 +33,15 @@ class NotPermittedError:
         return self.error_message
 
 
+class NoRoleError:
+    http_code = status.HTTP_401_UNAUTHORIZED
+    status_code = messages.NO_ROLES_HEADER
+    error_message = messages.NO_ROLES
+
+    def get_message(self):
+        return self.error_message
+
+
 class GenericError:
     error_message = messages.GENERAL_ERROR
 
