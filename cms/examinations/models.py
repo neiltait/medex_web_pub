@@ -770,7 +770,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
     form_type = 'MedicalHistoryEventForm'
     event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_medical_history_event_body.html'
-    display_type = 'Medical history'
+    display_type = 'Medical and social history'
     css_type = 'medical-history'
 
     def __init__(self, obj_dict, latest_id):
