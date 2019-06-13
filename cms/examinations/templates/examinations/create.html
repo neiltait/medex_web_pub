@@ -54,8 +54,8 @@
         </h2>
 
         <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
-              action="{% url 'create_examination' %}" method="post" autocomplete='none'>
-             <input autocomplete="none" name="hidden" type="text" style="display:none;">
+              action="{% url 'create_examination' %}" method="post" autocomplete='off'>
+             <input type="text" style="display:none">
             {% csrf_token %}
 
             {% include 'examinations/partials/patient_details/_primary_information.html' %}
