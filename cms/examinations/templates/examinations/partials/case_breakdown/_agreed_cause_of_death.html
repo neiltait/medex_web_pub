@@ -22,13 +22,13 @@
                 <div class="nhsuk-grid-column-full">
                     <div>
                         {% if agreed_cause_of_death.status == enums.cod_status.NOT_DISCUSSED %}
-                            <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
+                            <h3 class="nhsuk-heading-s">Cause of death established during review of records by Medical Examiner</h3>
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Pending discussion with QAP</span>
                             </p>
                         {% elif agreed_cause_of_death.status == enums.cod_status.NOT_POSSIBLE %}
-                            <h3 class="nhsuk-heading-s">Cause of death established during scrutiny by Medical Examiner</h3>
+                            <h3 class="nhsuk-heading-s">Cause of death established during review of records by Medical Examiner</h3>
                             <p class="nhsuk-body"><span
                                     class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>
                                 on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Discussion with QAP was not possible</span>

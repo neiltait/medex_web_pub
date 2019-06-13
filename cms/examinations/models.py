@@ -613,7 +613,7 @@ class CasePreScrutinyEvent(CaseEvent):
     form_type = 'PreScrutinyEventForm'
     event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_pre_scrutiny_event_body.html'
-    display_type = 'ME pre-scrutiny'
+    display_type = 'ME review of records'
     css_type = 'pre-scrutiny'
 
     def __init__(self, obj_dict, latest_id):
