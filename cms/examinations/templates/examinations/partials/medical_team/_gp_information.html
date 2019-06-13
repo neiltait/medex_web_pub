@@ -1,0 +1,73 @@
+<div class="form-section">
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full ">
+            <h3 class="nhsuk-heading-m">GP Information</h3>
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.gp %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="gp_name">
+                                Full name
+                            </label>
+                            {% if errors.gp %}
+                            <span
+                                    class="nhsuk-error-message medex-font-default-override">{{ errors.gp }}</span>{% endif %}
+                            <input
+                                    class="nhsuk-input nhsuk-input--width-10 {% if errors.gp %}nhsuk-input--error{% endif %}"
+                                    id="gp_name" name="gp_name"
+                                    value="{{ form.gp.name }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gp_role">
+                                Role
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_role" name="gp_role"
+                                   value="{{ form.gp.role }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gp_organisation">
+                                Organisation
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_organisation" name="gp_organisation"
+                                   value="{{ form.gp.organisation }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gp_phone_number">
+                                Personal phone / bleep number
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gp_phone_number" name="gp_phone_number"
+                                   value="{{ form.gp.phone_number }}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gmc_number_gp">
+                                GMC number
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_gp"
+                                   name="gmc_number_gp"
+                                   value="{{form.gp.gmc_number}}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

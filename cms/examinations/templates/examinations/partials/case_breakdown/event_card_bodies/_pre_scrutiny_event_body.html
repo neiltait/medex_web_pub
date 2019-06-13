@@ -1,0 +1,53 @@
+<div class="content">
+    <p class="details-body">
+        {{card_content.body}}
+    </p>
+
+    <div class="hideable-content">
+        <label>
+            Overall circumstances of death
+        </label>
+        <p>
+            {{card_content.display_circumstances_of_death}}
+        </p>
+
+        <label>
+            Possible cause of death established during pre scrutiny
+        </label>
+        <ul class="cause-of-death-list">
+            {% if card_content.cause_of_death_1a %}
+                <li>1a - {{card_content.cause_of_death_1a}}</li>
+            {% endif %}
+
+            {% if card_content.cause_of_death_1b %}
+                <li>1b - {{card_content.cause_of_death_1b}}</li>
+            {% endif %}
+
+            {% if card_content.cause_of_death_1c %}
+                <li>1c - {{card_content.cause_of_death_1c}}</li>
+            {% endif %}
+
+            {% if card_content.cause_of_death_2 %}
+                <li>2 - {{card_content.cause_of_death_2}}</li>
+            {% endif %}
+        </ul>
+
+
+        <label>
+            Overall outcome of pre-scrutiny
+        </label>
+        <p>
+            {{ card_content.display_scrutiny_outcome }}
+        </p>
+
+        <label>
+            Clinical governance review or learning opportunity
+        </label>
+        <p>
+            {{ card_content.clinical_governance_review }}
+        </p>
+        <p>
+            {{ card_content.clinical_governance_review_text }}
+        </p>
+    </div>
+</div>

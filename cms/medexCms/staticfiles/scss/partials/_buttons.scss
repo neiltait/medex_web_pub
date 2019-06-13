@@ -1,0 +1,40 @@
+@import '../variables';
+
+.submit-btn {
+  margin-top: 0.5rem;
+  font-size: $default-font-size;
+  background-color: $nhs-green;
+  color: $white;
+  padding: 0.4em 0.75em;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+
+.submit-btn--disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+.primary-btn {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: $default-font-size;
+  background-color: $nhs-green;
+  color: $white;
+  padding: 0.4em 2em;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.add-another {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: $default-font-size;
+  background-color: $nhs-grey;
+  color: $white;
+  padding: 0.4em 2em;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  text-decoration: none;
+}

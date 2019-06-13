@@ -1,0 +1,93 @@
+{% load examination_filters %}
+{% with card=case|case_card_presenter %}
+<div id="case-{{ case.id }}" class="case-card">
+    <div class="case-card-header {% if case.urgent %}urgent{% endif %}">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-third">
+                <p class="patient-name">
+                    {{ card.full_name }}
+                </p>
+            </div>
+
+            <div class="nhsuk-grid-column-one-third">
+                <p class="dates">
+                    {{ card.banner_dob }} - {{ card.banner_dod }}
+                </p>
+                <p class="no-dates">&nbsp;</p>
+            </div>
+
+            <div class="nhsuk-grid-column-one-third">
+                <div class="controls flex-row">
+                    {% if card.urgent %}
+                        <p class="urgent-flag">
+                            Urgent
+                        </p>
+                    {% endif %}
+
+                    <a class="view-btn" href="{% url 'edit_examination' examination_id=card.id %}">View Case</a>
+
+                    <div class="chevron-down">
+                    </div>
+
+                    <div class="chevron-up">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="case-card-body">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full block-header">
+                        <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Patient Information</p>
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <div class="info-line">D.O.B. <span class="heavy-text">{{ card.card_dob }}</span></div>
+                        <div class="info-line">D.O.D. <span class="heavy-text">{{ card.card_dod }}</span></div>
+                        <div class="info-line">T.O.D. <span class="heavy-text">{{ card.card_tod }}</span></div>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
+                        {% if card.has_last_admission %}
+                            <div class="info-line">Last admission <span
+                                    class="heavy-text">{{ card.last_admission_days_ago }}</span> days
+                            </div>
+                        {% else %}
+                             <div class="info-line">Last admission <span
+                                    class="heavy-text">-</span>
+                            </div>
+                        {% endif %}
+                        <div class="info-line">NHS no. <span class="heavy-text">{{ card.nhs_number }}</span></div>
+                        <div class="info-line">Age <span class="heavy-text">{{ card.age }}</span></div>
+                    </div>
+                </div>
+            </div>
+            {% if not closed_list %}
+                <div class="nhsuk-grid-column-one-third">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full block-header">
+                            <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Case Information</p>
+                        </div>
+                    </div>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full block-with-border">
+                            <div class="info-line">Appointment date <span
+                                    class="heavy-text">{{ card.appointment_date }}</span></div>
+                            <div class="info-line">Appointment time <span
+                                    class="heavy-text">{{ card.appointment_time }}</span></div>
+                            <div class="info-line">Case created <span
+                                    class="heavy-text">{{ card.created_days_ago }}</span> days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endwith %}

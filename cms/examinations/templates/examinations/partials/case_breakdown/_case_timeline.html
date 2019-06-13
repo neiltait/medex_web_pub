@@ -1,0 +1,9 @@
+<div class="case-timeline-block">
+    <div class="case-timeline-wrapper">
+        <div class="case-timeline">
+            {% for event in case_breakdown.event_list.events %}
+                {% include "examinations/partials/case_breakdown/_timeline_event.html" with event=event %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+@import "cause_of_death";
+
+.case-event-forms {
+    margin-top: 3rem;
+
+    .form-picker {
+        margin-top: 2.5rem;
+    }
+
+    .event-form {
+        display: none;
+    }
+
+    .event-hint {
+        display: none;
+    }
+
+    #hidden-text {
+        display: none;
+    }
+}

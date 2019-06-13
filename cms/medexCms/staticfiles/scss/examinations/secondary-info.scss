@@ -1,0 +1,11 @@
+@import '../variables';
+
+.secondary-info-form {
+  .additional-info {
+    display: none;
+  }
+
+  .small-print {
+    color: $nhs-grey;
+  }
+}

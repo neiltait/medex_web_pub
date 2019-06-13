@@ -1,0 +1,70 @@
+/* Colour vars */
+$nhs-grey: #425563;
+$nhs-grey-2: #768692;
+$nhs-grey-translucent: rgba(66, 85, 99, 0.6);
+$nhs-pale-grey: #E8EDEE;
+$nhs-light-grey: #AEB7BD;
+$nhs-pale-grey: #E8EDEE;
+$nhs-very-light-grey: #F4F4F4;
+$nhs-green: #007F3B;
+$nhs-dark-green: #003618;
+$nhs-aqua-green: #00A499;
+$nhs-blue: #005EB8;
+$nhs-dark-blue: #003087;
+$nhs-bright-blue: #0072CE;
+$nhs-light-blue: #41B6E6;
+$nhs-aqua-blue: #00A9CE;
+$nhs-red: #da291c;
+$white: #FFFFFF;
+$black: #212B32;
+$yellow: #FCEA60;
+$pale-yellow: #FFF8CA;
+
+$nhs_disabled-border: #aeb7bd;
+$nhs_disabled-background: #f0f4f5;
+$disabled-input-color:$nhs-light-grey;
+
+/* Font vars */
+$primary-font: Arial;
+$primary-font-color: $black;
+$default-font-size: 19px;
+$default-line-height: 28px;
+$nhs-heading-xl-size: 48px;
+$nhs-heading-xl-line-height: 56px;
+$nhs-heading-l-size: 32px;
+$nhs-heading-l-line-height: 40px;
+$nhs-heading-m-size: 24px;
+$nhs-heading-m-line-height: 32px;
+$nhs-heading-s-size: 22px;
+$nhs-heading-s-line-height: 32px;
+$nhs-heading-xs-size: 19px;
+$nhs-heading-xs-line-height: 28px;
+$nhs-body-l-size: 24px;
+$nhs-body-l-line-height: 32px;
+$nhs-body-s-size: 16px;
+$nhs-body-s-line-height: 28px;
+$link-size: 19px;
+$link-line-height: 28px;
+
+
+/* Notification vars */
+$error-color: #aa1414;
+$error-background: #f8d7da;
+$error-border: #DA291C;
+
+$success-color: #155724;
+$success-background: #d4edda;
+$success-border: #c3e6cb;
+
+$info-color: #0c5460;
+$info-background: #d1ecf1;
+$info-border: #bee5eb;
+
+$focus-width: 3px;
+$focus-color: #FFB81C;
+
+/* Component vars */
+$nhs-radios-size: 36px;
+$nhs-radios-internal-size: 20px;
+$nhs-radios-label-padding-left-right: 5px;
+$nhs-radios-focus-width: 4px;

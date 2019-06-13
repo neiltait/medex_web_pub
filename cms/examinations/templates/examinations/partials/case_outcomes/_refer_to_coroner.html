@@ -1,0 +1,45 @@
+{% if case_outcome.show_coroner_referral %}
+    <div class="refer-to-coroner">
+        <h2 class="page-subheading">
+            Coroner Referral
+        </h2>
+
+        <p>
+            Confirm that the relevant information has been sent to the coroner.
+        </p>
+
+        <form id="coroner-referral-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+              method="post">
+            {% csrf_token %}
+
+            <div class="nhsuk-checkboxes">
+                <div class="nhsuk-checkboxes__item">
+                    <input id="coroner-referral-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
+                           {% if case_outcome.coroner_referral %} checked {% endif %}
+                           {% if not case_outcome.coroner_referral_enabled %} disabled {% endif %} />
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner-referral-confirmation">
+                        Referral has been sent
+                    </label>
+                </div>
+            </div>
+
+            <div class="sticky-save">
+                <div class="container">
+                    <input class="submit-btn" type="submit" name="{{case_outcome.CORONER_REFERRAL_FORM_TYPE}}" value="Save changes" />
+                </div>
+            </div>
+        </form>
+
+        {% if case_outcome.coroner_referral %}
+            <div class="disclaimer-wrapper">
+                <div class="disclaimer-header">
+                    Disclaimer
+                </div>
+
+                <p class="disclaimer-body">
+                    {{ case_outcome.coroner_referral_disclaimer }}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

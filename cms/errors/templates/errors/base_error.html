@@ -1,0 +1,28 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block extra_css %}
+    <link href="{% sass_src 'scss/errors/error_page.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block page %}
+    <div class="error-page">
+        <h1 class="error-type">
+            {{ error.status_code }}
+        </h1>
+
+        <p class="error-message">
+            {{ error.get_message }}
+        </p>
+
+        {% if error.stack_trace %}
+            <div class="error-stack">
+                <p class="debug-message">
+                    You are seeing this full trace because DEBUG is currently turned on.
+                </p>
+
+                {{error.stack_trace | safe}}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

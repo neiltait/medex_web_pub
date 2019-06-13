@@ -1,0 +1,53 @@
+<div class="content">
+
+    <div {% if card_content.discussion_unable_happen == False %} class="nhsuk-u-visually-hidden" {% endif %}>
+        <div class="bereaved-discussion">
+            <label>
+                Outcomes of discussion
+            </label>
+            <p>
+                Discussion with representative unable to happen
+
+            </p>
+        </div>
+    </div>
+
+    <div {% if card_content.discussion_unable_happen == True %} class="nhsuk-u-visually-hidden" {% endif %}>
+        <div class="hideable-content">
+            <div class="bereaved-discussion">
+                <label>
+                    Information relating to discussion with representative
+                </label>
+                <p>
+                    Name - {{ card_content.participant_full_name }}
+                </p>
+                <p>
+                    Relationship - {{ card_content.participant_relationship }}
+                </p>
+                <p>
+                    Present at death - {{ card_content.present_at_death }}
+                </p>
+                <p>
+                    Informed of death - {{ card_content.informed_at_death }}
+                </p>
+                <p>
+                    Date and time of conversation - {{ card_content.date_of_conversation }}
+                </p>
+            </div>
+            <label>
+                Details of discussion with representative
+            </label>
+            <p>
+                {{ card_content.discussion_details }}
+            </p>
+
+        </div>
+
+        <label>
+            Outcome of discussion
+        </label>
+        <p>
+            {{ card_content.display_bereaved_discussion_outcome }}
+        </p>
+    </div>
+</div>

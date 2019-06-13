@@ -1,0 +1,79 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% sass_src 'scss/examinations/create.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/examinations/primary-information-form.js' %}"></script>
+{% endblock %}
+
+{% block page %}
+<div class="nhsuk-width-container">
+    <div class="examination__create">
+        {% if errors.count > 0 %}
+        <div class="nhsuk-error-summary " id="error_alert" automation-id="page_error" aria-labelledby="error-summary-title" role="alert"
+             tabindex="-1">
+            <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="nhsuk-error-summary__body">
+                <p>
+                    Please correct the errors in this form
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if errors.count == 0 and add_another %}
+
+        <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
+             role="alert"
+             tabindex="-1">
+            <ul class="nhsuk-list nhsuk-list--tick">
+                <li>
+                    <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         fill="none" aria-hidden="true">
+                        <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
+                    </svg>
+                    Information saved successfully.
+                </li>
+            </ul>
+        </div>
+
+        {% endif %}
+
+        <h1 class="nhs-heading-xl">
+            {{ page_heading }}
+        </h1>
+
+        <h2 class="nhs-heading-l">
+            {{ sub_heading }}
+        </h2>
+
+        <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
+              action="{% url 'create_examination' %}" method="post">
+            {% csrf_token %}
+
+            {% include 'examinations/partials/patient_details/_primary_information.html' %}
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <input id="submit-btn" class="nhsuk-button" type="submit" value="Create case and continue"
+                           name="create-and-continue"/>
+                </div>
+                <div class="nhsuk-grid-column-full">
+                    <p>
+                        Adding multiple cases at once?
+                    </p>
+                    <input id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                           value="Add another case" name="add-another-case"/>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

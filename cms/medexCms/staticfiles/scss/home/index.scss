@@ -1,0 +1,63 @@
+@import '../variables';
+@import '../examinations/partials/case_card';
+
+body {
+  background-color: $white;
+}
+
+.case-index {
+  .index-overview {
+    margin-top: 2rem;
+
+    .overview-block {
+      border-right: 1px solid $nhs-grey;
+      padding: 0.9rem 2rem;
+
+      &:first-of-type {
+        border-left: 1px solid $nhs-grey;
+      }
+
+      .overview-heading {
+        font-size: $nhs-body-s-size;
+        color: $nhs-grey;
+        margin: 0;
+      }
+
+      .overview-body {
+        margin: 0;
+        font-size: $nhs-heading-xl-size;
+
+        &.location {
+          font-size: $nhs-heading-m-size;
+        }
+      }
+    }
+  }
+
+  .filters-block {
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+
+    .nhsuk-select {
+        width: 100%
+    }
+  }
+
+  .sort-block {
+    margin-bottom: 1rem;
+  }
+
+  .page-navigation {
+    margin: 25px 0px 30px;
+    text-align: right;
+
+    .disabled {
+        cursor: not-allowed;
+        color: $nhs-light-grey;
+    }
+
+    .active {
+        cursor: pointer;
+    }
+  }
+}

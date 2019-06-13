@@ -1,0 +1,44 @@
+@import '../variables';
+
+.footer {
+  background-color: $nhs-blue;
+  color: $white;
+  padding: 0.75rem 0px;
+
+  &--row {
+    margin: 0.3rem 0px;
+    height: 2rem;
+  }
+
+  &--divider {
+    border-color: $nhs-bright-blue;
+    border-style: solid;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &--item {
+    font-size: $nhs-body-s-size;
+    line-height: $nhs-body-s-line-height;
+    margin-right: 1rem;
+
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+
+    p {
+      margin: 0px;
+    }
+  }
+
+  .version {
+    font-size: 0.6rem;
+    margin-bottom: 0;
+    margin-right: 2em;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    text-align: right;
+  }
+}

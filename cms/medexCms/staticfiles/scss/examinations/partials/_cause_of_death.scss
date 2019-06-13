@@ -1,0 +1,74 @@
+@import '../../variables';
+
+.cause-of-death-expandable {
+
+  .expandable-header {
+    padding: 1.5rem 2rem .5rem 2rem;
+    margin-bottom: 1rem;
+    color: $white;
+    background-color: $nhs-blue;
+
+    .controls {
+      justify-content: flex-end;
+
+      .chevron-down {
+        display: block;
+        background: url("/static/images/chevron_down_white.svg") no-repeat;
+        height: 1rem;
+        width: 2rem;
+        margin-top: .5rem;
+
+        &:hover {
+          background: url("/static/images/hollow_blue_chevron_down.svg") no-repeat;
+        }
+      }
+
+      .chevron-up {
+        display: none;
+        background: url("/static/images/chevron_up.svg") no-repeat;
+        height: 1rem;
+        width: 2rem;
+        margin-top: .5rem;
+
+        &:hover {
+          background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
+        }
+      }
+    }
+
+    &.expanded {
+      margin-bottom: 0;
+
+      .controls {
+
+        .chevron-down {
+          display: none;
+        }
+
+        .chevron-up {
+          display: block;
+        }
+      }
+    }
+  }
+
+
+  .expandable-body {
+    display: none;
+    background: $nhs-pale-grey;
+    color: $black;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+
+    textarea {
+      background: $nhs-very-light-grey;
+      color: $nhs-grey;
+    }
+
+    &.expanded {
+      display: block;
+    }
+  }
+
+}
+

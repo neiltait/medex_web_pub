@@ -1,0 +1,158 @@
+@import '../variables';
+
+.case-outcome {
+    padding: 3rem 2rem 6rem;
+
+    .page-subheading {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .case-summary {
+        border: 6px solid $nhs-aqua-green;
+        color: $nhs-grey;
+        margin-bottom: 5rem;
+
+        .conversation-outcomes {
+            padding: 3rem 4rem;
+            border-right: 6px solid $nhs-aqua-green;
+            width: 50%;
+
+            .outcome {
+                margin-bottom: 15px;
+
+                p {
+                    margin-bottom: 0;
+                }
+
+                .outcome-description {
+                    color: $black;
+                    font-size: $nhs-heading-m-size;
+                }
+
+                a {
+                    color: $nhs-grey;
+                    font-size: $nhs-body-s-size;
+                }
+            }
+        }
+
+        .overall-outcomes {
+            width: 50%;
+            align-self: center;
+            text-align: center;
+
+            .outcome {
+                margin-bottom: 15px;
+                text-transform: uppercase;
+
+                .outcome-description-heading {
+                    color: $black;
+                    font-size: $nhs-heading-l-size;
+                }
+
+                .outcome-description-details {
+                    margin-bottom: 0;
+                    color: $nhs-grey;
+                    font-size: $nhs-heading-s-size;
+                }
+            }
+        }
+    }
+
+    .scrutiny-confirmation {
+        background-color: $nhs-pale-grey;
+        margin-left: -2rem;
+        margin-right: -2rem;
+
+        padding: 3.5rem 2rem 6rem;
+
+        .scrutiny-confirmed-tick {
+            height: 3.5rem;
+            width: 4.2rem;
+            background: url("/static/images/scrutiny_complete_tick.svg") no-repeat;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .scrutiny-date-label {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        #confirm-scrutiny-button {
+            margin-top: 5rem;
+            margin-bottom: 0;
+        }
+
+        .me-name {
+            font-size: $nhs-heading-m-size;
+            font-weight: bold;
+            margin-bottom: 0.5rem
+        }
+
+        .me-role {
+            color: $nhs-grey;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .refer-to-coroner {
+        margin-top: 5rem;
+        margin-bottom: 5rem;
+
+        .disclaimer-wrapper {
+            margin-top: 5rem;
+
+            .disclaimer-header {
+                position: relative;
+                bottom: -1em;
+                display: inline;
+
+                padding: 0.5rem 1.5rem;
+
+                background-color: $yellow;
+                font-size: $nhs-body-l-size;
+                font-weight: bold;
+            }
+
+            .disclaimer-body {
+                background-color: $pale-yellow;
+                padding: 3rem 2.5rem;
+            }
+        }
+    }
+
+    .outstanding-items {
+        margin-top: 7rem;
+
+        .outstanding-item {
+            margin: 2rem 0rem 4rem;
+
+            .nhsuk-radios__item {
+                margin-right: 4rem;
+            }
+        }
+    }
+
+    .close-case {
+        background-color: $nhs-pale-grey;
+        padding: 6rem 2rem 7rem;
+        margin-left: -2rem;
+        margin-right: -2rem;
+
+        .page-subheading {
+            margin-top: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .hint-text {
+            margin: 0;
+            padding: 1rem 1.5rem;
+        }
+    }
+}

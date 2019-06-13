@@ -1,0 +1,22 @@
+<div class="form-section">
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <h3 class="nhsuk-heading-m">Nursing team information</h3>
+            <p class="nhsuk-body-m">Add any relevent information about the nursing team involved in care</p>
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group {% if errors.nursing_team_information %}nhsuk-form-group--error{% endif %}">
+                            {% if errors.nursing_team_information %}
+                                <span
+                                        class="nhsuk-error-message medex-font-default-override">{{ errors.nursing_team_information }}</span>{% endif %}
+                            <textarea class="nhsuk-textarea medex-textarea"
+                                      id="nursing_team_information" name="nursing_team_information" rows="3">{{ form.nursing_team_information  }}</textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

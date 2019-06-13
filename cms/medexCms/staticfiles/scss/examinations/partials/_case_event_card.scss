@@ -1,0 +1,164 @@
+@import '../../variables';
+@import '../../helpers';
+
+.timeline-event-row {
+    margin-top: 3rem;
+
+    &:first-of-type {
+        margin-top: 0;
+    }
+
+    .timeline-branch {
+        width: 10%;
+
+        hr {
+            border-bottom: 3px solid $nhs-grey;
+            margin: 0px;
+        }
+    }
+
+    .timeline-event {
+        width: 90%;
+        align-items: stretch;
+
+        border-left: 4px solid $nhs-grey-2;
+        background-color: $white;
+
+        .event-number-space {
+            flex-basis: 100px;
+            flex-shrink: 0;
+            flex-grow: 0;
+            border-right: 2px solid $nhs-pale-grey;
+
+            .event-number {
+                width: 100%;
+                text-align: center;
+                color: $nhs-grey-2;
+            }
+
+            font-size: $nhs-heading-xl-size;
+        }
+
+        .event-content {
+            padding: 2rem;
+            width: 100%;
+
+            .event-header-row {
+                justify-content: space-between;
+
+                .event-header {
+                    font-weight: bold;
+                    font-size: $nhs-heading-s-size;
+                }
+
+                .event-toggle {
+                    height: 1rem;
+                    flex-basis: 2rem;
+                    flex-shrink: 0;
+                    display: none;
+
+                    &.down {
+                        background: url("/static/images/chevron_down.svg") no-repeat;
+                        margin-top: .5rem;
+                        display: initial;
+                    }
+
+                    &.up {
+                        background: url("/static/images/chevron-up-grey.svg") no-repeat;
+                        margin-top: .5rem;
+                        display: initial;
+                    }
+                }
+            }
+
+            .event-reporter {
+                font-weight: bold;
+            }
+
+            .event-body {
+                .content {
+                    margin-bottom: 0;
+                    color: $nhs-grey;
+                }
+            }
+        }
+
+        .amend-link {
+            color: $nhs-grey;
+        }
+    }
+
+    &.other, &.medical-history, &.meo-summary {
+        .event-body {
+            .content {
+                &.collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.initial {
+        .event-body {
+            .content {
+                p {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &.admission-notes {
+        .event-body {
+            .content {
+
+            }
+        }
+    }
+
+    &.pre-scrutiny, &.qap-discussion, &.bereaved-discussion {
+        label {
+            font-weight: bold;
+            font-size: $default-font-size;
+        }
+        .cause-of-death-list {
+            list-style-type: none;
+            padding: 0;
+            font-size: $default-font-size;
+
+            li {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &.pre-scrutiny {
+        .event-body {
+            .content {
+                .collapsed {
+                    @include multiLineEllipsis($lineHeight: $default-line-height, $lineCount: 2, $bgColor: white);
+                }
+            }
+        }
+    }
+
+    &.qap-discussion {
+        .qap-details {
+            margin-bottom: 1rem;
+
+            p {
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    &.bereaved-discussion {
+        .bereaved-discussion {
+            margin-bottom: 1rem;
+
+            p {
+                margin-bottom: 0px;
+            }
+        }
+    }
+}

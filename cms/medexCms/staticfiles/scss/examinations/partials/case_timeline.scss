@@ -1,0 +1,27 @@
+@import '../../variables';
+@import './_case_event_card';
+
+.case-timeline-block {
+    .controls {
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+
+        .controls-label {
+            display: block;
+            color: $nhs-grey;
+        }
+    }
+
+    .case-timeline-wrapper {
+        margin-top: 50px;
+        background-color: $nhs-pale-grey;
+        padding-left: 70px;
+        padding-right: 100px;
+
+        .case-timeline {
+            border-left: 3px solid $nhs-grey;
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+    }
+}

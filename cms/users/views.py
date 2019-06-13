@@ -1,0 +1,56 @@
+from django.shortcuts import render, redirect
+from django.views.generic.base import View
+
+from rest_framework import status
+
+from errors.utils import log_api_error
+from home.utils import render_404
+from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+from .forms import CreateUserForm
+from .models import User
+
+
+class ManageUserBaseView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        self.managed_user = User.load_by_id(kwargs.get('user_id'), self.user.auth_token)
+        if self.managed_user is None:
+            return render_404(request, self.user, 'user')
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class CreateUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_invite_user'
+    template = 'users/new.html'
+
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        context = self.__set_create_user_context(CreateUserForm(), False)
+        return render(request, self.template, context, status=status_code)
+
+    def post(self, request):
+        form = CreateUserForm(request.POST)
+
+        if form.validate():
+            response = User.create(form.response_to_dict(), self.user.auth_token)
+
+            if response.ok:
+                return redirect('/users/%s/add_permission' % response.json()['userId'])
+            else:
+                log_api_error('user creation', response.text)
+                status_code = response.status_code
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        context = self.__set_create_user_context(form, True)
+        return render(request, self.template, context, status=status_code)
+
+    def __set_create_user_context(self, form, invalid):
+        return {
+            'session_user': self.user,
+            'page_heading': 'Add a user',
+            'form': form,
+            'invalid': invalid,
+        }

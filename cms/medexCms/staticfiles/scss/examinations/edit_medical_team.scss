@@ -1,0 +1,23 @@
+
+.medex-form-section {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  &--inverted-background {
+    background-color: $white !important;
+  }
+
+  &--first {
+    padding-top: 0;
+  }
+}
+
+.medex-tab-header {
+  margin-top: 1rem;
+  margin-bottom: 0 !important;
+}
+
+.expanded-margin {
+    margin-right: 1.25rem;
+}
+

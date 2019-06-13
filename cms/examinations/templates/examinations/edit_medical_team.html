@@ -1,0 +1,39 @@
+{% extends "examinations/edit_shared.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block tab_css %}
+{% endblock %}
+
+{% block tab_js %}
+    <script src="{% static 'js/examinations/partials/examination-change-tab-modal.js' %}"></script>
+    <script src="{% static 'js/examinations/partials/tab-block.js' %}"></script>
+    <script src="{% static 'js/examinations/partials/additional-notes-section.js' %}"></script>
+    <script src="{% static 'js/examinations/partials/add-remove-panel.js' %}"></script>
+    <script src="{% static 'js/examinations/partials/input.js' %}"></script>
+    <script src="{% static 'js/examinations/medical-team.js' %}"></script>
+    <script src="{% static 'js/examinations/assign-examination-team.js' %}"></script>
+{% endblock %}
+
+{% block tab_content %}
+    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'edit_examination' examination_id=examination_id %}/medical-team" method="post"
+          data-error-count="{{ error_count }}">
+        {% csrf_token %}
+
+        <div class="form-tab" id="medical-team-section">
+            {% include 'examinations/partials/medical_team/_consultants.html' %}
+            {% include 'examinations/partials/medical_team/_gp_information.html' %}
+            {% include 'examinations/partials/medical_team/_qap_information.html' %}
+            {% include 'examinations/partials/medical_team/_nursing_team.html' %}
+            {% include "examinations/partials/medical_team/_examination_team.html" %}
+        </div>
+
+        <div class="sticky-save">
+            <div class="container">
+                <input id="save-btn" class="submit-btn" type="submit" value="Save changes"/>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
