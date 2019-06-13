@@ -67,6 +67,7 @@
         {% include 'examinations/partials/_case_card.html' with case=examination %}
       {% endfor %}
 
+        {% include 'home/partials/_pagination.html' %}
       <div class="page-navigation">
         {% if session_user.index_overview.previous_page == 0 %}
           <span class="disabled">Previous</span>
@@ -88,6 +89,8 @@
           <a href="{% url pagination_url %}{% queryparams location=form.location person=form.person page_number=session_user.index_overview.next_page %}">Next</a>
         {% endif %}
       </div>
+
+
     {% endif %}
   </div>
 {% endblock %}
