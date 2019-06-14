@@ -9,7 +9,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     OutstandingItemsForm, MedicalHistoryEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination, PatientHeader
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
@@ -144,6 +144,7 @@ def __post_examination_patient_details(user, post_body, examination, get_body):
             status_code = response.status_code
         else:
             saved = True
+            examination.case_header = PatientHeader(response.json().get("header"))
     else:
         status_code = status.HTTP_400_BAD_REQUEST
 

@@ -237,7 +237,7 @@ class User:
         if self.permitted_actions.permitted_forms.preScrutinyEvent:
             forms_list.append({
                 'id': 'pre-scrutiny',
-                'name': 'ME pre-scrutiny',
+                'name': 'ME review of records',
                 'enabled': self.check_form_type_accessible(CaseEvent.PRE_SCRUTINY_EVENT_TYPE, existing_events,
                                                            case_breakdown.event_list.get_me_scrutiny_draft())
             })
