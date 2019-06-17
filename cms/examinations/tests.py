@@ -2076,7 +2076,7 @@ class ExaminationsBreakdownTests(MedExTestCase):
 
         event = CaseInitialEvent(data, None, None)
 
-        self.assertEquals(event.display_time(), '00:55:00')
+        self.assertEquals(event.display_time(), '00:55')
 
     def test_initial_event_does_display_unknown_for_default_none_date(self):
         data = {'dateOfDeath': NONE_DATE}
