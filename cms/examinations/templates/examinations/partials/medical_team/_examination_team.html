@@ -7,7 +7,7 @@
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-form-group {% if errors.medical_examiners_officer %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="medical_examiners_officer">
-                            Medical examiner's officer
+                            MEO assigned to case
                         </label>
                         {% if errors.medical_examiners_officer %}<span
                                 class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiners_officer }}</span>{% endif %}
@@ -24,7 +24,7 @@
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-form-group {% if errors.medical_examiner %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="medical_examiner">
-                            Medical examiner
+                            ME assigned to case
                         </label>
                         {% if errors.medical_examiner %}
                             <span class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiner }}</span>{% endif %}
