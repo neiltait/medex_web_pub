@@ -581,7 +581,10 @@ class CaseInitialEvent(CaseEvent):
         if self.tod == NONE_TIME:
             return self.UNKNOWN
         else:
-            return self.tod
+            if len(self.tod) == 8:
+                return self.tod[:-3]
+            else:
+                return self.tod
 
 
 class CaseOtherEvent(CaseEvent):
