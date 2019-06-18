@@ -123,7 +123,7 @@ class User:
             "LocationId": location,
             "UserId": person,
             "CaseStatus": '',
-            "OrderBy": "CaseCreated",
+            "OrderBy": "Urgency",
             "OpenCases": True,
             "PageSize": page_size,
             "PageNumber": page_number
