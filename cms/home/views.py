@@ -14,7 +14,7 @@ from .utils import redirect_to_landing, redirect_to_login
 from users.models import User
 
 
-class ExaminationIndexView(LoginRequiredMixin, View):
+class DashboardView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
     def get(self, request):

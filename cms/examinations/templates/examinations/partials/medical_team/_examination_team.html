@@ -7,7 +7,7 @@
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-form-group {% if errors.medical_examiners_officer %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="medical_examiners_officer">
-                            Medical examiner's officer
+                            MEO assigned to case
                         </label>
                         {% if errors.medical_examiners_officer %}<span
                                 class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiners_officer }}</span>{% endif %}
@@ -24,7 +24,7 @@
                 <div class="nhsuk-grid-column-one-half">
                     <div class="nhsuk-form-group {% if errors.medical_examiner %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="medical_examiner">
-                            Medical examiner
+                            ME assigned to case
                         </label>
                         {% if errors.medical_examiner %}
                             <span class="nhsuk-error-message medex-font-default-override">{{ errors.medical_examiner }}</span>{% endif %}
@@ -39,6 +39,12 @@
                     </div>
                 </div>
             </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <p class="nhsuk-hint">An ME should only be assigned once the case is ready for them and the Latest
+                        admission notes have been added to the Case breakdown.</p>
+                </div>
+            </div>
         </div>
     </div>
     <div id="confirm-section" class="nhsuk-u-visually-hidden">
@@ -50,15 +56,15 @@
         </div>
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-radios nhsuk-radios--inline">
-                    <div class="nhsuk-radios__item">
+                <div class="nhsuk-radios nhsuk-radios--inline nhsuk-u-margin-bottom-3">
+                    <div class="nhsuk-radios__item nhsuk-u-width-one-quarter">
                         <input class="nhsuk-radios__input"
                                id="confirm-yes" name="confirm" type="radio" value="yes">
                         <label class="nhsuk-label nhsuk-radios__label" for="confirm-1">
                             Yes
                         </label>
                     </div>
-                    <div class="nhsuk-radios__item">
+                    <div class="nhsuk-radios__item nhsuk-u-width-one-quarter">
                         <input class="nhsuk-radios__input"
                                id="confirm-no" name="confirm" type="radio" value="no">
                         <label class="nhsuk-label nhsuk-radios__label" for="confirm-2">
@@ -68,12 +74,6 @@
                 </div>
             </div>
         </div>
-        {#                <div class="nhsuk-grid-row">#}
-        {#                    <div class="nhsuk-grid-column-full">#}
-        {#                        <p class="nhs-body-s hint-text">They will receive a notification email informing them of this#}
-        {#                            assignment.</p>#}
-        {#                    </div>#}
-        {#                </div>#}
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <button id="assign-team-btn" class="nhsuk-button nhsuk-button--disabled" type="submit">

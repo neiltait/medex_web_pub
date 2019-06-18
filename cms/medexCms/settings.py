@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import sys
 
 with open('./version.txt') as v_file:
     VERSION = v_file.read()
@@ -48,6 +49,10 @@ ALLOWED_HOSTS = [
     'localhost',
     'medical-examiners-cms-sandbox.azurewebsites.net',
     'medical-examiners-cms-staging.azurewebsites.net',
+    'medex-web-pre.frontend.pre.medex.cloud',
+    'medex-web-prd.frontend.prd.medex.cloud',
+    'medex-uat.methods.co.uk',
+    'medex.methods.co.uk',
 ]
 
 
@@ -206,19 +211,24 @@ if not DEBUG:
         'version': 1,
         'disable_existing_loggers': False,
         'handlers': {
-            # 'file': {
-            #     'level': 'DEBUG',
-            #     'class': 'logging.FileHandler',
-            #     'filename': './debug.log',
-            # },
+            'file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': './debug.log',
+            },
             'appinsights': {
                 'class': 'applicationinsights.django.LoggingHandler',
-                'level': 'WARNING'
+                'level': 'DEBUG'
+            },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'stream': sys.stdout
             }
         },
         'loggers': {
             'django': {
-                'handlers': ['appinsights'],
+                'handlers': ['appinsights', 'file', 'console'],
                 'level': 'DEBUG',
                 'propagate': True,
             },

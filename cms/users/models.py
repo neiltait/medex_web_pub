@@ -217,37 +217,43 @@ class User:
             forms_list.append({
                     'id': 'admin-notes',
                     'name': 'Latest hospital admission details',
-                    'enabled': 'false' if CaseEvent.ADMISSION_NOTES_EVENT_TYPE in existing_events else 'true'
+                    'enabled': self.check_form_type_accessible(CaseEvent.ADMISSION_NOTES_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_latest_admission_draft())
                 })
         if self.permitted_actions.permitted_forms.medicalHistoryEvent:
             forms_list.append({
                 'id': 'medical-history',
                 'name': 'Medical and social history notes',
-                'enabled': 'false' if CaseEvent.MEDICAL_HISTORY_EVENT_TYPE in existing_events else 'true'
+                'enabled': self.check_form_type_accessible(CaseEvent.MEDICAL_HISTORY_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_medical_history_draft())
             })
         if self.permitted_actions.permitted_forms.meoSummaryEvent:
             forms_list.append({
                 'id': 'meo-summary',
                 'name': 'MEO summary',
-                'enabled': 'false' if CaseEvent.MEO_SUMMARY_EVENT_TYPE in existing_events else 'true'
+                'enabled': self.check_form_type_accessible(CaseEvent.MEO_SUMMARY_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_meo_summary_draft())
             })
         if self.permitted_actions.permitted_forms.preScrutinyEvent:
             forms_list.append({
                 'id': 'pre-scrutiny',
-                'name': 'ME pre-scrutiny',
-                'enabled': 'false' if CaseEvent.PRE_SCRUTINY_EVENT_TYPE in existing_events else 'true'
+                'name': 'ME review of records',
+                'enabled': self.check_form_type_accessible(CaseEvent.PRE_SCRUTINY_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_me_scrutiny_draft())
             })
         if self.permitted_actions.permitted_forms.qapDiscussionEvent:
             forms_list.append({
                 'id': 'qap-discussion',
                 'name': 'QAP discussion',
-                'enabled': 'false' if CaseEvent.QAP_DISCUSSION_EVENT_TYPE in existing_events else 'true'
+                'enabled': self.check_form_type_accessible(CaseEvent.QAP_DISCUSSION_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_qap_discussion_draft())
             })
         if self.permitted_actions.permitted_forms.bereavedDiscussionEvent:
             forms_list.append({
                 'id': 'bereaved-discussion',
                 'name': 'Bereaved/representative discussion',
-                'enabled': 'false' if CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE in existing_events else 'true'
+                'enabled': self.check_form_type_accessible(CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE, existing_events,
+                                                           case_breakdown.event_list.get_bereaved_discussion_draft())
             })
         if self.permitted_actions.permitted_forms.otherEvent:
             forms_list.append({
@@ -256,6 +262,9 @@ class User:
                 'enabled': 'true'
             })
         return forms_list
+
+    def check_form_type_accessible(self, event_type, events, draft):
+        return 'false' if event_type in events and draft is None else 'true'
 
     def editable_event_types(self):
         forms_list = []

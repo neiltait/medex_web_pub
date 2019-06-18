@@ -64,10 +64,21 @@ steps:
 
 - script: |
     pushd '$(projectRoot)'
-    docker build -f Dockerfile -t $(ContainerRegistryName).azurecr.io/$(imageName) .
+    docker build -f ./deploy_files/Dockerfile -t $(ContainerRegistryName).azurecr.io/$(imageName) .
     docker login -u $(ContainerRegistryName) -p $pswd $(ContainerRegistryName).azurecr.io
     docker push $(ContainerRegistryName).azurecr.io/$(imageName)
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   env:
     pswd: $(ContainerRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '_templates'
+    Contents: '**/*.json'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/templates'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'

@@ -1,5 +1,6 @@
 from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong, \
+    NHS_NUMBER_ERROR
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
 from medexCms.api import enums
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
@@ -9,6 +10,8 @@ from people.models import BereavedRepresentative
 
 class PrimaryExaminationInformationForm:
     CREATE_AND_CONTINUE_FLAG = 'create-and-continue'
+    NHS_MIN_LENGTH = 10
+    NHS_MAX_LENGTH = 13
 
     def __init__(self, request=None):
         self.initialise_errors()
@@ -151,11 +154,20 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
+        # check if nhs number group has content
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
             self.errors["nhs_number"] = ErrorFieldRequiredMessage("NHS number")
             self.errors["count"] += 1
+
+        elif not self.nhs_number_not_known:
+            # case - nhs number is entered
+            if self.nhs_number and len(self.nhs_number) >= self.NHS_MIN_LENGTH and len(self.nhs_number) <= self.NHS_MAX_LENGTH:
+                pass
+            else:
+                self.errors["nhs_number"] = NHS_NUMBER_ERROR
+                self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.time_of_death], self.time_of_death_not_known
@@ -1326,7 +1338,7 @@ class BereavedDiscussionEventForm:
         self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
         self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
         self.discussion_could_not_happen = True if form_data.get(
-            'bereaved_discussion_could_not_happen') == enums.yes_no.YES else False
+            'bereaved_discussion_could_not_happen') == enums.true_false.TRUE else False
 
     def is_valid(self):
         self.errors = {'count': 0}

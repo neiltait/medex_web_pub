@@ -581,7 +581,10 @@ class CaseInitialEvent(CaseEvent):
         if self.tod == NONE_TIME:
             return self.UNKNOWN
         else:
-            return self.tod
+            if len(self.tod) == 8:
+                return self.tod[:-3]
+            else:
+                return self.tod
 
 
 class CaseOtherEvent(CaseEvent):
@@ -613,7 +616,7 @@ class CasePreScrutinyEvent(CaseEvent):
     form_type = 'PreScrutinyEventForm'
     event_type = CaseEvent().PRE_SCRUTINY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_pre_scrutiny_event_body.html'
-    display_type = 'ME pre-scrutiny'
+    display_type = 'ME review of records'
     css_type = 'pre-scrutiny'
 
     def __init__(self, obj_dict, latest_id):
@@ -770,7 +773,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
     form_type = 'MedicalHistoryEventForm'
     event_type = CaseEvent().MEDICAL_HISTORY_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_medical_history_event_body.html'
-    display_type = 'Medical history'
+    display_type = 'Medical and social history'
     css_type = 'medical-history'
 
     def __init__(self, obj_dict, latest_id):
@@ -1062,22 +1065,24 @@ class CaseOutcome:
     REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, MCCD_100A_KEY]
 
     QAP_OUTCOMES = {
-        'MccdCauseOfDeathProvidedByQAP': 'MCCD to be issued, COD provided by QAP',
-        'MccdCauseOfDeathProvidedByME': 'MCCD to be issued, COD provided by ME',
-        'MccdCauseOfDeathAgreedByQAPandME': 'MCCD to be issued, new COD reached',
-        'ReferToCoroner': 'Refer to coroner'
+        enums.outcomes.MCCD_FROM_QAP: 'MCCD to be issued, COD provided by QAP',
+        enums.outcomes.MCCD_FROM_ME: 'MCCD to be issued, COD provided by ME',
+        enums.outcomes.MCCD_FROM_QAP_AND_ME: 'MCCD to be issued, new COD reached',
+        enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
+        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a'
     }
 
     REPRESENTATIVE_OUTCOMES = {
-        'CauseOfDeathAccepted': 'MCCD to be issued, no concerns',
-        'ConcernsCoronerInvestigation': 'Refer to coroner for investigation, concerns raised',
-        "ConcernsRequires100a": 'Refer to coroner for 100a, concerns raised',
-        "ConcernsAddressedWithoutCoroner": 'MCCD to be issued, concerns addressed without coroner',
+        enums.discussion.COD_ACCEPTED: 'MCCD to be issued, no concerns',
+        enums.discussion.CONCERNS_CORONER: 'Refer to coroner for investigation, concerns raised',
+        enums.discussion.CONCERNS_100A: 'Refer to coroner for 100a, concerns raised',
+        enums.discussion.CONCERNS_ADDRESSED: 'MCCD to be issued, concerns addressed without coroner',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
-        'IssueAnMccd': 'MCCD to be issued',
-        'ReferToCoroner': 'Refer to coroner'
+        enums.outcomes.MCCD: 'MCCD to be issued',
+        enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
+        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a'
     }
 
     OUTCOME_SUMMARIES = {

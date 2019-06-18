@@ -105,7 +105,7 @@
                             <label class="nhsuk-label" for="qap-other__full-name-input">
                                 Full name
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10 {% if form.errors.participant %}nhsuk-input--error{% endif %}"
+                            <input class="nhsuk-input nhsuk-input--width-10 margin-bottom{% if form.errors.participant %}nhsuk-input--error{% endif %}"
                                    id="qap-other__full-name-input" name="qap-other__full-name"
                                    value="{{ form.qap_discussion_name }}" type="text">
                         </fieldset>
@@ -117,7 +117,7 @@
                             <label class="nhsuk-label" for="qap_discussion_role">
                                 Role
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10"
+                            <input class="nhsuk-input nhsuk-input--width-10 margin-bottom"
                                    id="qap_discussion_role" name="qap-other__role"
                                    value="{{ form.qap_discussion_role }}" type="text">
                         </fieldset>
@@ -129,7 +129,7 @@
                             <label class="nhsuk-label" for="qap_discussion_organisation">
                                 Organisation
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10"
+                            <input class="nhsuk-input nhsuk-input--width-10 margin-bottom"
                                    id="qap_discussion_organisation" name="qap-other__organisation"
                                    value="{{ form.qap_discussion_organisation }}" type="text">
                         </fieldset>
@@ -140,7 +140,7 @@
                             <label class="nhsuk-label" for="qap_discussion_phone_number">
                                 Personal phone/ bleep number
                             </label>
-                            <input class="nhsuk-input nhsuk-input--width-10"
+                            <input class="nhsuk-input nhsuk-input--width-10 margin-bottom"
                                    id="qap_discussion_phone_number" name="qap-other__phone-number"
                                    value="{{ form.qap_discussion_phone_number }}" type="text">
                         </fieldset>
@@ -243,7 +243,7 @@
         <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.details %}nhsuk-form-group--error{% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_details">
+                    <label class="nhsuk-label nhsuk-u-font-weight-bold margin-section" for="qap_discussion_details">
                         Details of the discussion?
                     </label>
                     <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.details }}</span>
@@ -311,7 +311,7 @@
                                        {% if form.outcome_decision == enums.outcomes.MCCD_FROM_QAP %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-1">
-                                    Cause of death provided by the QAP before scrutiny accepted without change
+                                    Cause of death established by the QAP
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
@@ -322,7 +322,7 @@
                                        {% if form.outcome_decision == enums.outcomes.MCCD_FROM_ME %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-discussion-outcome-decision-2">
-                                    Cause of death established by ME accepted by QAP
+                                    Cause of death established by ME and accepted by QAP
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
@@ -385,7 +385,7 @@
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.1a %}nhsuk-form-group--error{% endif %}">
                     <label class="nhsuk-label nhsuk-u-font-weight-bold">
-                        Details of the discussion?
+                        Revised cause of death agreed
                     </label>
                     <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.1a }}</span>
 

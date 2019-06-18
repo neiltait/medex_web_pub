@@ -366,6 +366,16 @@ class ExaminationsFormsTests(MedExTestCase):
         form.is_valid()
         self.assertIsFalse("nhs_number" in form.errors)
 
+    def test_nhs_number_does_not_validate_if_nhs_number_too_long(self):
+        form = PrimaryExaminationInformationForm({'nhs_number': '12345678901234567890123456789012345678901234567890'})
+        form.is_valid()
+        self.assertIsTrue("nhs_number" in form.errors)
+
+    def test_nhs_number_does_not_validate_if_nhs_number_too_short(self):
+        form = PrimaryExaminationInformationForm({'nhs_number': '1234'})
+        form.is_valid()
+        self.assertIsTrue("nhs_number" in form.errors)
+
     def test_nhs_number_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'nhs_number': ''})
         form.is_valid()
@@ -2076,7 +2086,7 @@ class ExaminationsBreakdownTests(MedExTestCase):
 
         event = CaseInitialEvent(data, None, None)
 
-        self.assertEquals(event.display_time(), '00:55:00')
+        self.assertEquals(event.display_time(), '00:55')
 
     def test_initial_event_does_display_unknown_for_default_none_date(self):
         data = {'dateOfDeath': NONE_DATE}
