@@ -2,6 +2,7 @@ from rest_framework import status
 
 from unittest.mock import patch
 
+from home.templatetags.home_filters import page_range_presenter
 from medexCms.test.mocks import SessionMocks, ExaminationMocks
 from medexCms.test.utils import MedExTestCase
 
@@ -52,13 +53,14 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'home/index.html')
         context_user = self.get_context_value(response.context, 'session_user')
-        self.assertIsNot(context_user.examinations,  None)
+        self.assertIsNot(context_user.examinations, None)
         self.assertIs(type(context_user.examinations), list)
 
         count = len(ExaminationMocks.get_case_index_response_content().get('examinations'))
         self.assertEqual(len(context_user.examinations), count)
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_landing_page_redirects_to_login_if_the_user_not_logged_in(self, mock_auth_validation):
         response = self.client.get('/')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -88,9 +90,10 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'home/settings_index.html')
 
-    @patch('users.request_handler.validate_session', return_value=SessionMocks.get_unsuccessful_validate_session_response())
+    @patch('users.request_handler.validate_session',
+           return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(self,
-                                                                           mock_auth_validation):
+                                                                                                       mock_auth_validation):
         response = self.client.get('/settings')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
@@ -115,3 +118,26 @@ class HomeUtilsTests(MedExTestCase):
         result = redirect_to_login()
         self.assertEqual(result.status_code, status.HTTP_302_FOUND)
         self.assertEqual(result.url, '/login')
+
+
+class MockIndexOverview():
+    def __init__(self, page_min, page_max, active_page):
+        self.page_number = active_page
+        self.page_range = range(page_min - 1, page_max)
+
+
+class HomeTemplateTagsTest(MedExTestCase):
+
+    def test_page_range_presenter_returns_correct_number_of_pages(self):
+        index_overview = MockIndexOverview(1, 50, 1)
+
+        page_range = page_range_presenter(index_overview)
+
+        self.assertEqual(len(page_range), 50)
+
+    def test_page_range_presenter_returns_correct_number_of_pages(self):
+        index_overview = MockIndexOverview(1, 50, 1)
+
+        page_range = page_range_presenter(index_overview)
+
+        self.assertEqual(len(page_range), 50)

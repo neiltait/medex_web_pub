@@ -1,40 +1,55 @@
 {% load staticfiles %}
 {% load medex_tags %}
+{% load home_filters %}
 
 <nav role="navigation" aria-label="Pagination">
-    <ul class="medex-pagination">
+    <div class="nhsuk-width-container medex-pagination">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-quarter">
+                <div class="medex-pagination__previous">
+                    {% if session_user.index_overview.previous_page == 0 %}
+                        <span class="medex-pagination__disabled-item">&larr; Previous</span>
+                    {% else %}
+                        &larr;<a class="medex-pagination__link" href="
+                                {% url pagination_url %}{% queryparams location=form.location person=form.person page_number=session_user.index_overview.previous_page %}"
+                           aria-label="Previous page"><span aria-hidden="true" role="presentation"></span>
+                            Previous</a>
+                    {% endif %}
+                </div>
+            </div>
 
-        <li class="medex-pagination__item">
-            {% if session_user.index_overview.previous_page == 0 %}
-                <span class="medex-pagination__disabled-item">&larr; Previous</span>
-            {% else %}
-                <a class="medex-pagination__link" href="
-                        {% url pagination_url %}{% queryparams location=form.location person=form.person page_number=session_user.index_overview.previous_page %}"
-                   aria-label="Previous page"><span aria-hidden="true" role="presentation">&larr;</span> Previous</a>
-            {% endif %}
-        </li>
+            <div class="nhsuk-grid-column-one-half">
+                <div class="medex-pagination__item-list">
+                    {% with page_range=session_user.index_overview|page_range_presenter %}
+                        {% for page in page_range %}
+                            {% if page.type == 'active' %}
+                                <li class="medex-pagination__item"><span
+                                            class="medex-pagination__item-active">{% if page.page < 10 %}
+                                        0{% endif %}{{ page.page }}</span></li>
+                            {% elif page.type == 'spacer' %}
+                                <li class="medex-pagination__item"><span
+                                            class="medex-pagination__item-spacer">...</span></li>
+                            {% else %}
+                                <li class="medex-pagination__item"><a class="medex-pagination__item-link" href="{% url pagination_url %}{% queryparams page_number=page.page location=form.location person=form.person %}"
+                                                                      aria-label="Page {{ page.page }}">
+                                    {% if page.page < 10 %}0{% endif %}{{ page.page }}</a></li>
+                            {% endif %}
 
-        {% for i in session_user.index_overview.page_range %}
-            {% with page_number=i|add:"1" %}
-                {% if page_number == session_user.index_overview.page_number %}
-                    <span class="active">{% if page_number < 10 %}0{% endif %}{{ page_number }}</span>
-                {% else %}
-                    <li class="medex-pagination__item"><a class="medex-pagination__link" href="
-                            {% url pagination_url %}{% queryparams page_number=page_number location=form.location person=form.person %}"
-                                                          aria-label="Page {{ page_number }}">{% if page_number < 10 %}
-                        0{% endif %}{{ page_number }}</a></li>
-                {% endif %}
-            {% endwith %}
-        {% endfor %}
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            </div>
 
-        <li class="medex-pagination__item">
-            {% if session_user.index_overview.page_number == session_user.index_overview.page_count %}
-                <span class="medex-pagination__disabled-item">Next &rarr;</span>
-            {% else %}
-                <a class="medex-pagination__link" href="
-                        {% url pagination_url %}{% queryparams location=form.location person=form.person page_number=session_user.index_overview.previous_page %}"
-                   aria-label="Next page">Next <span aria-hidden="true" role="presentation">&rarr;</span></a>
-            {% endif %}
-        </li>
-    </ul>
+            <div class="nhsuk-grid-column-one-quarter">
+                <div class="medex-pagination__next">
+                    {% if session_user.index_overview.page_number == session_user.index_overview.page_count %}
+                        <span class="medex-pagination__disabled-item">Next &rarr;</span>
+                    {% else %}
+                        <a class="medex-pagination__link" href="{% url pagination_url %}{% queryparams location=form.location person=form.person page_number=session_user.index_overview.previous_page %}"
+                           aria-label="Next page">Next <span aria-hidden="true" role="presentation"></span></a>&rarr;
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </nav>
