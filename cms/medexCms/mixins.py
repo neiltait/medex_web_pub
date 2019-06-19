@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 from errors.utils import log_unexpected_method
 from errors.views import handle_method_not_allowed_error, handle_not_permitted_error, handle_no_role_error
-from home.utils import redirect_to_login
+from home.utils import redirect_to_login, redirect_to_landing
 from users.models import User
 
 
@@ -59,3 +59,16 @@ class PermissionRequiredMixin:
 
     def handle_no_permission(self, request):
         return handle_not_permitted_error(request, self.user)
+
+
+class LoggedInMixin:
+
+    def dispatch(self, request, *args, **kwargs):
+        user = User.initialise_with_token(request)
+        if user.check_logged_in():
+            return redirect_to_landing()
+        return super().dispatch(request, *args, **kwargs)
+
+    def http_method_not_allowed(self, request, *args, **kwargs):
+        log_unexpected_method(request.method, request.path)
+        return handle_method_not_allowed_error(request, self.user)

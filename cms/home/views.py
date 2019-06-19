@@ -7,7 +7,7 @@ from rest_framework import status
 from errors.utils import log_unexpected_method
 from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
-from medexCms.mixins import LoginRequiredMixin
+from medexCms.mixins import LoginRequiredMixin, LoggedInMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
@@ -50,13 +50,10 @@ def login_callback(request):
     return response
 
 
-def login(request):
-    user = User.initialise_with_token(request)
-    if user.check_logged_in():
-        return redirect_to_landing()
+class LoginView(LoggedInMixin, View):
+    template = 'home/login.html'
 
-    if request.method == "GET":
-        template = 'home/login.html'
+    def get(self, request):
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',
@@ -65,11 +62,8 @@ def login(request):
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
         }
-    else:
-        log_unexpected_method(request.method, 'login')
-        template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, template, context, status=status_code)
+        return render(request, self.template, context, status=status_code)
 
 
 def logout(request):
