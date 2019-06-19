@@ -7,47 +7,35 @@
     }
 
     .user-card {
-      border: 1px solid $nhs-light-grey;
-      border-left: 4px solid $nhs-light-grey;
-      padding: 1.5rem 2rem;
-      box-shadow: 0 5px $nhs-very-light-grey;
-      margin-bottom: 1rem;
+        border: 1px solid $nhs-light-grey;
+        border-left: 4px solid $nhs-light-grey;
+        padding: 1.5rem 2rem;
+        box-shadow: 0 5px $nhs-very-light-grey;
+        margin-bottom: 1rem;
 
-      .user-name {
-        margin: 0;
-        font-weight: bold;
-      }
+        p {
+            margin-bottom: 0;
+        }
 
-      .user-email {
-        @extend .s-body-base;
-        color: $nhs-grey;
-      }
+        .user-name {
+            font-weight: bold;
+        }
 
-      .controls {
-        justify-content: flex-end;
+        .user-email {
+            @extend .s-body-base;
+            color: $nhs-grey;
+        }
 
         .view-btn {
-          border: 1px solid $black;
-          color: $black;
-          text-decoration: none;
-          padding: 0.2em 0.5em;
-          margin-right: 1em;
-          margin-left: 1em;
+            color: $nhs-green;
 
+            &:visited {
+                color: $nhs-green;
+            }
 
-          &:visited {
-            color: $black;
-          }
-
-          &:hover {
-            color: $nhs-blue;
-            border: 1px solid $nhs-blue;
-            box-shadow: none;
-            background-color: $white;
-          }
-
+            &:hover {
+                color: $nhs-blue;
+            }
         }
-      }
     }
-
 }
