@@ -54,3 +54,20 @@ class CreateUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'form': form,
             'invalid': invalid,
         }
+
+
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_users'
+    template = 'users/list.html'
+
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        users = User.get_all(self.user.auth_token)
+        context = {
+            'session_user': self.user,
+            'page_heading': 'Users in the ME Network',
+            'users': users
+        }
+
+        return render(request, self.template, context, status=status_code)
+
