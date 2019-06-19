@@ -50,6 +50,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_create_examination_context(form, add_another)
+        context['full_name'] = post_body["first_name"] + " " + post_body["last_name"]
         return render(request, self.template, context, status=status_code)
 
     def __set_create_examination_context(self, form, add_another):
