@@ -4,7 +4,7 @@ from django.conf import settings
 
 from rest_framework import status
 
-from errors.utils import log_api_error, log_internal_error
+from errors.utils import log_api_error, log_internal_error, handle_error
 from examinations.models import ExaminationOverview, CaseEvent
 from examinations import request_handler as examination_request_handler
 
@@ -283,3 +283,12 @@ class User:
         if self.permitted_actions.permitted_forms.otherEvent:
             forms_list.append('other')
         return forms_list
+
+    @classmethod
+    def get_all(cls, auth_token):
+        response = request_handler.load_all_users(auth_token)
+
+        if response.status_code == status.HTTP_200_OK:
+            return response.json().get("users")
+        else:
+            return handle_error(response, {'type': 'users', 'action': 'loading'})

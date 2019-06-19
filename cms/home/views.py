@@ -80,16 +80,20 @@ def settings_index(request):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
         return redirect_to_login()
+
     if not user.permitted_actions.can_access_settings_index():
         template, context, status_code = __handle_not_permitted_error(user)
 
     elif request.method == 'GET':
         template = 'home/settings_index.html'
         status_code = status.HTTP_200_OK
+        users = User.get_all(user.auth_token)
+
         context = {
             'session_user': user,
             'page_heading': 'Settings',
             'sub_heading': 'Overview',
+            'user_count': len(users)
         }
     else:
         log_unexpected_method(request.method, 'settings index')

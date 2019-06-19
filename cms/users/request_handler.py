@@ -23,3 +23,10 @@ def load_by_id(user_id, auth_token):
         return UserMocks.get_successful_single_user_load_response()
     else:
         return MedexRequest.get(auth_token, '%s/users/%s' % (settings.API_URL, user_id))
+
+
+def load_all_users(auth_token):
+    if settings.LOCAL:
+        return UserMocks.get_me_user_list()
+    else:
+        return MedexRequest.get(auth_token, "%s/users" % settings.API_URL)
