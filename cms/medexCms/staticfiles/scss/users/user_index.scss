@@ -1,0 +1,53 @@
+@import '../variables';
+@import '../typography';
+
+.user-index {
+    .page-title {
+        margin-bottom: 43px;
+    }
+
+    .user-card {
+      border: 1px solid $nhs-light-grey;
+      border-left: 4px solid $nhs-light-grey;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 5px $nhs-very-light-grey;
+      margin-bottom: 1rem;
+
+      .user-name {
+        margin: 0;
+        font-weight: bold;
+      }
+
+      .user-email {
+        @extend .s-body-base;
+        color: $nhs-grey;
+      }
+
+      .controls {
+        justify-content: flex-end;
+
+        .view-btn {
+          border: 1px solid $black;
+          color: $black;
+          text-decoration: none;
+          padding: 0.2em 0.5em;
+          margin-right: 1em;
+          margin-left: 1em;
+
+
+          &:visited {
+            color: $black;
+          }
+
+          &:hover {
+            color: $nhs-blue;
+            border: 1px solid $nhs-blue;
+            box-shadow: none;
+            background-color: $white;
+          }
+
+        }
+      }
+    }
+
+}

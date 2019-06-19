@@ -61,7 +61,14 @@ class User:
         return user
 
     def full_name(self):
-        return self.first_name + ' ' + self.last_name
+        return "%s %s" % (self.first_name, self.last_name)
+
+    @property
+    def active(self):
+        return 'Active' if self.is_active() else 'Inactive'
+
+    def is_active(self):
+        return False if self.roles is None else True
 
     def check_logged_in(self):
         if self.auth_token:
@@ -289,6 +296,10 @@ class User:
         response = request_handler.load_all_users(auth_token)
 
         if response.status_code == status.HTTP_200_OK:
-            return response.json().get("users")
+            users = []
+            user_data = response.json().get("users")
+            for user in user_data:
+                users.append(User(user))
+            return users
         else:
             return handle_error(response, {'type': 'users', 'action': 'loading'})

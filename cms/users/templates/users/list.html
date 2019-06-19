@@ -1,0 +1,23 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+    <link href="{% sass_src 'scss/users/user_index.scss' %}" rel="stylesheet" type="text/css" >
+    <link href="{% sass_src 'scss/users/user_index.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block page %}
+
+    <div class="user-index">
+        <h1 class="page-title">
+            {{ page_heading }}
+        </h1>
+
+        {% for user in users %}
+            {%  include "users/partials/index_card.html" with user=user %}
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
