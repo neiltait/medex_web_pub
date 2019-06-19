@@ -16,6 +16,7 @@ from home.utils import redirect_to_login, render_404, redirect_to_examination
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from users.models import User
+from medexCms.utils import fallback_to
 
 
 class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -50,7 +51,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = post_body["first_name"] + " " + post_body["last_name"]
+        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " + fallback_to(post_body.get("last_name"), "")
         return render(request, self.template, context, status=status_code)
 
     def __set_create_examination_context(self, form, add_another):
