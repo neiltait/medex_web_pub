@@ -79,7 +79,7 @@ class EditExaminationSectionBaseView(View):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
             self.examination = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            print('not implemented yet')
+            self.examination = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -156,17 +156,17 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def __set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
-        error_count = self.primary_info_form.error_count + self.secondary_info_form.error_count + \
-                      self.bereaved_info_form.error_count + self.urgency_info_form.error_count
+        error_count = self.primary_form.error_count + self.secondary_form.error_count + \
+                      self.bereaved_form.error_count + self.urgency_form.error_count
 
         return {
             'session_user': self.user,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
-            'primary_info_form': self.primary_info_form,
-            'secondary_info_form': self.secondary_info_form,
-            'bereaved_info_form': self.bereaved_info_form,
-            'urgency_info_form': self.urgency_info_form,
+            'primary_info_form': self.primary_form,
+            'secondary_info_form': self.secondary_form,
+            'bereaved_info_form': self.bereaved_form,
+            'urgency_info_form': self.urgency_form,
             'error_count': error_count,
             'tab_modal': self.modal_config,
             "me_offices": me_offices,
@@ -179,91 +179,57 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
                and self.bereaved_info_form.is_valid() and self.urgency_info_form.is_valid()
 
 
-def examination_medical_team(request, examination_id):
-    # get the current user
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    saved = False
-
-    # check the examination exists
-    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
-    # TODO add better 404 check (currently not possible from medical_team endpoint
-    if not medical_team or not medical_team.case_header:
-        return render_404(request, user, 'medical team')
-
-    if request.method == 'GET':
-        template, context, status_code = __get_medical_team_form(user, medical_team)
-
-    elif request.method == 'POST':
-        # attempt to post and get return form
-        template, context, status_code, redirect_response = __post_medical_team_form(user, medical_team, request.POST,
-                                                                                     request.GET)
-
-        if redirect_response:
-            return redirect_response
-    else:
-        # the GET medical team form
-        log_unexpected_method(request.method, 'create examination')
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    # render the tab
-    return render(request, template, context, status=status_code)
-
-
-def __get_medical_team_form(user, medical_team):
+class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
+    permission_required = 'can_get_examination'
     template = 'examinations/edit_medical_team.html'
-    status_code = status.HTTP_200_OK
-
-    if medical_team:
-        form = MedicalTeamMembersForm(medical_team=medical_team)
-    else:
-        form = MedicalTeamMembersForm()
-
-    context = __set_medical_team_context(user, medical_team, form, False)
-
-    return template, context, status_code
-
-
-def __post_medical_team_form(user, medical_team, post_body, get_body):
-    template = 'examinations/edit_medical_team.html'
-    saved = False
-    form = MedicalTeamMembersForm(request=post_body)
-    forms_valid = form.is_valid()
-
-    if forms_valid:
-        response = medical_team.update(form.to_object(), user.auth_token)
-
-        if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
-            return None, None, None, redirect('/cases/%s/%s' % (medical_team.examination_id, get_body.get('nextTab')))
-        elif response.status_code != status.HTTP_200_OK:
-            log_api_error('patient details update', response.text)
-            status_code = response.status_code
-        else:
-            saved = True
-            status_code = response.status_code
-    else:
-        status_code = status.HTTP_400_BAD_REQUEST
-
-    context = __set_medical_team_context(user, medical_team, form, saved)
-    return template, context, status_code, None
-
-
-def __set_medical_team_context(user, medical_team, form, saved):
+    examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
-    return {
-        'session_user': user,
-        'examination_id': medical_team.examination_id,
-        'patient': medical_team.case_header,
-        'form': form,
-        'medical_examiners': medical_team.medical_examiner_lookup,
-        'medical_examiners_officers': medical_team.medical_examiner_officer_lookup,
-        'error_count': form.error_count,
-        'errors': form.errors,
-        'tab_modal': modal_config,
-        'saved': saved,
-    }
+
+    def get(self, request, examination_id):
+        status_code = status.HTTP_200_OK
+
+        form = MedicalTeamMembersForm(medical_team=self.examination)
+
+        context = self.__set_medical_team_context(form, False)
+
+        return render(request, self.template, context, status=status_code)
+
+    def post(self, request, examination_id):
+        post_body = request.POST
+        get_body = request.GET
+        saved = False
+        form = MedicalTeamMembersForm(request=post_body)
+
+        if form.is_valid():
+            response = self.examination.update(form.to_object(), self.user.auth_token)
+
+            if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+            elif response.status_code != status.HTTP_200_OK:
+                log_api_error('patient details update', response.text)
+                status_code = response.status_code
+            else:
+                saved = True
+                status_code = response.status_code
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        context = self.__set_medical_team_context(form, saved)
+        return render(request, self.template, context, status=status_code)
+
+    def __set_medical_team_context(self, form, saved):
+        return {
+            'session_user': self.user,
+            'examination_id': self.examination.examination_id,
+            'patient': self.examination.case_header,
+            'form': form,
+            'medical_examiners': self.examination.medical_examiner_lookup,
+            'medical_examiners_officers': self.examination.medical_examiner_officer_lookup,
+            'error_count': form.error_count,
+            'errors': form.errors,
+            'tab_modal': self.modal_config,
+            'saved': saved,
+        }
 
 
 def edit_examination_case_breakdown(request, examination_id):
