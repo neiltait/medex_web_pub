@@ -194,6 +194,12 @@ class PatientDetails:
             for representative in obj_dict.get("representatives"):
                 self.representatives.append(BereavedRepresentative(representative))
 
+    def set_values_from_forms(self, primary_form, secondary_form, bereaved_form, urgency_form):
+        self.set_primary_info_values(primary_form) \
+            .set_secondary_info_values(secondary_form) \
+            .set_bereaved_info_values(bereaved_form) \
+            .set_urgency_info_values(urgency_form)
+
     def set_primary_info_values(self, form):
         self.given_names = form.first_name
         self.surname = form.last_name

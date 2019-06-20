@@ -97,18 +97,19 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     permission_required = 'can_get_examination'
     template = 'examinations/edit_patient_details.html'
     examination_section = enums.examination_sections.PATIENT_DETAILS
-    primary_info_form = None
-    secondary_info_form = None
-    bereaved_info_form = None
-    urgency_info_form = None
+    modal_config = get_tab_change_modal_config()
+    primary_form = None
+    secondary_form = None
+    bereaved_form = None
+    urgency_form = None
 
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
-        self.primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(self.examination)
-        self.secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(self.examination)
-        self.bereaved_info_form = BereavedInformationForm().set_values_from_instance(self.examination)
-        self.urgency_info_form = UrgencyInformationForm().set_values_from_instance(self.examination)
+        self.primary_form = PrimaryExaminationInformationForm().set_values_from_instance(self.examination)
+        self.secondary_form = SecondaryExaminationInformationForm().set_values_from_instance(self.examination)
+        self.bereaved_form = BereavedInformationForm().set_values_from_instance(self.examination)
+        self.urgency_form = UrgencyInformationForm().set_values_from_instance(self.examination)
 
         context = self.__set_patient_details_context(False)
 
@@ -120,14 +121,12 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         saved = False
         status_code = status.HTTP_200_OK
 
-        self.primary_info_form = PrimaryExaminationInformationForm(post_body)
-        self.secondary_info_form = SecondaryExaminationInformationForm(post_body)
-        self.bereaved_info_form = BereavedInformationForm(post_body)
-        self.urgency_info_form = UrgencyInformationForm(post_body)
-        self.examination.set_primary_info_values(self.primary_info_form)\
-            .set_secondary_info_values(self.secondary_info_form) \
-            .set_bereaved_info_values(self.bereaved_info_form)\
-            .set_urgency_info_values(self.urgency_info_form)
+        self.primary_form = PrimaryExaminationInformationForm(post_body)
+        self.secondary_form = SecondaryExaminationInformationForm(post_body)
+        self.bereaved_form = BereavedInformationForm(post_body)
+        self.urgency_form = UrgencyInformationForm(post_body)
+        self.examination.set_values_from_forms(self.primary_form, self.secondary_form, self.bereaved_form,
+                                               self.urgency_form)
 
         forms_valid = self.__validate_patient_details_forms()
 
@@ -156,9 +155,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return render(request, self.template, context, status=status_code)
 
     def __set_patient_details_context(self, saved):
-        modal_config = get_tab_change_modal_config()
         me_offices = self.user.get_permitted_me_offices()
-
         error_count = self.primary_info_form.error_count + self.secondary_info_form.error_count + \
                       self.bereaved_info_form.error_count + self.urgency_info_form.error_count
 
@@ -171,19 +168,15 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             'bereaved_info_form': self.bereaved_info_form,
             'urgency_info_form': self.urgency_info_form,
             'error_count': error_count,
-            'tab_modal': modal_config,
+            'tab_modal': self.modal_config,
             "me_offices": me_offices,
             "enums": enums,
             "saved": saved,
         }
 
     def __validate_patient_details_forms(self):
-        primary_valid = self.primary_info_form.is_valid()
-        secondary_valid = self.secondary_info_form.is_valid()
-        bereaved_valid = self.bereaved_info_form.is_valid()
-        urgency_valid = self.urgency_info_form.is_valid()
-
-        return primary_valid and secondary_valid and bereaved_valid and urgency_valid
+        return self.primary_info_form.is_valid() and self.secondary_info_form.is_valid() \
+               and self.bereaved_info_form.is_valid() and self.urgency_info_form.is_valid()
 
 
 def examination_medical_team(request, examination_id):
