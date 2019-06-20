@@ -3,7 +3,7 @@ from django.views.generic.base import View
 from rest_framework import status
 
 from errors.models import GenericError, BadRequestResponse
-from errors.utils import log_unexpected_method, log_api_error
+from errors.utils import log_unexpected_method, log_api_error, log_internal_error
 from errors.views import __handle_method_not_allowed_error
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
@@ -73,119 +73,117 @@ class EditExaminationView(View):
         return redirect('/cases/' + examination_id + '/patient-details')
 
 
-def examination_patient_details(request, examination_id):
-    user = User.initialise_with_token(request)
+class EditExaminationSectionBaseView(View):
 
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    examination = PatientDetails.load_by_id(examination_id, user.auth_token)
-    if not examination:
-        return render_404(request, user, 'case')
-
-    if request.method == 'GET':
-        template, context, status_code = __get_examination_patient_details(user, examination)
-
-    elif request.method == 'POST':
-        template, context, status_code, redirect_response = __post_examination_patient_details(user, request.POST,
-                                                                                               examination, request.GET)
-
-        if redirect_response:
-            return redirect_response
-
-    else:
-
-        log_unexpected_method(request.method, 'patient details')
-
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_examination_patient_details(user, examination):
-    template = 'examinations/edit_patient_details.html'
-    status_code = status.HTTP_200_OK
-
-    primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(examination)
-    secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(examination)
-    bereaved_info_form = BereavedInformationForm().set_values_from_instance(examination)
-    urgency_info_form = UrgencyInformationForm().set_values_from_instance(examination)
-
-    context = __set_examination_patient_details_context(user, examination, primary_info_form, secondary_info_form,
-                                                        bereaved_info_form, urgency_info_form, False)
-    return template, context, status_code
-
-
-def __post_examination_patient_details(user, post_body, examination, get_body):
-    template = 'examinations/edit_patient_details.html'
-    saved = False
-    status_code = status.HTTP_200_OK
-
-    primary_info_form = PrimaryExaminationInformationForm(post_body)
-    secondary_info_form = SecondaryExaminationInformationForm(post_body)
-    bereaved_info_form = BereavedInformationForm(post_body)
-    urgency_info_form = UrgencyInformationForm(post_body)
-    examination.set_primary_info_values(primary_info_form).set_secondary_info_values(secondary_info_form) \
-        .set_bereaved_info_values(bereaved_info_form).set_urgency_info_values(urgency_info_form)
-
-    forms_valid = __validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form,
-                                                   urgency_info_form)
-    if forms_valid:
-        submission = primary_info_form.to_object()
-        submission.update(secondary_info_form.for_request())
-        submission.update(bereaved_info_form.for_request())
-        submission.update(urgency_info_form.for_request())
-        submission['id'] = examination.id
-
-        response = PatientDetails.update(examination.id, submission, user.auth_token)
-
-        if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
-            return None, None, None, redirect('/cases/%s/%s' % (examination.id, get_body.get('nextTab')))
-        elif response.status_code != status.HTTP_200_OK:
-            log_api_error('patient details update', response.text)
-            status_code = response.status_code
+    def dispatch(self, request, *args, **kwargs):
+        if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
+            self.examination = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+        elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
+            print('not implemented yet')
+        elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
+            print('not implemented yet')
+        elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
+            print('not implemented yet')
         else:
-            saved = True
-            examination.case_header = PatientHeader(response.json().get("header"))
-    else:
-        status_code = status.HTTP_400_BAD_REQUEST
+            log_internal_error('EditExaminationSectionBaseView section load', 'Unknown examination section requested')
 
-    context = __set_examination_patient_details_context(user, examination, primary_info_form, secondary_info_form,
-                                                        bereaved_info_form, urgency_info_form, saved)
+        if self.examination is None:
+            return render_404(request, self.user, self.examination_section)
 
-    return template, context, status_code, None
+        return super().dispatch(request, *args, **kwargs)
 
 
-def __validate_patient_details_forms(primary_info_form, secondary_info_form, bereaved_info_form, urgency_info_form):
-    primary_valid = primary_info_form.is_valid()
-    secondary_valid = secondary_info_form.is_valid()
-    bereaved_valid = bereaved_info_form.is_valid()
-    urgency_valid = urgency_info_form.is_valid()
+class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
+    permission_required = 'can_get_examination'
+    template = 'examinations/edit_patient_details.html'
+    examination_section = enums.examination_sections.PATIENT_DETAILS
+    primary_info_form = None
+    secondary_info_form = None
+    bereaved_info_form = None
+    urgency_info_form = None
 
-    return primary_valid and secondary_valid and bereaved_valid and urgency_valid
+    def get(self, request, examination_id):
+        status_code = status.HTTP_200_OK
 
+        self.primary_info_form = PrimaryExaminationInformationForm().set_values_from_instance(self.examination)
+        self.secondary_info_form = SecondaryExaminationInformationForm().set_values_from_instance(self.examination)
+        self.bereaved_info_form = BereavedInformationForm().set_values_from_instance(self.examination)
+        self.urgency_info_form = UrgencyInformationForm().set_values_from_instance(self.examination)
 
-def __set_examination_patient_details_context(user, examination, primary_form, secondary_form, bereaved_form,
-                                              urgency_form, saved):
-    modal_config = get_tab_change_modal_config()
-    me_offices = user.get_permitted_me_offices()
+        context = self.__set_patient_details_context(False)
 
-    error_count = primary_form.error_count + secondary_form.error_count + bereaved_form.error_count + \
-        urgency_form.error_count
-    return {
-        'session_user': user,
-        'examination_id': examination.id,
-        'patient': examination.case_header,
-        'primary_info_form': primary_form,
-        'secondary_info_form': secondary_form,
-        'bereaved_info_form': bereaved_form,
-        'urgency_info_form': urgency_form,
-        'error_count': error_count,
-        'tab_modal': modal_config,
-        "me_offices": me_offices,
-        "enums": enums,
-        "saved": saved,
-    }
+        return render(request, self.template, context, status=status_code)
+
+    def post(self, request, examination_id):
+        post_body = request.POST
+        get_body = request.GET
+        saved = False
+        status_code = status.HTTP_200_OK
+
+        self.primary_info_form = PrimaryExaminationInformationForm(post_body)
+        self.secondary_info_form = SecondaryExaminationInformationForm(post_body)
+        self.bereaved_info_form = BereavedInformationForm(post_body)
+        self.urgency_info_form = UrgencyInformationForm(post_body)
+        self.examination.set_primary_info_values(self.primary_info_form)\
+            .set_secondary_info_values(self.secondary_info_form) \
+            .set_bereaved_info_values(self.bereaved_info_form)\
+            .set_urgency_info_values(self.urgency_info_form)
+
+        forms_valid = self.__validate_patient_details_forms()
+
+        if forms_valid:
+            submission = self.primary_info_form.to_object()
+            submission.update(self.secondary_info_form.for_request())
+            submission.update(self.bereaved_info_form.for_request())
+            submission.update(self.urgency_info_form.for_request())
+            submission['id'] = examination_id
+
+            response = PatientDetails.update(examination_id, submission, self.user.auth_token)
+
+            if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+            elif response.status_code != status.HTTP_200_OK:
+                log_api_error('patient details update', response.text)
+                status_code = response.status_code
+            else:
+                saved = True
+                self.examination.case_header = PatientHeader(response.json().get("header"))
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        context = self.__set_patient_details_context(saved)
+
+        return render(request, self.template, context, status=status_code)
+
+    def __set_patient_details_context(self, saved):
+        modal_config = get_tab_change_modal_config()
+        me_offices = self.user.get_permitted_me_offices()
+
+        error_count = self.primary_info_form.error_count + self.secondary_info_form.error_count + \
+                      self.bereaved_info_form.error_count + self.urgency_info_form.error_count
+
+        return {
+            'session_user': self.user,
+            'examination_id': self.examination.id,
+            'patient': self.examination.case_header,
+            'primary_info_form': self.primary_info_form,
+            'secondary_info_form': self.secondary_info_form,
+            'bereaved_info_form': self.bereaved_info_form,
+            'urgency_info_form': self.urgency_info_form,
+            'error_count': error_count,
+            'tab_modal': modal_config,
+            "me_offices": me_offices,
+            "enums": enums,
+            "saved": saved,
+        }
+
+    def __validate_patient_details_forms(self):
+        primary_valid = self.primary_info_form.is_valid()
+        secondary_valid = self.secondary_info_form.is_valid()
+        bereaved_valid = self.bereaved_info_form.is_valid()
+        urgency_valid = self.urgency_info_form.is_valid()
+
+        return primary_valid and secondary_valid and bereaved_valid and urgency_valid
 
 
 def examination_medical_team(request, examination_id):
@@ -207,7 +205,8 @@ def examination_medical_team(request, examination_id):
 
     elif request.method == 'POST':
         # attempt to post and get return form
-        template, context, status_code, redirect_response = __post_medical_team_form(user, medical_team, request.POST, request.GET)
+        template, context, status_code, redirect_response = __post_medical_team_form(user, medical_team, request.POST,
+                                                                                     request.GET)
 
         if redirect_response:
             return redirect_response
@@ -374,7 +373,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
         latest_for_type = event_list.get_latest_of_type(amend_type)
         if latest_for_type:
             form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
-                                                                                     patient_details.representatives)\
+                                                                                     patient_details.representatives) \
                 .make_active()
         else:
             form_type = '%sEventForm' % amend_type
@@ -481,7 +480,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
         context = self.set_context(form)
 
         return render(request, self.template, context, status=status_code)
-    
+
     def set_context(self, form):
         return {
             'page_header': 'Closed Case Dashboard',
