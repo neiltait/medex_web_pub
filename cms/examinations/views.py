@@ -67,8 +67,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
 
-def edit_examination(request, examination_id):
-    return redirect('/cases/' + examination_id + '/patient-details')
+class EditExaminationView(View):
+
+    def get(self, request, examination_id):
+        return redirect('/cases/' + examination_id + '/patient-details')
 
 
 def examination_patient_details(request, examination_id):
