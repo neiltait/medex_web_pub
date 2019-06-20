@@ -98,10 +98,12 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     template = 'examinations/edit_patient_details.html'
     examination_section = enums.examination_sections.PATIENT_DETAILS
     modal_config = get_tab_change_modal_config()
-    primary_form = None
-    secondary_form = None
-    bereaved_form = None
-    urgency_form = None
+
+    def __init__(self):
+        self.primary_form = None
+        self.secondary_form = None
+        self.bereaved_form = None
+        self.urgency_form = None
 
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
