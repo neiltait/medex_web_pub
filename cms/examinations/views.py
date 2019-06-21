@@ -132,10 +132,10 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         forms_valid = self.__validate_patient_details_forms()
 
         if forms_valid:
-            submission = self.primary_info_form.to_object()
-            submission.update(self.secondary_info_form.for_request())
-            submission.update(self.bereaved_info_form.for_request())
-            submission.update(self.urgency_info_form.for_request())
+            submission = self.primary_form.to_object()
+            submission.update(self.secondary_form.for_request())
+            submission.update(self.bereaved_form.for_request())
+            submission.update(self.urgency_form.for_request())
             submission['id'] = examination_id
 
             response = PatientDetails.update(examination_id, submission, self.user.auth_token)
@@ -176,8 +176,8 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         }
 
     def __validate_patient_details_forms(self):
-        return self.primary_info_form.is_valid() and self.secondary_info_form.is_valid() \
-               and self.bereaved_info_form.is_valid() and self.urgency_info_form.is_valid()
+        return self.primary_form.is_valid() and self.secondary_form.is_valid() \
+               and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
 class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
