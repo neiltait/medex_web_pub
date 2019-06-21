@@ -326,6 +326,7 @@ class ExaminationEventList:
     MEDICAL_HISTORY_EVENT_KEY = 'medicalHistory'
     BEREAVED_DISCUSSION_EVENT_KEY = 'bereavedDiscussion'
     PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
+    CASE_CLOSED_EVENT_KEY = 'caseClosed'
 
     def __init__(self, timeline_items, dod, patient_name, user_role):
         self.events = []
@@ -345,7 +346,9 @@ class ExaminationEventList:
         for key, event_type in timeline_items.items():
             if key == CaseEvent.INITIAL_EVENT_TYPE and event_type:
                 self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
-            elif key != CaseEvent.INITIAL_EVENT_TYPE:
+            elif key == CaseEvent.CASE_CLOSED_TYPE and event_type:
+                self.events.append(CaseClosedEvent(event_type, patient_name, user_role))
+            elif event_type:
                 for event in event_type['history']:
                     if event['isFinal']:
                         self.events.append(CaseEvent.parse_event(event, event_type['latest']['eventId'], self.dod))
@@ -487,6 +490,7 @@ class ExaminationEventList:
 
 
 class CaseEvent:
+
     OTHER_EVENT_TYPE = 'Other'
     PRE_SCRUTINY_EVENT_TYPE = 'PreScrutiny'
     BEREAVED_DISCUSSION_EVENT_TYPE = 'BereavedDiscussion'
@@ -495,6 +499,7 @@ class CaseEvent:
     MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
     ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
+    CASE_CLOSED_TYPE = 'caseClosed'
 
     EVENT_TYPES = {
         ExaminationEventList.OTHER_EVENT_KEY: OTHER_EVENT_TYPE,
@@ -504,6 +509,7 @@ class CaseEvent:
         ExaminationEventList.QAP_DISCUSSION_EVENT_KEY: QAP_DISCUSSION_EVENT_TYPE,
         ExaminationEventList.MEDICAL_HISTORY_EVENT_KEY: MEDICAL_HISTORY_EVENT_TYPE,
         ExaminationEventList.ADMISSION_NOTES_EVENT_KEY: ADMISSION_NOTES_EVENT_TYPE,
+        ExaminationEventList.CASE_CLOSED_EVENT_KEY: CASE_CLOSED_TYPE
     }
 
     date_format = '%d.%m.%Y'
@@ -585,6 +591,38 @@ class CaseInitialEvent(CaseEvent):
                 return self.tod[:-3]
             else:
                 return self.tod
+
+
+class CaseClosedEvent(CaseEvent):
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+    UNKNOWN = 'Unknown'
+
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_case_closed_body.html'
+    event_type = CaseEvent().CASE_CLOSED_TYPE
+    css_type = 'case-closed'
+
+    def __init__(self, obj_dict, patient_name, user_role):
+        self.number = None
+        self.patient_name = patient_name
+        self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = user_role
+        self.created_date = obj_dict.get('created')
+        self.date_case_closed = obj_dict.get('dateCaseClosed')
+        self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
+        self.published = False
+
+    @property
+    def display_type(self):
+        return 'Case closed'
+
+    def display_date_case_closed(self):
+        if self.date_case_closed == NONE_DATE:
+            return self.UNKNOWN
+        else:
+            date = parse_datetime(self.date_case_closed)
+            return date.strftime(self.date_format)
 
 
 class CaseOtherEvent(CaseEvent):
@@ -903,7 +941,6 @@ class CaseBreakdownQAPDiscussion:
 
 
 class CauseOfDeathProposal:
-
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
 
