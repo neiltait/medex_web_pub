@@ -225,6 +225,13 @@ class UserMocks:
         response._content = json.dumps(cls.get_empty_user_dict()).encode('utf-8')
         return response
 
+    @classmethod
+    def get_successful_users_load_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_medical_examiners_load_response_content()).encode('utf-8')
+        return response
+
 
 class PermissionMocks:
     PERMISSION_ID = 1

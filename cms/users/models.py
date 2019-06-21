@@ -4,7 +4,7 @@ from django.conf import settings
 
 from rest_framework import status
 
-from errors.utils import log_api_error, log_internal_error
+from errors.utils import log_api_error, log_internal_error, handle_error
 from examinations.models import ExaminationOverview, CaseEvent
 from examinations import request_handler as examination_request_handler
 
@@ -61,7 +61,14 @@ class User:
         return user
 
     def full_name(self):
-        return self.first_name + ' ' + self.last_name
+        return "%s %s" % (self.first_name, self.last_name)
+
+    @property
+    def active(self):
+        return 'Active' if self.is_active() else 'Inactive'
+
+    def is_active(self):
+        return False if self.roles is None else True
 
     def check_logged_in(self):
         if self.auth_token:
@@ -283,3 +290,16 @@ class User:
         if self.permitted_actions.permitted_forms.otherEvent:
             forms_list.append('other')
         return forms_list
+
+    @classmethod
+    def get_all(cls, auth_token):
+        response = request_handler.load_all_users(auth_token)
+
+        if response.status_code == status.HTTP_200_OK:
+            users = []
+            user_data = response.json().get("users")
+            for user in user_data:
+                users.append(User(user))
+            return users
+        else:
+            return handle_error(response, {'type': 'users', 'action': 'loading'})

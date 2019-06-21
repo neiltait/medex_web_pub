@@ -4,10 +4,8 @@ from django.views.generic.base import View
 
 from rest_framework import status
 
-from errors.utils import log_unexpected_method
-from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
-from medexCms.mixins import LoginRequiredMixin
+from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 
@@ -40,23 +38,22 @@ class DashboardView(LoginRequiredMixin, View):
         }
 
 
-def login_callback(request):
-    token_response = request_handler.create_session(request.GET.get('code'))
-    response = redirect_to_landing()
-    id_token = token_response.json().get('id_token')
-    auth_token = token_response.json().get('access_token')
-    response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-    response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-    return response
+class LoginCallbackView(View):
+
+    def get(self, request):
+        token_response = request_handler.create_session(request.GET.get('code'))
+        response = redirect_to_landing()
+        id_token = token_response.json().get('id_token')
+        auth_token = token_response.json().get('access_token')
+        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+        response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+        return response
 
 
-def login(request):
-    user = User.initialise_with_token(request)
-    if user.check_logged_in():
-        return redirect_to_landing()
+class LoginView(LoggedInMixin, View):
+    template = 'home/login.html'
 
-    if request.method == "GET":
-        template = 'home/login.html'
+    def get(self, request):
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',
@@ -65,40 +62,35 @@ def login(request):
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
         }
-    else:
-        log_unexpected_method(request.method, 'login')
-        template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, template, context, status=status_code)
+        return render(request, self.template, context, status=status_code)
 
 
-def logout(request):
-    user = User.initialise_with_token(request)
-    user.logout()
+class LogoutView(View):
 
-    response = redirect_to_login()
-    response.delete_cookie(settings.AUTH_TOKEN_NAME)
-    response.delete_cookie(settings.ID_TOKEN_NAME)
-    return response
+    def get(self, request):
+        user = User.initialise_with_token(request)
+        user.logout()
+
+        response = redirect_to_login()
+        response.delete_cookie(settings.AUTH_TOKEN_NAME)
+        response.delete_cookie(settings.ID_TOKEN_NAME)
+        return response
 
 
-def settings_index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-    if not user.permitted_actions.can_access_settings_index():
-        template, context, status_code = __handle_not_permitted_error(user)
+class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    template = 'home/settings_index.html'
+    permission_required = 'can_get_users'
 
-    elif request.method == 'GET':
-        template = 'home/settings_index.html'
+    def get(self, request):
         status_code = status.HTTP_200_OK
+        users = User.get_all(self.user.auth_token)
+
         context = {
-            'session_user': user,
+            'session_user': self.user,
             'page_heading': 'Settings',
             'sub_heading': 'Overview',
+            'user_count': len(users)
         }
-    else:
-        log_unexpected_method(request.method, 'settings index')
-        template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, template, context, status=status_code)
+        return render(request, self.template, context, status=status_code)

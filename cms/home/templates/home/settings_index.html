@@ -1,4 +1,9 @@
 {% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/home/settings_index.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
 
 {% block page %}
   <div class="settings-index">
@@ -10,22 +15,29 @@
       {{sub_heading}}
     </h2>
 
-    <i>Temp page structure until page built</i>
-    <div class="flex-row">
+    <div class="flex-row service-overview">
       <div class="trusts">
-        <a href="#">0 of 210</a>
-        <p>
-          NHS Trusts in the ME Netowrk
+        <a class="trusts-count" href="#">
+          2
+        </a>
+
+        <p class="trusts-label">
+          NHS Trusts in the ME Network
         </p>
       </div>
 
       <div class="users">
-        <a href="#">20</a>
-        <p>Users</p>
+        <a class='users-count' href="/users">
+          {{ user_count }}
+        </a>
+
+        <p class="users-label">
+          Users
+        </p>
       </div>
     </div>
 
-    <a class="primary-btn" href="/users/new">
+    <a class="nhsuk-button add-user-btn" href="/users/new">
       Add a user
     </a>
   </div>
