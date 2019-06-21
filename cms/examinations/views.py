@@ -3,8 +3,7 @@ from django.views.generic.base import View
 from rest_framework import status
 
 from errors.models import GenericError, BadRequestResponse
-from errors.utils import log_unexpected_method, log_api_error, log_internal_error
-from errors.views import __handle_method_not_allowed_error
+from errors.utils import log_api_error, log_internal_error
 from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
@@ -12,7 +11,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
 from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination, PatientHeader
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
-from home.utils import redirect_to_login, render_404, redirect_to_examination
+from home.utils import redirect_to_login, render_404, redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from users.models import User
@@ -192,7 +191,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         form = MedicalTeamMembersForm(medical_team=self.examination)
 
-        context = self.__set_medical_team_context(form, False)
+        context = self.__set_context(form, False)
 
         return render(request, self.template, context, status=status_code)
 
@@ -216,10 +215,10 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_medical_team_context(form, saved)
+        context = self.__set_context(form, saved)
         return render(request, self.template, context, status=status_code)
 
-    def __set_medical_team_context(self, form, saved):
+    def __set_context(self, form, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
@@ -346,83 +345,58 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
     return form_data
 
 
-def examination_case_outcome(request, examination_id):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-
-    if request.method == 'GET':
-        template, context, status_code = __get_examination_case_outcome(user, examination_id)
-
-    elif request.method == 'POST':
-        template, context, status_code = __post_examination_case_outcome(user, examination_id, request.POST)
-
-    else:
-        log_unexpected_method(request.method, 'case outcome')
-        template, context, status_code = __handle_method_not_allowed_error(user)
-
-    return render(request, template, context, status=status_code)
-
-
-def __get_examination_case_outcome(user, examination_id):
-    template, context, status_code = __load_case_outcome(user, examination_id)
-
-    return template, context, status_code
-
-
-def __post_examination_case_outcome(user, examination_id, post_body):
-    if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
-        result = CaseOutcome.complete_scrutiny(user.auth_token, examination_id)
-    elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
-        result = CaseOutcome.confirm_coroner_referral(user.auth_token, examination_id)
-    elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
-        form = OutstandingItemsForm(post_body)
-        result = CaseOutcome.update_outstanding_items(user.auth_token, examination_id, form.for_request())
-    elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
-        result = CaseOutcome.close_case(user.auth_token, examination_id)
-    else:
-        result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
-
-    if result and not result == status.HTTP_200_OK:
-        log_api_error('case outcome update', result.get_message())
-        context = {
-            'session_user': user,
-            'error': result,
-        }
-
-        return 'errors/base_error.html', context, result.status_code
-
-    template, context, status_code = __load_case_outcome(user, examination_id)
-    return template, context, status_code
-
-
-def __load_case_outcome(user, examination_id):
+class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_examination'
     template = 'examinations/case_outcome.html'
-    status_code = status.HTTP_200_OK
-    case_outcome, error = CaseOutcome.load_by_id(user.auth_token, examination_id)
-    if error:
-        context = {
-            'session_user': user,
-            'error': error,
+    examination_section = enums.examination_sections.CASE_OUTCOMES
+
+    def __init__(self):
+        self.status_code = status.HTTP_200_OK
+
+    def get(self, request, examination_id):
+        print('called get')
+        self._load_case_outcome(examination_id)
+        if self.error:
+            return render_error(request, self.user, self.error)
+
+        context = self._set_context()
+
+        return render(request, self.template, context, status=self.status_code)
+
+    def post(self,  request, examination_id):
+        post_body = request.POST
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
+            result = CaseOutcome.complete_scrutiny(self.user.auth_token, examination_id)
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
+            result = CaseOutcome.confirm_coroner_referral(self.user.auth_token, examination_id)
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
+            form = OutstandingItemsForm(post_body)
+            result = CaseOutcome.update_outstanding_items(self.user.auth_token, examination_id, form.for_request())
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
+            result = CaseOutcome.close_case(self.user.auth_token, examination_id)
+        else:
+            result = GenericError(BadRequestResponse.new(), {'type': 'form', 'action': 'submitting'})
+
+        if result and not result == status.HTTP_200_OK:
+            log_api_error('case outcome update', result.get_message())
+            return render_error(request, self.user, result)
+
+        self._load_case_outcome(examination_id)
+        context = self._set_context()
+
+        return render(request, self.template, context, status=self.status_code)
+
+    def _load_case_outcome(self, examination_id):
+        self.examination, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
+
+    def _set_context(self):
+        return {
+            'session_user': self.user,
+            'examination_id': self.examination.examination_id,
+            'case_outcome': self.examination,
+            'patient': self.examination.case_header,
+            'enums': enums,
         }
-
-        return 'errors/base_error.html', context, error.status_code
-    else:
-        context = __set_examination_case_outcome_context(user, case_outcome)
-
-        return template, context, status_code
-
-
-def __set_examination_case_outcome_context(user, case_outcome):
-    modal_config = get_tab_change_modal_config()
-
-    return {
-        'session_user': user,
-        'examination_id': case_outcome.examination_id,
-        'case_outcome': case_outcome,
-        'patient': case_outcome.case_header,
-        'enums': enums,
-    }
 
 
 class ClosedExaminationIndexView(LoginRequiredMixin, View):

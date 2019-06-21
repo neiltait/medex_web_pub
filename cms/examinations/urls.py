@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from examinations.views import CreateExaminationView, ClosedExaminationIndexView, EditExaminationView, \
-    PatientDetailsView, MedicalTeamView
+    PatientDetailsView, MedicalTeamView, CaseOutcomeView
 from . import views
 
 urlpatterns = [
@@ -11,7 +11,6 @@ urlpatterns = [
     url(r'(?P<examination_id>[\w\-]+)/medical-team', MedicalTeamView.as_view(), name='edit_medical_team'),
     url(r'(?P<examination_id>[\w\-]+)/case-breakdown', views.edit_examination_case_breakdown,
         name='edit_examination_case_breakdown'),
-    url(r'(?P<examination_id>[\w\-]+)/case-outcome', views.examination_case_outcome,
-        name='view_examination_case_outcome'),
+    url(r'(?P<examination_id>[\w\-]+)/case-outcome', CaseOutcomeView.as_view(), name='view_examination_case_outcome'),
     url(r'(?P<examination_id>[\w\-]+)', EditExaminationView.as_view(), name='edit_examination'),
 ]

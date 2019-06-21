@@ -1119,7 +1119,7 @@ class CaseOutcome:
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
 
     @classmethod
-    def load_by_id(cls, auth_token, examination_id):
+    def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
