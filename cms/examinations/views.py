@@ -233,116 +233,119 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         }
 
 
-def edit_examination_case_breakdown(request, examination_id):
-    user = User.initialise_with_token(request)
-    status_code = status.HTTP_200_OK
+class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_examination'
+    template = 'examinations/edit_case_breakdown.html'
+    examination_section = enums.examination_sections.CASE_BREAKDOWN
 
-    if not user.check_logged_in():
-        return redirect_to_login()
+    def __init__(self):
+        self.status_code = status.HTTP_200_OK
+        self.amend_type = None
+        self.form = None
+        self.medical_team = None
+        self.patient_details = None
 
-    form = None
+    def get(self, request, examination_id):
+        self._load_breakdown(examination_id)
+        if self.error:
+            return render_error(request, self.user, self.error)
 
-    if request.method == 'POST':
-        form, status_code, errors = __post_case_breakdown_event(request, user, examination_id)
+        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.amend_type = request.GET.get('amendType')
 
-    examination = CaseBreakdown.load_by_id(user.auth_token, examination_id)
+        context = self._set_context(examination_id)
 
-    if not type(examination) == CaseBreakdown:
-        context = {
-            'session_user': user,
-            'error': examination,
+        return render(request, self.template, context, status=self.status_code)
+
+    def post(self, request, examination_id):
+        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.form = event_form_parser(request.POST)
+        if self.form.is_valid():
+            response = event_form_submitter(self.user.auth_token, examination_id, self.form)
+            self.status_code = response.status_code
+            self.form = None
+        else:
+            self.status_code = status.HTTP_400_BAD_REQUEST
+
+        self._load_breakdown(examination_id)
+        
+        context = self._set_context(examination_id)
+
+        return render(request, self.template, context, status=self.status_code)
+
+    def _set_context(self, examination_id):
+        forms = self.user.get_forms_for_role(self.examination)
+        form_data = self._prepare_forms(self.examination.event_list, self.medical_team, self.patient_details, self.form,
+                                        self.amend_type)
+
+        return {
+            'session_user': self.user,
+            'examination_id': examination_id,
+            'forms': forms,
+            'qap': self.medical_team.qap,
+            'proposed_cause_of_death': self.examination.event_list.get_latest_me_scrutiny_cause_of_death(),
+            'agreed_cause_of_death': self.examination.event_list.get_latest_agreed_cause_of_death(),
+            'case_breakdown': self.examination,
+            'bereaved_form': {"use_default_bereaved": True},
+            'patient': self.examination.case_header,
+            'form_data': form_data,
+            'enums': enums,
         }
 
-        return render(request, 'errors/base_error.html', context, status=examination.status_code)
+    def _load_breakdown(self, examination_id):
+        self.examination, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
 
-    forms = user.get_forms_for_role(examination)
+    def _prepare_forms(self, event_list, medical_team, patient_details, form, amend_type):
+        pre_scrutiny_form = PreScrutinyEventForm()
+        other_notes_form = OtherEventForm()
+        admission_notes_form = AdmissionNotesEventForm()
+        meo_summary_form = MeoSummaryEventForm()
+        qap_discussion_form = QapDiscussionEventForm()
+        bereaved_discussion_form = BereavedDiscussionEventForm(representatives=patient_details.representatives)
+        medical_history_form = MedicalHistoryEventForm()
 
-    medical_team = MedicalTeam.load_by_id(examination_id, user.auth_token)
-    patient_details = PatientDetails.load_by_id(examination_id, user.auth_token)
+        if event_list.get_me_scrutiny_draft():
+            pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
+        if event_list.get_other_notes_draft():
+            other_notes_form.fill_from_draft(event_list.get_other_notes_draft())
+        if event_list.get_latest_admission_draft():
+            admission_notes_form.fill_from_draft(event_list.get_latest_admission_draft())
+        if event_list.get_meo_summary_draft():
+            meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
+        if event_list.get_qap_discussion_draft():
+            qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
+        if event_list.get_bereaved_discussion_draft():
+            bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(),
+                                                     patient_details.representatives)
+        if event_list.get_medical_history_draft():
+            medical_history_form.fill_from_draft(event_list.get_medical_history_draft())
 
-    amend_type = request.GET.get('amendType')
+        form_data = {
+            'PreScrutinyEventForm': pre_scrutiny_form,
+            'OtherEventForm': other_notes_form,
+            'AdmissionNotesEventForm': admission_notes_form,
+            'MeoSummaryEventForm': meo_summary_form,
+            'QapDiscussionEventForm': qap_discussion_form,
+            'BereavedDiscussionEventForm': bereaved_discussion_form,
+            'MedicalHistoryEventForm': medical_history_form
+        }
 
-    form_data = __prepare_forms(examination.event_list, medical_team, patient_details, form, amend_type)
+        if amend_type and not form:
+            latest_for_type = event_list.get_latest_of_type(amend_type)
+            if latest_for_type:
+                form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
+                                                                                         patient_details.representatives) \
+                    .make_active()
+            else:
+                form_type = '%sEventForm' % amend_type
+                form_data[form_type] = form_data[form_type].make_active()
 
-    context = {
-        'session_user': user,
-        'examination_id': examination_id,
-        'forms': forms,
-        'qap': medical_team.qap,
-        'proposed_cause_of_death': examination.event_list.get_latest_me_scrutiny_cause_of_death(),
-        'agreed_cause_of_death': examination.event_list.get_latest_agreed_cause_of_death(),
-        'case_breakdown': examination,
-        'bereaved_form': {"use_default_bereaved": True},
-        'patient': examination.case_header,
-        'form_data': form_data,
-        'enums': enums,
-    }
+        if form:
+            form_data[type(form).__name__] = form.make_active()
 
-    return render(request, 'examinations/edit_case_breakdown.html', context, status=status_code)
-
-
-def __post_case_breakdown_event(request, user, examination_id):
-    form = event_form_parser(request.POST)
-    if form.is_valid():
-        response = event_form_submitter(user.auth_token, examination_id, form)
-        status_code = response.status_code
-        form = None
-        errors = {'count': 0}
-    else:
-        errors = form.errors
-        status_code = status.HTTP_400_BAD_REQUEST
-    return form, status_code, errors
-
-
-def __prepare_forms(event_list, medical_team, patient_details, form, amend_type):
-    pre_scrutiny_form = PreScrutinyEventForm()
-    other_notes_form = OtherEventForm()
-    admission_notes_form = AdmissionNotesEventForm()
-    meo_summary_form = MeoSummaryEventForm()
-    qap_discussion_form = QapDiscussionEventForm()
-    bereaved_discussion_form = BereavedDiscussionEventForm(representatives=patient_details.representatives)
-    medical_history_form = MedicalHistoryEventForm()
-
-    if event_list.get_me_scrutiny_draft():
-        pre_scrutiny_form.fill_from_draft(event_list.get_me_scrutiny_draft())
-    if event_list.get_other_notes_draft():
-        other_notes_form.fill_from_draft(event_list.get_other_notes_draft())
-    if event_list.get_latest_admission_draft():
-        admission_notes_form.fill_from_draft(event_list.get_latest_admission_draft())
-    if event_list.get_meo_summary_draft():
-        meo_summary_form.fill_from_draft(event_list.get_meo_summary_draft())
-    if event_list.get_qap_discussion_draft():
-        qap_discussion_form.fill_from_draft(event_list.get_qap_discussion_draft(), medical_team.qap)
-    if event_list.get_bereaved_discussion_draft():
-        bereaved_discussion_form.fill_from_draft(event_list.get_bereaved_discussion_draft(),
-                                                 patient_details.representatives)
-    if event_list.get_medical_history_draft():
-        medical_history_form.fill_from_draft(event_list.get_medical_history_draft())
-
-    form_data = {
-        'PreScrutinyEventForm': pre_scrutiny_form,
-        'OtherEventForm': other_notes_form,
-        'AdmissionNotesEventForm': admission_notes_form,
-        'MeoSummaryEventForm': meo_summary_form,
-        'QapDiscussionEventForm': qap_discussion_form,
-        'BereavedDiscussionEventForm': bereaved_discussion_form,
-        'MedicalHistoryEventForm': medical_history_form
-    }
-
-    if amend_type and not form:
-        latest_for_type = event_list.get_latest_of_type(amend_type)
-        if latest_for_type:
-            form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
-                                                                                     patient_details.representatives) \
-                .make_active()
-        else:
-            form_type = '%sEventForm' % amend_type
-            form_data[form_type] = form_data[form_type].make_active()
-
-    if form:
-        form_data[type(form).__name__] = form.make_active()
-
-    return form_data
+        return form_data
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -354,7 +357,6 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.status_code = status.HTTP_200_OK
 
     def get(self, request, examination_id):
-        print('called get')
         self._load_case_outcome(examination_id)
         if self.error:
             return render_error(request, self.user, self.error)
