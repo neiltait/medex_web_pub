@@ -2,7 +2,8 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
-    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
+    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome, \
+    get_display_outcome_summary
 
 from medexCms.api import enums
 
@@ -612,6 +613,7 @@ class CaseClosedEvent(CaseEvent):
         self.date_case_closed = obj_dict.get('dateCaseClosed')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
         self.published = False
+        self.case_outcome = obj_dict.get('caseOutcome')
 
     @property
     def display_type(self):
@@ -623,6 +625,10 @@ class CaseClosedEvent(CaseEvent):
         else:
             date = parse_datetime(self.date_case_closed)
             return date.strftime(self.date_format)
+
+    @property
+    def display_case_outcome(self):
+        return get_display_outcome_summary(self.case_outcome)
 
 
 class CaseOtherEvent(CaseEvent):
