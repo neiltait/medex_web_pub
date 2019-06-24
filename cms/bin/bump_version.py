@@ -2,7 +2,7 @@ import sys
 
 
 def bump_version(level):
-    with open('../release_version.txt', 'r') as file:
+    with open('../version.txt', 'r') as file:
         version = file.read().replace('\n', '')
 
     version_parts = version.split('.')
@@ -17,7 +17,7 @@ def bump_version(level):
         elif level == 'patch':
             version_parts[2] = str(int(version_parts[2]) + 1)
         new_version = '.'.join(version_parts)
-        with open('../release_version.txt', 'w') as file:
+        with open('../version.txt', 'w') as file:
             file.write(new_version)
         print(new_version)
 
