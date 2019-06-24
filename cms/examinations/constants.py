@@ -59,6 +59,15 @@ def get_display_scrutiny_outcome(outcome):
     return __get_dictionary_value(outcome, outcomes)
 
 
+def get_display_outcome_summary(outcome):
+    outcomes = {
+        'IssueMCCD': 'Issue an MCCD',
+        'IssueMCCDWith100a': 'Issue an MCCD with 100a',
+        'ReferToCoroner': 'Refer case to coroner'
+    }
+    return __get_dictionary_value(outcome, outcomes)
+
+
 def __get_dictionary_value(key, dictionary, default=''):
     if key in dictionary:
         return dictionary[key]
