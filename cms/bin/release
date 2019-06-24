@@ -3,6 +3,9 @@
 #Exit on error
 set -oe pipefail
 
+#set main repo branch
+main_branch="development"
+
 if [[ -n $(git status --porcelain) ]]; then
     echo "Repo is dirty" && \
     echo "Please stash or commit your changes before releasing" && \
@@ -32,7 +35,7 @@ function update() {
 echo "Fetching remote branches (git fetch)"
 git fetch --quiet
 
-switch_to development
+switch_to $main_branch
 current_commit="$(git rev-parse HEAD)"
 
 
@@ -46,23 +49,26 @@ function clean () {
 
 trap 'clean $LINENO' ERR
 
-update development
+update main_branch
 
 #Bump version up
 #version=$(npm version --prefix frontend/hay-ui  "$1" --no-git-tag-version)
+current_path="$PWD"
+bump_script_path="$current_path/bump_version.py"
 version=$(python ./bump_version.py $1)
 echo "Bumped version to $version"
 
 # commit version number increment
-#git commit -am "$version"
+git commit -am "$version"
 
-# create tag for new version from -development
-#git tag "$version"
+# create branch for new version
+release_branch="release/v$version"
+git branch $release_branch
 
 
 #Atomic ensures nothing is pushed if any of the repos fails to push
-#git push --atomic origin master "$version"
+git push --atomic origin "$main_branch" "$release_branch"
 
 #switch back to branch you started
-#switch_to "$branch"
+switch_to "$branch"
 
