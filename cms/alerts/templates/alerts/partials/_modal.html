@@ -6,10 +6,10 @@
       <button id="{{config.confirm_btn_id}}" class="nhsuk-button">{{config.confirm_btn_text}}</button>
 
       {% for button in config.extra_buttons %}
-        <button id="{{button.id}}" class="nhsuk-button nhsuk-button--secondary">{{button.text}}</button>
+        <button id="{{button.id}}" class="modal-btn modal-btn__destructive">{{button.text}}</button>
       {% endfor %}
 
-      <button class="modal-cancel-btn">Cancel</button>
+      <button class="modal-cancel-btn modal-btn modal-btn__cancel">Cancel</button>
     </div>
   </div>
 </div>
