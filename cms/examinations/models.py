@@ -195,6 +195,12 @@ class PatientDetails:
             for representative in obj_dict.get("representatives"):
                 self.representatives.append(BereavedRepresentative(representative))
 
+    def set_values_from_forms(self, primary_form, secondary_form, bereaved_form, urgency_form):
+        self.set_primary_info_values(primary_form) \
+            .set_secondary_info_values(secondary_form) \
+            .set_bereaved_info_values(bereaved_form) \
+            .set_urgency_info_values(urgency_form)
+
     def set_primary_info_values(self, form):
         self.given_names = form.first_name
         self.surname = form.last_name
@@ -308,15 +314,15 @@ class CaseBreakdown:
         self.medical_team = medical_team
 
     @classmethod
-    def load_by_id(cls, auth_token, examination_id):
+    def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
 
         medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseBreakdown(response.json(), medical_team)
+            return CaseBreakdown(response.json(), medical_team), None
         else:
-            return handle_error(response, {'type': 'case', 'action': 'loading'})
+            return None, handle_error(response, {'type': 'case', 'action': 'loading'})
 
 
 class ExaminationEventList:
@@ -1156,7 +1162,7 @@ class CaseOutcome:
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
 
     @classmethod
-    def load_by_id(cls, auth_token, examination_id):
+    def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
