@@ -77,6 +77,13 @@ class APIGPNotifiedStatus:
     NA = 'NA'
 
 
+class ExaminationSections:
+    PATIENT_DETAILS = 'patient_details'
+    MEDICAL_TEAM = 'medical_team'
+    CASE_BREAKDOWN = 'case_breakdown'
+    CASE_OUTCOMES = 'case_outcomes'
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -89,6 +96,7 @@ class APIStrings:
     cod_status = APICauseOfDeathStatuses()
     role_types = UserRoleTypes()
     gp_notified_status = APIGPNotifiedStatus()
+    examination_sections = ExaminationSections()
 
 
 enums = APIStrings()

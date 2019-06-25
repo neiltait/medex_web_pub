@@ -2,7 +2,8 @@ from rest_framework import status
 from datetime import datetime, timedelta, timezone
 
 from examinations.constants import get_display_short_user_role, get_display_bereaved_outcome, get_display_qap_outcome, \
-    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome
+    get_display_qap_high_outcome, get_display_circumstances_of_death, get_display_scrutiny_outcome, \
+    get_display_outcome_summary
 
 from medexCms.api import enums
 
@@ -194,6 +195,12 @@ class PatientDetails:
             for representative in obj_dict.get("representatives"):
                 self.representatives.append(BereavedRepresentative(representative))
 
+    def set_values_from_forms(self, primary_form, secondary_form, bereaved_form, urgency_form):
+        self.set_primary_info_values(primary_form) \
+            .set_secondary_info_values(secondary_form) \
+            .set_bereaved_info_values(bereaved_form) \
+            .set_urgency_info_values(urgency_form)
+
     def set_primary_info_values(self, form):
         self.given_names = form.first_name
         self.surname = form.last_name
@@ -307,15 +314,15 @@ class CaseBreakdown:
         self.medical_team = medical_team
 
     @classmethod
-    def load_by_id(cls, auth_token, examination_id):
+    def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
 
         medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseBreakdown(response.json(), medical_team)
+            return CaseBreakdown(response.json(), medical_team), None
         else:
-            return handle_error(response, {'type': 'case', 'action': 'loading'})
+            return None, handle_error(response, {'type': 'case', 'action': 'loading'})
 
 
 class ExaminationEventList:
@@ -612,6 +619,7 @@ class CaseClosedEvent(CaseEvent):
         self.date_case_closed = obj_dict.get('dateCaseClosed')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
         self.published = False
+        self.case_outcome = obj_dict.get('caseOutcome')
 
     @property
     def display_type(self):
@@ -623,6 +631,10 @@ class CaseClosedEvent(CaseEvent):
         else:
             date = parse_datetime(self.date_case_closed)
             return date.strftime(self.date_format)
+
+    @property
+    def display_case_outcome(self):
+        return get_display_outcome_summary(self.case_outcome)
 
 
 class CaseOtherEvent(CaseEvent):
@@ -1150,7 +1162,7 @@ class CaseOutcome:
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
 
     @classmethod
-    def load_by_id(cls, auth_token, examination_id):
+    def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
