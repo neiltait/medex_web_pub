@@ -1,4 +1,4 @@
-from examinations.models import CaseBreakdown
+from examinations.models.case_breakdown import CaseBreakdown
 from medexCms.test.utils import MedExTestCase
 from medexCms.test.mocks import SessionMocks, UserMocks, PermissionMocks, ExaminationMocks
 

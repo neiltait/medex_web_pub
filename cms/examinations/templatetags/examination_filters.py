@@ -1,7 +1,5 @@
 from django import template
 
-from examinations.models import ExaminationOverview
-
 register = template.Library()
 
 
