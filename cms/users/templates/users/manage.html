@@ -1,0 +1,22 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block page %}
+<div class="nhsuk-width-container">
+    <div class="nhsuk-grid-row">
+        <h1 class="page-title">
+            {{ managed_user }}
+        </h1>
+    </div>
+    <div class="nhsuk-grid-row nhsuk-heading-l">
+        Current permissions and locations
+    </div>
+</div>
+
+
+{% endblock %}
