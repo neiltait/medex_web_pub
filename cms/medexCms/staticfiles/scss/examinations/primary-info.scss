@@ -1,0 +1,10 @@
+@import '../variables';
+
+.age_at_death {
+  &__label {
+    text-align: center;
+    &--unknown {
+      color: $nhs-grey-2;
+    }
+  }
+}
