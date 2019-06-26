@@ -70,4 +70,3 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
-

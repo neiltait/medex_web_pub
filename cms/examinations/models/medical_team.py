@@ -110,5 +110,3 @@ class MedicalTeamMember:
             "notes": self.notes,
             "gmcNumber": self.gmc_number
         }
-
-

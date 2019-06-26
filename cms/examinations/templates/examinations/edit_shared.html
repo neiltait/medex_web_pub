@@ -69,12 +69,12 @@
             </a>
 
             <a class="tab-item {% if "case-breakdown" in request.path %}active{% endif %}" id="case-breakdown-tab"
-            href="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}">
+            href="{% url 'edit_case_breakdown' examination_id=examination_id %}">
             Case breakdown
             </a>
 
             <a class="tab-item {% if "case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
-            href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
+            href="{% url 'view_case_outcome' examination_id=examination_id %}">
             Case outcomes
             </a>
         </div>

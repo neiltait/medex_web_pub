@@ -266,10 +266,10 @@ class QapDiscussionEventForm:
     @staticmethod
     def __draft_participant_is_default_qap(draft, default_qap):
         return default_qap is not None and \
-               default_qap.name == draft.participant_name and \
-               default_qap.phone_number == draft.participant_phone_number and \
-               default_qap.organisation == draft.participant_organisation and \
-               default_qap.role == draft.participant_role
+            default_qap.name == draft.participant_name and \
+            default_qap.phone_number == draft.participant_phone_number and \
+            default_qap.organisation == draft.participant_organisation and \
+            default_qap.role == draft.participant_role
 
     def fill_from_draft(self, draft, default_qap):
         # simple values
@@ -488,9 +488,11 @@ class AdmissionNotesEventForm:
         self.admission_day = fallback_to(form_data.get('day_of_last_admission'), '')
         self.admission_month = fallback_to(form_data.get('month_of_last_admission'), '')
         self.admission_year = fallback_to(form_data.get('year_of_last_admission'), '')
-        self.admission_date_unknown = True if form_data.get('date_of_last_admission_not_known') == enums.true_false.TRUE else False
+        self.admission_date_unknown = True if \
+            form_data.get('date_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_time = fallback_to(form_data.get('time_of_last_admission'), '')
-        self.admission_time_unknown = True if form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
+        self.admission_time_unknown = True if \
+            form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False

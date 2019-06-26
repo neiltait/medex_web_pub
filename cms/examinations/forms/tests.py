@@ -16,7 +16,7 @@ from people.models import BereavedRepresentative
 
 class ExaminationsFormsTests(MedExTestCase):
 
-    #### Primary Information Form
+    # Primary Information Form
     def test_given_create_examination_without_first_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
         result = form.is_valid()
@@ -58,7 +58,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
     def test_given_create_examination_without_gender_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
-        result = form.is_valid()
+        form.is_valid()
         self.assertEqual(form.errors["gender"], messages.ErrorFieldRequiredMessage('gender'))
 
     def test_given_create_examination_with_gender_other_but_no_detail_when_submitted_does_not_validate(self):
@@ -346,7 +346,7 @@ class ExaminationsFormsTests(MedExTestCase):
 
         self.assertIsTrue(form.time_of_death_not_known)
 
-    #### Secondary Info Form tests
+    # Secondary Info Form tests
 
     def test_secondary_form_initialised_empty_returns_as_valid(self):
         form = SecondaryExaminationInformationForm()
@@ -356,7 +356,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form = SecondaryExaminationInformationForm(ExaminationMocks.get_patient_details_secondary_info_form_data())
         self.assertIsTrue(form.is_valid())
 
-    #### Bereaved Info Form tests
+    # Bereaved Info Form tests
 
     def test_bereaved_form_initialised_empty_returns_as_valid(self):
         form = BereavedInformationForm()
@@ -401,7 +401,7 @@ class ExaminationsFormsTests(MedExTestCase):
         self.assertEqual(form.bereaved_name_1, loaded_data['representatives'][0]['fullName'])
         self.assertEqual(form.bereaved_name_2, '')
 
-    #### Urgency Info Form tests
+    # Urgency Info Form tests
 
     def test_urgency_form_initialised_empty_returns_as_valid(self):
         form = UrgencyInformationForm()
@@ -411,7 +411,7 @@ class ExaminationsFormsTests(MedExTestCase):
         form = UrgencyInformationForm(ExaminationMocks.get_patient_details_urgency_form_data())
         self.assertIsTrue(form.is_valid())
 
-    #### Medical Team Form tests
+    # Medical Team Form tests
     def test_medical_team_member_initialised_with_valid_medical_team_contains_lookups(self):
         medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
 

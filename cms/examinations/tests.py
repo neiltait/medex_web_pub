@@ -14,7 +14,7 @@ from medexCms.test.utils import MedExTestCase
 
 class ExaminationsViewsTests(MedExTestCase):
 
-    #### Create case tests
+    # Create case tests
 
     def test_landing_on_create_case_page_loads_the_correct_template(self):
         self.set_auth_cookies()
@@ -61,7 +61,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/create.html')
 
-    #### Edit case tests
+    # Edit case tests
 
     @patch('users.request_handler.validate_session',
            return_value=SessionMocks.get_unsuccessful_validate_session_response())
@@ -76,12 +76,11 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
 
-    #### Patient details tests
+    # Patient details tests
 
     @patch('examinations.request_handler.load_patient_details_by_id',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
-    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code \
-                    (self, mock_case_load):
+    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self, mock_case_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -128,7 +127,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
 
-    def test_submitting_a_valid_form_that_passes_on_the_api_returns_reloads_the_form(self):
+    def test_submitting_a_valid_form_that_passes_on_the_api_redirects_to_the_next_tab(self):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
         form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
@@ -137,7 +136,7 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/cases/%s/medical-team' % ExaminationMocks.EXAMINATION_ID)
 
-    #### Case breakdown tests
+    # Case breakdown tests
 
     def test_loading_the_case_breakdown_screen_loads_the_correct_template(self):
         self.set_auth_cookies()
@@ -312,7 +311,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
         self.assertEquals(form.errors['count'], 1)
 
-    def test_other_notes_form_valid_for_draft_even_if_notes_are_blank(self):
+    def test_medical_history_form_valid_for_draft_even_if_notes_are_blank(self):
         form_data = {
             'medical_history_id': 'any id',
             'medical-history-details': '',
@@ -402,9 +401,9 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
     """
     LATEST ADMISSION FORM
-    
+
     Draft - Date to be a valid date or blank
-    
+
     Final - Date to be a valid date or unknown, Time or unknown, one of coroner referral radio buttons selected
 
     """
@@ -585,13 +584,12 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         self.assertEquals(form.errors['count'], 0)
 
     """
-    
     PRE-SCRUTINY
-    
+
     draft - no validation at all
-    
-    final - text in thoughts, text in 1a, 
-        radio-buttons: circumstances of death, outcome, and clinical governance selected 
+
+    final - text in thoughts, text in 1a,
+        radio-buttons: circumstances of death, outcome, and clinical governance selected
         clinical governance textbox filled in if clinical governance filled in
     """
 

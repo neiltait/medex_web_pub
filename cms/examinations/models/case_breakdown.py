@@ -15,7 +15,7 @@ class CaseBreakdown:
 
         self.case_header = PatientHeader(obj_dict.get("header"))
 
-        ## parse data
+        # parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.case_header.date_of_death,
                                                self.case_header.full_name, "MEO")
         self.event_list.sort_events_oldest_to_newest()

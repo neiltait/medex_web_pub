@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic.base import View
 
 from rest_framework import status

@@ -15,7 +15,7 @@ from .forms import CreateUserForm
 
 class UsersViewsTest(MedExTestCase):
 
-    #### User create tests
+    # User create tests
 
     def test_landing_on_the_user_creation_page_loads_the_correct_template(self):
         self.set_auth_cookies()
@@ -46,7 +46,7 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/users/%s/add_permission' % UserMocks.USER_ID)
 
-    #### Add permission tests
+    # Add permission tests
 
     def test_landing_on_the_add_permission_page_loads_the_correct_template(self):
         self.set_auth_cookies()
@@ -103,7 +103,7 @@ class UsersViewsTest(MedExTestCase):
 
 class UsersFormsTests(MedExTestCase):
 
-    #### CreateUserForm tests
+    # CreateUserForm tests
 
     def test_CreateUserForm_initialises_blank_attributes_if_no_request_provided(self):
         create_form = CreateUserForm()
@@ -151,7 +151,7 @@ class UsersFormsTests(MedExTestCase):
 
 class UsersModelsTests(MedExTestCase):
 
-    #### User tests
+    # User tests
 
     def test_User_initialisation_correctly_sets_the_fields_from_dict(self):
         user_dict = UserMocks.get_filled_user_dict()

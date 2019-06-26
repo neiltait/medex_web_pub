@@ -8,7 +8,7 @@ from permissions.models import Permission
 
 class PermissionModelsTests(MedExTestCase):
 
-    #### Permission tests
+    # Permission tests
     def test_correctly_sets_values_on_init(self):
         permission = Permission(PermissionMocks.get_meo_permission_dict())
         self.assertEqual(permission.user_id, PermissionMocks.get_meo_permission_dict()['userId'])
@@ -38,7 +38,7 @@ class PermissionModelsTests(MedExTestCase):
 
 class PermissionsFormsTests(MedExTestCase):
 
-    #### PermissionBuilderForm tests
+    # PermissionBuilderForm tests
 
     def test_is_valid_returns_false_when_no_role_given(self):
         form_content = {

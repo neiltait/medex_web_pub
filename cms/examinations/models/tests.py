@@ -11,7 +11,7 @@ from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 
 class ExaminationsModelsTests(MedExTestCase):
 
-    #### PatientDetails tests
+    # PatientDetails tests
 
     def test_initialising_with_the_none_date_results_in_no_dob(self):
         loaded_data = ExaminationMocks.get_patient_details_load_response_content()
@@ -46,7 +46,7 @@ class ExaminationsModelsTests(MedExTestCase):
         self.assertEqual(len(patient_details.representatives), 1)
         self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
 
-    #### ExaminationOverview tests
+    # ExaminationOverview tests
 
     def test_card_presenter_returns_a_correctly_formatted_dod_if_date_present(self):
         examination_overview = ExaminationOverview(ExaminationMocks.get_case_index_response_content()
@@ -182,7 +182,6 @@ class ExaminationsBreakdownTests(MedExTestCase):
         event = CaseInitialEvent(data, None, None)
 
         self.assertEquals(event.display_date(), CaseInitialEvent.UNKNOWN)
-
 
     def test_initial_event_does_display_unknown_for_default_none_time(self):
         data = {'timeOfDeath': NONE_TIME}

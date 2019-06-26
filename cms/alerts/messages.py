@@ -39,12 +39,14 @@ NO_ROLES = 'You do not currently have roles assigned to your account, please con
 
 NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
+
 
 def ErrorSelectionRequiredMessage(field_name):
     return ("Please select a value for %s") % field_name
 
+
 def ErrorFieldTooLong(character_max):
     return ("Please enter fewer than %d characters") % character_max
-
