@@ -1,0 +1,224 @@
+
+$medex-spacing-points: (
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 16px,
+  4: 24px,
+  5: 32px,
+  6: 40px,
+  7: 48px,
+  8: 56px,
+  9: 64px
+) !default;
+
+$medex-spacing-responsive-scale: (
+  0: (
+    null: 0,
+    tablet: 0
+  ),
+  1: (
+    null: 4px,
+    tablet: 4px
+  ),
+  2: (
+    null: 8px,
+    tablet: 8px
+  ),
+  3: (
+    null: 8px,
+    tablet: 16px
+  ),
+  4: (
+    null: 16px,
+    tablet: 24px
+  ),
+  5: (
+    null: 24px,
+    tablet: 32px
+  ),
+  6: (
+    null: 32px,
+    tablet: 40px
+  ),
+  7: (
+    null: 40px,
+    tablet: 48px
+  ),
+  8: (
+    null: 48px,
+    tablet: 56px
+  ),
+  9: (
+    null: 56px,
+    tablet: 64px
+  )
+) !default;
+
+@function medex-spacing($spacing-point) {
+
+  $actual-input-type: type-of($spacing-point);
+  @if $actual-input-type != 'number' {
+    @error 'Expected a number (integer), but got a '
+    + '#{$actual-input-type}.';
+  }
+
+  @if not map-has-key($medex-spacing-points, $spacing-point) {
+    @error 'Unknown spacing variable `#{$spacing-point}`. Make sure you are using a point from the spacing scale in `_settings/spacing.scss`.';
+  }
+
+  @return map-get($medex-spacing-points, $spacing-point);
+}
+
+
+@function medex-spacing($spacing-point) {
+
+  $actual-input-type: type-of($spacing-point);
+  @if $actual-input-type != 'number' {
+    @error 'Expected a number (integer), but got a '
+    + '#{$actual-input-type}.';
+  }
+
+  @if not map-has-key($medex-spacing-points, $spacing-point) {
+    @error 'Unknown spacing variable `#{$spacing-point}`. Make sure you are using a point from the spacing scale in `_settings/spacing.scss`.';
+  }
+
+  @return map-get($medex-spacing-points, $spacing-point);
+}
+
+// Responsive spacing
+// ==========================================================================
+
+//
+// Adds responsive spacing (either padding or margin, depending on `$property`)
+// by fetching a 'spacing map' from the responsive spacing scale, which defines
+// different spacing values at different breakpoints.
+//
+// To generate responsive spacing, use 'medex-responsive-margin' or
+// 'medex-responsive-padding' mixins
+//
+// @param {Number} $responsive-spacing-point - Point on the responsive spacing
+//  scale, corresponds to a map of breakpoints and spacing values
+// @param {String} $property - Property to add spacing to (e.g. 'margin')
+// @param {String} $direction [all] - Direction to add spacing to
+//  (`top`, `right`, `bottom`, `left`, `all`)
+// @param {Boolean} $important [false] - Whether to mark as `!important`
+// @param {Number} $adjustment [false] - Offset to adjust spacing by
+//
+// @example scss
+//  .foo {
+//    padding: medex-spacing(5);
+//    top: medex-spacing(2) !important; // if `!important` is required
+//   }
+//
+// 1. Make sure that the return value from `_settings/spacing.scss` is a map.
+// 2. Loop through each breakpoint in the map
+// 3. The 'null' breakpoint is for mobile.
+//
+// Original code taken from GDS (Government Digital Service)
+// https://github.com/alphagov/govuk-frontend
+//
+
+@mixin _medex-responsive-spacing($responsive-spacing-point, $property, $direction: 'all', $important: false, $adjustment: false) {
+
+  $actual-input-type: type-of($responsive-spacing-point);
+  @if $actual-input-type != 'number' {
+    @error 'Expected a number (integer), but got a ' + '#{$actual-input-type}.';
+  }
+
+  @if not map-has-key($medex-spacing-responsive-scale, $responsive-spacing-point) {
+    @error 'Unknown spacing point `#{$responsive-spacing-point}`. Make sure you are using a point from the '
+    + 'responsive spacing scale in `_settings/spacing.scss`.';
+  }
+
+  $scale-map: map-get($medex-spacing-responsive-scale, $responsive-spacing-point); // [1] //
+  $actual-map-type: type-of($scale-map);
+  @if $actual-map-type != 'map' {
+    @error 'Expected a number (integer), but got a '
+    + '#{$actual-map-type}. Make sure you are using a map to set the responsive spacing in `_settings/spacing.scss`)';
+  }
+
+  @each $breakpoint, $breakpoint-value in $scale-map { // [2] //
+
+    @if ($adjustment) {
+      $breakpoint-value: $breakpoint-value + $adjustment;
+    }
+
+    @if $breakpoint == null { // [3] //
+
+      @if $direction == all {
+        #{$property}: $breakpoint-value iff($important, !important);
+      } @else {
+        #{$property}-#{$direction}: $breakpoint-value iff($important, !important);
+      }
+    } @else {
+      @include govuk-media-query($from: $breakpoint) {
+        @if $direction == all {
+          #{$property}: $breakpoint-value iff($important, !important);
+        } @else {
+          #{$property}-#{$direction}: $breakpoint-value iff($important, !important);
+        }
+      }
+    }
+  }
+}
+
+// Responsive margin
+// ==========================================================================
+
+//
+// Adds responsive margin by fetching a 'spacing map' from the responsive
+// spacing scale, which defines different spacing values at different
+// breakpoints. Wrapper for the `_medex-responsive-spacing` mixin.
+//
+// @see {mixin} _medex-responsive-spacing
+//
+// @param {Number} $responsive-spacing-point - Point on the responsive spacing
+// scale, corresponds to a map of breakpoints and spacing values
+// @param {String} $direction [all] - Direction to add spacing to
+//   (`top`, `right`, `bottom`, `left`, `all`)
+// @param {Boolean} $important [false] - Whether to mark as `!important`
+// @param {Number} $adjustment [false] - Offset to adjust spacing by
+//
+// @example scss
+//   .foo {
+//      @include medex-responsive-margin(6, 'left', $adjustment: 1px);
+//   }
+//
+// Original code taken from GDS (Government Digital Service)
+// https://github.com/alphagov/govuk-frontend
+//
+
+@mixin medex-responsive-margin($responsive-spacing-point, $direction: 'all', $important: false, $adjustment: false) {
+  @include _medex-responsive-spacing($responsive-spacing-point, 'margin', $direction, $important, $adjustment);
+}
+
+// Responsive padding
+// ==========================================================================
+
+//
+// Adds responsive padding by fetching a 'spacing map' from the responsive
+// spacing scale, which defines different spacing values at different
+// breakpoints. Wrapper for the `_medex-responsive-spacing` mixin.
+//
+// @see {mixin} _medex-responsive-spacing
+//
+// @param {Number} $responsive-spacing-point - Point on the responsive spacing
+//   scale, corresponds to a map of breakpoints and spacing values
+// @param {String} $direction [all] - Direction to add spacing to
+//   (`top`, `right`, `bottom`, `left`, `all`)
+// @param {Boolean} $important [false] - Whether to mark as `!important`
+// @param {Number} $adjustment [false] - Offset to adjust spacing
+//
+// @example scss
+//   .foo {
+//      @include medex-responsive-padding(6, 'left', $adjustment: 1px);
+//   }
+//
+// Original code taken from GDS (Government Digital Service)
+// https://github.com/alphagov/govuk-frontend
+//
+
+@mixin medex-responsive-padding($responsive-spacing-point, $direction: 'all', $important: false, $adjustment: false) {
+  @include _medex-responsive-spacing($responsive-spacing-point, 'padding', $direction, $important, $adjustment);
+}
