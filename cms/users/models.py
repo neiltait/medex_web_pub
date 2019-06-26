@@ -5,8 +5,9 @@ from django.conf import settings
 from rest_framework import status
 
 from errors.utils import log_api_error, log_internal_error, handle_error
-from examinations.models import ExaminationOverview, CaseEvent
+from examinations.models.core import ExaminationOverview
 from examinations import request_handler as examination_request_handler
+from examinations.models.timeline_events import CaseEvent
 
 from home import request_handler as home_request_handler
 from home.models import IndexOverview
@@ -224,42 +225,48 @@ class User:
             forms_list.append({
                     'id': 'admin-notes',
                     'name': 'Latest hospital admission details',
-                    'enabled': self.check_form_type_accessible(CaseEvent.ADMISSION_NOTES_EVENT_TYPE, existing_events,
-                                                           case_breakdown.event_list.get_latest_admission_draft())
+                    'enabled': self.check_form_type_accessible(enums.timeline_event_types.ADMISSION_NOTES_EVENT_TYPE,
+                                                               existing_events,
+                                                               case_breakdown.event_list.get_latest_admission_draft())
                 })
         if self.permitted_actions.permitted_forms.medicalHistoryEvent:
             forms_list.append({
                 'id': 'medical-history',
                 'name': 'Medical and social history notes',
-                'enabled': self.check_form_type_accessible(CaseEvent.MEDICAL_HISTORY_EVENT_TYPE, existing_events,
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.MEDICAL_HISTORY_EVENT_TYPE,
+                                                           existing_events,
                                                            case_breakdown.event_list.get_medical_history_draft())
             })
         if self.permitted_actions.permitted_forms.meoSummaryEvent:
             forms_list.append({
                 'id': 'meo-summary',
                 'name': 'MEO summary',
-                'enabled': self.check_form_type_accessible(CaseEvent.MEO_SUMMARY_EVENT_TYPE, existing_events,
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.MEO_SUMMARY_EVENT_TYPE,
+                                                           existing_events,
                                                            case_breakdown.event_list.get_meo_summary_draft())
             })
         if self.permitted_actions.permitted_forms.preScrutinyEvent:
             forms_list.append({
                 'id': 'pre-scrutiny',
                 'name': 'ME review of records',
-                'enabled': self.check_form_type_accessible(CaseEvent.PRE_SCRUTINY_EVENT_TYPE, existing_events,
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.PRE_SCRUTINY_EVENT_TYPE,
+                                                           existing_events,
                                                            case_breakdown.event_list.get_me_scrutiny_draft())
             })
         if self.permitted_actions.permitted_forms.qapDiscussionEvent:
             forms_list.append({
                 'id': 'qap-discussion',
                 'name': 'QAP discussion',
-                'enabled': self.check_form_type_accessible(CaseEvent.QAP_DISCUSSION_EVENT_TYPE, existing_events,
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.QAP_DISCUSSION_EVENT_TYPE,
+                                                           existing_events,
                                                            case_breakdown.event_list.get_qap_discussion_draft())
             })
         if self.permitted_actions.permitted_forms.bereavedDiscussionEvent:
             forms_list.append({
                 'id': 'bereaved-discussion',
                 'name': 'Bereaved/representative discussion',
-                'enabled': self.check_form_type_accessible(CaseEvent.BEREAVED_DISCUSSION_EVENT_TYPE, existing_events,
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.BEREAVED_DISCUSSION_EVENT_TYPE,
+                                                           existing_events,
                                                            case_breakdown.event_list.get_bereaved_discussion_draft())
             })
         if self.permitted_actions.permitted_forms.otherEvent:

@@ -61,3 +61,7 @@ def get_tab_change_modal_config():
             }
         ],
     }
+
+
+def text_field_is_not_null(field):
+    return field and len(field.strip()) > 0

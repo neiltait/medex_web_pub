@@ -1,7 +1,8 @@
 from alerts import messages
 from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong, \
     NHS_NUMBER_ERROR
-from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
+from examinations.models.core import CauseOfDeathProposal
+from examinations.models.medical_team import MedicalTeamMember
 from medexCms.api import enums
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
     validate_is_not_blank, pop_if_falsey, date_is_valid_or_empty

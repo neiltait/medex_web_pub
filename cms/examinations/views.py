@@ -8,13 +8,16 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     OutstandingItemsForm, MedicalHistoryEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination, PatientHeader
+from examinations.models.case_breakdown import CaseBreakdown
+from examinations.models.case_outcomes import CaseOutcome
+from examinations.models.core import Examination, PatientHeader
+from examinations.models.medical_team import MedicalTeam
+from examinations.models.patient_details import PatientDetails
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
-from home.utils import redirect_to_login, render_404, redirect_to_examination, render_error
+from home.utils import render_404, redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from users.models import User
 from medexCms.utils import fallback_to
 
 
