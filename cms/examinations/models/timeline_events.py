@@ -158,7 +158,7 @@ class CaseOtherEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import OtherEventForm
+        from examinations.forms.timeline_events import OtherEventForm
         form = OtherEventForm().fill_from_draft(self)
         form.event_id = None
         return form
@@ -191,7 +191,7 @@ class CasePreScrutinyEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import PreScrutinyEventForm
+        from examinations.forms.timeline_events import PreScrutinyEventForm
         form = PreScrutinyEventForm().fill_from_draft(self)
         form.event_id = None
         return form
@@ -231,7 +231,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import BereavedDiscussionEventForm
+        from examinations.forms.timeline_events import BereavedDiscussionEventForm
         form = BereavedDiscussionEventForm().fill_from_draft(self, default_representatives=representatives)
         form.event_id = None
         return form
@@ -259,7 +259,7 @@ class CaseMeoSummaryEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import MeoSummaryEventForm
+        from examinations.forms.timeline_events import MeoSummaryEventForm
         form = MeoSummaryEventForm().fill_from_draft(self)
         form.event_id = None
         return form
@@ -303,7 +303,7 @@ class CaseQapDiscussionEvent(CaseEvent):
         return self.date_of_conversation.strftime(self.time_format) if self.date_of_conversation else ''
 
     def as_amendment_form(self, default_qap, representatives):
-        from examinations.forms import QapDiscussionEventForm
+        from examinations.forms.timeline_events import QapDiscussionEventForm
         form = QapDiscussionEventForm().fill_from_draft(self, default_qap=default_qap)
         form.event_id = None
         return form
@@ -318,7 +318,8 @@ class CaseQapDiscussionEvent(CaseEvent):
         return self.qap_discussion_outcome in [enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]
 
     def hide_new_cause_of_death_section(self):
-        return self.qap_discussion_outcome in [enums.outcomes.MCCD_FROM_ME, enums.outcomes.CORONER_100A, enums.outcomes.CORONER_INVESTIGATION]
+        return self.qap_discussion_outcome in [enums.outcomes.MCCD_FROM_ME, enums.outcomes.CORONER_100A,
+                                               enums.outcomes.CORONER_INVESTIGATION]
 
 
 class CaseMedicalHistoryEvent(CaseEvent):
@@ -340,7 +341,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
         self.is_latest = self.event_id == latest_id
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import MedicalHistoryEventForm
+        from examinations.forms.timeline_events import MedicalHistoryEventForm
         form = MedicalHistoryEventForm().fill_from_draft(self)
         form.event_id = None
         return form
@@ -381,7 +382,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
         return 'Yes' if self.immediate_coroner_referral else 'No'
 
     def as_amendment_form(self, qap, representatives):
-        from examinations.forms import AdmissionNotesEventForm
+        from examinations.forms.timeline_events import AdmissionNotesEventForm
         form = AdmissionNotesEventForm().fill_from_draft(self)
         form.event_id = None
         return form

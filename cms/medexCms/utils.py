@@ -3,6 +3,7 @@ from django.conf import settings
 import datetime
 import re
 from alerts import messages
+from errors.utils import log_internal_error
 
 API_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 API_DATE_FORMAT_2 = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -25,6 +26,7 @@ def validate_date(year, month, day, hour='00', min='00'):
         build_date(year, month, day, hour, min)
         return True
     except (ValueError, TypeError, AttributeError) as ex:
+        log_internal_error('validate_date', ex)
         return False
 
 
@@ -34,11 +36,11 @@ def pop_if_falsey(key, from_dict):
 
 
 def all_not_blank(*args):
-    return all(v is not '' for v in args)
+    return all(v != '' for v in args)
 
 
 def any_not_blank(*args):
-    return any(v is not '' for v in args)
+    return any(v != '' for v in args)
 
 
 def validate_date_time_field(field_name, errors, year, month, day, time, error_message=messages.INVALID_DATE,
@@ -80,7 +82,7 @@ def parse_datetime(datetime_string):
     if datetime_string and not is_empty_date(datetime_string):
         try:
             date_and_time, microseconds_and_zone = datetime_string.split('.')
-            arr = list(filter(None, re.split('(\d+)', microseconds_and_zone)))
+            arr = list(filter(None, re.split("(\d+)", microseconds_and_zone)))
             microseconds = arr.pop(0)[:6]
             datetime_string = '%s.%s%s' % (date_and_time, microseconds, ''.join(arr))
             return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)

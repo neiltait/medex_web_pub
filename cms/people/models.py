@@ -38,9 +38,9 @@ class BereavedRepresentative:
 
     def equals(self, representative):
         return representative is not None and \
-               self.full_name == representative.full_name and \
-               self.relationship == representative.relationship and \
-               self.phone_number == representative.phone_number
+            self.full_name == representative.full_name and \
+            self.relationship == representative.relationship and \
+            self.phone_number == representative.phone_number
 
 
 class DropdownPerson:

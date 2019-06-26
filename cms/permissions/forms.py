@@ -25,10 +25,10 @@ class PermissionBuilderForm:
 
     def is_valid(self):
 
-        if self.role is None or self.role is '':
+        if self.role is None or self.role == '':
             self.role_error = messages.FIELD_MISSING % "a role"
 
-        if self.permission_level is None or self.permission_level is '':
+        if self.permission_level is None or self.permission_level == '':
             self.permission_level_error = messages.FIELD_MISSING % "a level"
 
         if self.permission_level == 'trust' and not self.trust_present():
@@ -41,10 +41,10 @@ class PermissionBuilderForm:
                         or self.trust_error or self.region_error else True
 
     def trust_present(self):
-        return self.trust is not None and self.trust is not '' and self.trust != 'None'
+        return self.trust is not None and self.trust != '' and self.trust != 'None'
 
     def region_present(self):
-        return self.region is not None and self.region is not '' and self.region != 'None'
+        return self.region is not None and self.region != '' and self.region != 'None'
 
     def location_id(self):
         if self.region_present():

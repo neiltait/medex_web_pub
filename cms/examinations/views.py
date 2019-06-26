@@ -56,7 +56,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " + fallback_to(post_body.get("last_name"), "")
+        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " "\
+            + fallback_to(post_body.get("last_name"), "")
         return render(request, self.template, context, status=status_code)
 
     def __set_create_examination_context(self, form, add_another):
@@ -166,7 +167,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     def __set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
         error_count = self.primary_form.error_count + self.secondary_form.error_count + \
-                      self.bereaved_form.error_count + self.urgency_form.error_count
+            self.bereaved_form.error_count + self.urgency_form.error_count
 
         return {
             'session_user': self.user,
@@ -185,7 +186,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def __validate_patient_details_forms(self):
         return self.primary_form.is_valid() and self.secondary_form.is_valid() \
-               and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
+            and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
 class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
@@ -278,7 +279,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             self.status_code = status.HTTP_400_BAD_REQUEST
 
         self._load_breakdown(examination_id)
-        
+
         context = self._set_context(examination_id)
 
         return render(request, self.template, context, status=self.status_code)
@@ -343,9 +344,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if amend_type and not form:
             latest_for_type = event_list.get_latest_of_type(amend_type)
             if latest_for_type:
-                form_data[latest_for_type.form_type] = latest_for_type.as_amendment_form(medical_team.qap,
-                                                                                         patient_details.representatives) \
-                    .make_active()
+                form_data[latest_for_type.form_type] = latest_for_type\
+                    .as_amendment_form(medical_team.qap, patient_details.representatives).make_active()
             else:
                 form_type = '%sEventForm' % amend_type
                 form_data[form_type] = form_data[form_type].make_active()
@@ -373,7 +373,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
-    def post(self,  request, examination_id):
+    def post(self, request, examination_id):
         post_body = request.POST
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
             result = CaseOutcome.complete_scrutiny(self.user.auth_token, examination_id)

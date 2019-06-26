@@ -159,7 +159,7 @@ class PrimaryExaminationInformationForm:
 
         elif not self.nhs_number_not_known:
             # case - nhs number is entered
-            if self.nhs_number and len(self.nhs_number) >= self.NHS_MIN_LENGTH and len(self.nhs_number) <= self.NHS_MAX_LENGTH:
+            if self.nhs_number and self.NHS_MIN_LENGTH <= len(self.nhs_number) <= self.NHS_MAX_LENGTH:
                 pass
             else:
                 self.errors["nhs_number"] = NHS_NUMBER_ERROR

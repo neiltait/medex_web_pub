@@ -7,7 +7,6 @@ from rest_framework import status
 from errors.utils import log_api_error, log_internal_error, handle_error
 from examinations.models.core import ExaminationOverview
 from examinations import request_handler as examination_request_handler
-from examinations.models.timeline_events import CaseEvent
 
 from home import request_handler as home_request_handler
 from home.models import IndexOverview
@@ -223,12 +222,12 @@ class User:
         forms_list = []
         if self.permitted_actions.permitted_forms.admissionEvent:
             forms_list.append({
-                    'id': 'admin-notes',
-                    'name': 'Latest hospital admission details',
-                    'enabled': self.check_form_type_accessible(enums.timeline_event_types.ADMISSION_NOTES_EVENT_TYPE,
-                                                               existing_events,
-                                                               case_breakdown.event_list.get_latest_admission_draft())
-                })
+                'id': 'admin-notes',
+                'name': 'Latest hospital admission details',
+                'enabled': self.check_form_type_accessible(enums.timeline_event_types.ADMISSION_NOTES_EVENT_TYPE,
+                                                           existing_events,
+                                                           case_breakdown.event_list.get_latest_admission_draft())
+            })
         if self.permitted_actions.permitted_forms.medicalHistoryEvent:
             forms_list.append({
                 'id': 'medical-history',

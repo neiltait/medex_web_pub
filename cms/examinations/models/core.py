@@ -97,7 +97,7 @@ class ExaminationOverview:
     def calc_age(self):
         if self.date_of_death and self.date_of_birth:
             return self.date_of_death.year - self.date_of_birth.year - (
-                    (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+                (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
         else:
             return None
 

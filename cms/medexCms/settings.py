@@ -199,8 +199,8 @@ if not DEBUG:
         # send_interval specifies how often the queue is checked for items to submit.
         # send_time specifies how long the sender waits for new input before recycling
         # the background thread.
-        'send_interval': 1.0, # Check every second
-        'send_time': 3.0, # Wait up to 3 seconds for an event
+        'send_interval': 1.0,  # Check every second
+        'send_time': 3.0,  # Wait up to 3 seconds for an event
 
         # (optional, uncommon) If you must send to an endpoint other than the
         # default endpoint, specify it here:
