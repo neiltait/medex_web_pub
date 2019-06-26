@@ -1,6 +1,6 @@
 from . import request_handler
-from examinations.forms import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, \
-    QapDiscussionEventForm, BereavedDiscussionEventForm, MedicalHistoryEventForm
+from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm,\
+    MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, MedicalHistoryEventForm
 
 PRE_SCRUTINY_FORM = 'pre-scrutiny'
 MEO_SUMMARY_FORM = 'meo-summary'
