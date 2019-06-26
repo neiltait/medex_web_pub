@@ -1,41 +1,13 @@
 @import '../variables';
 @import 'primary-info.scss';
+@import "../spacing";
 
 .examination {
   &__create {
-    margin-bottom: 3rem;
+    margin-bottom: medex-spacing(8);
 
     #submit-btn {
-        margin-bottom: 5rem;
-    }
-
-    .form-item {
-      width: 50%;
-      margin-bottom: 3rem;
-
-      &--header {
-        display: block;
-        margin-bottom: 0.6rem;
-      }
-
-      .checkbox-item {
-        margin-top: 10px;
-
-        .checkbox {
-          padding: 1rem;
-          margin-left: 0px;
-          margin-top: 0px;
-          margin-bottom: 0px;
-
-          &:checked {
-            &:after {
-              font-size: 1.3rem;
-              top: 0.3rem;
-              left: 0.4rem;
-            }
-          }
-        }
-      }
+        margin-bottom: medex-spacing(8);
     }
   }
 }

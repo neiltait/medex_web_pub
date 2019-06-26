@@ -36,7 +36,7 @@ p {
 }
 
 .page-content {
-  margin-top: 4rem;
+  margin-top: medex-spacing(9);
 
   .page-title {
     @extend .xl-heading-base;
