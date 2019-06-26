@@ -4,10 +4,13 @@ from rest_framework import status
 
 from errors.models import GenericError, BadRequestResponse
 from errors.utils import log_api_error, log_internal_error
-from examinations.forms import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
-    BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
+from examinations.forms.patient_details import PrimaryExaminationInformationForm, SecondaryExaminationInformationForm, \
+    BereavedInformationForm, UrgencyInformationForm
+from examinations.forms.medical_team import MedicalTeamMembersForm
+from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
-    OutstandingItemsForm, MedicalHistoryEventForm
+    MedicalHistoryEventForm
+from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.models.case_breakdown import CaseBreakdown
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination, PatientHeader
