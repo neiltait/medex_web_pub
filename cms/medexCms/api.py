@@ -92,7 +92,16 @@ class TimelineEventKeys:
     MEDICAL_HISTORY_EVENT_KEY = 'medicalHistory'
     BEREAVED_DISCUSSION_EVENT_KEY = 'bereavedDiscussion'
     PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
+    INITIAL_EVENT_KEY = 'patientDeathEvent'
     CASE_CLOSED_EVENT_KEY = 'caseClosed'
+
+    @classmethod
+    def all(cls):
+        return [
+            cls.QAP_DISCUSSION_EVENT_KEY, cls.OTHER_EVENT_KEY, cls.ADMISSION_NOTES_EVENT_KEY, cls.MEO_SUMMARY_EVENT_KEY,
+            cls.MEDICAL_HISTORY_EVENT_KEY, cls.BEREAVED_DISCUSSION_EVENT_KEY, cls.PRE_SCRUTINY_EVENT_KEY,
+            cls.CASE_CLOSED_EVENT_KEY, cls.INITIAL_EVENT_KEY
+        ]
 
 
 class TimelineEventTypes:
