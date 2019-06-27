@@ -5,7 +5,7 @@ from people.models import BereavedRepresentative
 
 class PeopleModelsTest(MedExTestCase):
 
-    ##### BereavedRepresentative tests
+    # BereavedRepresentative tests
 
     def test_initialising_with_the_none_date_leads_no_appointment_details_set(self):
         bereaved = BereavedRepresentative(ExaminationMocks.get_patient_details_bereaved_form_data())

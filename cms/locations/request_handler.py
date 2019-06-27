@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from medexCms.models import MedexRequest
-from medexCms.test.mocks import LocationsMocks, UserMocks
+from medexCms.test.mocks import LocationsMocks
 
 
 def get_locations_list(auth_token):

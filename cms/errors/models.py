@@ -50,7 +50,7 @@ class GenericError:
         self.params = params
 
     def get_message(self):
-        return self.error_message % (self.params.get('action'),self.params.get('type'))
+        return self.error_message % (self.params.get('action'), self.params.get('type'))
 
     @property
     def status_code(self):
