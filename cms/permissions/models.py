@@ -1,5 +1,6 @@
 import json
 
+from examinations.constants import get_display_short_user_role, get_display_user_role
 from permissions import request_handler
 
 
@@ -24,6 +25,10 @@ class Permission:
     @classmethod
     def create(cls, submission, user_id, auth_token):
         return request_handler.create_permission(json.dumps(submission), user_id, auth_token)
+
+    def user_display_role(self):
+        print(self.user_role)
+        return get_display_user_role(self.user_role)
 
 
 class PermittedActions:

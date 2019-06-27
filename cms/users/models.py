@@ -33,6 +33,7 @@ class User:
         self.index_overview = None
         self.examinations = []
         self.permissions = []
+        self.permission_objects = []
         if obj_dict:
             self.user_id = obj_dict.get('userId')
             self.first_name = obj_dict.get('firstName')
@@ -41,6 +42,9 @@ class User:
             self.roles = obj_dict.get('role')
             if type(obj_dict.get('permissions')) == list:
                 self.permissions = obj_dict.get('permissions')
+                for permission in self.permissions:
+                    permission_object = Permission(obj_dict=permission)
+                    self.permission_objects.append(permission_object)
             else:
                 self.permitted_actions = PermittedActions(obj_dict.get('permissions'))
 

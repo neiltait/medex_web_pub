@@ -7,14 +7,56 @@
 {% endblock %}
 
 {% block page %}
-<div class="nhsuk-width-container">
-    <div class="nhsuk-grid-row">
-        <h1 class="page-title">
-            {{ managed_user }}
-        </h1>
-    </div>
-    <div class="nhsuk-grid-row nhsuk-heading-l">
-        Current permissions and locations
+<div class="manage-page">
+    <div class="nhsuk-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-heading-xl">
+                    {{ managed_user }}
+                </div>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full nhsuk-heading-l">
+                Current permissions and locations
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                {% for permission in managed_user.permission_objects %}
+               <div> {{ permission.user_display_role }} - {{ permission.location_id }} </div>
+                {% endfor %}
+            </div>
+            <div class="nhsuk-grid-column-one-half">
+                <a href=''>Edit role and permissions</a>
+            </div>
+            <div class="nhsuk-grid-column-one-half">
+                {{ managed_user.location_id }}
+            </div>
+            <div class="nhsuk-grid-column-one-half">
+                <a href=''>Delete</a>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full nhsuk-heading-l">
+                Manage this user
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <a href=''>Add another permission</a>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <a href=''>Suspend</a>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <a href=''>Remove</a>
+            </div>
+        </div>
     </div>
 </div>
 
