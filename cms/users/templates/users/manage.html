@@ -22,20 +22,38 @@
             </div>
         </div>
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-half">
-                {% for permission in managed_user.permission_objects %}
-               <div> {{ permission.user_display_role }} - {{ permission.location_id }} </div>
-                {% endfor %}
+            <div class="nhsuk-grid-column-full">
+
+                <div class="nhsuk-table-responsive">
+                    <table class="nhsuk-table">
+                        <thead class="nhsuk-table__head">
+                        <tr class="nhsuk-table__row">
+                            <th class="nhsuk-table__header" scope="col">Role</th>
+                            <th class="nhsuk-table__header" scope="col">Location</th>
+                            <th class="nhsuk-table__header" scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="nhsuk-table__body">
+                        {% for permission in managed_user.permission_objects %}
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell"> {{ permission.user_display_role }}</td>
+                            <td class="nhsuk-table__cell "> {{ permission.location_id }}</td>
+                            <td class="nhsuk-table__cell ">
+                                <div class="nhsuk-grid-column-one-half">
+                                    <a href=''>Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="nhsuk-grid-column-one-half">
-                <a href=''>Edit role and permissions</a>
-            </div>
+
             <div class="nhsuk-grid-column-one-half">
                 {{ managed_user.location_id }}
             </div>
-            <div class="nhsuk-grid-column-one-half">
-                <a href=''>Delete</a>
-            </div>
+
         </div>
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full nhsuk-heading-l">
@@ -43,17 +61,17 @@
             </div>
         </div>
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-grid-column-one-half link-margin">
                 <a href=''>Add another permission</a>
             </div>
         </div>
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-grid-column-one-half link-margin">
                 <a href=''>Suspend</a>
             </div>
         </div>
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-half">
+            <div class="nhsuk-grid-column-one-half link-margin">
                 <a href=''>Remove</a>
             </div>
         </div>
