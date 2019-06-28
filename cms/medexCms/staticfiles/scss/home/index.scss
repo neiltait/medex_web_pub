@@ -11,7 +11,7 @@ body {
 
     .overview-block {
       border-right: 1px solid $nhs-grey;
-      padding: 0.9rem 2rem;
+      padding: medex-spacing(1) medex-spacing(6);
 
       &:first-of-type {
         border-left: 1px solid $nhs-grey;
@@ -26,9 +26,12 @@ body {
       .overview-body {
         margin: 0;
         font-size: $nhs-heading-xl-size;
+        line-height: $nhs-heading-xl-line-height;
 
         &.location {
+          padding-top: medex-spacing(1);
           font-size: $nhs-heading-m-size;
+          line-height: $nhs-heading-m-line-height;
         }
       }
     }
