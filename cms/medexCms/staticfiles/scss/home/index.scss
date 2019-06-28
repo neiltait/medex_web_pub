@@ -7,11 +7,11 @@ body {
 
 .case-index {
   .index-overview {
-    margin-top: 2rem;
+    margin-top: $medex-spacing-lg;
 
     .overview-block {
       border-right: 1px solid $nhs-grey;
-      padding: medex-spacing(1) medex-spacing(6);
+      padding: $medex-spacing-xs $medex-spacing-lg;
 
       &:first-of-type {
         border-left: 1px solid $nhs-grey;
@@ -29,7 +29,7 @@ body {
         line-height: $nhs-heading-xl-line-height;
 
         &.location {
-          padding-top: medex-spacing(1);
+          padding-top: $medex-spacing-xs;
           font-size: $nhs-heading-m-size;
           line-height: $nhs-heading-m-line-height;
         }
@@ -38,8 +38,8 @@ body {
   }
 
   .filters-block {
-    margin-top: 2rem;
-    margin-bottom: 3rem;
+    margin-top: $medex-spacing-lg;
+    margin-bottom: $medex-spacing-xl;
 
     .nhsuk-select {
         width: 100%
@@ -47,7 +47,7 @@ body {
   }
 
   .sort-block {
-    margin-bottom: 1rem;
+    margin-bottom: $medex-spacing-md;
   }
 
   .page-navigation {
