@@ -21,14 +21,14 @@
       this.tabBlock = new TabBlock(this.wrapper.find('.examination__tab-bar'), this.getHasChanges.bind(this), this.tabChangeModal);
     },
 
-    setupAdditionalNotes() {
+    setupAdditionalNotes: function() {
       var additionalNotesFields = $('.additional-notes');
       for (var i = 0; i < additionalNotesFields.length; i++) {
         new AdditionalNotesSection(additionalNotesFields[i]);
       }
     },
 
-    setupAddRemovePanels() {
+    setupAddRemovePanels: function() {
       var addRemovePanelSection = $('#add-remove-panel-section');
       var consultantCount = $('#consultant-count').val();
       var optionalConsultantCount = consultantCount && parseInt(consultantCount) > 1 ? parseInt(consultantCount) - 1 : 0;
