@@ -6,7 +6,7 @@
             MEO Summary
         </label>
         {% if form.errors.meo_summary_notes %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.meo_summary_notes }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_meo_summary_details">{{ form.errors.meo_summary_notes }}</span>{% endif %}
         <span class="nhsuk-hint">Summarise the key information about this case</span>
         <textarea id="meo_summary_notes" class="nhsuk-textarea" name="meo_summary_notes"
                   rows="6">{{ form.meo_summary_notes }}</textarea>

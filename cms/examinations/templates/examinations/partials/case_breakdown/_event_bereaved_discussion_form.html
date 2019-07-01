@@ -112,7 +112,7 @@
             <div class="nhsuk-grid-row margin-top">
                 {% if form.errors.bereaved_participant_name %}
                     <div class="nhsuk-grid-column-full">
-                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_participant_name }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_details">{{ form.errors.bereaved_participant_name }}</span>
                     </div>
                 {% endif %}
                 <div class="nhsuk-grid-column-one-half">
@@ -232,7 +232,7 @@
                         </legend>
 
                         {% if form.errors.bereaved_time_of_conversation %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_time_of_conversation }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_date">{{ form.errors.bereaved_time_of_conversation }}</span>
                         {% endif %}
                         <div class="nhsuk-date-input margin-top" id="doc-day">
                             <div class="nhsuk-date-input__item">
@@ -324,7 +324,7 @@
                             Details of the discussion?
                         </label>
                         {% if form.errors.bereaved_discussion_details %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_details }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_details">{{ form.errors.bereaved_discussion_details }}</span>
                         {% endif %}
                         <textarea class="nhsuk-textarea medex-textarea"
                                   name="bereaved_discussion_details"
@@ -346,7 +346,7 @@
                                     Outcome
                                 </legend>
                                 {% if form.errors.bereaved_discussion_outcome %}
-                                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_outcome }}</span>
+                                    <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_outcome">{{ form.errors.bereaved_discussion_outcome }}</span>
                                 {% endif %}
                                 <span class="nhsuk-hint" id="outcome-hint">
                                 What was the ultimate outcome of the conversation with the family member or representative?
