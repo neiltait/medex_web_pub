@@ -1,7 +1,8 @@
+@import '../variables';
 
 .medex-form-section {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-top: $medex-spacing-md;
+  padding-bottom: $medex-spacing-md;
 
   &--inverted-background {
     background-color: $white !important;
@@ -13,11 +14,10 @@
 }
 
 .medex-tab-header {
-  margin-top: 1rem;
+  margin-top: $medex-spacing-md;
   margin-bottom: 0 !important;
 }
 
 .expanded-margin {
-    margin-right: 1.25rem;
+    margin-right: medex-spacing(4);
 }
-

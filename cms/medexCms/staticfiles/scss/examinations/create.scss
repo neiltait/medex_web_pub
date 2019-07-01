@@ -4,10 +4,10 @@
 
 .examination {
   &__create {
-    margin-bottom: medex-spacing(8);
+    margin-bottom: $medex-spacing-xl;
 
     #submit-btn {
-        margin-bottom: medex-spacing(8);
+        margin-bottom: $medex-spacing-xl;
     }
   }
 }

@@ -1,11 +1,11 @@
 @import '../variables';
 
 .submit-btn {
-  margin-top: 0.5rem;
+  margin-top: $medex-spacing-sm;
   font-size: $default-font-size;
   background-color: $nhs-green;
   color: $white;
-  padding: 0.4em 0.75em;
+  padding: $medex-spacing-sm $medex-spacing-sm;
   border: 2px solid transparent;
   border-radius: 4px;
 }
@@ -16,12 +16,12 @@
 }
 
 .primary-btn {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  margin-top: $medex-spacing-sm;
+  margin-bottom: $medex-spacing-md;
   font-size: $default-font-size;
   background-color: $nhs-green;
   color: $white;
-  padding: 0.4em 2em;
+  padding: $medex-spacing-sm $medex-spacing-lg;
   border: 2px solid transparent;
   border-radius: 4px;
   text-decoration: none;
@@ -33,7 +33,7 @@
   font-size: $default-font-size;
   background-color: $nhs-grey;
   color: $white;
-  padding: 0.4em 2em;
+  padding: $medex-spacing-sm $medex-spacing-lg;
   border: 2px solid transparent;
   border-radius: 4px;
   text-decoration: none;
