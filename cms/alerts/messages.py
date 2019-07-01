@@ -32,6 +32,12 @@ NOT_PERMITTED_HEADER = 'Not Permitted'
 
 NOT_PERMITTED = 'Your permissions do not allow you to access this page'
 
+NO_ROLES_HEADER = 'No Roles Assigned'
+
+NO_ROLES = 'You do not currently have roles assigned to your account, please contact your service lead to request' \
+           ' assignment'
+
+NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name

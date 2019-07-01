@@ -9,7 +9,7 @@ from examinations.forms import PrimaryExaminationInformationForm, SecondaryExami
     BereavedInformationForm, UrgencyInformationForm, MedicalTeamMembersForm, PreScrutinyEventForm, OtherEventForm, \
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     OutstandingItemsForm, MedicalHistoryEventForm
-from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination
+from examinations.models import PatientDetails, CaseBreakdown, MedicalTeam, CaseOutcome, Examination, PatientHeader
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_login, render_404, redirect_to_examination
@@ -144,6 +144,7 @@ def __post_examination_patient_details(user, post_body, examination, get_body):
             status_code = response.status_code
         else:
             saved = True
+            examination.case_header = PatientHeader(response.json().get("header"))
     else:
         status_code = status.HTTP_400_BAD_REQUEST
 
@@ -204,7 +205,10 @@ def examination_medical_team(request, examination_id):
 
     elif request.method == 'POST':
         # attempt to post and get return form
-        template, context, status_code = __post_medical_team_form(user, medical_team, request.POST)
+        template, context, status_code, redirect_response = __post_medical_team_form(user, medical_team, request.POST, request.GET)
+
+        if redirect_response:
+            return redirect_response
     else:
         # the GET medical team form
         log_unexpected_method(request.method, 'create examination')
@@ -228,7 +232,7 @@ def __get_medical_team_form(user, medical_team):
     return template, context, status_code
 
 
-def __post_medical_team_form(user, medical_team, post_body):
+def __post_medical_team_form(user, medical_team, post_body, get_body):
     template = 'examinations/edit_medical_team.html'
     saved = False
     form = MedicalTeamMembersForm(request=post_body)
@@ -236,13 +240,20 @@ def __post_medical_team_form(user, medical_team, post_body):
 
     if forms_valid:
         response = medical_team.update(form.to_object(), user.auth_token)
-        saved = True
-        status_code = response.status_code
+
+        if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+            return None, None, None, redirect('/cases/%s/%s' % (medical_team.examination_id, get_body.get('nextTab')))
+        elif response.status_code != status.HTTP_200_OK:
+            log_api_error('patient details update', response.text)
+            status_code = response.status_code
+        else:
+            saved = True
+            status_code = response.status_code
     else:
         status_code = status.HTTP_400_BAD_REQUEST
 
     context = __set_medical_team_context(user, medical_team, form, saved)
-    return template, context, status_code
+    return template, context, status_code, None
 
 
 def __set_medical_team_context(user, medical_team, form, saved):
@@ -448,7 +459,6 @@ def __set_examination_case_outcome_context(user, case_outcome):
         'examination_id': case_outcome.examination_id,
         'case_outcome': case_outcome,
         'patient': case_outcome.case_header,
-        'tab_modal': modal_config,
         'enums': enums,
     }
 

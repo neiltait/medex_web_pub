@@ -1,5 +1,5 @@
 <div id="bereaved-discussion" class="event-form{% if form.active %} active{% endif %}">
-    <input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>
+    {% if form.event_id %}<input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>{% endif %}
     <div class="nhs-form-group">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
@@ -17,7 +17,7 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved_rep_type" type="radio"
-                                       value="{{ form.REPRESENTATIVE_TYPE_EXISTING }}"
+                                       value="{{ enums.people.BEREAVED_REP }}"
                                         {% if form.use_existing_bereaved == True %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-existing-rep">
@@ -29,7 +29,7 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-new-rep"
                                        name="bereaved_rep_type"
-                                       type="radio" value="{{ form.REPRESENTATIVE_TYPE_ALTERNATE }}"
+                                       type="radio" value="{{ enums.people.OTHER }}"
                                         {% if form.use_existing_bereaved == False %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-new-rep">
@@ -51,7 +51,7 @@
                 <input type="hidden" name="bereaved_existing_rep_phone_number"
                        value="{{ form.existing_representative.phone_number }}"/>
                 <input type="hidden" name="bereaved_existing_rep_present_at_death"
-                       value="{{ form.existing_representative.present_death }}"/>
+                       value="{{ form.existing_representative.present_at_death }}"/>
                 <input type="hidden" name="bereaved_existing_rep_informed"
                        value="{{ form.existing_representative.informed }}"/>
             {% endif %}
@@ -75,7 +75,7 @@
                                        id="rep-present-at-death">
                                     Present at death
                                 </label>
-                                <p class="nhsuk-body-m">No</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.present_at_death }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -88,7 +88,7 @@
                                        for="rep-phone-number" id="rep-phone-number">
                                     Phone number
                                 </label>
-                                <p class="nhsuk-body-m">07812 345 678</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.phone_number }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -99,7 +99,7 @@
                                        for="rep-informed-of-death" id="rep-informed-of-death">
                                     Informed of death
                                 </label>
-                                <p class="nhsuk-body-m">Yes</p>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.informed }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -135,8 +135,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-1"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_YES }}"
-                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_YES %}checked{% endif %}>
+                                       value="{{ enums.yes_no.YES }}"
+                                       {% if form.alternate_representative.present_at_death == enums.yes_no.YES %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-1">
                                     Yes
                                 </label>
@@ -144,8 +144,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-2"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_NO }}"
-                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_NO %}checked{% endif %}>
+                                       value="{{ enums.yes_no.NO }}"
+                                       {% if form.alternate_representative.present_at_death == enums.yes_no.NO %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-2">
                                     No
                                 </label>
@@ -153,8 +153,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="pad-3"
                                        name="bereaved_alternate_rep_present_at_death" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_UNKNOWN }}"
-                                       {% if form.alternate_representative.present_at_death == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
+                                       value="{{ enums.yes_no.UNKNOWN }}"
+                                       {% if form.alternate_representative.present_at_death == enums.yes_no.UNKNOWN %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="pad-3">
                                     Unknown
                                 </label>
@@ -182,8 +182,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-1"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_YES }}"
-                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_YES %}checked{% endif %}>
+                                       value="{{ enums.yes_no.YES }}"
+                                       {% if form.alternate_representative.informed == enums.yes_no.YES %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-1">
                                     Yes
                                 </label>
@@ -191,8 +191,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-2"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_NO }}"
-                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_NO %}checked{% endif %}>
+                                       value="{{ enums.yes_no.NO }}"
+                                       {% if form.alternate_representative.informed == enums.yes_no.NO %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-2">
                                     No
                                 </label>
@@ -200,8 +200,8 @@
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="informed-3"
                                        name="bereaved_alternate_rep_informed" type="radio"
-                                       value="{{ form.BEREAVED_RADIO_UNKNOWN }}"
-                                       {% if form.alternate_representative.informed == form.BEREAVED_RADIO_UNKNOWN %}checked{% endif %}>
+                                       value="{{ enums.yes_no.UNKNOWN }}"
+                                       {% if form.alternate_representative.informed == enums.yes_no.UNKNOWN %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="informed-3">
                                     Unknown
                                 </label>
@@ -295,9 +295,9 @@
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
                                        name="bereaved_discussion_could_not_happen"
-                                       value="{{ form.BEREAVED_RADIO_YES }}"
+                                       value="{{ enums.true_false.TRUE }}"
                                        type="checkbox"
-                                        {% if form.discussion_could_not_happen == form.BEREAVED_RADIO_YES %}
+                                        {% if form.discussion_could_not_happen == enums.true_false.TRUE %}
                                        checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
                                        for="bereaved_discussion_could_not_happen">

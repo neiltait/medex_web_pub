@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from errors.models import MethodNotAllowedError, NotPermittedError
+from errors.models import MethodNotAllowedError, NotPermittedError, NoRoleError
 
 
 def handle_method_not_allowed_error(request, user):
@@ -49,3 +49,15 @@ def __handle_not_permitted_error(user):
     }
 
     return template, context, result.http_code
+
+
+def handle_no_role_error(request, user):
+    template = 'errors/base_error.html'
+    result = NoRoleError()
+
+    context = {
+        'session_user': user,
+        'error': result
+    }
+
+    return render(request, template, context, status=result.http_code)

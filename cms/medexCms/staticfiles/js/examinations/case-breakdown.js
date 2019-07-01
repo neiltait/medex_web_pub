@@ -143,9 +143,14 @@
         },
         showHideOutcomeDecision() {
             let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
-            if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'MccdCauseOfDeathProvidedByME') {
+            let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'ReferToCoroner') {
+                this.revisedCauseOfDeathPanel.hide();
+            }
+            else if (selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() !== 'MccdCauseOfDeathProvidedByME') {
                 this.revisedCauseOfDeathPanel.show();
-            } else {
+            }
+            else {
                 this.revisedCauseOfDeathPanel.hide();
             }
         },
@@ -159,6 +164,8 @@
                     that.coronerDecisionPanel.show();
                     that.outcomeDecisionPanel.hide();
                 }
+
+                that.showHideOutcomeDecision();
             });
 
             $('input[type=radio][name=qap-discussion-outcome-decision]').change(function () {
@@ -288,7 +295,7 @@
 
         showHideRepTypePanels() {
             let selectedButton = this.form.find('input[name=bereaved_rep_type]:checked');
-            if (selectedButton.val() === 'existing-rep') {
+            if (selectedButton.val() === 'bereaved-representative') {
                 this.repDetails.show();
                 this.repForm.hide();
             } else {

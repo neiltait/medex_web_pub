@@ -1,5 +1,5 @@
 <div id="meo-summary" class="event-form{% if form.active %} active{% endif %}">
-    <input name="meo_summary_id" value="{{ form.event_id }}" hidden>
+    {% if form.event_id %}<input name="meo_summary_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.meo_summary_notes %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label nhsuk-u-font-weight-bold" for="meo_summary_notes">

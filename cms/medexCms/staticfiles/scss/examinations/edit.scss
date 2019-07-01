@@ -59,6 +59,7 @@
       text-align: center;
       text-decoration: none;
 
+
       background-color: $nhs-dark-blue;
       color: $white;
 
@@ -71,8 +72,14 @@
         border: none;
       }
 
+      &:focus {
+        z-index: 1000;
+        border: none;
+      }
+
       &:hover {
-        box-shadow: none !important;
+        text-decoration: underline;
+        box-shadow: 0 0 0 0 $nhs-light-grey !important;
       }
 
       &.active {
@@ -80,7 +87,9 @@
         color: $nhs-dark-blue;
         border-top: 7px solid $nhs-dark-blue;
         padding-top: 13px;
+        text-decoration: none !important;
       }
+
     }
   }
 }
@@ -96,5 +105,5 @@
 }
 
 .success-message {
-    border: 4px solid $nhs-green !important;
+  border: 4px solid $nhs-green !important;
 }

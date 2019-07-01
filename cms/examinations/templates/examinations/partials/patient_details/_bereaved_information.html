@@ -2,6 +2,11 @@
     <div id="first-bereaved" class="bereaved">
         <!-- Representative -->
         <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+            <span class="nhsuk-hint">Enter information regarding the patient's bereaved family or representative handling their affairs.</span>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group {% if errors.bereaved_name_1 %}nhsuk-form-group--error{% endif %}">
@@ -195,7 +200,7 @@
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_1 %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-label" for="appointment_additional_details_1">Enter details below</label>
+                            <label class="nhsuk-hint" for="appointment_additional_details_1">Enter any additional details or context about the bereaved</label>
 
 
                             {% if errors.appointment_additional_details_1 %}
@@ -410,7 +415,7 @@
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_2 %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-label" for="appointment_additional_details_2">Enter details below</label>
+                            <label class="nhsuk-hint" for="appointment_additional_details_2">Enter any additional details or context about the bereaved</label>
 
 
                             {% if errors.appointment_additional_details_2 %}
@@ -429,7 +434,7 @@
 
     <div class="flex-row">
         <div id="add-another-btn" class="nhsuk-button">
-            Add another
+            Add a person
         </div>
 
         <div id="remove-btn" class="nhsuk-button nhsuk-button--secondary">

@@ -1,5 +1,6 @@
 from alerts import messages
-from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE, DEATH_IS_NOT_AFTER_BIRTH, ErrorFieldTooLong, \
+    NHS_NUMBER_ERROR
 from examinations.models import MedicalTeamMember, CauseOfDeathProposal, CaseQapDiscussionEvent
 from medexCms.api import enums
 from medexCms.utils import validate_date, API_DATE_FORMAT, NONE_DATE, build_date, fallback_to, validate_date_time_field, \
@@ -9,6 +10,8 @@ from people.models import BereavedRepresentative
 
 class PrimaryExaminationInformationForm:
     CREATE_AND_CONTINUE_FLAG = 'create-and-continue'
+    NHS_MIN_LENGTH = 10
+    NHS_MAX_LENGTH = 13
 
     def __init__(self, request=None):
         self.initialise_errors()
@@ -151,11 +154,20 @@ class PrimaryExaminationInformationForm:
             self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
             self.errors["count"] += 1
 
+        # check if nhs number group has content
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
             self.errors["nhs_number"] = ErrorFieldRequiredMessage("NHS number")
             self.errors["count"] += 1
+
+        elif not self.nhs_number_not_known:
+            # case - nhs number is entered
+            if self.nhs_number and len(self.nhs_number) >= self.NHS_MIN_LENGTH and len(self.nhs_number) <= self.NHS_MAX_LENGTH:
+                pass
+            else:
+                self.errors["nhs_number"] = NHS_NUMBER_ERROR
+                self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.time_of_death], self.time_of_death_not_known
@@ -959,7 +971,7 @@ class QapDiscussionEventForm:
     def __calculate_discussion_outcome_radio_button_combination(self, draft):
         api_outcome = draft.qap_discussion_outcome
         if api_outcome is not None:
-            if api_outcome == enums.outcomes.CORONER:
+            if api_outcome in [enums.outcomes.CORONER_INVESTIGATION, enums.outcomes.CORONER_100A]:
                 self.outcome = enums.outcomes.CORONER
                 self.coroner_decision = api_outcome
                 self.outcome_decision = ""
@@ -1219,8 +1231,6 @@ class AdmissionNotesEventForm:
 
 class BereavedDiscussionEventForm:
     # constants
-    REPRESENTATIVE_TYPE_EXISTING = 'existing-rep'
-    REPRESENTATIVE_TYPE_ALTERNATE = 'alternate-rep'
 
     BEREAVED_OUTCOME_NO_CONCERNS = 'no concerns'
     BEREAVED_OUTCOME_CONCERNS = 'concerns'
@@ -1228,10 +1238,6 @@ class BereavedDiscussionEventForm:
     BEREAVED_CONCERNED_OUTCOME_CORONER = 'coroner'
     BEREAVED_CONCERNED_OUTCOME_100A = '100a'
     BEREAVED_CONCERNED_OUTCOME_ADDRESSED = 'addressed'
-
-    BEREAVED_RADIO_YES = 'yes'
-    BEREAVED_RADIO_NO = 'no'
-    BEREAVED_RADIO_UNKNOWN = 'unknown'
 
     REQUEST_OUTCOME_NO_CONCERNS = "CauseOfDeathAccepted"
     REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
@@ -1276,7 +1282,7 @@ class BereavedDiscussionEventForm:
 
     def __init_representatives(self, representatives):
         self.existing_representative = representatives[0]
-        self.discussion_representative_type = self.REPRESENTATIVE_TYPE_EXISTING
+        self.discussion_representative_type = enums.people.BEREAVED_REP
         self.use_existing_bereaved = True
 
     def __init_representatives_from_draft(self, form_data):
@@ -1289,9 +1295,9 @@ class BereavedDiscussionEventForm:
         self.__set_use_existing_bereaved()
 
     def __set_use_existing_bereaved(self):
-        if self.discussion_representative_type == self.REPRESENTATIVE_TYPE_EXISTING:
+        if self.discussion_representative_type == enums.people.BEREAVED_REP:
             self.use_existing_bereaved = True
-        elif self.discussion_representative_type == self.REPRESENTATIVE_TYPE_ALTERNATE:
+        elif self.discussion_representative_type == enums.people.OTHER:
             self.use_existing_bereaved = False
         elif self.existing_representative:
             self.use_existing_bereaved = True
@@ -1332,7 +1338,7 @@ class BereavedDiscussionEventForm:
         self.year_of_conversation = fallback_to(form_data.get('bereaved_year_of_conversation'), '')
         self.time_of_conversation = fallback_to(form_data.get('bereaved_time_of_conversation'), '')
         self.discussion_could_not_happen = True if form_data.get(
-            'bereaved_discussion_could_not_happen') == self.BEREAVED_RADIO_YES else False
+            'bereaved_discussion_could_not_happen') == enums.true_false.TRUE else False
 
     def is_valid(self):
         self.errors = {'count': 0}
@@ -1432,14 +1438,14 @@ class BereavedDiscussionEventForm:
             })
         if draft_participant is None:
             if self.existing_representative is not None:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+                self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.discussion_representative_type = enums.people.OTHER
         else:
             if draft_participant.equals(self.existing_representative):
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING
+                self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_ALTERNATE
+                self.discussion_representative_type = enums.people.OTHER
                 self.alternate_representative = draft_participant
 
         self.__set_use_existing_bereaved()
@@ -1495,7 +1501,7 @@ class BereavedDiscussionEventForm:
         return None
 
     def __participant_for_request(self):
-        if self.discussion_representative_type == BereavedDiscussionEventForm.REPRESENTATIVE_TYPE_EXISTING:
+        if self.discussion_representative_type == enums.people.BEREAVED_REP:
             return self.existing_representative
         else:
             return self.alternate_representative

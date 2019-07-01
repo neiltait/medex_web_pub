@@ -3,36 +3,39 @@
 {% load staticfiles %}
 
 {% block tab_css %}
-    <link href="{% sass_src 'scss/examinations/patient_details.scss' %}" rel="stylesheet" type="text/css">
+<link href="{% sass_src 'scss/examinations/patient_details.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block tab_js %}
-    <script src="{% static 'js/examinations/partials/examination-change-tab-modal.js' %}"></script>
-    <script src="{% static 'js/examinations/partials/tab-block.js' %}"></script>
-    <script src="{% static 'js/examinations/partials/additional-notes-section.js' %}"></script>
-    <script src="{% static 'js/examinations/partials/add-remove-panel.js' %}"></script>
-    <script src="{% static 'js/examinations/partials/input.js' %}"></script>
-    <script src="{% static 'js/examinations/patient-details.js' %}"></script>
-    <script src="{% static 'js/examinations/primary-information-form.js' %}"></script>
-    <script src="{% static 'js/examinations/secondary-info-form.js' %}"></script>
-    <script src="{% static 'js/examinations/bereaved-info-form.js' %}"></script>
+<script src="{% static 'js/examinations/partials/examination-change-tab-modal.js' %}"></script>
+<script src="{% static 'js/examinations/partials/tab-block.js' %}"></script>
+<script src="{% static 'js/examinations/partials/additional-notes-section.js' %}"></script>
+<script src="{% static 'js/examinations/partials/add-remove-panel.js' %}"></script>
+<script src="{% static 'js/examinations/partials/input.js' %}"></script>
+<script src="{% static 'js/examinations/patient-details.js' %}"></script>
+<script src="{% static 'js/examinations/primary-information-form.js' %}"></script>
+<script src="{% static 'js/examinations/secondary-info-form.js' %}"></script>
+<script src="{% static 'js/examinations/bereaved-info-form.js' %}"></script>
 {% endblock %}
 
 {% block tab_content %}
-    <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
-          action="{% url 'edit_examination' examination_id=examination_id %}/patient-details" method="post"
-          data-error-count="{{ error_count }}">
-        {% csrf_token %}
+<form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
+      action="{% url 'edit_examination' examination_id=examination_id %}/patient-details" method="post"
+      data-error-count="{{ error_count }}" autocomplete="off">
+    <input type="text" style="display:none">
 
-        <div class="form-tab" id="patient-details-section">
-            {% include "examinations/partials/_patient_details.html" %}
-        </div>
 
-        <div class="sticky-save">
-            <div class="container">
-                <input class="submit-btn" type="submit" value="Save changes"/>
-            </div>
+    {% csrf_token %}
+
+    <div class="form-tab" id="patient-details-section">
+        {% include "examinations/partials/_patient_details.html" %}
+    </div>
+
+    <div class="sticky-save">
+        <div class="container">
+            <input class="submit-btn" type="submit" value="Save changes"/>
         </div>
-    </form>
+    </div>
+</form>
 {% endblock %}
 

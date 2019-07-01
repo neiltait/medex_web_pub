@@ -10,6 +10,7 @@
             margin-bottom: 140px;
             border: none;
             box-shadow: none;
+            background-color: transparent;
 
             .okta-sign-in-header.auth-header {
                 border: none;
@@ -33,6 +34,10 @@
                 .button-primary {
                     @extend .submit-btn;
                     background: $nhs-green;
+                }
+
+                .link, label {
+                    color: $black;
                 }
             }
         }
