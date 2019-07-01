@@ -16,11 +16,3 @@ services:
       - ./cms:/code
     ports:
       - "12000:8000"
-    
-  api:
-    build: ./mock_api
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./mock_api:/code
-    ports:
-      - "9000:8000"
