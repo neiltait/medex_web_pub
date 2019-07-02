@@ -82,11 +82,15 @@ class EditExaminationView(View):
 
 class EditExaminationSectionBaseView(View):
 
+    def __init__(self):
+        self.examination = None
+        self.error = None
+
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -94,8 +98,8 @@ class EditExaminationSectionBaseView(View):
         else:
             log_internal_error('EditExaminationSectionBaseView section load', 'Unknown examination section requested')
 
-        if self.examination is None:
-            return render_404(request, self.user, self.examination_section)
+        if self.error is not None:
+            return render_error(request, self.user, self.error)
 
         return super().dispatch(request, *args, **kwargs)
 
