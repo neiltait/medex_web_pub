@@ -52,9 +52,9 @@ def update_medical_team(examination_id, submission, auth_token):
 
 def load_modes_of_disposal(auth_token):
     if settings.LOCAL:
-        return DatatypeMocks.get_modes_of_disposal_list()
+        return DatatypeMocks.get_successful_modes_of_disposal_list_response()
     else:
-        return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()
+        return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL)
 
 
 def load_case_breakdown_by_id(examination_id, auth_token):

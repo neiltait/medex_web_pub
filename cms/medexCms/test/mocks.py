@@ -1739,3 +1739,10 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
+
+    @classmethod
+    def get_successful_modes_of_disposal_list_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_modes_of_disposal_list()).encode('utf-8')
+        return response
