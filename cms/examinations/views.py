@@ -121,7 +121,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.bereaved_form = BereavedInformationForm().set_values_from_instance(self.examination)
         self.urgency_form = UrgencyInformationForm().set_values_from_instance(self.examination)
 
-        context = self.__set_patient_details_context(False)
+        context = self._set_patient_details_context(False)
 
         return render(request, self.template, context, status=status_code)
 
@@ -138,7 +138,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.examination.set_values_from_forms(self.primary_form, self.secondary_form, self.bereaved_form,
                                                self.urgency_form)
 
-        forms_valid = self.__validate_patient_details_forms()
+        forms_valid = self._validate_patient_details_forms()
 
         if forms_valid:
             submission = self.primary_form.to_object()
@@ -160,11 +160,11 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_patient_details_context(saved)
+        context = self._set_patient_details_context(saved)
 
         return render(request, self.template, context, status=status_code)
 
-    def __set_patient_details_context(self, saved):
+    def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
         error_count = self.primary_form.error_count + self.secondary_form.error_count + \
             self.bereaved_form.error_count + self.urgency_form.error_count
@@ -184,7 +184,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             "saved": saved,
         }
 
-    def __validate_patient_details_forms(self):
+    def _validate_patient_details_forms(self):
         return self.primary_form.is_valid() and self.secondary_form.is_valid() \
             and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
@@ -200,7 +200,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         form = MedicalTeamMembersForm(medical_team=self.examination)
 
-        context = self.__set_context(form, False)
+        context = self._set_context(form, False)
 
         return render(request, self.template, context, status=status_code)
 
@@ -224,10 +224,10 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_context(form, saved)
+        context = self._set_context(form, saved)
         return render(request, self.template, context, status=status_code)
 
-    def __set_context(self, form, saved):
+    def _set_context(self, form, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
