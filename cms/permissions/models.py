@@ -1,6 +1,7 @@
 import json
 
 from examinations.constants import get_display_short_user_role, get_display_user_role
+from medexCms.utils import fallback_to
 from permissions import request_handler
 
 
@@ -16,6 +17,7 @@ class Permission:
         self.permission_id = obj_dict.get("permissionId")
         self.user_id = obj_dict.get("userId")
         self.location_id = obj_dict.get("locationId")
+        self.location_name = fallback_to(obj_dict.get("locationName"), self.location_id)
         self.user_role = obj_dict.get("userRole")
 
     @property

@@ -37,7 +37,7 @@
                         {% for permission in managed_user.permission_objects %}
                         <tr class="nhsuk-table__row">
                             <td class="nhsuk-table__cell"> {{ permission.user_display_role }}</td>
-                            <td class="nhsuk-table__cell "> {{ permission.location_id }}</td>
+                            <td class="nhsuk-table__cell "> {{ permission.location_name }}</td>
                             <td class="nhsuk-table__cell ">
                                 <div class="nhsuk-grid-column-one-half">
                                     <a href=''>Delete</a>
