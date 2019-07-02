@@ -34,7 +34,7 @@
 }
 
 .case-header {
-  margin-bottom: 3rem;
+  margin-bottom: $medex-spacing-xl;
 
   .patient-name {
     font-size: $nhs-heading-l-size;
@@ -79,16 +79,16 @@
         border-right: 2px solid $white;
       }
 
+      &:last-of-type {
+        border: none;
+      }
+
       &.active {
         background-color: $white;
         color: $nhs-dark-blue;
         border-top: $medex-spacing-xs solid $nhs-dark-blue;
         padding-top: calc(#{$medex-spacing-md} - #{$medex-spacing-xs});
         text-decoration: none !important;
-      }
-
-      &:last-of-type {
-        border: none;
       }
     }
   }
@@ -100,8 +100,8 @@
 }
 
 #confirm-message {
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
+  padding-top: $medex-spacing-md;
+  padding-bottom: $medex-spacing-md;
 }
 
 .success-message {
