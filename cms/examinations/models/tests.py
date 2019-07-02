@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
-from examinations.models.core import ExaminationOverview
+from errors.models import GenericError
+from examinations.forms.patient_details import PrimaryExaminationInformationForm
+from examinations.models.core import ExaminationOverview, Examination
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent
 from examinations.templatetags.examination_filters import case_card_presenter
-from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks
+from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 
@@ -12,9 +15,22 @@ from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 class ExaminationsCoreModelsTests(MedExTestCase):
     # Examination tests
 
-    def test_examination_placeholder(self):
-        # Need to implement tests for the examination model
-        pass
+    def test_examination_create_returns_an_examination_object_if_creation_succeeds(self):
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form = PrimaryExaminationInformationForm(form_data)
+        examination, error = Examination.create(form.to_object(), SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(examination)
+        self.assertEquals(type(examination), Examination)
+
+    @patch('examinations.request_handler.post_new_examination', return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
+    def test_examination_create_returns_an_error_object_if_creation_fails(self, mock_examination_creation):
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form = PrimaryExaminationInformationForm(form_data)
+        examination, error = Examination.create(form.to_object(), SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(examination)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), GenericError)
 
     # ExaminationOverview tests
 

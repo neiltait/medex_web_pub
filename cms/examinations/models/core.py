@@ -83,7 +83,6 @@ class Examination:
             error = GenericError(response, {"action": "create", "type": "case"})
 
         return examination, error
-        # return request_handler.post_new_examination(submission, auth_token)
 
 
 class ExaminationOverview:
