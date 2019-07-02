@@ -28,6 +28,10 @@ class Permission:
     def create(cls, submission, user_id, auth_token):
         return request_handler.create_permission(json.dumps(submission), user_id, auth_token)
 
+    @classmethod
+    def delete(cls, user_id, permission_id, auth_token):
+        return request_handler.delete_permission(permission_id, user_id, auth_token)
+
     def user_display_role(self):
         print(self.user_role)
         return get_display_user_role(self.user_role)

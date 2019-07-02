@@ -1,3 +1,4 @@
+from django.views import View
 from rest_framework import status
 from django.shortcuts import render, redirect
 
@@ -5,6 +6,7 @@ from errors.utils import log_api_error
 from locations.models import Location
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
+from permissions.models import Permission
 from users.views import ManageUserBaseView
 
 
@@ -62,3 +64,16 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
             'national': national,
             'managed_user': self.managed_user,
         }
+
+
+class DeletePermissionView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_delete_user_permission'
+
+    def get(self, request, user_id, permission_id):
+        Permission.delete(user_id, permission_id, auth_token=self.user.auth_token)
+
+        return self.__redirect_to_manage_user(user_id)
+
+    def __redirect_to_manage_user(self, user_id):
+        return redirect('/users/%s/manage' % user_id)
+

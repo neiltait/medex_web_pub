@@ -305,6 +305,13 @@ class PermissionMocks:
         response._content = json.dumps(None).encode('utf-8')
         return response
 
+    @classmethod
+    def get_successful_permission_delete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'permissionId': cls.PERMISSION_ID}).encode('utf-8')
+        return response
+
 
 class LocationsMocks:
 
