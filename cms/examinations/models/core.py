@@ -152,17 +152,18 @@ class CauseOfDeathProposal:
         self.section_1c = ''
         self.section_2 = ''
 
-    def to_object(self):
-        return {
-            'medical_examiner': get_user_presenter(self.medical_examiner),
-            'creation_date': self.creation_date,
-            'qap': get_medical_team_member_presenter(self.qap),
-            'status': self.status,
-            'section_1a': self.section_1a,
-            'section_1b': self.section_1b,
-            'section_1c': self.section_1c,
-            'section_2': self.section_2
-        }
+    # TODO confirm this function is unneeded
+    # def to_object(self):
+    #     return {
+    #         'medical_examiner': get_user_presenter(self.medical_examiner),
+    #         'creation_date': self.creation_date,
+    #         'qap': get_medical_team_member_presenter(self.qap),
+    #         'status': self.status,
+    #         'section_1a': self.section_1a,
+    #         'section_1b': self.section_1b,
+    #         'section_1c': self.section_1c,
+    #         'section_2': self.section_2
+    #     }
 
     def display_date(self):
         if self.creation_date:

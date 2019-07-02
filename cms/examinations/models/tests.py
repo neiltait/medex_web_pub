@@ -3,13 +3,13 @@ from unittest.mock import patch
 
 from errors.models import GenericError
 from examinations.forms.patient_details import PrimaryExaminationInformationForm
-from examinations.models.core import ExaminationOverview, Examination
+from examinations.models.core import ExaminationOverview, Examination, CauseOfDeathProposal
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent
 from examinations.templatetags.examination_filters import case_card_presenter
 from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
+from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT_4
 
 
 class ExaminationsCoreModelsTests(MedExTestCase):
@@ -172,6 +172,33 @@ class ExaminationsCoreModelsTests(MedExTestCase):
         case_overview_data['open'] = False
         case_overview = ExaminationOverview(case_overview_data)
         self.assertIsFalse(case_overview.urgent())
+
+    # CauseOfDeathProposal tests
+
+    def test_cause_of_death_proposal_display_date_returns_none_if_no_creation_date(self):
+        cause_of_death = CauseOfDeathProposal()
+        display_date = cause_of_death.display_date()
+        self.assertIsNone(display_date)
+
+    def test_cause_of_death_proposal_display_date_returns_date_and_time_if_created_more_than_a_day_ago(self):
+        cause_of_death = CauseOfDeathProposal()
+        cause_of_death.creation_date = "2019-01-02T10:00:00"
+        display_date = cause_of_death.display_date()
+        self.assertEquals(display_date, "02.01.2019 at 10:00")
+
+    def test_cause_of_death_proposal_display_date_returns_yesterday_and_time_if_created_one_day_ago(self):
+        cause_of_death = CauseOfDeathProposal()
+        yesterday = datetime.today().date() - timedelta(days=1)
+        cause_of_death.creation_date = yesterday.strftime(API_DATE_FORMAT_4)
+        display_date = cause_of_death.display_date()
+        self.assertEquals(display_date, "Yesterday at %s" % yesterday.strftime(cause_of_death.time_format))
+
+    def test_cause_of_death_proposal_display_date_returns_today_and_time_if_created_today(self):
+        cause_of_death = CauseOfDeathProposal()
+        yesterday = datetime.today().date()
+        cause_of_death.creation_date = yesterday.strftime(API_DATE_FORMAT_4)
+        display_date = cause_of_death.display_date()
+        self.assertEquals(display_date, "Today at %s" % yesterday.strftime(cause_of_death.time_format))
 
 
 class ExaminationsPatientDetailsModelsTests(MedExTestCase):
