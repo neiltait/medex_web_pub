@@ -6,10 +6,6 @@ from medexCms.models import MedexRequest
 from medexCms.test.mocks import ExaminationMocks, DatatypeMocks
 
 
-def get_coroner_statuses_list():
-    return [{'status': 'blocked'}]
-
-
 def post_new_examination(examination_object, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_creation_response()
