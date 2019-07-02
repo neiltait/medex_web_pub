@@ -1,6 +1,6 @@
 from rest_framework import status
 
-from errors.utils import handle_error
+from errors.utils import handle_error, logger, log_unexpected_api_response
 from examinations import request_handler
 from examinations.models.core import CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam
@@ -52,11 +52,13 @@ class ExaminationEventList:
 
     def parse_events(self, timeline_items, patient_name, user_role):
         for key, event_type in timeline_items.items():
-            if key == enums.timeline_event_types.INITIAL_EVENT_TYPE and event_type:
+            if key == enums.timeline_event_keys.INITIAL_EVENT_KEY and event_type:
                 self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
-            elif key == enums.timeline_event_types.CASE_CLOSED_TYPE and event_type:
+
+            elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
                 self.events.append(CaseClosedEvent(event_type, patient_name, user_role))
-            elif event_type:
+
+            elif key in enums.timeline_event_keys.all() and event_type:
                 for event in event_type['history']:
                     if event['isFinal']:
                         self.events.append(CaseEvent.parse_event(event, event_type['latest']['eventId'], self.dod))
@@ -67,6 +69,8 @@ class ExaminationEventList:
                     latest_id = event_type['latest']['eventId']
                     self.latests[CaseEvent.EVENT_TYPES[key]] = CaseEvent.parse_event(event_type['latest'], latest_id,
                                                                                      None)
+            elif event_type:
+                log_unexpected_api_response("case_breakdown.parse_events", "event_type", key)
 
     def sort_events_oldest_to_newest(self):
         self.events.sort(key=lambda event: event.created_date, reverse=False)

@@ -116,7 +116,7 @@ class CaseClosedEvent(CaseEvent):
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
         self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = user_role
+        self.user_role = obj_dict.get('usersRole')
         self.created_date = obj_dict.get('created')
         self.date_case_closed = obj_dict.get('dateCaseClosed')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
