@@ -9,7 +9,7 @@ from people.models import BereavedRepresentative
 class PatientDetails:
 
     def __init__(self, obj_dict={}, modes_of_disposal={}, examination_id=None):
-        from examinations.models.core import PatientHeader
+        from examinations.presenters.core import PatientHeader
 
         self.modes_of_disposal = modes_of_disposal
 

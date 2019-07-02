@@ -13,7 +13,8 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
 from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.models.case_breakdown import CaseBreakdown
 from examinations.models.case_outcomes import CaseOutcome
-from examinations.models.core import Examination, PatientHeader
+from examinations.models.core import Examination
+from examinations.presenters.core import PatientHeader
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
@@ -29,7 +30,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request):
         status_code = status.HTTP_200_OK
-        context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False)
+        context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False, None)
         return render(request, self.template, context, status=status_code)
 
     def post(self, request):

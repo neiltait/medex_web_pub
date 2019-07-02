@@ -1,6 +1,6 @@
 from rest_framework import status
 
-from errors.utils import handle_error, logger, log_unexpected_api_response
+from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
 from examinations.models.core import CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam
@@ -11,7 +11,7 @@ from medexCms.api import enums
 class CaseBreakdown:
 
     def __init__(self, obj_dict, medical_team):
-        from examinations.models.core import PatientHeader
+        from examinations.presenters.core import PatientHeader
 
         self.case_header = PatientHeader(obj_dict.get("header"))
 

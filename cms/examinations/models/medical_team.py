@@ -9,7 +9,7 @@ from medexCms.utils import fallback_to
 class MedicalTeam:
 
     def __init__(self, obj_dict, examination_id):
-        from examinations.models.core import PatientHeader
+        from examinations.presenters.core import PatientHeader
 
         self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
