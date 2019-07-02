@@ -1,5 +1,6 @@
 from rest_framework import status
 
+from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
 
@@ -49,14 +50,16 @@ class MedicalTeam:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_medical_team_by_id(examination_id, auth_token)
+        medical_team = None
+        error = None
 
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            return MedicalTeam(response.json(), examination_id)
+        if response.ok:
+            medical_team = MedicalTeam(response.json(), examination_id)
         else:
             log_api_error('medical team load', response.text)
-            return None
+            error = GenericError(response, {"action": "loading", "type": "medical team"})
+
+        return medical_team, error
 
     def update(self, submission, auth_token):
         return request_handler.update_medical_team(self.examination_id, submission, auth_token)

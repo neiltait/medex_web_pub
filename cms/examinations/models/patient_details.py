@@ -1,5 +1,6 @@
 from rest_framework import status
 
+from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
 from medexCms.utils import fallback_to, bool_to_string, is_empty_time, is_empty_date, parse_datetime
@@ -174,15 +175,20 @@ class PatientDetails:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
+        patient_details = None
+        error = None
 
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
-            return PatientDetails(response.json(), modes_of_disposal, examination_id)
+        if response.ok:
+            modes_of_disposal_response = request_handler.load_modes_of_disposal(auth_token)
+            if modes_of_disposal_response.ok:
+                patient_details = PatientDetails(response.json(), modes_of_disposal_response.json(), examination_id)
+            else:
+                log_api_error('modes of disposal load', modes_of_disposal_response.text)
+                error = GenericError(modes_of_disposal_response, {"action": "loading", "type": "modes of disposal"})
         else:
             log_api_error('patient details load', response.text)
-            return None
+            error = GenericError(response, {"action": "loading", "type": "patient details"})
+        return patient_details, error
 
     @classmethod
     def update(cls, examination_id, submission, auth_token):
