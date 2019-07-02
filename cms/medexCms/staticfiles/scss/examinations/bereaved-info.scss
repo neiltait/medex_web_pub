@@ -4,7 +4,7 @@
   .bereaved {
     display: none;
     border-top: 1px solid $nhs-grey;
-    padding-top: 1.5rem;
+    padding-top: $medex-spacing-lg;
 
     &:first-of-type {
       border-top: none;
@@ -12,7 +12,7 @@
   }
 
   #add-another-btn {
-    margin-right: 2rem;
+    margin-right: $medex-spacing-lg;
   }
 
   #remove-btn {

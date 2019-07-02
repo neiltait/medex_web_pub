@@ -3,11 +3,11 @@
 @import './partials/case_breakdown_forms';
 
 #case-breakdown-section {
-  margin: 4rem 2rem 300px;
+  margin: $medex-spacing-xl $medex-spacing-lg 300px;
 
   .section-title {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 
     font-size: $nhs-heading-xl-size;
     line-height: $nhs-heading-xl-line-height;
@@ -23,7 +23,7 @@
 }
 
 #submit-btn {
-  margin-right: 1.25rem;
+  margin-right: $medex-spacing-md;
   width: 15.79rem;
 }
 
@@ -31,59 +31,58 @@
   width: 15.79rem;
 }
 
-
 .case-breakdown-form-group {
-  margin-bottom: 5rem;
+  margin-bottom: $medex-spacing-xl;
 }
 
 .more-detail {
-  margin-top: 1.25rem;
-  margin-bottom: 5rem;
+  margin-top: $medex-spacing-md;
+  margin-bottom: $medex-spacing-xl;
 }
 
 .inset-text-panel {
   padding-top: 0rem;
-  padding-left: 2rem;
+  padding-left: $medex-spacing-lg;
   border-left: $nhs-light-grey 3px solid;
 }
 
 #pre-scrutiny {
 
   .margin-bottom {
-    margin-bottom: 7rem;
+    margin-bottom: $medex-spacing-xl;
   }
 
   .text-area-margin {
-    margin-top: 1rem;
+    margin-top: $medex-spacing-md;
   }
 
   .disclaimer-margin {
-    margin-bottom: 4rem;
+    margin-bottom: $medex-spacing-xl;
   }
 }
 
 #bereaved-discussion {
 
   .margin-bottom {
-    margin-bottom: 1rem;
+    margin-bottom: $medex-spacing-md;
   }
 
   .margin-top {
-    margin-top: 1.25rem;
+    margin-top: $medex-spacing-md;
   }
 
   .margin-save-button {
-    margin-bottom: 7rem;
+    margin-bottom: $medex-spacing-xl;
   }
 
   .margin-time {
-    margin-bottom: 2rem;
+    margin-bottom: $medex-spacing-lg;
   }
 }
 
 #bereavement-discussion__save-buttons {
   #submit-btn {
-    margin-right: 1.25rem;
+    margin-right: $medex-spacing-md;
     width: 15.79rem;
   }
 
@@ -92,8 +91,8 @@
   }
 
   #more-detail {
-    margin-top: 1.25rem;
-    margin-bottom: 5rem;
+    margin-top: $medex-spacing-md;
+    margin-bottom: $medex-spacing-xl;
   }
 
 }
@@ -101,11 +100,11 @@
 #qap-discussion {
 
     .margin-bottom {
-        margin-bottom: 1rem;
+        margin-bottom: $medex-spacing-md;
     }
 
     .margin-section {
-        margin-top: 3rem;
+        margin-top: $medex-spacing-xl;
     }
 
 }

@@ -3,8 +3,8 @@
 .cause-of-death-expandable {
 
   .expandable-header {
-    padding: 1.5rem 2rem .5rem 2rem;
-    margin-bottom: 1rem;
+    padding: $medex-spacing-md $medex-spacing-lg 0;
+    margin-bottom: $medex-spacing-md;
     color: $white;
     background-color: $nhs-blue;
 
@@ -16,7 +16,7 @@
         background: url("/static/images/chevron_down_white.svg") no-repeat;
         height: 1rem;
         width: 2rem;
-        margin-top: .5rem;
+        margin-top: $medex-spacing-sm;
 
         &:hover {
           background: url("/static/images/hollow_blue_chevron_down.svg") no-repeat;
@@ -28,7 +28,7 @@
         background: url("/static/images/chevron_up.svg") no-repeat;
         height: 1rem;
         width: 2rem;
-        margin-top: .5rem;
+        margin-top: $medex-spacing-sm;
 
         &:hover {
           background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
@@ -57,8 +57,8 @@
     display: none;
     background: $nhs-pale-grey;
     color: $black;
-    padding: 1.5rem 2rem;
-    margin-bottom: 1rem;
+    padding: $medex-spacing-lg;
+    margin-bottom: $medex-spacing-md;
 
     textarea {
       background: $nhs-very-light-grey;
