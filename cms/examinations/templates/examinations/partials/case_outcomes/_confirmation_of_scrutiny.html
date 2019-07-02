@@ -17,7 +17,7 @@
     </p>
 
     {% if not case_outcome.scrutiny_confirmed %}
-        <form id="scrutiny-form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+        <form id="scrutiny-form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
               method="post">
             {% csrf_token %}
 

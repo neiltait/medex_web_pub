@@ -56,13 +56,17 @@ Form.prototype = {
 
         this.initialiseFormWithData();
 
+        new AgeCalculator(this.form.find("#age-at-death__label"), "age_at_death__label--unknown",
+            this.form.find("#day_of_birth"), this.form.find("#month_of_birth"), this.form.find("#year_of_birth"),
+            this.form.find("#day_of_death"), this.form.find("#month_of_death"), this.form.find("#year_of_death"))
+
     },
-    initialiseFormWithData: function() {
-        for(inputGroup of this.inputGroups) {
+    initialiseFormWithData: function () {
+        for (inputGroup of this.inputGroups) {
             inputGroup.enabledOrDisable();
         }
 
-        if(this.hospitalNumber3Textbox.val() !== '') {
+        if (this.hospitalNumber3Textbox.val() !== '') {
             this.visibleHospitalNumbers = 3
         } else if (this.hospitalNumber2Textbox.val() !== '') {
             this.visibleHospitalNumbers = 2
@@ -85,18 +89,18 @@ Form.prototype = {
         // });
     },
     makeHospitalNumbersVisible: function () {
-        if(this.visibleHospitalNumbers >= 2) {
+        if (this.visibleHospitalNumbers >= 2) {
             this.hospitalNumber1Label.html("Hospital Number 1");
             this.hospitalNumber2.removeClass("medex-hidden")
         }
-        if(this.visibleHospitalNumbers === 3) {
+        if (this.visibleHospitalNumbers === 3) {
             this.hospitalNumber3.removeClass("medex-hidden");
             this.hospitalNumberAddBtn.addClass("medex-hidden");
         }
     },
     setupHospitalNumberAddBtn: function () {
         var that = this;
-        this.hospitalNumberAddBtn.click(function(event) {
+        this.hospitalNumberAddBtn.click(function (event) {
             event.preventDefault();
 
             that.visibleHospitalNumbers += 1;
@@ -126,9 +130,9 @@ Form.prototype = {
         var that = this;
 
         if (this.genderRadioButtons[2].checked) {
-          that.genderDetailArea.show()
+            that.genderDetailArea.show()
         } else {
-          that.genderDetailArea.hide()
+            that.genderDetailArea.hide()
         }
 
         this.genderRadioButtons.change(
@@ -148,7 +152,7 @@ Form.prototype = {
         this.meOfficeSelect.change(this.validateAndHighlightMeOffice.bind(this));
     },
     validateGenderRadioButtons: function () {
-      return this.genderMale[0].checked || this.genderFemale[0].checked || this.genderOther[0].checked
+        return this.genderMale[0].checked || this.genderFemale[0].checked || this.genderOther[0].checked
     },
     validateAndHighlightMeOffice: function () {
         if (!this.showValidation || this.validateMeOffice()) {
@@ -170,7 +174,7 @@ Form.prototype = {
     validateMeOffice: function () {
         return this.meOfficeSelect.val();
     },
-    validateAndHighlightGenderRadioButtons: function() {
+    validateAndHighlightGenderRadioButtons: function () {
         if (!this.showValidation || this.validateGenderRadioButtons()) {
             this.genderMale.removeClass("error");
             this.genderFemale.removeClass("error");
@@ -212,11 +216,11 @@ Form.prototype = {
             inputGroup.showValidation = true;
         }
     },
-    showFormError: function() {
+    showFormError: function () {
         this.errorAlert.removeClass("medex-hidden");
         window.scrollTo(0, 0);
     },
-    highlightAllErrors: function() {
+    highlightAllErrors: function () {
         this.inputGroups[0].validateAndHighlightTextInputsCheckboxGroup();
         this.inputGroups[1].validateAndHighlightTextInputsCheckboxGroup();
         this.inputGroups[2].validateAndHighlightTextInputsCheckboxGroup();
@@ -269,11 +273,11 @@ TextInputsCheckboxGroup.prototype = {
         } else {
             var textboxesAreEmpty = true;
             $.each(that.textboxes, function (index, textInput) {
-                if(textInput.val() !== '') {
+                if (textInput.val() !== '') {
                     textboxesAreEmpty = false;
                 }
             });
-            if(textboxesAreEmpty === false) {
+            if (textboxesAreEmpty === false) {
                 that.checkbox.prop("disabled", true);
             }
         }
@@ -322,7 +326,84 @@ TextInputsCheckboxGroup.prototype = {
     }
 };
 
+var AgeCalculator = function (result, resultUnknownClass,
+                              dayOfBirth_input, monthOfBirth_input, yearOfBirth_input,
+                              dayOfDeath_input, monthOfDeath_input, yearOfDeath_input) {
+    this.dayOfBirth_input = dayOfBirth_input;
+    this.monthOfBirth_input = monthOfBirth_input;
+    this.yearOfBirth_input = yearOfBirth_input;
+    this.dayOfDeath_input = dayOfDeath_input;
+    this.monthOfDeath_input = monthOfDeath_input;
+    this.yearOfDeath_input = yearOfDeath_input;
+    this.dayOfBirth = 0;
+    this.monthOfBirth = 0;
+    this.yearOfBirth = 0;
+    this.dayOfDeath = 0;
+    this.monthOfDeath = 0;
+    this.yearOfDeath = 0;
+    this.result = result;
+    this.resultUnknownClass = resultUnknownClass;
+    this.resultIsValid = false
+    this.setup()
+};
 
+AgeCalculator.prototype = {
+    setup: function () {
+        this.refreshAge();
+        this.setupWatchers()
+    },
+    setupWatchers: function () {
+        var that = this;
+        this.dayOfBirth_input.keyup(function (e) {
+            that.refreshAge()
+        });
+        this.monthOfBirth_input.keyup(function (e) {
+            that.refreshAge()
+        });
+        this.yearOfBirth_input.keyup(function (e) {
+            that.refreshAge()
+        });
+        this.dayOfDeath_input.keyup(function (e) {
+            that.refreshAge()
+        });
+        this.monthOfDeath_input.keyup(function (e) {
+            that.refreshAge()
+        });
+        this.yearOfDeath_input.keyup(function (e) {
+            that.refreshAge()
+        })
+    },
+    fetchValues: function() {
+        this.dayOfBirth = this.dayOfBirth_input.val();
+        this.monthOfBirth = this.monthOfBirth_input.val();
+        this.yearOfBirth = this.yearOfBirth_input.val();
+        this.dayOfDeath = this.dayOfDeath_input.val();
+        this.monthOfDeath = this.monthOfDeath_input.val();
+        this.yearOfDeath = this.yearOfDeath_input.val();
+    },
+    refreshAge: function () {
+        this.fetchValues();
+        let dobValid = this.dayOfBirth > 0 && this.monthOfBirth > 0 && this.yearOfBirth > 0;
+        let dodValid = this.dayOfBirth > 0 && this.monthOfBirth > 0 && this.yearOfBirth > 0;
+        let age = this.getAgeAtDeath();
+
+        if (dobValid && dodValid && age > 0) {
+            this.result.html(age);
+            this.result.removeClass(this.resultUnknownClass)
+        } else {
+            this.result.html("0");
+            this.result.addClass(this.resultUnknownClass)
+        }
+    },
+    getAgeAtDeath: function () {
+        var age = this.yearOfDeath - this.yearOfBirth;
+        var month_diff = this.monthOfDeath - this.monthOfBirth;
+        if (month_diff < 0 || (month_diff === 0 && this.dayOfDeath < this.dayOfBirth)) {
+            age = age - 1;
+        }
+        return age;
+    }
+}
 
 $(function () // execute once the DOM has loaded
 {

@@ -6,7 +6,7 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-third">
-            <form id="case-close-form" class="form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+            <form id="case-close-form" class="form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
                       method="post">
                 {% csrf_token %}
 

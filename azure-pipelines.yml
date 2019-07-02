@@ -1,21 +1,13 @@
 # Build Docker image for this app using Azure Pipelines
 # http://docs.microsoft.com/azure/devops/pipelines/languages/docker?view=vsts
 trigger:
-- master
-- development
 - feature/*
 - refactor/*
 - bug/*
-- release/*
 
 
 pool:
   vmImage: 'Ubuntu 16.04'
-
-variables:
-  imageName: 'medex-cms:$(Build.BuildId)'
-  sandboxDockerId: medexCmsSandbox
-  stagingDockerId: medexFrontendStaging
 
 steps:
 - task: UsePythonVersion@0
@@ -62,23 +54,3 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
-
-- script: |
-    pushd '$(projectRoot)'
-    docker build -f Dockerfile -t $(sandboxDockerId).azurecr.io/$(imageName) .
-    docker login -u $(sandboxDockerId) -p $pswd $(sandboxDockerId).azurecr.io
-    docker push $(sandboxDockerId).azurecr.io/$(imageName)
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/development'))
-  env:
-    pswd: $(dockerPassword)
-  displayName: 'Build and push Docker image to Sandbox'
-
-- script: |
-    pushd '$(projectRoot)'
-    docker build -f ./deploy_files/Dockerfile -t $(stagingDockerId).azurecr.io/$(imageName) .
-    docker login -u $(stagingDockerId) -p $pswd $(stagingDockerId).azurecr.io
-    docker push $(stagingDockerId).azurecr.io/$(imageName)
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
-  env:
-    pswd: $(stagingRegistryPassword)
-  displayName: 'Build and push Docker image to Staging'

@@ -85,6 +85,3 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
 
         return render(request, self.template, context, status=status_code)
 
-
-
-
