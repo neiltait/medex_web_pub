@@ -518,28 +518,7 @@ class ExaminationMocks:
     @classmethod
     def get_patient_details_load_response_content(cls):
         return {
-            "header": {
-                "urgencyScore": 0,
-                "givenNames": "John",
-                "surname": "Doe",
-                "nhsNumber": "123-456-7890",
-                "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
-                "timeOfDeath": "10:00",
-                "dateOfBirth": "1919-04-15T10:00:01.174Z",
-                "dateOfDeath": "2019-04-15T10:00:01.174Z",
-                "appointmentDate": "2019-04-15T11:37:01.174Z",
-                "appointmentTime": "09:00",
-                "lastAdmission": "2019-04-15T11:37:01.174Z",
-                "caseCreatedDate": "2019-04-15T11:37:01.174Z",
-                "admissionNotesHaveBeenAdded": True,
-                "readyForMEScrutiny": True,
-                "unassigned": True,
-                "haveBeenScrutinisedByME": True,
-                "pendingAdmissionNotes": True,
-                "pendingDiscussionWithQAP": True,
-                "pendingDiscussionWithRepresentative": True,
-                "haveFinalCaseOutstandingOutcomes": True
-            },
+            "header": cls.get_patient_header_content(),
             "id": "1",
             "culturalPriority": True,
             "faithPriority": True,
@@ -765,6 +744,31 @@ class ExaminationMocks:
             "appointmentTime": "15:48",
             "lastAdmission": "2019-03-18T10:48:15.749Z",
             "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+        }
+
+    @classmethod
+    def get_patient_header_content(cls):
+        return {
+            "urgencyScore": 0,
+            "givenNames": "John",
+            "surname": "Doe",
+            "nhsNumber": "123-456-7890",
+            "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+            "timeOfDeath": "10:00",
+            "dateOfBirth": "1919-04-15T10:00:01.174Z",
+            "dateOfDeath": "2019-04-15T10:00:01.174Z",
+            "appointmentDate": "2019-04-15T11:37:01.174Z",
+            "appointmentTime": "09:00",
+            "lastAdmission": "2019-04-15T11:37:01.174Z",
+            "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+            "admissionNotesHaveBeenAdded": True,
+            "readyForMEScrutiny": True,
+            "unassigned": True,
+            "haveBeenScrutinisedByME": True,
+            "pendingAdmissionNotes": True,
+            "pendingDiscussionWithQAP": True,
+            "pendingDiscussionWithRepresentative": True,
+            "haveFinalCaseOutstandingOutcomes": True
         }
 
     @classmethod
