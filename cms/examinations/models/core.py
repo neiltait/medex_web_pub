@@ -89,7 +89,6 @@ class ExaminationOverview:
     date_format = '%d.%m.%Y'
 
     def __init__(self, obj_dict):
-        self.open = obj_dict.get('open')
         self.urgency_score = obj_dict.get("urgencyScore")
         self.given_names = obj_dict.get("givenNames")
         self.surname = obj_dict.get("surname")
@@ -102,6 +101,7 @@ class ExaminationOverview:
         self.appointment_time = obj_dict.get("appointmentTime")
         self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
         self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+        self.open = obj_dict.get('open')
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:

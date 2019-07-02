@@ -145,6 +145,34 @@ class ExaminationsCoreModelsTests(MedExTestCase):
         expected_days = 0
         self.assertEqual(result, expected_days)
 
+    def test_examination_overview_urgent_returns_true_if_urgency_score_gt_than_0_and_case_open(self):
+        case_overview_data = ExaminationMocks.get_case_overview_content()
+        case_overview_data['urgencyScore'] = 1000
+        case_overview_data['open'] = True
+        case_overview = ExaminationOverview(case_overview_data)
+        self.assertIsTrue(case_overview.urgent())
+
+    def test_examination_overview_urgent_returns_false_if_urgency_score_gt_than_0_but_case_closed(self):
+        case_overview_data = ExaminationMocks.get_case_overview_content()
+        case_overview_data['urgencyScore'] = 1000
+        case_overview_data['open'] = False
+        case_overview = ExaminationOverview(case_overview_data)
+        self.assertIsFalse(case_overview.urgent())
+
+    def test_examination_overview_urgent_returns_false_if_urgency_score_is_0_and_case_open(self):
+        case_overview_data = ExaminationMocks.get_case_overview_content()
+        case_overview_data['urgencyScore'] = 0
+        case_overview_data['open'] = True
+        case_overview = ExaminationOverview(case_overview_data)
+        self.assertIsFalse(case_overview.urgent())
+
+    def test_examination_overview_urgent_returns_false_if_urgency_score_is_0_and_case_closed(self):
+        case_overview_data = ExaminationMocks.get_case_overview_content()
+        case_overview_data['urgencyScore'] = 0
+        case_overview_data['open'] = False
+        case_overview = ExaminationOverview(case_overview_data)
+        self.assertIsFalse(case_overview.urgent())
+
 
 class ExaminationsPatientDetailsModelsTests(MedExTestCase):
     # PatientDetails tests

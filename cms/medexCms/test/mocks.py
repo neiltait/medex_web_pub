@@ -751,6 +751,23 @@ class ExaminationMocks:
             }
 
     @classmethod
+    def get_case_overview_content(cls):
+        return {
+            "urgencyScore": 1,
+            "givenNames": "John",
+            "surname": "Doe",
+            "nhsNumber": "123-456-78910",
+            "examinationId": "1",
+            "timeOfDeath": "10:48",
+            "dateOfBirth": "1935-09-18T10:48:15.749Z",
+            "dateOfDeath": "2019-03-18T10:48:15.749Z",
+            "appointmentDate": "2019-03-18T10:48:15.749Z",
+            "appointmentTime": "15:48",
+            "lastAdmission": "2019-03-18T10:48:15.749Z",
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+        }
+
+    @classmethod
     def get_case_index_response_content(cls):
         return {
             "countOfTotalCases": 3,
