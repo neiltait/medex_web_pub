@@ -23,3 +23,7 @@ def log_api_error(process, response):
 
 def log_internal_error(function, details=''):
     logger.error('An error occurred in %s - %s' % (function, details))
+
+
+def log_unexpected_api_response(function, key='', value=''):
+    logger.error('An unexpected response was received from the api in %s - %s = %s' % (function, key, value))
