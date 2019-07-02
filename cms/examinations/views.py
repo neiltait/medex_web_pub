@@ -21,7 +21,6 @@ from home.forms import IndexFilterForm
 from home.utils import render_404, redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from medexCms.utils import fallback_to
 
 
 class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -37,30 +36,28 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         add_another = False
         post_body = request.POST
         form = PrimaryExaminationInformationForm(post_body)
+        patient_name = None
 
         if form.is_valid():
-            response = Examination.create(form.to_object(), self.user.auth_token)
+            examination, error = Examination.create(form.to_object(), self.user.auth_token)
 
-            if response.ok:
+            if error:
+                status_code = error.status_code
+            else:
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
-                    examination_id = response.json()['examinationId']
-                    return redirect_to_examination(examination_id)
+                    return redirect_to_examination(examination.id)
                 else:
                     add_another = True
+                    patient_name = form.full_name()
                     form = PrimaryExaminationInformationForm()
                     status_code = status.HTTP_200_OK
-            else:
-                log_api_error('case creation', response.text)
-                status_code = response.status_code
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " "\
-            + fallback_to(post_body.get("last_name"), "")
+        context = self.__set_create_examination_context(form, add_another, patient_name)
         return render(request, self.template, context, status=status_code)
 
-    def __set_create_examination_context(self, form, add_another):
+    def __set_create_examination_context(self, form, add_another, patient_name):
         me_offices = self.user.get_permitted_me_offices()
 
         return {
@@ -72,6 +69,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "enums": enums,
             "errors": form.errors,
             "add_another": add_another,
+            "full_name": patient_name
         }
 
 

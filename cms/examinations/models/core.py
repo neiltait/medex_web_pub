@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
+from errors.models import GenericError
+from errors.utils import log_api_error
 from medexCms.api import enums
 
 from medexCms.utils import parse_datetime
@@ -11,47 +13,77 @@ from examinations import request_handler
 
 class Examination:
 
-    def __init__(self, obj_dict=None, examination_id=None):
-        if obj_dict:
-            self.id = examination_id if examination_id else obj_dict.get("id")
-            self.time_of_death = obj_dict.get("timeOfDeath")
-            self.given_names = obj_dict.get("givenNames")
-            self.surname = obj_dict.get("surname")
-            self.nhs_number = obj_dict.get("nhsNumber")
-            self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
-            self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
-            self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
-            self.gender = obj_dict.get("gender")
-            self.gender_details = obj_dict.get("genderDetails")
-            self.house_name_number = obj_dict.get("houseNameNumber")
-            self.street = obj_dict.get("street")
-            self.town = obj_dict.get("town")
-            self.county = obj_dict.get("county")
-            self.postcode = obj_dict.get("postcode")
-            self.country = obj_dict.get("country")
-            self.last_occupation = obj_dict.get("lastOccupation")
-            self.organisation_care_before_death_locationId = obj_dict.get("organisationCareBeforeDeathLocationId")
-            self.death_occurred_location_id = obj_dict.get("deathOccuredLocationId")
-            self.mode_of_disposal = obj_dict.get("modeOfDisposal")
-            self.funeral_directors = obj_dict.get("funeralDirectors")
-            self.personal_affects_collected = obj_dict.get("personalAffectsCollected")
-            self.personal_affects_details = obj_dict.get("personalAffectsDetails")
-            self.date_of_birth = obj_dict.get("dateOfBirth")
-            self.date_of_death = obj_dict.get("dateOfDeath")
-            self.faith_priority = obj_dict.get("faithPriority")
-            self.child_priority = obj_dict.get("childPriority")
-            self.coroner_priority = obj_dict.get("coronerPriority")
-            self.cultural_priority = obj_dict.get("culturalPriority")
-            self.other_priority = obj_dict.get("otherPriority")
-            self.priority_details = obj_dict.get("priorityDetails")
-            self.completed = obj_dict.get("completed")
-            self.coroner_status = obj_dict.get("coronerStatus")
-            self.representatives = obj_dict.get("representatives")
-            self.out_of_hours = obj_dict.get('outOfHours')
+    def __init__(self, form_data=None, examination_id=None):
+        self.id = None
+        self.time_of_death = None
+        self.given_names = None
+        self.surname = None
+        self.nhs_number = None
+        self.hospital_number_1 = None
+        self.hospital_number_2 = None
+        self.hospital_number_3 = None
+        self.gender = None
+        self.gender_details = None
+        self.house_name_number = None
+        self.street = None
+        self.town = None
+        self.county = None
+        self.postcode = None
+        self.country = None
+        self.last_occupation = None
+        self.organisation_care_before_death_locationId = None
+        self.place_of_death = None
+        self.me_office = None
+        self.mode_of_disposal = None
+        self.funeral_directors = None
+        self.personal_affects_collected = None
+        self.personal_affects_details = None
+        self.date_of_birth = None
+        self.date_of_death = None
+        self.faith_priority = None
+        self.child_priority = None
+        self.coroner_priority = None
+        self.cultural_priority = None
+        self.other_priority = None
+        self.priority_details = None
+        self.completed = None
+        self.coroner_status = None
+        self.representatives = None
+        self.out_of_hours = None
+
+        if form_data:
+            self.fill_from_form(form_data, examination_id)
+
+    def fill_from_form(self, obj_dict, examination_id):
+        self.id = examination_id if examination_id else obj_dict.get("id")
+        self.given_names = obj_dict.get("givenNames")
+        self.surname = obj_dict.get("surname")
+        self.gender = obj_dict.get("gender")
+        self.gender_details = obj_dict.get("genderDetails")
+        self.place_of_death = obj_dict.get("placeDeathOccured")
+        self.me_office = obj_dict.get("medicalExaminerOfficeResponsible")
+        self.nhs_number = obj_dict.get("nhsNumber")
+        self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
+        self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
+        self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
+        self.date_of_birth = obj_dict.get("dateOfBirth")
+        self.date_of_death = obj_dict.get("dateOfDeath")
+        self.time_of_death = obj_dict.get("timeOfDeath")
 
     @classmethod
     def create(cls, submission, auth_token):
-        return request_handler.post_new_examination(submission, auth_token)
+        examination = None
+        error = None
+        response = request_handler.post_new_examination(submission, auth_token)
+
+        if response.ok:
+            examination = Examination(submission, response.json().get('examinationId'))
+        else:
+            log_api_error('case creation', response.text)
+            error = GenericError(response, {"action": "create", "type": "case"})
+
+        return examination, error
+        # return request_handler.post_new_examination(submission, auth_token)
 
 
 class ExaminationOverview:
