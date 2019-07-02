@@ -33,8 +33,12 @@ class Permission:
         return request_handler.delete_permission(permission_id, user_id, auth_token)
 
     def user_display_role(self):
-        print(self.user_role)
         return get_display_user_role(self.user_role)
+
+    @classmethod
+    def update(cls, location_id, user_role, user_id, auth_token):
+        return request_handler.update_permission(json.dumps({"locationId": location_id, "userRole": user_role}),
+                                                 user_id, auth_token)
 
 
 class PermittedActions:
@@ -57,7 +61,7 @@ class PermittedActions:
         self.can_get_examinations = obj_dict.get("GetExaminations") if obj_dict else False
         self.can_get_examination = obj_dict.get("GetExamination") if obj_dict else False
         self.can_create_examination = obj_dict.get("CreateExamination") if obj_dict else False
-        self.can_assign_examination_to_medical_examiner = obj_dict.get("AssignExaminationToMedicalExaminer")\
+        self.can_assign_examination_to_medical_examiner = obj_dict.get("AssignExaminationToMedicalExaminer") \
             if obj_dict else False
         self.can_update_examination = obj_dict.get("UpdateExamination") if obj_dict else False
         self.can_update_examination_state = obj_dict.get("UpdateExaminationState") if obj_dict else False
