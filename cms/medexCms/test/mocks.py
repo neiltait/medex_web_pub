@@ -595,7 +595,6 @@ class ExaminationMocks:
             "success": True
         }
 
-
     @classmethod
     def get_medical_team_load_response_content(cls, examination_id=1):
         if examination_id == 1:
@@ -1773,6 +1772,28 @@ class PeopleMocks:
                 "fullName": "Doctor Foster"
             }
         ]
+
+    @classmethod
+    def get_medical_team_member_content(cls, key):
+        medical_team_members = {
+            'gp': {
+                "name": 'Dr Foster',
+                "role": 'GP',
+                "organisation": 'Fosters GP Surgery',
+                "phone": '01234 567890',
+                "notes": '',
+                "gmcNumber": '1234567890'
+            },
+            'consultant': {
+                "name": 'Dr Jones',
+                "role": 'Consultant',
+                "organisation": 'Jones GP Surgery',
+                "phone": '01234 098765',
+                "notes": '',
+                "gmcNumber": '0123456789'
+            }
+        }
+        return medical_team_members.get(key)
 
 
 class DatatypeMocks:

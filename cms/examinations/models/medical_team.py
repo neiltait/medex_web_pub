@@ -95,7 +95,7 @@ class MedicalTeamMember:
                                  notes=notes, gmc_number=gmc_number)
 
     def has_name(self):
-        return self.name and len(self.name.strip()) > 0
+        return True if self.name and len(self.name.strip()) > 0 else False
 
     def has_valid_name(self):
         return len(self.name.strip()) < 250

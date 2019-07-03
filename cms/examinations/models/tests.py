@@ -4,7 +4,7 @@ from unittest.mock import patch
 from errors.models import GenericError
 from examinations.forms.patient_details import PrimaryExaminationInformationForm
 from examinations.models.core import ExaminationOverview, Examination, CauseOfDeathProposal
-from examinations.models.medical_team import MedicalTeam
+from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent
 from examinations.templatetags.examination_filters import case_card_presenter
@@ -390,9 +390,180 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
 
     # MedicalTeamMember tests
 
-    def test_medical_team_member_placeholder(self):
-        # Need to implement tests for the medical team member model
-        pass
+    def test_medical_team_member_from_dict_returns_none_when_not_given_a_dict(self):
+        from_dict_response = MedicalTeamMember.from_dict(None)
+        self.assertIsNone(from_dict_response)
+
+    def test_medical_team_member_has_name_returns_true_if_a_value_is_present(self):
+        medical_team_member = MedicalTeamMember.from_dict(PeopleMocks.get_medical_team_member_content('gp'))
+        self.assertIsNotNone(medical_team_member)
+
+        self.assertIsTrue(len(medical_team_member.name) > 0)
+
+        self.assertIsTrue(medical_team_member.has_name())
+
+    def test_medical_team_member_has_name_returns_falsnoe_if__value_is_present(self):
+        medical_team_member = MedicalTeamMember.from_dict(PeopleMocks.get_medical_team_member_content('gp'))
+        self.assertIsNotNone(medical_team_member)
+
+        medical_team_member.name = None
+
+        self.assertIsFalse(medical_team_member.has_name())
+
+        medical_team_member.name = ''
+
+        self.assertIsFalse(medical_team_member.has_name())
+
+    def test_medical_team_member_has_valid_name_returns_true_if_name_is_within_character_limit(self):
+        medical_team_member = MedicalTeamMember.from_dict(PeopleMocks.get_medical_team_member_content('gp'))
+        self.assertIsNotNone(medical_team_member)
+
+        self.assertIsTrue(len(medical_team_member.name) < 250)
+
+        self.assertIsTrue(medical_team_member.has_valid_name())
+
+    def test_medical_team_member_has_valid_name_returns_false_if_name_is_over_character_limit(self):
+        medical_team_member = MedicalTeamMember.from_dict(PeopleMocks.get_medical_team_member_content('gp'))
+        self.assertIsNotNone(medical_team_member)
+
+        medical_team_member.name = "x" * 250
+        self.assertEquals(len(medical_team_member.name), 250)
+
+        self.assertIsFalse(medical_team_member.has_valid_name())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_no_fields_entered(self):
+        medical_team_member = MedicalTeamMember()
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_no_other_fields_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_and_role_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.role = 'Consultant'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_and_org_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.organisation = 'A NHS Trust'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_and_number_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_role_and_org_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.role = 'Consultant'
+        medical_team_member.organisation = 'A NHS Trust'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_role_and_number_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.role = 'Consultant'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_org_and_number_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.organisation = 'A NHS Trust'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_true_if_name_role_org_and_number_entered(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.name = 'Dr Jones'
+        medical_team_member.role = 'Consultant'
+        medical_team_member.organisation = 'A NHS Trust'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsTrue(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_role_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.role = 'Consultant'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_org_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.organisation = 'A NHS Trust'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_number_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_role_and_org_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.role = 'Consultant'
+        medical_team_member.organisation = 'A NHS Trust'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_role_and_number_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.role = 'Consultant'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_org_and_number_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.organisation = 'A NHS Trust'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_has_name_if_needed_returns_false_if_role_org_and_number_entered_with_no_name(self):
+        medical_team_member = MedicalTeamMember()
+        medical_team_member.role = 'Consultant'
+        medical_team_member.organisation = 'A NHS Trust'
+        medical_team_member.phone_number = '01234 567890'
+
+        self.assertIsFalse(medical_team_member.has_name_if_needed())
+
+    def test_medical_team_member_to_object_returns_correct_json_object(self):
+        medical_team_member = MedicalTeamMember.from_dict(PeopleMocks.get_medical_team_member_content('gp'))
+        medical_team_member_dict = medical_team_member.to_object()
+
+        self.assertIsTrue("name" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('name'), medical_team_member.name)
+
+        self.assertIsTrue("role" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('role'), medical_team_member.role)
+
+        self.assertIsTrue("organisation" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('organisation'), medical_team_member.organisation)
+
+        self.assertIsTrue("phone" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('phone'), medical_team_member.phone_number)
+
+        self.assertIsTrue("notes" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('notes'), medical_team_member.notes)
+
+        self.assertIsTrue("gmcNumber" in medical_team_member_dict)
+        self.assertEqual(medical_team_member_dict.get('gmcNumber'), medical_team_member.gmc_number)
 
 
 class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
