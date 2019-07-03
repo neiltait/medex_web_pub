@@ -1611,6 +1611,13 @@ class ExaminationMocks:
         return response
 
     @classmethod
+    def get_unsuccessful_medical_team_update_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps('Not found').encode('utf-8')
+        return response
+
+    @classmethod
     def get_successful_timeline_event_create_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK

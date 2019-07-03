@@ -360,18 +360,35 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
         medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(medical_team)
-        self.assertEquals(type(medical_team), PatientDetails)
+        self.assertEquals(type(medical_team), MedicalTeam)
 
     @patch('examinations.request_handler.load_medical_team_by_id',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
-    def test_patient_details_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
-        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                           SessionMocks.ACCESS_TOKEN)
+    def test_medical_team_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
+        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(medical_team)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), GenericError)
 
-    # MedicalTeam tests
+    def test_medical_team_update_returns_no_error_if_update_succeeds(self):
+        medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(medical_team)
+        error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
+                                    SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+
+    @patch('examinations.request_handler.update_medical_team',
+           return_value=ExaminationMocks.get_unsuccessful_medical_team_update_response())
+    def test_medical_team_update_returns_error_if_update_fails(self, mock_update):
+        medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(medical_team)
+        error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
+                                    SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(error)
+
+    # MedicalTeamMember tests
 
     def test_medical_team_member_placeholder(self):
         # Need to implement tests for the medical team member model
