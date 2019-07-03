@@ -1,5 +1,4 @@
-from errors.models import GenericError
-from errors.utils import log_api_error
+from errors.utils import log_api_error, handle_error
 from examinations import request_handler
 
 from medexCms.utils import fallback_to, key_not_empty
@@ -55,7 +54,7 @@ class MedicalTeam:
             medical_team = MedicalTeam(response.json(), examination_id)
         else:
             log_api_error('medical team load', response.text)
-            error = GenericError(response, {"action": "loading", "type": "medical team"})
+            error = handle_error(response, {"action": "loading", "type": "medical team"})
 
         return medical_team, error
 
@@ -65,7 +64,7 @@ class MedicalTeam:
 
         if not response.ok:
             log_api_error('patient details update', response.text)
-            error = GenericError(response, {"action": "updating", "type": "medical team"})
+            error = handle_error(response, {"action": "updating", "type": "medical team"})
 
         return error
 

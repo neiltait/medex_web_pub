@@ -1,5 +1,4 @@
-from errors.models import GenericError
-from errors.utils import log_api_error
+from errors.utils import log_api_error, handle_error
 from examinations import request_handler
 from examinations.presenters.core import PatientHeader
 from medexCms.utils import fallback_to, bool_to_string, is_empty_time, is_empty_date, parse_datetime
@@ -182,10 +181,10 @@ class PatientDetails:
                 patient_details = PatientDetails(response.json(), modes_of_disposal_response.json(), examination_id)
             else:
                 log_api_error('modes of disposal load', '')
-                error = GenericError(modes_of_disposal_response, {"action": "loading", "type": "modes of disposal"})
+                error = handle_error(modes_of_disposal_response, {"action": "loading", "type": "modes of disposal"})
         else:
             log_api_error('patient details load', response.text)
-            error = GenericError(response, {"action": "loading", "type": "patient details"})
+            error = handle_error(response, {"action": "loading", "type": "patient details"})
         return patient_details, error
 
     def update(self, submission, auth_token):
@@ -196,7 +195,7 @@ class PatientDetails:
             self.case_header = PatientHeader(response.json().get('header'))
         else:
             log_api_error('patient details update', response.text)
-            error = GenericError(response, {"action": "updating", "type": "patient details"})
+            error = handle_error(response, {"action": "updating", "type": "patient details"})
 
         return error
 
