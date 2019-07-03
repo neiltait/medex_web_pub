@@ -324,6 +324,33 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertNotEquals(ending_patient_header.given_names, updated_header_content.get('givenNames'))
         self.assertEquals(starting_patient_header.given_names, ending_patient_header.given_names)
 
+    def test_patient_details_full_name_correctly_joins_first_and_last_names(self):
+        patient_details_data = ExaminationMocks.get_patient_details_load_response_content()
+        patient_details = PatientDetails(patient_details_data)
+        full_name = patient_details.full_name()
+        self.assertEqual(full_name.split(' ')[0], patient_details_data.get('givenNames'))
+        self.assertEqual(full_name.split(' ')[1], patient_details_data.get('surname'))
+
+    def test_patient_details_get_nhs_number_returns_the_nhs_number_if_present(self):
+        patient_details_data = ExaminationMocks.get_patient_details_load_response_content()
+        patient_details = PatientDetails(patient_details_data)
+        self.assertIsNotNone(patient_details)
+        self.assertIsNotNone(patient_details.nhs_number)
+
+        display_nhs_number = patient_details.get_nhs_number()
+
+        self.assertEquals(patient_details.nhs_number, display_nhs_number)
+
+    def test_patient_details_get_nhs_number_returns_unknown_if_number_not_present(self):
+        patient_details_data = ExaminationMocks.get_patient_details_load_response_content()
+        patient_details = PatientDetails(patient_details_data)
+        self.assertIsNotNone(patient_details)
+        patient_details.nhs_number = None
+
+        display_nhs_number = patient_details.get_nhs_number()
+
+        self.assertEquals(display_nhs_number, 'Unknown')
+
 
 class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     # MedicalTeam tests
