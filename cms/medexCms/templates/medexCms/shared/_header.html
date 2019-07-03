@@ -55,14 +55,14 @@
 
                         <div class="nav-dropdown--content">
                             {% if session_user.permitted_actions.can_access_settings_index %}
-                                <a class="nhsuk-header__navigation-link" href="/settings">
+                                <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/settings">
                                     <div class="nav-dropdown--item">
                                         Settings
                                     </div>
                                 </a>
                             {% endif %}
 
-                            <a href="/logout">
+                            <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/logout">
                                 <div class="nav-dropdown--item">
                                     Logout
                                 </div>
