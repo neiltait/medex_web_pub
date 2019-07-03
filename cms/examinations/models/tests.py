@@ -4,6 +4,7 @@ from unittest.mock import patch
 from errors.models import GenericError
 from examinations.forms.patient_details import PrimaryExaminationInformationForm
 from examinations.models.core import ExaminationOverview, Examination, CauseOfDeathProposal
+from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent
 from examinations.templatetags.examination_filters import case_card_presenter
@@ -355,9 +356,20 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
 class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     # MedicalTeam tests
 
-    def test_medical_team_placeholder(self):
-        # Need to implement tests for the medical team model
-        pass
+    def test_medical_team_load_by_id_returns_a_medical_team_object_if_successful(self):
+        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(medical_team)
+        self.assertEquals(type(medical_team), PatientDetails)
+
+    @patch('examinations.request_handler.load_medical_team_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
+    def test_patient_details_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
+        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                           SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(medical_team)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), GenericError)
 
     # MedicalTeam tests
 

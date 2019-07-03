@@ -1,5 +1,3 @@
-from rest_framework import status
-
 from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
