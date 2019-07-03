@@ -1,5 +1,3 @@
-from rest_framework import status
-
 from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
@@ -183,7 +181,7 @@ class PatientDetails:
             if modes_of_disposal_response.ok:
                 patient_details = PatientDetails(response.json(), modes_of_disposal_response.json(), examination_id)
             else:
-                log_api_error('modes of disposal load', modes_of_disposal_response.text)
+                log_api_error('modes of disposal load', '')
                 error = GenericError(modes_of_disposal_response, {"action": "loading", "type": "modes of disposal"})
         else:
             log_api_error('patient details load', response.text)

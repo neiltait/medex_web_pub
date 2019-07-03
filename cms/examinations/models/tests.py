@@ -237,6 +237,26 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertEqual(len(patient_details.representatives), 1)
         self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
 
+    def test_patient_details_load_by_id_returns_a_patient_details_object_if_successful(self):
+        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(patient_details)
+        self.assertEquals(type(patient_details), PatientDetails)
+
+    @patch('examinations.request_handler.load_modes_of_disposal', return_value=DatatypeMocks.get_unsuccessful_modes_of_disposal_response())
+    def test_patient_details_load_by_id_returns_an_error_object_if_modes_of_disposal_load_fails(self, mock_modes_of_disposal):
+        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(patient_details)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), GenericError)
+
+    @patch('examinations.request_handler.load_patient_details_by_id', return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
+    def test_patient_details_load_by_id_returns_an_error_object_if_load_fails(self, mock_patient_details):
+        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(patient_details)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), GenericError)
+
 
 class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     # MedicalTeam tests

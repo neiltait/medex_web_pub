@@ -1746,3 +1746,11 @@ class DatatypeMocks:
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_modes_of_disposal_list()).encode('utf-8')
         return response
+
+
+    @classmethod
+    def get_unsuccessful_modes_of_disposal_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
