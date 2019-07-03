@@ -115,6 +115,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.secondary_form = None
         self.bereaved_form = None
         self.urgency_form = None
+        super().__init__()
 
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
@@ -196,48 +197,51 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
 
+    def __init__(self):
+        self.form = None
+        super().__init__()
+
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
-        form = MedicalTeamMembersForm(medical_team=self.examination)
+        self.form = MedicalTeamMembersForm(medical_team=self.examination)
 
-        context = self._set_context(form, False)
+        context = self._set_context(False)
 
         return render(request, self.template, context, status=status_code)
 
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
+        status_code = status.HTTP_200_OK
         saved = False
-        form = MedicalTeamMembersForm(request=post_body)
+        self.form = MedicalTeamMembersForm(request=post_body)
 
-        if form.is_valid():
-            response = self.examination.update(form.to_object(), self.user.auth_token)
+        if self.form.is_valid():
+            error = self.examination.update(self.form.to_object(), self.user.auth_token)
 
-            if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
-                return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
-            elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+            if error:
+                status_code = error.status_code
             else:
+                if get_body.get('nextTab'):
+                    return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
                 saved = True
-                status_code = response.status_code
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self._set_context(form, saved)
+        context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
 
-    def _set_context(self, form, saved):
+    def _set_context(self, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
             'patient': self.examination.case_header,
-            'form': form,
+            'form': self.form,
             'medical_examiners': self.examination.medical_examiner_lookup,
             'medical_examiners_officers': self.examination.medical_examiner_officer_lookup,
-            'error_count': form.error_count,
-            'errors': form.errors,
+            'error_count': self.form.error_count,
+            'errors': self.form.errors,
             'tab_modal': self.modal_config,
             'saved': saved,
         }

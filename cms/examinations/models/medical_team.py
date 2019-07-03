@@ -2,7 +2,7 @@ from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
 
-from medexCms.utils import fallback_to
+from medexCms.utils import fallback_to, key_not_empty
 
 
 class MedicalTeam:
@@ -14,11 +14,11 @@ class MedicalTeam:
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.consultant_responsible = MedicalTeamMember.from_dict(
             obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
-        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if obj_dict['qap'] else None
+        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if key_not_empty('qap', obj_dict) else None
         self.general_practitioner = MedicalTeamMember.from_dict(
-            obj_dict['generalPractitioner']) if obj_dict['generalPractitioner'] else None
+            obj_dict['generalPractitioner']) if key_not_empty('generalPractitioner', obj_dict) else None
 
-        if "consultantsOther" in obj_dict and obj_dict["consultantsOther"] is not None:
+        if key_not_empty("consultantsOther", obj_dict):
             self.consultants_other = [MedicalTeamMember.from_dict(consultant) for consultant in
                                       obj_dict['consultantsOther']]
         else:
@@ -60,7 +60,14 @@ class MedicalTeam:
         return medical_team, error
 
     def update(self, submission, auth_token):
-        return request_handler.update_medical_team(self.examination_id, submission, auth_token)
+        response = request_handler.update_medical_team(self.examination_id, submission, auth_token)
+        error = None
+
+        if not response.ok:
+            log_api_error('patient details update', response.text)
+            error = GenericError(response, {"action": "updating", "type": "medical team"})
+
+        return error
 
 
 class MedicalTeamMember:
