@@ -565,6 +565,38 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_patient_details_update_response_content(cls):
+        header_content = cls.get_patient_header_content()
+        header_content['givenNames'] = "James"
+        return {
+            "header": header_content,
+            "errors": {
+                "additionalProp1": [
+                    "string"
+                ],
+                "additionalProp2": [
+                    "string"
+                ],
+                "additionalProp3": [
+                    "string"
+                ]
+            },
+            "lookups": {
+                "additionalProp1": [
+                    {}
+                ],
+                "additionalProp2": [
+                    {}
+                ],
+                "additionalProp3": [
+                    {}
+                ]
+            },
+            "success": True
+        }
+
+
+    @classmethod
     def get_medical_team_load_response_content(cls, examination_id=1):
         if examination_id == 1:
             return {
@@ -1532,7 +1564,7 @@ class ExaminationMocks:
     def get_successful_patient_details_update_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(cls.get_patient_details_load_response_content()).encode('utf-8')
+        response._content = json.dumps(cls.get_patient_details_update_response_content()).encode('utf-8')
         return response
 
     @classmethod
@@ -1752,5 +1784,5 @@ class DatatypeMocks:
     def get_unsuccessful_modes_of_disposal_response(cls):
         response = Response()
         response.status_code = status.HTTP_404_NOT_FOUND
-        response._content = json.dumps(None)
+        response._content = json.dumps('Not found').encode('utf-8')
         return response

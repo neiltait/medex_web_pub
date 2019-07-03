@@ -243,19 +243,86 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertIsNotNone(patient_details)
         self.assertEquals(type(patient_details), PatientDetails)
 
-    @patch('examinations.request_handler.load_modes_of_disposal', return_value=DatatypeMocks.get_unsuccessful_modes_of_disposal_response())
+    @patch('examinations.request_handler.load_modes_of_disposal',
+           return_value=DatatypeMocks.get_unsuccessful_modes_of_disposal_response())
     def test_patient_details_load_by_id_returns_an_error_object_if_modes_of_disposal_load_fails(self, mock_modes_of_disposal):
         patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), GenericError)
 
-    @patch('examinations.request_handler.load_patient_details_by_id', return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
+    @patch('examinations.request_handler.load_patient_details_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
     def test_patient_details_load_by_id_returns_an_error_object_if_load_fails(self, mock_patient_details):
         patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), GenericError)
+
+    def test_patient_details_update_returns_no_error_if_update_succeeds(self):
+        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(patient_details)
+        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
+                                       SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+
+    def test_patient_details_update_updates_the_patient_header_on_success(self):
+        updated_header_content = ExaminationMocks.get_patient_details_update_response_content().get('header')
+        self.assertNotEqual(ExaminationMocks.get_patient_details_load_response_content().get('givenNames'),
+                            updated_header_content.get('givenNames'))
+
+        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(patient_details)
+
+        starting_patient_header = patient_details.case_header
+        self.assertEquals(starting_patient_header.given_names,
+                          ExaminationMocks.get_patient_details_load_response_content().get('givenNames'))
+
+        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
+                                       SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+
+        ending_patient_header = patient_details.case_header
+        self.assertEquals(ending_patient_header.given_names, updated_header_content.get('givenNames'))
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
+    def test_patient_details_update_returns_error_if_update_fails(self, mock_update):
+        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(patient_details)
+        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
+                                       SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(error)
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
+    def test_patient_details_update_does_not_update_the_patient_header_on_failure(self,mock_update):
+        updated_header_content = ExaminationMocks.get_patient_details_update_response_content().get('header')
+        self.assertNotEqual(ExaminationMocks.get_patient_details_load_response_content().get('givenNames'),
+                            updated_header_content.get('givenNames'))
+
+        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(load_error)
+        self.assertIsNotNone(patient_details)
+
+        starting_patient_header = patient_details.case_header
+        self.assertEquals(starting_patient_header.given_names,
+                          ExaminationMocks.get_patient_details_load_response_content().get('givenNames'))
+
+        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
+                                       SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(error)
+
+        ending_patient_header = patient_details.case_header
+        self.assertNotEquals(ending_patient_header.given_names, updated_header_content.get('givenNames'))
+        self.assertEquals(starting_patient_header.given_names, ending_patient_header.given_names)
 
 
 class ExaminationsMedicalTeamModelsTests(MedExTestCase):
