@@ -1,6 +1,7 @@
 from errors.models import GenericError
 from errors.utils import log_api_error
 from examinations import request_handler
+from examinations.presenters.core import PatientHeader
 from medexCms.utils import fallback_to, bool_to_string, is_empty_time, is_empty_date, parse_datetime
 from people.models import BereavedRepresentative
 
@@ -8,7 +9,6 @@ from people.models import BereavedRepresentative
 class PatientDetails:
 
     def __init__(self, obj_dict={}, modes_of_disposal={}, examination_id=None):
-        from examinations.presenters.core import PatientHeader
 
         self.modes_of_disposal = modes_of_disposal
 
@@ -188,9 +188,17 @@ class PatientDetails:
             error = GenericError(response, {"action": "loading", "type": "patient details"})
         return patient_details, error
 
-    @classmethod
-    def update(cls, examination_id, submission, auth_token):
-        return request_handler.update_patient_details(examination_id, submission, auth_token)
+    def update(self, submission, auth_token):
+        response = request_handler.update_patient_details(self.id, submission, auth_token)
+        error = None
+
+        if response.ok:
+            self.case_header = PatientHeader(response.json().get('header'))
+        else:
+            log_api_error('patient details update', response.text)
+            error = GenericError(response, {"action": "updating", "type": "patient details"})
+
+        return error
 
     def full_name(self):
         return "%s %s" % (self.given_names, self.surname)

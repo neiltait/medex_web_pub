@@ -150,16 +150,14 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             submission.update(self.urgency_form.for_request())
             submission['id'] = examination_id
 
-            response = PatientDetails.update(examination_id, submission, self.user.auth_token)
+            error = self.examination.update(submission, self.user.auth_token)
 
-            if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
-                return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
-            elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+            if error:
+                status_code = error.status_code
             else:
+                if get_body.get('nextTab'):
+                    return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
                 saved = True
-                self.examination.case_header = PatientHeader(response.json().get("header"))
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
@@ -262,8 +260,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if self.error:
             return render_error(request, self.user, self.error)
 
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details,  error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -271,8 +269,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template, context, status=self.status_code)
 
     def post(self, request, examination_id):
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details,error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
