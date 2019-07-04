@@ -15,7 +15,7 @@ class CaseBreakdown:
 
         # parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.case_header.date_of_death,
-                                               self.case_header.full_name, "MEO")
+                                               self.case_header.full_name)
         self.event_list.sort_events_oldest_to_newest()
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
@@ -39,7 +39,7 @@ class CaseBreakdown:
 
 class ExaminationEventList:
 
-    def __init__(self, timeline_items, dod, patient_name, user_role):
+    def __init__(self, timeline_items, dod, patient_name):
         self.events = []
         self.drafts = {}
         self.latests = {}
@@ -51,15 +51,15 @@ class ExaminationEventList:
         self.bereaved_discussion_draft = None
         self.me_scrutiny_draft = None
         self.dod = dod
-        self.parse_events(timeline_items, patient_name, user_role)
+        self.parse_events(timeline_items, patient_name)
 
-    def parse_events(self, timeline_items, patient_name, user_role):
+    def parse_events(self, timeline_items, patient_name):
         for key, event_type in timeline_items.items():
             if key == enums.timeline_event_keys.INITIAL_EVENT_KEY and event_type:
-                self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
+                self.events.append(CaseInitialEvent(event_type, patient_name))
 
             elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
-                self.events.append(CaseClosedEvent(event_type, patient_name, user_role))
+                self.events.append(CaseClosedEvent(event_type, patient_name))
 
             elif key in enums.timeline_event_keys.all() and event_type:
                 for event in event_type['history']:
