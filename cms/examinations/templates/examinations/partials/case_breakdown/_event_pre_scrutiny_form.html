@@ -6,7 +6,7 @@
             Review of patient records by the Medical Examiner assigned to this case
         </label>
         {% if form.errors.me_thoughts %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.me_thoughts }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_details">{{ form.errors.me_thoughts }}</span>{% endif %}
 
         <span class="nhsuk-hint" id="more-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom" id="me-thoughts" name="me-thoughts" rows="5"
@@ -19,7 +19,7 @@
                 Overall circumstances of death
             </label>
             {% if form.errors.circumstances_of_death %}
-            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.circumstances_of_death }}</span>
+            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_death_circumstances">{{ form.errors.circumstances_of_death }}</span>
             {% endif %}
 
             <span class="nhsuk-hint"
@@ -75,7 +75,7 @@
             Possible cause of death established during the review of records by Medical Examiner
         </label>
         {% if form.errors.possible_cod %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.possible_cod }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_cause_of_death">{{ form.errors.possible_cod }}</span>{% endif %}
 
         <label class="nhsuk-label" for="possible-cod-1a">
             1a
@@ -111,7 +111,7 @@
                 Overall outcome after ME review of records
             </label>
             {% if form.errors.overall_outcome %}
-            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.overall_outcome }}</span>{% endif %}
+            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_outcome">{{ form.errors.overall_outcome }}</span>{% endif %}
             <span class="nhsuk-hint" id="outcome-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
             <div class="nhsuk-radios nhsuk-radios--inline">
                 <div class="nhsuk-radios__item">
@@ -179,7 +179,7 @@
             Clinical governance review or learning opportunity
         </label>
         {% if form.errors.governance_review %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.governance_review }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_clinical_governance">{{ form.errors.governance_review }}</span>{% endif %}
 
         <span class="nhsuk-hint"
               id="governance-hint">Is there any reason why this case should be referred for a review?</span>
