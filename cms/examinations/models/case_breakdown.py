@@ -1,5 +1,3 @@
-from rest_framework import status
-
 from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
 from examinations.models.core import CauseOfDeathProposal
@@ -25,13 +23,18 @@ class CaseBreakdown:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
+        case_breakdown = None
+        error = None
 
-        medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
-
-        if response.status_code == status.HTTP_200_OK:
-            return CaseBreakdown(response.json(), medical_team), None
+        if response.ok:
+            medical_team, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
+            if medical_team_error:
+                error = medical_team_error
+            else:
+                case_breakdown = CaseBreakdown(response.json(), medical_team)
         else:
-            return None, handle_error(response, {'type': 'case', 'action': 'loading'})
+            error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
+        return case_breakdown, error
 
 
 class ExaminationEventList:

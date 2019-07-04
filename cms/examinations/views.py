@@ -14,12 +14,11 @@ from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.models.case_breakdown import CaseBreakdown
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
-from examinations.presenters.core import PatientHeader
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
-from home.utils import render_404, redirect_to_examination, render_error
+from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 

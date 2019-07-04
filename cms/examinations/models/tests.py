@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from errors.models import GenericError
+from errors.models import NotFoundError, GenericError
 from examinations.forms.patient_details import PrimaryExaminationInformationForm
+from examinations.models.case_breakdown import CaseBreakdown
 from examinations.models.core import ExaminationOverview, Examination, CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
@@ -250,7 +251,7 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
-        self.assertEquals(type(error), GenericError)
+        self.assertEquals(type(error), NotFoundError)
 
     @patch('examinations.request_handler.load_patient_details_by_id',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
@@ -258,7 +259,7 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
-        self.assertEquals(type(error), GenericError)
+        self.assertEquals(type(error), NotFoundError)
 
     def test_patient_details_update_returns_no_error_if_update_succeeds(self):
         patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
@@ -368,7 +369,7 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
         medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(medical_team)
         self.assertIsNotNone(error)
-        self.assertEquals(type(error), GenericError)
+        self.assertEquals(type(error), NotFoundError)
 
     def test_medical_team_update_returns_no_error_if_update_succeeds(self):
         medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
@@ -569,9 +570,28 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
 class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
     # CaseBreakdown tests
 
-    def test_case_breakdown_placeholder(self):
-        # Need to implement tests for the case breakdown model
-        pass
+    def test_case_breakdown_load_by_id_returns_case_breakdown_object_on_success(self):
+        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                           SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(case_breakdown)
+        self.assertEquals(type(case_breakdown), CaseBreakdown)
+
+    @patch('examinations.request_handler.load_medical_team_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
+    def test_case_breakdown_load_by_id_returns_an_error_object_if_medical_team_load_fails(self, mock_load):
+        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(case_breakdown)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), NotFoundError)
+
+    @patch('examinations.request_handler.load_case_breakdown_by_id',
+           return_value=ExaminationMocks.get_unsuccessful_case_breakdown_load_response())
+    def test_case_breakdown_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
+        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(case_breakdown)
+        self.assertIsNotNone(error)
+        self.assertEquals(type(error), NotFoundError)
 
     # ExaminationEventList tests
 

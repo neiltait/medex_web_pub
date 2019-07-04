@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from errors.models import GenericError
-from errors.utils import log_api_error
+from errors.utils import log_api_error, handle_error
 from medexCms.api import enums
 
 from medexCms.utils import parse_datetime
@@ -78,7 +77,7 @@ class Examination:
             examination = Examination(submission, response.json().get('examinationId'))
         else:
             log_api_error('case creation', response.text)
-            error = GenericError(response, {"action": "create", "type": "case"})
+            error = handle_error(response, {"action": "create", "type": "case"})
 
         return examination, error
 
