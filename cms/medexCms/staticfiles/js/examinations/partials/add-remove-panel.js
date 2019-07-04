@@ -29,12 +29,12 @@ AddRemovePanelList.prototype = {
         this.refreshVisible();
     },
 
-    refreshVisible() {
+    refreshVisible: function() {
         this.refreshVisiblePanels();
         this.refreshVisibleButtons();
     },
 
-    refreshVisiblePanels() {
+    refreshVisiblePanels: function() {
         for (i = 0; i < this.panels.length; i += 1) {
             if (i < this.visibleCount) {
                 this.panels[i].classList.remove("medex-hidden");
@@ -46,7 +46,7 @@ AddRemovePanelList.prototype = {
         }
     },
 
-    refreshVisibleButtons() {
+    refreshVisibleButtons: function() {
         if (this.visibleCount === 0) {
             this.removeButton.addClass("medex-hidden");
         } else {
