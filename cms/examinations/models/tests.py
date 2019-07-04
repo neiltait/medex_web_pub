@@ -3,15 +3,17 @@ from unittest.mock import patch
 
 from errors.models import NotFoundError, GenericError
 from examinations.forms.patient_details import PrimaryExaminationInformationForm
-from examinations.models.case_breakdown import CaseBreakdown
+from examinations.models.case_breakdown import CaseBreakdown, ExaminationEventList
 from examinations.models.core import ExaminationOverview, Examination, CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
-from examinations.models.timeline_events import CaseInitialEvent
+from examinations.models.timeline_events import CaseInitialEvent, CaseClosedEvent, CaseOtherEvent, CasePreScrutinyEvent, \
+    CaseQapDiscussionEvent, CaseMeoSummaryEvent, CaseAdmissionNotesEvent, CaseBereavedDiscussionEvent, \
+    CaseMedicalHistoryEvent
 from examinations.templatetags.examination_filters import case_card_presenter
 from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT_4
+from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT_4, key_not_empty
 
 
 class ExaminationsCoreModelsTests(MedExTestCase):
@@ -25,7 +27,8 @@ class ExaminationsCoreModelsTests(MedExTestCase):
         self.assertIsNotNone(examination)
         self.assertEquals(type(examination), Examination)
 
-    @patch('examinations.request_handler.post_new_examination', return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
     def test_examination_create_returns_an_error_object_if_creation_fails(self, mock_examination_creation):
         form_data = ExaminationMocks.get_minimal_create_case_form_data()
         form = PrimaryExaminationInformationForm(form_data)
@@ -247,7 +250,8 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
 
     @patch('examinations.request_handler.load_modes_of_disposal',
            return_value=DatatypeMocks.get_unsuccessful_modes_of_disposal_response())
-    def test_patient_details_load_by_id_returns_an_error_object_if_modes_of_disposal_load_fails(self, mock_modes_of_disposal):
+    def test_patient_details_load_by_id_returns_an_error_object_if_modes_of_disposal_load_fails(self,
+                                                                                                mock_modes_of_disposal):
         patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
@@ -304,7 +308,7 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
 
     @patch('examinations.request_handler.update_patient_details',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
-    def test_patient_details_update_does_not_update_the_patient_header_on_failure(self,mock_update):
+    def test_patient_details_update_does_not_update_the_patient_header_on_failure(self, mock_update):
         updated_header_content = ExaminationMocks.get_patient_details_update_response_content().get('header')
         self.assertNotEqual(ExaminationMocks.get_patient_details_load_response_content().get('givenNames'),
                             updated_header_content.get('givenNames'))
@@ -572,7 +576,7 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
 
     def test_case_breakdown_load_by_id_returns_case_breakdown_object_on_success(self):
         case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                           SessionMocks.ACCESS_TOKEN)
+                                                         SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(case_breakdown)
         self.assertEquals(type(case_breakdown), CaseBreakdown)
@@ -595,9 +599,122 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
 
     # ExaminationEventList tests
 
-    def test_examination_event_list_placeholder(self):
-        # Need to implement tests for the examination event list model
-        pass
+    def test_examination_event_list_parse_events_creates_a_list_including_all_events_in_the_data(self):
+        patient_name = 'Joe Bloggs'
+        event_list = ExaminationEventList({}, "0001-01-01T00:00:00", patient_name)
+        self.assertEquals(len(event_list.events), 0)
+
+        event_data = ExaminationMocks.get_case_breakdown_response_content().get('caseBreakdown')
+        event_list.parse_events(event_data, patient_name)
+
+        count_of_initial_events_in_data = 1
+        count_of_closed_events_in_data = 1 if key_not_empty('caseClosed', event_data) else 0
+        count_of_other_events_in_data = len(event_data.get('otherEvents').get('history')) if \
+            key_not_empty('otherEvents', event_data) else 0
+        count_of_scrutiny_events_in_data = len(event_data.get('preScrutiny').get('history')) if \
+            key_not_empty('preScrutiny', event_data) else 0
+        count_of_qap_events_in_data = len(event_data.get('qapDiscussion').get('history')) if \
+            key_not_empty('qapDiscussion', event_data) else 0
+        count_of_summary_events_in_data = len(event_data.get('meoSummary').get('history')) if \
+            key_not_empty('meoSummary', event_data) else 0
+        count_of_admission_events_in_data = len(event_data.get('admissionNotes').get('history')) if \
+            key_not_empty('admissionNotes', event_data) else 0
+        count_of_bereaved_events_in_data = len(event_data.get('bereavedDiscussion').get('history')) if \
+            key_not_empty('bereavedDiscussion', event_data) else 0
+        count_of_medical_events_in_data = len(event_data.get('medicalHistory').get('history')) if \
+            key_not_empty('medicalHistory', event_data) else 0
+
+        count_of_initial_events_in_list = 0
+        count_of_closed_events_in_list = 0
+        count_of_other_events_in_list = 0
+        count_of_scrutiny_events_in_list = 0
+        count_of_qap_events_in_list = 0
+        count_of_summary_events_in_list = 0
+        count_of_admission_events_in_list = 0
+        count_of_bereaved_events_in_list = 0
+        count_of_medical_events_in_list = 0
+
+        for event in event_list.events:
+            if type(event) == CaseInitialEvent:
+                count_of_initial_events_in_list = count_of_initial_events_in_list + 1
+            elif type(event) == CaseClosedEvent:
+                count_of_closed_events_in_list = count_of_closed_events_in_list + 1
+            elif type(event) == CaseOtherEvent:
+                count_of_other_events_in_list = count_of_other_events_in_list + 1
+            elif type(event) == CasePreScrutinyEvent:
+                count_of_scrutiny_events_in_list = count_of_scrutiny_events_in_list + 1
+            elif type(event) == CaseQapDiscussionEvent:
+                count_of_qap_events_in_list = count_of_qap_events_in_list + 1
+            elif type(event) == CaseMeoSummaryEvent:
+                count_of_summary_events_in_list = count_of_summary_events_in_list + 1
+            elif type(event) == CaseAdmissionNotesEvent:
+                count_of_admission_events_in_list = count_of_admission_events_in_list + 1
+            elif type(event) == CaseBereavedDiscussionEvent:
+                count_of_bereaved_events_in_list = count_of_bereaved_events_in_list + 1
+            elif type(event) == CaseMedicalHistoryEvent:
+                count_of_medical_events_in_list = count_of_medical_events_in_list + 1
+
+        self.assertEquals(count_of_initial_events_in_list, count_of_initial_events_in_data)
+        self.assertEquals(count_of_closed_events_in_list, count_of_closed_events_in_data)
+        self.assertEquals(count_of_other_events_in_list, count_of_other_events_in_data)
+        self.assertEquals(count_of_scrutiny_events_in_list, count_of_scrutiny_events_in_data)
+        self.assertEquals(count_of_qap_events_in_list, count_of_qap_events_in_data)
+        self.assertEquals(count_of_summary_events_in_list, count_of_summary_events_in_data)
+        self.assertEquals(count_of_admission_events_in_list, count_of_admission_events_in_data)
+        self.assertEquals(count_of_bereaved_events_in_list, count_of_bereaved_events_in_data)
+        self.assertEquals(count_of_medical_events_in_list, count_of_medical_events_in_data)
+
+    def test_examination_event_list_parse_events_does_not_blow_up_if_it_recieves_an_unknown_event_type(self):
+        patient_name = 'Joe Bloggs'
+        event_list = ExaminationEventList({}, "0001-01-01T00:00:00", patient_name)
+        self.assertEquals(len(event_list.events), 0)
+
+        event_data = ExaminationMocks.get_case_breakdown_response_content().get('caseBreakdown')
+        event_data['randomKey'] = event_data.get('otherEvents')
+
+        try:
+            event_list.parse_events(event_data, patient_name)
+            # if the test reaches here the function completed without blowing up
+            self.assertIsTrue(True)
+        except:
+            # function should not have thrown an error
+            self.assertIsTrue(False)
+
+    def test_examination_event_list_sort_events_oldest_to_newest_correctly_orders_events_with_oldest_first(self):
+
+        def check_events_correctly_ordered(events_list):
+            correctly_ordered = True
+            previous_loop_date = None
+
+            for event in events_list:
+                if previous_loop_date:
+                    next_date = parse_datetime(event.created_date)
+                    if previous_loop_date > next_date:
+                        correctly_ordered = False
+
+                previous_loop_date = parse_datetime(event.created_date)
+
+            return correctly_ordered
+
+        patient_name = 'Joe Bloggs'
+        event_data = ExaminationMocks.get_case_breakdown_response_content().get('caseBreakdown')
+        event_list = ExaminationEventList(event_data, "0001-01-01T00:00:00", patient_name)
+
+        is_correctly_ordered = check_events_correctly_ordered(event_list.events)
+
+        if is_correctly_ordered:
+            holder = event_list.events[0]
+            event_list.events[0] = event_list.events[1]
+            event_list.events[1] = holder
+            is_correctly_ordered = check_events_correctly_ordered(event_list.events)
+
+        self.assertIsFalse(is_correctly_ordered)
+
+        event_list.sort_events_oldest_to_newest()
+
+        is_correctly_ordered = check_events_correctly_ordered(event_list.events)
+
+        self.assertIsTrue(is_correctly_ordered)
 
 
 class ExaminationsCaseOutcomeModelsTests(MedExTestCase):
@@ -613,27 +730,27 @@ class ExaminationsTimelineEventsModelsTests(MedExTestCase):
     def test_initial_event_does_display_date_in_correct_format(self):
         data = {'dateOfDeath': '2019-05-12T00:00:00'}
 
-        event = CaseInitialEvent(data, None, None)
+        event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_date(), '12.05.2019')
 
     def test_initial_event_does_display_time_in_correct_format(self):
         data = {'timeOfDeath': '00:55:00'}
 
-        event = CaseInitialEvent(data, None, None)
+        event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_time(), '00:55')
 
     def test_initial_event_does_display_unknown_for_default_none_date(self):
         data = {'dateOfDeath': NONE_DATE}
 
-        event = CaseInitialEvent(data, None, None)
+        event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_date(), CaseInitialEvent.UNKNOWN)
 
     def test_initial_event_does_display_unknown_for_default_none_time(self):
         data = {'timeOfDeath': NONE_TIME}
 
-        event = CaseInitialEvent(data, None, None)
+        event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_time(), CaseInitialEvent.UNKNOWN)

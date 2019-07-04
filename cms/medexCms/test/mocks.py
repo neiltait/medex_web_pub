@@ -1007,7 +1007,7 @@ class ExaminationMocks:
                         {
                             "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:31:43.019Z",
                             "medicalExaminerThoughts": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                        "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                        "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1076,7 +1076,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "BereavedDiscussion",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:32:43.019Z",
                             "participantFullName": "Jane Doe",
                             "participantRelationship": "Wife",
                             "participantPhoneNumber": "01234 567890",
@@ -1143,7 +1143,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "MeoSummary",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:33:43.019Z",
                             "summaryDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1186,7 +1186,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "QapDiscussion",
-                            "created": "2019-03-13T10:30:43.019Z",
+                            "created": "2019-03-13T10:34:43.019Z",
                             "participantRole": "Consultant",
                             "participantOrganisation": "A Hospital",
                             "participantPhoneNumber": "01234 567890",
@@ -1262,7 +1262,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "eventType": "MedicalHistory",
                             "isFinal": True,
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:35:43.019Z",
                             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                     "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                     "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1318,7 +1318,7 @@ class ExaminationMocks:
                             "admittedDate": "",
                             "admittedTime": "",
                             "immediateCoronerReferral": False,
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:36:43.019Z",
                         }
                     ],
                     "latest": {
@@ -1343,6 +1343,17 @@ class ExaminationMocks:
                         "immediateCoronerReferral": False,
                         "created": "2019-03-12T10:30:43.019Z",
                     }
+                },
+                "caseClosed": {
+                    "dateCaseClosed": "2019-07-04T14:41:53.7341611+00:00",
+                    "eventType": "CaseClosed",
+                    "eventId": "2e07f19c-4db6-487c-a53b-79a646f408e3",
+                    "isFinal": True,
+                    "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+                    "created": "2019-07-04T14:41:53.7340362+00:00",
+                    "userFullName": "Matthew Nicks",
+                    "usersRole": "ServiceAdministrator",
+                    "caseOutcome": "IssueMCCD"
                 }
             },
             "errors": {
