@@ -18,11 +18,15 @@ class Permission:
         self.user_id = obj_dict.get("userId")
         self.location_id = obj_dict.get("locationId")
         self.location_name = fallback_to(obj_dict.get("locationName"), self.location_id)
-        self.user_role = obj_dict.get("userRole")
+
+        # TODO: Revert to commented code when API team have updated Permissions endpoint
+        # self.user_role = obj_dict.get("userRole")
+        role = obj_dict.get("userRole")
+        self.user_role = self.ROLES.get(str(role)) if isinstance(role, int) else role
 
     @property
     def role_type(self):
-        return self.ROLES[str(self.user_role)]
+        return self.user_role
 
     @classmethod
     def create(cls, submission, user_id, auth_token):
@@ -39,6 +43,11 @@ class Permission:
     def update(cls, location_id, user_role, user_id, auth_token):
         return request_handler.update_permission(json.dumps({"locationId": location_id, "userRole": user_role}),
                                                  user_id, auth_token)
+
+    @classmethod
+    def load_by_id(cls, user_id, permission_id, auth_token):
+        response = request_handler.load_single_permission_for_user(user_id, permission_id, auth_token)
+        return Permission(obj_dict=response.json())
 
 
 class PermittedActions:

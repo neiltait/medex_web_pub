@@ -40,6 +40,7 @@
                             <td class="nhsuk-table__cell "> {{ permission.location_name }}</td>
                             <td class="nhsuk-table__cell ">
                                 <div class="nhsuk-grid-column-one-half">
+                                    <a href='{% url 'edit_permission' user_id=managed_user.user_id permission_id=permission.permission_id %}'>Edit</a>
                                     <a href='{% url 'delete_permission' user_id=managed_user.user_id permission_id=permission.permission_id %}'>Delete</a>
                                 </div>
                             </td>

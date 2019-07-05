@@ -278,6 +278,12 @@ class PermissionMocks:
         }
 
     @classmethod
+    def get_user_single_permission_response_content(cls, role_type=ME_TYPE):
+        permission_dict = cls.get_me_permission_dict() if role_type == cls.ME_TYPE else cls.get_meo_permission_dict()
+        permission_dict["success"] = True
+        return permission_dict
+
+    @classmethod
     def get_successful_permission_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
@@ -296,6 +302,13 @@ class PermissionMocks:
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_user_permission_response_content(role_type)).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_single_permission_load_response(cls, role_type=ME_TYPE):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_user_single_permission_response_content(role_type)).encode('utf-8')
         return response
 
     @classmethod

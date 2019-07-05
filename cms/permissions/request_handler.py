@@ -11,6 +11,13 @@ def load_permissions_for_user(user_id, auth_token):
         return MedexRequest.get(auth_token, '%s/users/%s/permissions' % (settings.API_URL, user_id))
 
 
+def load_single_permission_for_user(user_id, permission_id, auth_token):
+    if settings.LOCAL:
+        return PermissionMocks.get_successful_permission_load_response(PermissionMocks.MEO_TYPE)
+    else:
+        return MedexRequest.get(auth_token, '%s/users/%s/permissions/%s' % (settings.API_URL, user_id, permission_id))
+
+
 def create_permission(permission, user_id, auth_token):
     if settings.LOCAL:
         return PermissionMocks.get_successful_permission_creation_response()
