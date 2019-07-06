@@ -17,6 +17,7 @@ class PermissionBuilderForm:
             self.region = request.get('region')
             self.trust = request.get('trust')
             self.national = request.get('national')
+            self.trust_name = request.get('trust_name')
         else:
             self.role = None
             self.permission_level = None

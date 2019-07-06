@@ -64,6 +64,13 @@ class APIPeopleStrings:
     OTHER = 'other'
 
 
+class APIRoles:
+    ME = 'MedicalExaminer'
+    MEO = 'MedicalExaminerOfficer'
+    SERVICE_ADMIN = 'ServiceAdministrator'
+    SERVICE_OWNER = 'ServiceOwner'
+
+
 class UserRoleTypes:
     ME = 'Medical Examiner'
     MEO = 'Medical Examiner Officer'
@@ -126,6 +133,7 @@ class APIStrings:
     discussion = APIDiscussionOutcomes()
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
+    roles = APIRoles()
     role_types = UserRoleTypes()
     gp_notified_status = APIGPNotifiedStatus()
     examination_sections = ExaminationSections()

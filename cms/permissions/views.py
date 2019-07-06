@@ -65,6 +65,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
             'managed_user': self.managed_user,
         }
 
+
 class EditPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView):
     permission_required = 'can_update_user_permission'
     template = 'users/permission_editor.html'
@@ -77,40 +78,35 @@ class EditPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUser
         context = self.__set_edit_permission_context(permission, False)
         return render(request, self.template, context, status=status_code)
 
-    def post(self, request, user_id):
+    def post(self, request, user_id, permission_id):
         post_body = request.POST
-        status_code = status.HTTP_200_OK
-        invalid = False
         form = PermissionBuilderForm(post_body)
-        add_another = True if post_body.get('add_another') == "true" else False
 
         if form.is_valid():
-            response = self.managed_user.add_permission(form, self.user.auth_token)
+            response = self.managed_user.update_permission(form, permission_id, self.user.auth_token)
 
             if response.ok:
-                if add_another:
-                    form = PermissionBuilderForm()
-                else:
-                    return redirect('/settings')
+                return redirect('/users/%s/manage' % self.managed_user.user_id)
             else:
                 invalid = True
                 log_api_error('permission creation', response.text)
                 status_code = response.status_code
-
         else:
             invalid = True
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_edit_permission_context(form, invalid)
+        permission = Permission.load_by_id(user_id, permission_id, self.user.auth_token)
+        context = self.__set_edit_permission_context(permission, invalid, posted_form=form)
 
         return render(request, self.template, context, status=status_code)
 
-    def __set_edit_permission_context(self, permission, invalid):
+    def __set_edit_permission_context(self, permission, invalid, posted_form=None):
         trusts = self.user.get_permitted_trusts()
         regions = self.user.get_permitted_regions()
         national = Location.get_national_location_id(self.user.auth_token)
 
-        form = PermissionBuilderForm.load_from_permission(permission, trusts, regions, national)
+        form = posted_form if posted_form else PermissionBuilderForm.load_from_permission(permission, trusts, regions,
+                                                                                          national)
         return {
             'session_user': self.user,
             'sub_heading': 'Edit role and permission level',
@@ -135,4 +131,3 @@ class DeletePermissionView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def __redirect_to_manage_user(self, user_id):
         return redirect('/users/%s/manage' % user_id)
-

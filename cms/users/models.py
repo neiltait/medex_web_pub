@@ -118,6 +118,9 @@ class User:
     def add_permission(self, form, auth_token):
         return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
 
+    def update_permission(self, form, permission_id, auth_token):
+        return Permission.update(form.to_dict(self.user_id), self.user_id, permission_id, auth_token)
+
     def load_permissions(self):
         response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
 

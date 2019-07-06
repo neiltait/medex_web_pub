@@ -239,21 +239,39 @@ class PermissionMocks:
     MEO_TYPE = 'meo'
 
     @classmethod
-    def get_meo_permission_dict(cls):
-        return {
-            "permissionId": "123-456-789",
-            "userId": "abc-def-ghi",
-            "locationId": "jkl-mno-pqr",
-            "userRole": '0',
-        }
-
-    @classmethod
     def get_me_permission_dict(cls):
         return {
             "permissionId": "123-456-789",
             "userId": "abc-def-ghi",
             "locationId": "jkl-mno-pqr",
-            "userRole": '1',
+            "userRole": 'MedicalExaminer',
+        }
+
+    @classmethod
+    def get_meo_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 'MedicalExaminerOfficer',
+        }
+
+    @classmethod
+    def get_legacy_me_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 1,
+        }
+
+    @classmethod
+    def get_legacy_meo_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 0,
         }
 
     @classmethod

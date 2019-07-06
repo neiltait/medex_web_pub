@@ -170,12 +170,12 @@
               <div class="search-dropdown">
                 <input id="trust" class='selection-field' type="text" name="trust" value="{{form.trust}}">
                 <div class='search-field{% if form.trust_error %} error{% endif %}'>
-                  <input type="text" name="searchField" placeholder="Search for a trust"  value="{% if form.trust %}{{ form.trust_name }}{% endif %}">
+                  <input type="text" class="search-field-input" name="trust_name" placeholder="Search for a trust"  value="{% if form.trust %}{{ form.trust_name }}{% endif %}">
                 </div>
                 <div class="options-list">
                   <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
                   {% for trust in trusts %}
-                    <option value="{{trust.location_id}}" {% if trust.location_id == permission.location_id %}style="display:block" {% endif %}>{{trust.name}}</option>
+                    <option value="{{trust.location_id}}" {% if trust.location_id == form.trust %}style="display:block" {% endif %}>{{trust.name}}</option>
                   {% endfor %}
                 </div>
               </div>
@@ -186,7 +186,7 @@
         <div class="nhsuk-grid-row">
           <div class="nhsuk-grid-column-full">
             <input id="submit-btn" class="nhsuk-button" type="submit" value="{{form.submit_btn_text}}"/>
-              <button id="cancel-btn" class="nhsuk-button nhsuk-button--secondary">Cancel</button>
+              <button id="cancel-btn" class="nhsuk-button nhsuk-button--secondary" href="{% url 'manage_user' user_id=managed_user.user_id %}">Cancel</button>
           </div>
         </div>
 

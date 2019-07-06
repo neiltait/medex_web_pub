@@ -40,9 +40,8 @@ class Permission:
         return get_display_user_role(self.user_role)
 
     @classmethod
-    def update(cls, location_id, user_role, user_id, auth_token):
-        return request_handler.update_permission(json.dumps({"locationId": location_id, "userRole": user_role}),
-                                                 user_id, auth_token)
+    def update(cls, submission, user_id, permission_id, auth_token):
+        return request_handler.update_permission(submission, user_id, permission_id, auth_token)
 
     @classmethod
     def load_by_id(cls, user_id, permission_id, auth_token):
