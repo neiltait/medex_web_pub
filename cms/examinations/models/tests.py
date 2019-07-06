@@ -9,42 +9,12 @@ from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME
 
 
-class ExaminationsModelsTests(MedExTestCase):
+class ExaminationsCoreModelsTests(MedExTestCase):
+    # Examination tests
 
-    # PatientDetails tests
-
-    def test_initialising_with_the_none_date_results_in_no_dob(self):
-        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
-        loaded_data['dateOfBirth'] = NONE_DATE
-        patient_details = PatientDetails(loaded_data)
-        self.assertIsNone(patient_details.date_of_birth)
-        self.assertIsNone(patient_details.day_of_birth)
-        self.assertIsNone(patient_details.month_of_birth)
-        self.assertIsNone(patient_details.year_of_birth)
-
-    def test_initialising_with_the_none_date_results_in_no_dod(self):
-        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
-        loaded_data['dateOfDeath'] = NONE_DATE
-        patient_details = PatientDetails(loaded_data)
-        self.assertIsNone(patient_details.date_of_death)
-        self.assertIsNone(patient_details.day_of_death)
-        self.assertIsNone(patient_details.month_of_death)
-        self.assertIsNone(patient_details.year_of_death)
-
-    def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
-        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
-        mode_of_disposal = list(DatatypeMocks.get_modes_of_disposal_list().keys())[0]
-        loaded_data['modeOfDisposal'] = mode_of_disposal
-        patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
-        self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
-
-    def test_initialising_with_a_bereaved_sets_the_representatives(self):
-        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
-        bereaved = PeopleMocks.get_bereaved_representative_response_dict()
-        loaded_data['representatives'].append(bereaved)
-        patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
-        self.assertEqual(len(patient_details.representatives), 1)
-        self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
+    def test_examination_placeholder(self):
+        # Need to implement tests for the examination model
+        pass
 
     # ExaminationOverview tests
 
@@ -160,8 +130,81 @@ class ExaminationsModelsTests(MedExTestCase):
         self.assertEqual(result, expected_days)
 
 
-class ExaminationsBreakdownTests(MedExTestCase):
+class ExaminationsPatientDetailsModelsTests(MedExTestCase):
+    # PatientDetails tests
 
+    def test_initialising_with_the_none_date_results_in_no_dob(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        loaded_data['dateOfBirth'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_birth)
+        self.assertIsNone(patient_details.day_of_birth)
+        self.assertIsNone(patient_details.month_of_birth)
+        self.assertIsNone(patient_details.year_of_birth)
+
+    def test_initialising_with_the_none_date_results_in_no_dod(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        loaded_data['dateOfDeath'] = NONE_DATE
+        patient_details = PatientDetails(loaded_data)
+        self.assertIsNone(patient_details.date_of_death)
+        self.assertIsNone(patient_details.day_of_death)
+        self.assertIsNone(patient_details.month_of_death)
+        self.assertIsNone(patient_details.year_of_death)
+
+    def test_initialising_with_a_mode_of_disposal_and_the_enums_sets_the_mode_of_disposal(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        mode_of_disposal = list(DatatypeMocks.get_modes_of_disposal_list().keys())[0]
+        loaded_data['modeOfDisposal'] = mode_of_disposal
+        patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
+        self.assertEqual(patient_details.mode_of_disposal, mode_of_disposal)
+
+    def test_initialising_with_a_bereaved_sets_the_representatives(self):
+        loaded_data = ExaminationMocks.get_patient_details_load_response_content()
+        bereaved = PeopleMocks.get_bereaved_representative_response_dict()
+        loaded_data['representatives'].append(bereaved)
+        patient_details = PatientDetails(loaded_data, DatatypeMocks.get_modes_of_disposal_list())
+        self.assertEqual(len(patient_details.representatives), 1)
+        self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
+
+
+class ExaminationsMedicalTeamModelsTests(MedExTestCase):
+    # MedicalTeam tests
+
+    def test_medical_team_placeholder(self):
+        # Need to implement tests for the medical team model
+        pass
+
+    # MedicalTeam tests
+
+    def test_medical_team_member_placeholder(self):
+        # Need to implement tests for the medical team member model
+        pass
+
+
+class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
+    # CaseBreakdown tests
+
+    def test_case_breakdown_placeholder(self):
+        # Need to implement tests for the case breakdown model
+        pass
+
+    # ExaminationEventList tests
+
+    def test_examination_event_list_placeholder(self):
+        # Need to implement tests for the examination event list model
+        pass
+
+
+class ExaminationsCaseOutcomeModelsTests(MedExTestCase):
+    # CaseOutcome tests
+
+    def test_case_outcome_placeholder(self):
+        # Need to implement tests for the case outcome model
+        pass
+
+
+class ExaminationsTimelineEventsModelsTests(MedExTestCase):
+    # InitialEvent tests
     def test_initial_event_does_display_date_in_correct_format(self):
         data = {'dateOfDeath': '2019-05-12T00:00:00'}
 

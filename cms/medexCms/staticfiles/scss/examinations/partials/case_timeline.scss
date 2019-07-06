@@ -3,8 +3,8 @@
 
 .case-timeline-block {
     .controls {
-        margin-top: 1rem;
-        margin-bottom: 3rem;
+        margin-top: $medex-spacing-md;
+        margin-bottom: $medex-spacing-xl;
 
         .controls-label {
             display: block;
@@ -15,13 +15,13 @@
     .case-timeline-wrapper {
         margin-top: 50px;
         background-color: $nhs-pale-grey;
-        padding-left: 70px;
-        padding-right: 100px;
+        padding-left: medex-spacing(9);
+        padding-right: medex-spacing(9);
 
         .case-timeline {
             border-left: 3px solid $nhs-grey;
-            padding-top: 100px;
-            padding-bottom: 100px;
+            padding-top: medex-spacing(9);
+            padding-bottom: medex-spacing(9);
         }
     }
 }

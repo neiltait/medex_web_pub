@@ -4,9 +4,9 @@
 .case-card-header {
   border: 1px solid $nhs-light-grey;
   border-left: 4px solid $nhs-blue;
-  padding: 1.5rem 2rem;
+  padding: medex-spacing(4) $medex-spacing-lg;
   box-shadow: 0 5px $nhs-very-light-grey;
-  margin-bottom: 1rem;
+  margin-bottom: $medex-spacing-md;
 
   &.urgent {
     border-left: 4px solid $nhs-red;
@@ -59,7 +59,7 @@
       background: url("/static/images/down_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
-      margin-top: .5rem;
+      margin-top: $medex-spacing-sm;
 
       &:hover {
         background: url("/static/images/chevron-down-blue.svg") no-repeat;
@@ -70,7 +70,7 @@
       background: url("/static/images/up_chevron.png") no-repeat;
       height: 1rem;
       width: 2rem;
-      margin-top: .5rem;
+      margin-top: $medex-spacing-sm;
       display: none;
     }
 
@@ -78,9 +78,9 @@
       border: 1px solid $black;
       color: $black;
       text-decoration: none;
-      padding: 0.2em 0.5em;
-      margin-right: 1em;
-      margin-left: 1em;
+      padding: $medex-spacing-xs $medex-spacing-sm;
+      margin-right: $medex-spacing-md;
+      margin-left: $medex-spacing-md;
 
 
       &:visited {
@@ -190,12 +190,12 @@
   background: $white;
   color: $black;
   border: 1px solid $nhs-light-grey;
-  padding: 1.5rem 2rem;
+  padding: $medex-spacing-md $medex-spacing-lg;
   box-shadow: 0 5px $nhs-very-light-grey;
-  margin-bottom: 1rem;
+  margin-bottom: $medex-spacing-md;
 
   .info-line {
-    margin-bottom: .5rem
+    margin-bottom: $medex-spacing-sm
   }
 
   .urgent {

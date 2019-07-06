@@ -36,7 +36,7 @@
 
     EventEntryArea.prototype = {
         setup: function () {
-            this.picker = this.wrapper.find('#event-form-picker');
+            this.picker = this.wrapper.find('select#event-form-picker ');
             this.text = this.wrapper.find('#hidden-text');
             this.forms = {};
             this.activeForm = null;
@@ -57,6 +57,7 @@
         startWatcher: function () {
             var that = this;
             this.picker.change(function (e) {
+                console.log('changing form type')
                 that.forms[that.picker[0].value].show();
                 that.hideOtherForms(that.picker[0].value);
                 that.text.show();
@@ -127,7 +128,8 @@
 
             this.startWatchers();
         },
-        showHideOutcome() {
+
+        showHideOutcome: function() {
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
 
             if (selectedOutcome.length > 0 && selectedOutcome.val() === 'IssueAnMccd') {
@@ -141,7 +143,8 @@
                 this.coronerDecisionPanel.hide();
             }
         },
-        showHideOutcomeDecision() {
+
+        showHideOutcomeDecision: function() {
             let selectedOutcomeDecision = this.form.find('input[name=qap-discussion-outcome-decision]:checked');
             let selectedOutcome = this.form.find('input[name=qap-discussion-outcome]:checked');
             if (selectedOutcome.length > 0 && selectedOutcome.val() === 'ReferToCoroner') {
@@ -154,7 +157,8 @@
                 this.revisedCauseOfDeathPanel.hide();
             }
         },
-        startWatchers() {
+
+        startWatchers: function() {
             let that = this;
             $('input[type=radio][name=qap-discussion-outcome]').change(function () {
                 if (this.value === 'IssueAnMccd') {
@@ -190,7 +194,8 @@
 
             this.startWatchers();
         },
-        showHideCoronerPanel() {
+
+        showHideCoronerPanel: function() {
             let selectedOutcome = this.form.find('input[name=ops]:checked');
 
             if (selectedOutcome.length > 0 && selectedOutcome.val() === 'ReferToCoroner') {
@@ -199,7 +204,8 @@
                 this.coronerDecisionPanel.hide();
             }
         },
-        startWatchers() {
+
+        startWatchers: function() {
             let that = this;
             $('input[type=radio][name=ops]').change(function () {
                 if (this.value === 'IssueAnMccd') {
@@ -217,7 +223,7 @@
     };
 
     ChevronExpandable.prototype = {
-        setup() {
+        setup: function() {
             this.header = this.wrapper.find(".expandable-header");
             this.body = this.wrapper.find(".expandable-body");
             this.upChevron = this.wrapper.find(".chevron-up");
@@ -225,7 +231,8 @@
 
             this.startWatchers();
         },
-        startWatchers() {
+
+        startWatchers: function() {
             let that = this;
             this.upChevron.click(function (e) {
                 that.contract()
@@ -234,11 +241,12 @@
                 that.expand()
             });
         },
-        expand() {
+
+        expand: function() {
             this.header.addClass("expanded");
             this.body.addClass("expanded");
         },
-        contract() {
+        contract: function() {
             this.header.removeClass("expanded");
             this.body.removeClass("expanded");
         }
@@ -293,7 +301,7 @@
             this.startWatchers();
         },
 
-        showHideRepTypePanels() {
+        showHideRepTypePanels: function() {
             let selectedButton = this.form.find('input[name=bereaved_rep_type]:checked');
             if (selectedButton.val() === 'bereaved-representative') {
                 this.repDetails.show();
@@ -304,7 +312,7 @@
             }
         },
 
-        showHideConcernsPanel() {
+        showHideConcernsPanel: function() {
             let selectedButton = this.form.find('input[name=bereaved_discussion_outcome]:checked');
             if (selectedButton && (selectedButton.val() === 'concerns')) {
                 this.concernsPanel.show();
@@ -313,7 +321,7 @@
             }
         },
 
-        startWatchers() {
+        startWatchers: function() {
             let that = this;
             this.newRep.change(function () {
                 that.showHideRepTypePanels();
@@ -390,16 +398,16 @@
 
         setupTextboxesHandler: function () {
         var that = this;
-        for (textInput of that.textboxes) {
-            textInput.on('change keyup paste mouseup', function () {
+        for (var i = 0; i < that.textboxes.length; i++) {
+            that.textboxes[i].on('change keyup paste mouseup', function () {
                 that.checkbox.prop("disabled", that.anyTextBoxesHaveContent(that.textboxes));
             })
         }
     },
 
         anyTextBoxesHaveContent: function () {
-            for (textInput of this.textboxes) {
-                if (textInput.val() !== '') {
+            for (var i = 0; i < this.textboxes.length; i++) {
+                if (this.textboxes[i].val() !== '') {
                     return true
                 }
             }
@@ -424,8 +432,8 @@
     },
 
     initialiseFormWithData: function() {
-        for(inputGroup of this.inputGroups) {
-            inputGroup.enabledOrDisable();
+        for(var i = 0; i < this.inputGroups.length; i++) {
+            this.inputGroups[i].enabledOrDisable();
         }
     },
 

@@ -14,8 +14,7 @@ from medexCms.utils import NONE_DATE
 from people.models import BereavedRepresentative
 
 
-class ExaminationsFormsTests(MedExTestCase):
-
+class PatientDetailsFormsTests(MedExTestCase):
     # Primary Information Form
     def test_given_create_examination_without_first_name_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
@@ -411,6 +410,8 @@ class ExaminationsFormsTests(MedExTestCase):
         form = UrgencyInformationForm(ExaminationMocks.get_patient_details_urgency_form_data())
         self.assertIsTrue(form.is_valid())
 
+
+class MedicalTeamFormsTests(MedExTestCase):
     # Medical Team Form tests
     def test_medical_team_member_initialised_with_valid_medical_team_contains_lookups(self):
         medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
@@ -442,6 +443,23 @@ class ExaminationsFormsTests(MedExTestCase):
         form = MedicalTeamMembersForm(mock_data)
 
         self.assertIsFalse(form.is_valid())
+
+
+class TimelineEventFormsTests(MedExTestCase):
+    @staticmethod
+    def get_participant_from_draft(draft_data):
+        return MedicalTeamMember(name=draft_data["participantName"],
+                                 role=draft_data["participantRole"],
+                                 organisation=draft_data["participantOrganisation"],
+                                 phone_number=draft_data["participantPhoneNumber"])
+
+    @staticmethod
+    def get_existing_bereaved_representative_from_draft(draft_data):
+        return BereavedRepresentative({
+            'fullName': draft_data.get("participantFullName"),
+            'relationship': draft_data.get("participantRelationship"),
+            'phoneNumber': draft_data.get("participantPhoneNumber")
+        })
 
     # PreScrutinyEventForm
 
@@ -739,13 +757,6 @@ class ExaminationsFormsTests(MedExTestCase):
         # Then the form is filled with individual date fields
         self.assertEquals(form.discussion_participant_type, 'other')
 
-    @staticmethod
-    def get_participant_from_draft(draft_data):
-        return MedicalTeamMember(name=draft_data["participantName"],
-                                 role=draft_data["participantRole"],
-                                 organisation=draft_data["participantOrganisation"],
-                                 phone_number=draft_data["participantPhoneNumber"])
-
     # BereavedDiscussionEvent
 
     def test_bereaved_discussion__request__maps_to_bereaved_discussion_api_put_request(self):
@@ -928,11 +939,3 @@ class ExaminationsFormsTests(MedExTestCase):
 
         # Then the form is filled with individual date fields
         self.assertIsFalse(form.use_existing_bereaved)
-
-    @staticmethod
-    def get_existing_bereaved_representative_from_draft(draft_data):
-        return BereavedRepresentative({
-            'fullName': draft_data.get("participantFullName"),
-            'relationship': draft_data.get("participantRelationship"),
-            'phoneNumber': draft_data.get("participantPhoneNumber")
-        })
