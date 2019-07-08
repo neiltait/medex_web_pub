@@ -45,8 +45,10 @@ class LoginCallbackView(View):
         response = redirect_to_landing()
         id_token = token_response.json().get('id_token')
         auth_token = token_response.json().get('access_token')
+        refresh_token = token_response.json().get('refresh_token')
         response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
         response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
         return response
 
 

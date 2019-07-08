@@ -34,7 +34,7 @@ type="text/javascript"></script>
           issuer: "{{base_uri}}{{issuer}}",
           responseType: 'code',
           display: 'page',
-          scopes: ['openid', 'profile', 'email']
+          scopes: ['openid', 'profile', 'email', 'offline_access']
         }
       }).renderEl(
         { el: '#sign-in-widget' },

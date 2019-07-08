@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 AUTH_TOKEN_NAME = 'medex_auth_token'
 ID_TOKEN_NAME = 'medex_id_token'
+REFRESH_TOKEN_NAME = 'medex_refresh_token'
 
 # Note - docker url is API_URL=http://api:8000
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
