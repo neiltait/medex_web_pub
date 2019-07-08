@@ -62,11 +62,23 @@ class LoginRefreshView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(LoginRefreshView, self).dispatch(request, *args, **kwargs)
 
-
     def post(self, request):
-        print(request.COOKIES)
-        return HttpResponse(json.dumps({'name': "tom"}), content_type="application/json")
+        refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
+        if refresh_token:
+            token_response = request_handler.refresh_session(refresh_token)
+            response = HttpResponse(json.dumps({}), content_type="application/json", status=200)
 
+            id_token = token_response.json().get('id_token')
+            auth_token = token_response.json().get('access_token')
+            refresh_token = token_response.json().get('refresh_token')
+            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+            response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+
+            return response
+
+        return HttpResponse(json.dumps({"error": "could not refresh", "code": request.status}),
+                            content_type="application/json", status=400)
 
 
 class LoginView(LoggedInMixin, View):
