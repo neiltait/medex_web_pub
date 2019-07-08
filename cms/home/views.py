@@ -1,5 +1,10 @@
+import json
+
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
 from rest_framework import status
@@ -52,6 +57,18 @@ class LoginCallbackView(View):
         return response
 
 
+class LoginRefreshView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRefreshView, self).dispatch(request, *args, **kwargs)
+
+
+    def post(self, request):
+        print(request.COOKIES)
+        return HttpResponse(json.dumps({'name': "tom"}), content_type="application/json")
+
+
+
 class LoginView(LoggedInMixin, View):
     template = 'home/login.html'
 
@@ -77,6 +94,7 @@ class LogoutView(View):
         response = redirect_to_login()
         response.delete_cookie(settings.AUTH_TOKEN_NAME)
         response.delete_cookie(settings.ID_TOKEN_NAME)
+        response.delete_cookie(settings.REFRESH_TOKEN_NAME)
         return response
 
 
