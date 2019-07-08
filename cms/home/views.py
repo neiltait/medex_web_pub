@@ -66,7 +66,7 @@ class LoginRefreshView(View):
         refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
         if refresh_token:
             token_response = request_handler.refresh_session(refresh_token)
-            response = HttpResponse(json.dumps({}), content_type="application/json", status=200)
+            response = HttpResponse(json.dumps({"status":"success"}), content_type="application/json", status=200)
 
             id_token = token_response.json().get('id_token')
             auth_token = token_response.json().get('access_token')
@@ -77,7 +77,7 @@ class LoginRefreshView(View):
 
             return response
 
-        return HttpResponse(json.dumps({"error": "could not refresh", "code": request.status}),
+        return HttpResponse(json.dumps({"error": "could not refresh", "code": 400}),
                             content_type="application/json", status=400)
 
 
