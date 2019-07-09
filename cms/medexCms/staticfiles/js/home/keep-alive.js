@@ -1,8 +1,7 @@
 function keepAlive() {
     var refreshCookie = this.readCookie("medex_do_not_refresh");
-    console.log("keeping alive");
     if (!refreshCookie) {
-        console.log("refreshing");
+        console.log("refreshing tokens")
         this.refreshTokens();
     }
 }
@@ -27,13 +26,25 @@ function readCookie(name) {
     return null;
 }
 
-function runKeepAliveOnThisPage() {
-    return $('#do-not-refresh-tokens').length == 0
+function getRefreshRate() {
+    var refreshTokensSeconds = $('#refresh-tokens-period');
+
+    if (refreshTokensSeconds.length > 0) {
+        return parseInt(refreshTokensSeconds[0].value);
+    } else {
+        return 60 * 10;
+    }
 }
+
+function runKeepAliveOnThisPage() {
+    return $('#do-not-refresh-tokens').length === 0
+}
+
 function startKeepAlive() {
-    if(runKeepAliveOnThisPage()) {
+    var refreshTokensSeconds = getRefreshRate();
+    if (runKeepAliveOnThisPage()) {
         keepAlive();
-        setInterval(keepAlive, 5*60*1000);
+        setInterval(keepAlive, refreshTokensSeconds * 300);
     }
 }
 

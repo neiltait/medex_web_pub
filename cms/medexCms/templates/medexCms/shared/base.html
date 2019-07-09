@@ -1,5 +1,6 @@
 {% load sass_tags %}
 {% load staticfiles %}
+{% load medex_tags %}
 
 <!DOCTYPE html>
 <html>
@@ -31,6 +32,11 @@
     {% include 'medexCms/shared/phaseBanner.html' %}
 
     <div class="container page-content">
+      {% logout_period as logout_seconds %}
+      {% refresh_period as refresh_tokens_seconds %}
+      <input type="hidden" id="max-idle-seconds" value="{{ logout_seconds }}">
+      <input type="hidden" id="refresh-tokens-period" value="{{ refresh_tokens_seconds }}">
+
       {% block page %}
       {% endblock %}
     </div>
