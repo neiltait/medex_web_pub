@@ -37,4 +37,7 @@ function startKeepAlive() {
     }
 }
 
-startKeepAlive();
+$(document).ready(function () {
+    startKeepAlive();
+});
+
