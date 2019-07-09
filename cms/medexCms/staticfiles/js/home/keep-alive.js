@@ -1,7 +1,6 @@
 function keepAlive() {
     var refreshCookie = this.readCookie("medex_do_not_refresh");
     if (!refreshCookie) {
-        console.log("refreshing tokens")
         this.refreshTokens();
     }
 }
