@@ -54,6 +54,8 @@ class LoginCallbackView(View):
         response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
         response.set_cookie(settings.ID_TOKEN_NAME, id_token)
         response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+        response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current", max_age=settings.REFRESH_PERIOD)
+
         return response
 
 
@@ -66,7 +68,7 @@ class LoginRefreshView(View):
         refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
         if refresh_token:
             token_response = request_handler.refresh_session(refresh_token)
-            response = HttpResponse(json.dumps({"status":"success"}), content_type="application/json", status=200)
+            response = HttpResponse(json.dumps({"status": "success"}), content_type="application/json", status=200)
 
             id_token = token_response.json().get('id_token')
             auth_token = token_response.json().get('access_token')
@@ -74,6 +76,7 @@ class LoginRefreshView(View):
             response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
             response.set_cookie(settings.ID_TOKEN_NAME, id_token)
             response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+            response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current", max_age=settings.REFRESH_PERIOD)
 
             return response
 
@@ -107,6 +110,7 @@ class LogoutView(View):
         response.delete_cookie(settings.AUTH_TOKEN_NAME)
         response.delete_cookie(settings.ID_TOKEN_NAME)
         response.delete_cookie(settings.REFRESH_TOKEN_NAME)
+        response.delete_cookie(settings.DO_NOT_REFRESH_COOKIE)
         return response
 
 
