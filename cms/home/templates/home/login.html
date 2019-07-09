@@ -19,6 +19,7 @@ type="text/javascript"></script>
     <h1 class="page-title" automation-id="page-title">
       {{ page_heading }}
     </h1>
+    <input id="do-not-refresh" type="hidden"/>
 
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}
