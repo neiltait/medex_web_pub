@@ -107,7 +107,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group hospital-number__group">
                 <div class="hospital-number__list-item" id="hospital_number_1">
-                    <label class="nhsuk-label" for="hospital_number_1" id="hospital_number_1_label">
+                    <label class="nhsuk-label" for="hospital_number_1_textbox" id="hospital_number_1_label">
                         Hospital number
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_1_textbox"
@@ -140,7 +140,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <fieldset class="nhsuk-fieldset">
                         <legend class="nhsuk-fieldset__legend">
                             Date of birth
                         </legend>
@@ -152,7 +152,7 @@
                                         Day
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                           id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
+                                           id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*" aria-labelledby="day_of_birth"
                                            {% if form.day_of_birth %}value="{{ form.day_of_birth }}" {% endif %}>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="month_of_birth" name="month_of_birth" type="number"
-                                           pattern="[0-9]*"
+                                           pattern="[0-9]*" aria-labelledby="month_of_birth"
                                            {% if form.month_of_birth %}value="{{ form.month_of_birth }}"{% endif %}>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                                         Year
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                           id="year_of_birth" name="year_of_birth" type="number"
+                                           id="year_of_birth" name="year_of_birth" type="number" aria-labelledby="year_of_birth"
                                            pattern="[0-9]*"
                                            {% if form.year_of_birth %}value="{{ form.year_of_birth }}"{% endif %}>
                                 </div>
@@ -203,7 +203,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_death" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Date of death
                         </legend>
@@ -288,7 +288,7 @@
                 </div>
 
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="time_of_death_not_known">
                         <div class="nhsuk-checkboxes">
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"

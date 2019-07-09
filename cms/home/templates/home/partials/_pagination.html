@@ -19,7 +19,7 @@
             </div>
 
             <div class="nhsuk-grid-column-one-half">
-                <div class="medex-pagination__item-list">
+                <div class="medex-pagination__item-list" role="list">
                     {% with page_range=session_user.index_overview|page_range_presenter %}
                         {% for page in page_range %}
                             {% if page.type == 'active' %}
