@@ -24,11 +24,10 @@ ID_TOKEN_NAME = 'medex_id_token'
 
 REFRESH_TOKEN_NAME = 'medex_refresh_token'
 DO_NOT_REFRESH_COOKIE = 'medex_do_not_refresh'
-REFRESH_PERIOD = 10 # 10 seconds whilst testing
+REFRESH_PERIOD = 10*60 # refresh tokens every 10 minutes
 
 # Note - docker url is API_URL=http://api:8000
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
-
 CMS_URL = os.environ.get('CMS_URL', 'http://localhost:12000')
 
 OP_DOMAIN = os.environ.get('OP_DOMAIN')

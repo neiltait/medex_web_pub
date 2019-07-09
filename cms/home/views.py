@@ -54,7 +54,8 @@ class LoginCallbackView(View):
         response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
         response.set_cookie(settings.ID_TOKEN_NAME, id_token)
         response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
-        response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current", max_age=settings.REFRESH_PERIOD)
+        response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                            max_age=settings.REFRESH_PERIOD)
 
         return response
 
@@ -76,7 +77,8 @@ class LoginRefreshView(View):
             response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
             response.set_cookie(settings.ID_TOKEN_NAME, id_token)
             response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
-            response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current", max_age=settings.REFRESH_PERIOD)
+            response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                                max_age=settings.REFRESH_PERIOD)
 
             return response
 
