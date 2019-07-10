@@ -83,11 +83,13 @@
  }
 
 .manage-page {
+  margin-bottom: $medex-spacing-xl;
+
     .link-margin {
-        margin-bottom: .5rem;
+        margin-bottom: $medex-spacing-sm;
   }
 
     .margin-bottom {
-        margin-bottom: 3rem;
+        margin-bottom: $medex-spacing-xl;
   }
 }
