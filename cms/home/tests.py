@@ -45,6 +45,24 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/')
 
+
+    # Login refresh tests
+
+    @patch('home.request_handler.refresh_session', return_value=SessionMocks.get_successful_refresh_token_response())
+    def test_login_refresh_with_cookies_returns_success(self, mock_token_generation):
+        self.set_auth_cookies()
+        response = self.client.post('/login-refresh')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+    @patch('home.request_handler.refresh_session', return_value=SessionMocks.get_successful_refresh_token_response())
+    def test_login_refresh_without_cookies_returns_400(self, mock_token_generation):
+        self.clear_auth_cookies()
+        response = self.client.post('/login-refresh')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     # Index tests
 
     def test_landing_on_the_landing_page_returns_the_correct_template(self):

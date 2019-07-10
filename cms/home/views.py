@@ -1,5 +1,10 @@
+import json
+
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
 from rest_framework import status
@@ -45,9 +50,40 @@ class LoginCallbackView(View):
         response = redirect_to_landing()
         id_token = token_response.json().get('id_token')
         auth_token = token_response.json().get('access_token')
+        refresh_token = token_response.json().get('refresh_token')
         response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
         response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+        response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                            max_age=settings.REFRESH_PERIOD)
+
         return response
+
+
+class LoginRefreshView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRefreshView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
+        if refresh_token:
+            token_response = request_handler.refresh_session(refresh_token)
+            response = HttpResponse(json.dumps({"status": "success"}), content_type="application/json", status=200)
+
+            id_token = token_response.json().get('id_token')
+            auth_token = token_response.json().get('access_token')
+            refresh_token = token_response.json().get('refresh_token')
+            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+            response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+            response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                                max_age=settings.REFRESH_PERIOD)
+
+            return response
+
+        return HttpResponse(json.dumps({"error": "could not refresh", "code": 400}),
+                            content_type="application/json", status=400)
 
 
 class LoginView(LoggedInMixin, View):
@@ -75,6 +111,8 @@ class LogoutView(View):
         response = redirect_to_login()
         response.delete_cookie(settings.AUTH_TOKEN_NAME)
         response.delete_cookie(settings.ID_TOKEN_NAME)
+        response.delete_cookie(settings.REFRESH_TOKEN_NAME)
+        response.delete_cookie(settings.DO_NOT_REFRESH_COOKIE)
         return response
 
 

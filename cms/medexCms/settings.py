@@ -22,9 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AUTH_TOKEN_NAME = 'medex_auth_token'
 ID_TOKEN_NAME = 'medex_id_token'
 
+REFRESH_TOKEN_NAME = 'medex_refresh_token'
+DO_NOT_REFRESH_COOKIE = 'medex_do_not_refresh'
+
+# All period times should be in seconds
+REFRESH_PERIOD = int(os.environ.get('REFRESH_PERIOD', 10*60)) # refresh tokens every ** seconds (default 10 minutes)
+LOGOUT_IF_IDLE_PERIOD = int(os.environ.get('LOGOUT_IF_IDLE_PERIOD', 60*60)) # logout user if idle (default 1 hr)
+
 # Note - docker url is API_URL=http://api:8000
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
-
 CMS_URL = os.environ.get('CMS_URL', 'http://localhost:12000')
 
 OP_DOMAIN = os.environ.get('OP_DOMAIN')
