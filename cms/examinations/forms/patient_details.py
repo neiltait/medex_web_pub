@@ -1,5 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 
@@ -209,6 +209,16 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         return self.errors["count"] == 0
+
+    def register_known_api_errors(self, api_errors):
+        known_errors = []
+        if "NHS_NUMBER_DUPLICATE" in api_errors:
+            self.errors["nhs_number"] = api_error_messages.nhs_number.NOT_VALID
+            self.errors["count"] += 1
+            known_errors = known_errors + ["NHS_NUMBER_DUPLICATE"]
+
+
+        return known_errors
 
     def to_object(self):
         dob = NONE_DATE

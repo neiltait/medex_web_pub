@@ -43,22 +43,47 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             if response.ok:
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
-                    examination_id = response.json()['examinationId']
-                    return redirect_to_examination(examination_id)
+                    # scenario 1 - success
+                    return self.__successful_post(response)
                 else:
-                    add_another = True
-                    form = PrimaryExaminationInformationForm()
-                    status_code = status.HTTP_200_OK
+                    # scenario 1b - success and add another
+                    add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
-                log_api_error('case creation', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(form, response)
         else:
+            # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " "\
-            + fallback_to(post_body.get("last_name"), "")
+        context = self.__set_return_to_create_examination_context(add_another, form, post_body)
         return render(request, self.template, context, status=status_code)
+
+    def __successful_post(self, response):
+        examination_id = response.json()['examinationId']
+        return redirect_to_examination(examination_id)
+
+    def __reset_form_to_add_another(self, add_another, form):
+        add_another = True
+        form = PrimaryExaminationInformationForm()
+        status_code = status.HTTP_200_OK
+        return add_another, form, status_code
+
+    def __set_return_to_create_examination_context(self, add_another, form, post_body):
+        context = self.__set_create_examination_context(form, add_another)
+        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " \
+                               + fallback_to(post_body.get("last_name"), "")
+        return context
+
+    def __process_api_error(self, form, response):
+        known_errors = form.register_known_api_errors(response.json()['errors'])
+        if len(known_errors) > 0:
+            for known_error in known_errors:
+                log_api_error('case creation', known_error)
+            status_code = response.status_code
+        else:
+            log_api_error('case creation', response.text)
+            status_code = response.status_code
+        return status_code
 
     def __set_create_examination_context(self, form, add_another):
         me_offices = self.user.get_permitted_me_offices()

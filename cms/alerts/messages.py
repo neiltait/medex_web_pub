@@ -50,3 +50,14 @@ def ErrorSelectionRequiredMessage(field_name):
 
 def ErrorFieldTooLong(character_max):
     return ("Please enter fewer than %d characters") % character_max
+
+
+class NhsNumberErrors:
+    NOT_VALID = "This NHS number includes invalid characters"
+    DUPLICATE = "This NHS number already exists on another case"
+
+
+class ApiErrorMessages:
+    nhs_numbers = NhsNumberErrors()
+
+api_error_messages = ApiErrorMessages()

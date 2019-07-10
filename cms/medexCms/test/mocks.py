@@ -1471,7 +1471,7 @@ class ExaminationMocks:
     def get_unsuccessful_case_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps(None).encode('utf-8')
+        response._content = json.dumps({"errors": {}}).encode('utf-8')
         return response
 
     @classmethod
