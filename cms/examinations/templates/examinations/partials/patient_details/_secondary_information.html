@@ -108,14 +108,17 @@
 
     <!-- Funeral arrangements -->
     <div class="nhsuk-grid-row">
-        <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-radios">
-                <div class="nhsuk-grid-column-full">
-                    <div class="nhsuk-form-group {% if errors.funeral_arrangements %}nhsuk-form-group--error{% endif %}">
-                        <label class="nhsuk-label">Funeral arrangements</label>
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group {% if errors.funeral_arrangements %}nhsuk-form-group--error{% endif %}">
 
-                        <div class="nhsuk-grid-row">
-                            <div class="nhsuk-grid-column-one-third">
+                <fieldset class="nhsuk-fieldset">
+                    <legend class="nhsuk-fieldset__legend">
+                        Funeral arrangements
+                    </legend>
+
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
                                            id="arrangements-1" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.CREMATION }}"
@@ -134,8 +137,10 @@
                                     </label>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="nhsuk-grid-column-one-third">
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
                                            id="arrangements-3" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.BURIED_AT_SEA }}"
@@ -154,8 +159,10 @@
                                     </label>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="nhsuk-grid-column-one-third">
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
                                            id="arrangements-5" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.UNKNOWN }}"
@@ -167,72 +174,82 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </fieldset>
             </div>
-        </fieldset>
+        </div>
+    </div>
 
+    <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
             <div id="implant-devices">
                 <div class="nhsuk-radios">
                     <div class="nhsuk-form-group {% if errors.implanted_devices %}nhsuk-form-group--error{% endif %}">
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend">
+                                Does the patient have any devices implanted that could cause issues at cremation?
+                            </legend>
 
-                        <legend class="nhsuk-fieldset__legend">
-                            Does the patient have any devices implanted that could cause issues at cremation?
-                        </legend>
-
-                        <div class="nhsuk-grid-row">
-                            <div class="nhsuk-grid-column-one-third">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                                           id="implant-devices-1" name="implanted_devices" type="radio" value="{{ enums.true_false.TRUE }}"
-                                           {% if form.implanted_devices == enums.true_false.TRUE %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-1">
-                                        Yes
-                                    </label>
+                            <div class="nhsuk-grid-row">
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-1" name="implanted_devices" type="radio" value="{{ enums.true_false.TRUE }}"
+                                               {% if form.implanted_devices == enums.true_false.TRUE %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-2" name="implanted_devices" type="radio" value="{{ enums.true_false.FALSE }}"
+                                               {% if form.implanted_devices == enums.true_false.FALSE %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-3" name="implanted_devices" type="radio" value="{{ enums.true_false.UNKNOWN }}"
+                                               {% if form.implanted_devices == enums.true_false.UNKNOWN %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-3">
+                                            Unknown
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="nhsuk-grid-column-one-third">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                                           id="implant-devices-2" name="implanted_devices" type="radio" value="{{ enums.true_false.FALSE }}"
-                                           {% if form.implanted_devices == enums.true_false.FALSE %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-2">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                                           id="implant-devices-3" name="implanted_devices" type="radio" value="{{ enums.true_false.UNKNOWN }}"
-                                           {% if form.implanted_devices == enums.true_false.UNKNOWN %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-3">
-                                        Unknown
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        </fieldset>
                     </div>
                 </div>
-
-                <div class="nhsuk-form-group additional-info">
-                    <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-label" for="implanted_devices_details">Enter details below</label>
-
-
-                            {% if errors.implanted_devices_details %}
-                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
-                            {% endif %}
-
-                            <textarea id="implanted_devices_details"
-                                      class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
-                                      name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
-                        </div>
-                    </fieldset>
-                </div>
             </div>
+        </div>
+    </div>
 
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group additional-info">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="implanted_devices_details">Enter details below</label>
+
+
+                        {% if errors.implanted_devices_details %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
+                        {% endif %}
+
+                        <textarea id="implanted_devices_details"
+                                  class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
+                                  name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
@@ -254,48 +271,54 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-radios">
                 <div class="nhsuk-form-group {% if errors.personal_effects %}nhsuk-form-group--error{% endif %}">
-                    <legend class="nhsuk-fieldset__legend">
-                        Personal effects
-                    </legend>
+                    <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend">
+                            Personal effects
+                        </legend>
 
-                    <p class="nhsuk-hint">Is there any property to collect from the ward?</p>
+                        <p class="nhsuk-hint">Is there any property to collect from the ward?</p>
 
-                    <div class="nhsuk-grid-row">
-                        <div class="nhsuk-grid-column-one-third">
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                                       id="personal-effects-1" name="personal_effects" type="radio" value="{{ enums.true_false.TRUE }}"
-                                       {% if form.personal_effects == enums.true_false.TRUE %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
-                                    Yes
-                                </label>
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-one-third">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-1" name="personal_effects" type="radio" value="{{ enums.true_false.TRUE }}"
+                                           {% if form.personal_effects == enums.true_false.TRUE %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-third">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-2" name="personal_effects" type="radio" value="{{ enums.true_false.FALSE }}"
+                                           {% if form.personal_effects == enums.true_false.FALSE %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
+                                <div class="nhsuk-radios__item ">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-3" name="personal_effects" type="radio" value="{{ enums.true_false.UNKNOWN }}"
+                                           {% if form.personal_effects == enums.true_false.UNKNOWN %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
+                                        Unknown
+                                    </label>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="nhsuk-grid-column-one-third">
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                                       id="personal-effects-2" name="personal_effects" type="radio" value="{{ enums.true_false.FALSE }}"
-                                       {% if form.personal_effects == enums.true_false.FALSE %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
-                                    No
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
-                            <div class="nhsuk-radios__item ">
-                                <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                                       id="personal-effects-3" name="personal_effects" type="radio" value="{{ enums.true_false.UNKNOWN }}"
-                                       {% if form.personal_effects == enums.true_false.UNKNOWN %}checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
-                                    Unknown
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    </fieldset>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group additional-info">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">
@@ -315,3 +338,4 @@
         </div>
     </div>
 </div>
+
