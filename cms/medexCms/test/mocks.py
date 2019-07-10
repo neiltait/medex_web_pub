@@ -12,13 +12,19 @@ from medexCms.utils import NONE_DATE, API_DATE_FORMAT
 class SessionMocks:
     ACCESS_TOKEN = "c15be3d1-513f-49dc-94f9-47449c1cfeb8"
     ID_TOKEN_NAME = "8a89be6d-70df-4b21-9d6e-82873d7ff1b0"
+    REFRESH_TOKEN = "8a89be6d-70df-4b21"
 
     @classmethod
     def get_auth_cookies(cls):
         return {
             settings.AUTH_TOKEN_NAME: cls.ACCESS_TOKEN,
-            settings.ID_TOKEN_NAME: cls.ID_TOKEN_NAME
+            settings.ID_TOKEN_NAME: cls.ID_TOKEN_NAME,
+            settings.REFRESH_TOKEN_NAME: cls.REFRESH_TOKEN
         }
+
+    @classmethod
+    def get_empty_cookies(cls):
+        return {}
 
     @classmethod
     def get_auth_token(cls):
@@ -27,7 +33,18 @@ class SessionMocks:
             "id_token": cls.ID_TOKEN_NAME,
             "token_type": "Bearer",
             "expires_in": 3600,
-            "scope": "openid profile email",
+            "scope": "openid profile email refresh_token",
+        }
+
+    @classmethod
+    def get_refresh_token(cls):
+        return {
+            "access_token": cls.ACCESS_TOKEN,
+            "id_token": cls.ID_TOKEN_NAME,
+            "refresh_token": cls.REFRESH_TOKEN,
+            "token_type": "Bearer",
+            "expires_in": 3600,
+            "scope": "openid profile email offline_access",
         }
 
     @classmethod
@@ -106,6 +123,12 @@ class SessionMocks:
         response.status_code = status.HTTP_200_OK
         return response
 
+    @classmethod
+    def get_successful_refresh_token_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_refresh_token()).encode('utf-8')
+        return response
 
 class UserMocks:
     USER_ID = 1
