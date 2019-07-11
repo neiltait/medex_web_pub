@@ -1,5 +1,6 @@
 {% load sass_tags %}
 {% load staticfiles %}
+{% load medex_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +17,8 @@
     <script type="text/javascript" src="{{ STATIC_URL }} /static/js/nhsuk-1.1.0.min.js"></script>
     <script src="{% static 'js/shared/modal.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/shared/autofill.js' %}"></script>
+    <script src="{% static 'js/home/keep-alive.js' %}"></script>
+    <script src="{% static 'js/home/idle-logout.js' %}"></script>
 
     {% block extra_css %}
     {% endblock %}
@@ -28,7 +31,13 @@
     {% include 'medexCms/shared/_header.html' %}
     {% include 'medexCms/shared/phaseBanner.html' %}
 
+
     <div class="container page-content" role="main" aria-labelledby="page-content" id="page-content">
+      {% logout_period as logout_seconds %}
+      {% refresh_period as refresh_tokens_seconds %}
+      <input type="hidden" id="max-idle-seconds" value="{{ logout_seconds }}">
+      <input type="hidden" id="refresh-tokens-period" value="{{ refresh_tokens_seconds }}">
+
       {% block page %}
       {% endblock %}
     </div>

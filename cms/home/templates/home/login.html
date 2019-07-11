@@ -19,6 +19,7 @@ type="text/javascript"></script>
     <h1 class="page-title" automation-id="page-title">
       {{ page_heading }}
     </h1>
+    <input id="do-not-refresh-tokens" type="hidden"/>
 
     {% for alert in alerts %}
       {% include 'alerts/partials/_alert.html' %}
@@ -34,7 +35,7 @@ type="text/javascript"></script>
           issuer: "{{base_uri}}{{issuer}}",
           responseType: 'code',
           display: 'page',
-          scopes: ['openid', 'profile', 'email']
+          scopes: ['openid', 'profile', 'email', 'offline_access']
         }
       }).renderEl(
         { el: '#sign-in-widget' },

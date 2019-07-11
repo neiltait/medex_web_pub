@@ -63,7 +63,7 @@ Form.prototype = {
     },
     initialiseFormWithData: function () {
         for(var i = 0; i < this.inputGroups.length; i++) {
-            inputGroup.enabledOrDisable();
+            this.inputGroups[i].enabledOrDisable();
         }
 
         if (this.hospitalNumber3Textbox.val() !== '') {

@@ -20,5 +20,22 @@ def create_session(code):
                          auth=(settings.OP_ID, settings.OP_SECRET))
 
 
+def refresh_session(refresh_token):
+    headers = {
+        'accept': 'application/json',
+        'content-type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'grant_type': 'refresh_token',
+        'redirect_uri': '%s/refresh-callback' % settings.CMS_URL,
+        'scope':'offline_access openid',
+        'refresh_token': refresh_token
+    }
+    return requests.post('%s%s/v1/token' % (settings.OP_DOMAIN, settings.OP_ISSUER),
+                         headers=headers,
+                         data=urllib.parse.urlencode(data),
+                         auth=(settings.OP_ID, settings.OP_SECRET))
+
+
 def end_session(cookie):
     return requests.get('%s%s/v1/logout?id_token_hint=%s' % (settings.OP_DOMAIN, settings.OP_ISSUER, cookie))
