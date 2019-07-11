@@ -212,11 +212,19 @@ class PrimaryExaminationInformationForm:
 
     def register_known_api_errors(self, api_errors):
         known_errors = []
-        if "NHS_NUMBER_DUPLICATE" in api_errors:
-            self.errors["nhs_number"] = api_error_messages.nhs_number.NOT_VALID
-            self.errors["count"] += 1
-            known_errors = known_errors + ["NHS_NUMBER_DUPLICATE"]
-
+        if "NhsNumber" in api_errors:
+            if api_errors["NhsNumber"] == "ContainsWhitespace":
+                self.errors["nhs_number"] = api_error_messages.nhs_number.CONTAINS_WHITESPACE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'ContainsWhitespace'}]
+            elif api_errors["NhsNumber"] == "ContainsInvalidCharacters":
+                self.errors["nhs_number"] = api_error_messages.nhs_number.CONTAINS_INVALID_CHARACTERS
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'ContainsInvalidCharacters'}]
+            elif api_errors["NhsNumber"] == "DuplicateNhsNumber":
+                self.errors["nhs_number"] = api_error_messages.nhs_number.DUPLICATE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'DuplicateNhsNumber'}]
 
         return known_errors
 
