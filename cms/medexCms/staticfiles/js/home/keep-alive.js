@@ -7,7 +7,7 @@ function keepAlive() {
 
 function refreshTokens() {
     $.ajax({
-        url: "login-refresh",
+        url: "/login-refresh",
         dataType: "json",
         method: "POST",
         context: document.body
