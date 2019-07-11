@@ -140,7 +140,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_birth" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Date of birth
                         </legend>
@@ -152,30 +152,28 @@
                                         Day
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                           id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*" aria-labelledby="day_of_birth"
+                                           id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
                                            {% if form.day_of_birth %}value="{{ form.day_of_birth }}" {% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="month_of_birth">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="month_of_birth">
                                         Month
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
                                            id="month_of_birth" name="month_of_birth" type="number"
-                                           pattern="[0-9]*" aria-labelledby="month_of_birth"
+                                           pattern="[0-9]*"
                                            {% if form.month_of_birth %}value="{{ form.month_of_birth }}"{% endif %}>
                                 </div>
                             </div>
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="year_of_birth">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="year_of_birth">
                                         Year
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                           id="year_of_birth" name="year_of_birth" type="number" aria-labelledby="year_of_birth"
+                                           id="year_of_birth" name="year_of_birth" type="number"
                                            pattern="[0-9]*"
                                            {% if form.year_of_birth %}value="{{ form.year_of_birth }}"{% endif %}>
                                 </div>
