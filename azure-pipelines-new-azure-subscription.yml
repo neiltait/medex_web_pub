@@ -1,19 +1,15 @@
 # Build Docker image for this app using Azure Pipelines
 # http://docs.microsoft.com/azure/devops/pipelines/languages/docker?view=vsts
 trigger:
-- master
-- development
-- feature/*
-- refactor/*
-- bug/*
 - release/*
 
+pr: none
 
 pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageName: 'medex-cms:$(Build.BuildId)'
+  imageName: 'medex-cms:prod_$(Build.BuildId)'
   ContainerRegistryName: acrmedexuks
 
 steps:
@@ -67,10 +63,18 @@ steps:
     docker build -f ./deploy_files/Dockerfile -t $(ContainerRegistryName).azurecr.io/$(imageName) .
     docker login -u $(ContainerRegistryName) -p $pswd $(ContainerRegistryName).azurecr.io
     docker push $(ContainerRegistryName).azurecr.io/$(imageName)
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   env:
     pswd: $(ContainerRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'medex UAT PRD container registery'
+    repository: 'medex-cms'
+    command: 'buildAndPush'
+    Dockerfile: './deploy_files/Dockerfile'
+    buildContext: '.'
+    tags: '$(ContainerRegistryName).azurecr.io/$(imageName)'
 
 - task: CopyFiles@2
   inputs:
