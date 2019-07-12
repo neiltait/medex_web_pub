@@ -67,6 +67,15 @@ steps:
     pswd: $(ContainerRegistryPassword)
   displayName: 'Build and push Docker image to Staging'
 
+- task: Docker@2
+  inputs:
+    containerRegistry: 'medex UAT PRD container registery'
+    repository: 'medex-cms'
+    command: 'buildAndPush'
+    Dockerfile: './deploy_files/Dockerfile'
+    buildContext: '.'
+    tags: '$(ContainerRegistryName).azurecr.io/$(imageName)'
+
 - task: CopyFiles@2
   inputs:
     SourceFolder: '_templates'
