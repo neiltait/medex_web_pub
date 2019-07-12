@@ -9,7 +9,7 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageName: 'medex-cms:prod_$(Build.BuildId)'
+  imageName: 'medex-cms:$(Build.BuildId)'
   ContainerRegistryName: acrmedexuks
 
 steps:
@@ -65,16 +65,7 @@ steps:
     docker push $(ContainerRegistryName).azurecr.io/$(imageName)
   env:
     pswd: $(ContainerRegistryPassword)
-  displayName: 'Build and push Docker image to Staging'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'medex UAT PRD container registery'
-    repository: 'medex-cms'
-    command: 'buildAndPush'
-    Dockerfile: './deploy_files/Dockerfile'
-    buildContext: '.'
-    tags: '$(ContainerRegistryName).azurecr.io/$(imageName)'
+  displayName: 'Build and push Docker image to UAR and PROD container registry'
 
 - task: CopyFiles@2
   inputs:
