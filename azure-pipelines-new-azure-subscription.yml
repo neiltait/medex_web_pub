@@ -9,7 +9,7 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageName: 'medex-cms:$(Build.BuildId)'
+  imageName: 'medex-cms:prod_$(Build.BuildId)'
   ContainerRegistryName: acrmedexuks
 
 steps:
