@@ -35,6 +35,13 @@
   width: 100%;
 }
 
+.field-indicator {
+    font-size: 14px;
+    color: $nhs-blue;
+    margin-top: $medex-spacing-xs;
+    margin-bottom: $medex-spacing-md;
+}
+
 .radiobutton {
   &__list {
     justify-content: space-between;
