@@ -27,3 +27,9 @@
     color: $nhs-blue;
     margin-top: $medex-spacing-xs;
 }
+
+.nhsuk-form-group {
+    &--field-indicator {
+        margin-bottom: 12px;
+    }
+}
