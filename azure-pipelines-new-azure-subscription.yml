@@ -65,7 +65,7 @@ steps:
     docker push $(ContainerRegistryName).azurecr.io/$(imageName)
   env:
     pswd: $(ContainerRegistryPassword)
-  displayName: 'Build and push Docker image to Staging'
+  displayName: 'Build and push Docker image to container registery for UAT and Prod'
 
 - task: CopyFiles@2
   inputs:

@@ -3,7 +3,7 @@
 {% load medex_tags %}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Medical Examiners Portal</title>
 
@@ -32,7 +32,8 @@
     {% include 'medexCms/shared/_header.html' %}
     {% include 'medexCms/shared/phaseBanner.html' %}
 
-    <div class="container page-content">
+
+    <div class="container page-content" role="main" aria-labelledby="page-content" id="page-content">
       {% logout_period as logout_seconds %}
       {% refresh_period as refresh_tokens_seconds %}
       <input type="hidden" id="max-idle-seconds" value="{{ logout_seconds }}">

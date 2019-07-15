@@ -49,7 +49,7 @@ Form.prototype = {
         this.meOfficeDropdown = this.form.find('#me_office_dropdown');
         this.setupMeOffice();
 
-        this.submitButton = this.form.find("#submit-btn");
+        this.submitButton = this.form.find(".submit-btn");
         this.setupSubmitButton();
 
         this.errorAlert = this.form.find("#error_alert");
