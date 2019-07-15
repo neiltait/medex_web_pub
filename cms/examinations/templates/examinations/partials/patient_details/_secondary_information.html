@@ -1,316 +1,341 @@
 <div class="secondary-info-form">
-  <!-- Address -->
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-one-half">
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_line_1 %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="address_line_1">Building and street</label>
+    <!-- Address -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_line_1 %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="address_line_1">Building and street</label>
 
-          {% if errors.address_line_1 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_line_1">{{ errors.address_line_1 }}</span>{% endif %}
+                    {% if errors.address_line_1 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_line_1">{{ errors.address_line_1 }}</span>{% endif %}
 
-          <input id="address_line_1" type="text" name="address_line_1" value="{{form.address_line_1}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.address_line_1 %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_line_2 %}nhsuk-form-group--error{% endif %}">
-          {% if errors.address_line_2 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_line_2">{{ errors.address_line_2 }}</span>{% endif %}
-
-          <input id="address_line_2" type="text" name="address_line_2" value="{{form.address_line_2}}"
-              class="nhsuk-input nhsuk-input--width-10 {% if errors.address_line_2 %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="address_town">Town or city</label>
-
-          {% if errors.address_town %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_town">{{ errors.address_town }}</span>{% endif %}
-
-          <input id="address_town" type="text" name="address_town" value="{{form.address_town}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.address_town %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_county %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="address_county">County</label>
-
-          {% if errors.address_county %}
-            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_county">{{ errors.address_county }}</span>
-          {% endif %}
-
-          <input id="address_county" type="text" name="address_county" value="{{form.address_county}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.address_county %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_country %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="address_country">Country</label>
-
-          {% if errors.address_country %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_country">{{ errors.address_country }}</span>{% endif %}
-
-          <input id="address_country" type="text" name="address_country" value="{{form.address_country}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.address_country %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="address_postcode">Postcode of residential address</label>
-
-          {% if errors.address_postcode %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_postcode">{{ errors.address_postcode }}</span>{% endif %}
-
-          <input id="address_postcode" type="text" name="address_postcode" value="{{form.address_postcode}}"
-                 class="nhsuk-input nhsuk-input--width-10 {% if errors.address_postcode %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-    </div>
-  </div>
-
-  <!-- Occupation -->
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-full">
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.relevant_occupation %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="relevant_occupation">Relevant occupation</label>
-
-          <p class="nhsuk-hint">Add any information about the patient's work history that could have contributed to their death</p>
-
-          {% if errors.relevant_occupation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_relevant_occupation">{{ errors.relevant_occupation }}</span>{% endif %}
-
-          <textarea id="relevant_occupation"
-                    class="nhsuk-textarea medex-textarea{% if errors.relevant_occupation %} nhsuk-textarea--error{% endif %}"
-                    name="relevant_occupation">{{form.relevant_occupation}}</textarea>
-        </div>
-      </fieldset>
-    </div>
-  </div>
-
-  <!-- Care organisation -->
-  <div class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-full">
-      <fieldset class="nhsuk-fieldset">
-        <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
-          <label class="nhsuk-label" for="care_organisation">Organisation responsible for care prior to death</label>
-
-          {% if errors.care_organisation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_care_organisation">{{ errors.care_organisation }}</span>{% endif %}
-
-          <input id="care_organisation" type="text" name="care_organisation" value="{{form.care_organisation}}"
-                 class="nhsuk-input nhsuk-input--width-20 {% if errors.care_organisation %}nhsuk-input--error{% endif %}">
-        </div>
-      </fieldset>
-    </div>
-  </div>
-
-  <!-- Funeral arrangements -->
-  <div class="nhsuk-grid-row">
-    <fieldset class="nhsuk-fieldset">
-      <div class="nhsuk-radios">
-        <div class="nhsuk-grid-column-full">
-          <div class="nhsuk-form-group {% if errors.funeral_arrangements %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label">Funeral arrangements</label>
-
-            <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-third">
-              <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
-                       id="arrangements-1" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.CREMATION }}"
-                       {% if form.funeral_arrangements == enums.funeral_arrangements.CREMATION %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-1">
-                    Cremation
-                </label>
-              </div>
-
-              <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
-                       id="arrangements-2" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.BURIAL }}"
-                       {% if form.funeral_arrangements == enums.funeral_arrangements.BURIAL %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-2">
-                    Burial
-                </label>
-              </div>
-            </div>
-
-            <div class="nhsuk-grid-column-one-third">
-              <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
-                       id="arrangements-3" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.BURIED_AT_SEA }}"
-                       {% if form.funeral_arrangements == enums.funeral_arrangements.BURIED_AT_SEA %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-3">
-                  Buried at sea
-                </label>
-              </div>
-
-              <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
-                       id="arrangements-4" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.REPATRIATION }}"
-                       {% if form.funeral_arrangements == enums.funeral_arrangements.REPATRIATION %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-4">
-                  Repatriation
-                </label>
-              </div>
-            </div>
-
-            <div class="nhsuk-grid-column-one-third">
-              <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
-                       id="arrangements-5" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.UNKNOWN }}"
-                       {% if form.funeral_arrangements == enums.funeral_arrangements.UNKNOWN %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="arrangements-5">
-                  Unknown
-                </label>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-
-    <div class="nhsuk-grid-column-full">
-      <div id="implant-devices">
-        <div class="nhsuk-radios">
-          <div class="nhsuk-form-group {% if errors.implanted_devices %}nhsuk-form-group--error{% endif %}">
-
-            <legend class="nhsuk-fieldset__legend">
-              Does the patient have any devices implanted that could cause issues at cremation?
-            </legend>
-
-              <div class="nhsuk-grid-row">
-              <div class="nhsuk-grid-column-one-third">
-            <div class="nhsuk-radios__item">
-              <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                     id="implant-devices-1" name="implanted_devices" type="radio" value="{{ enums.true_false.TRUE }}"
-                     {% if form.implanted_devices == enums.true_false.TRUE %}checked{% endif %}>
-              <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-1">
-                  Yes
-              </label>
-            </div>
-            </div>
-              <div class="nhsuk-grid-column-one-third">
-            <div class="nhsuk-radios__item">
-              <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                     id="implant-devices-2" name="implanted_devices" type="radio" value="{{ enums.true_false.FALSE }}"
-                     {% if form.implanted_devices == enums.true_false.FALSE %}checked{% endif %}>
-              <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-2">
-                  No
-              </label>
-            </div>
-            </div>
-              <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
-              <div class="nhsuk-radios__item">
-                  <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
-                         id="implant-devices-3" name="implanted_devices" type="radio" value="{{ enums.true_false.UNKNOWN }}"
-                         {% if form.implanted_devices == enums.true_false.UNKNOWN %}checked{% endif %}>
-                  <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-3">
-                      Unknown
-                  </label>
+                    <input id="address_line_1" type="text" name="address_line_1" value="{{form.address_line_1}}"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_line_1 %}nhsuk-input--error{% endif %}">
                 </div>
-              </div>
-              </div>
-          </div>
+            </fieldset>
+
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_line_2 %}nhsuk-form-group--error{% endif %}">
+                    {% if errors.address_line_2 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_line_2">{{ errors.address_line_2 }}</span>{% endif %}
+                    <input id="address_line_2" type="text" name="address_line_2" value="{{form.address_line_2}}" aria-label="address_line_2"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_line_2 %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
+
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="address_town">Town or city</label>
+
+                    {% if errors.address_town %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_town">{{ errors.address_town }}</span>{% endif %}
+
+                    <input id="address_town" type="text" name="address_town" value="{{form.address_town}}"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_town %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
+
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_county %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="address_county">County</label>
+
+                    {% if errors.address_county %}
+                    <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_county">{{ errors.address_county }}</span>
+                    {% endif %}
+
+                    <input id="address_county" type="text" name="address_county" value="{{form.address_county}}"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_county %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
+
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_country %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="address_country">Country</label>
+
+                    {% if errors.address_country %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_country">{{ errors.address_country }}</span>{% endif %}
+
+                    <input id="address_country" type="text" name="address_country" value="{{form.address_country}}"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_country %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
+
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.address_town %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="address_postcode">Postcode of residential address</label>
+
+                    {% if errors.address_postcode %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_address_postcode">{{ errors.address_postcode }}</span>{% endif %}
+
+                    <input id="address_postcode" type="text" name="address_postcode" value="{{form.address_postcode}}"
+                           class="nhsuk-input nhsuk-input--width-10 {% if errors.address_postcode %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
         </div>
+    </div>
 
-        <div class="nhsuk-form-group additional-info">
-          <fieldset class="nhsuk-fieldset">
-            <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
-              <label class="nhsuk-label" for="implanted_devices_details">Enter details below</label>
+    <!-- Occupation -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.relevant_occupation %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="relevant_occupation">Relevant occupation</label>
 
+                    <p class="nhsuk-hint">Add any information about the patient's work history that could have
+                        contributed to their death</p>
 
-              {% if errors.implanted_devices_details %}
-                  <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
-              {% endif %}
+                    {% if errors.relevant_occupation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_relevant_occupation">{{ errors.relevant_occupation }}</span>{% endif %}
 
-              <textarea id="implanted_devices_details"
-                  class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
-                  name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
-            </div>
-          </fieldset>
+                    <textarea id="relevant_occupation"
+                              class="nhsuk-textarea medex-textarea{% if errors.relevant_occupation %} nhsuk-textarea--error{% endif %}"
+                              name="relevant_occupation">{{form.relevant_occupation}}</textarea>
+                </div>
+            </fieldset>
         </div>
-      </div>
-
-      <div class="nhsuk-form-group">
-        <fieldset class="nhsuk-fieldset">
-          <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="funeral_directors">Funeral directors</label>
-
-            {% if errors.funeral_directors %}
-              <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_funeral_directors">{{ errors.funeral_directors }}</span>
-            {% endif %}
-
-            <input id="funeral_directors" type="text" name="funeral_directors" value="{{form.funeral_directors}}"
-                   class="nhsuk-input nhsuk-input--width-20 {% if errors.funeral_directors %}nhsuk-input--error{% endif %}">
-          </div>
-        </fieldset>
-      </div>
     </div>
-  </div>
 
-  <div id="personal-effects" class="nhsuk-grid-row">
-    <div class="nhsuk-grid-column-full">
-      <div class="nhsuk-radios">
-        <div class="nhsuk-form-group {% if errors.personal_effects %}nhsuk-form-group--error{% endif %}">
-          <legend class="nhsuk-fieldset__legend">
-            Personal effects
-          </legend>
+    <!-- Care organisation -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <fieldset class="nhsuk-fieldset">
+                <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
+                    <label class="nhsuk-label" for="care_organisation">Organisation responsible for care prior to
+                        death</label>
 
-          <p class="nhsuk-hint">Is there any property to collect from the ward?</p>
+                    {% if errors.care_organisation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_care_organisation">{{ errors.care_organisation }}</span>{% endif %}
 
-          <div class="nhsuk-grid-row">
-              <div class="nhsuk-grid-column-one-third">
-            <div class="nhsuk-radios__item">
-              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                     id="personal-effects-1" name="personal_effects" type="radio" value="{{ enums.true_false.TRUE }}"
-                     {% if form.personal_effects == enums.true_false.TRUE %}checked{% endif %}>
-              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
-                  Yes
-              </label>
-            </div>
-          </div>
-
-          <div class="nhsuk-grid-column-one-third">
-            <div class="nhsuk-radios__item">
-              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                     id="personal-effects-2" name="personal_effects" type="radio" value="{{ enums.true_false.FALSE }}"
-                     {% if form.personal_effects == enums.true_false.FALSE %}checked{% endif %}>
-              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
-                  No
-              </label>
-            </div>
-          </div>
-
-          <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
-            <div class="nhsuk-radios__item ">
-              <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
-                     id="personal-effects-3" name="personal_effects" type="radio" value="{{ enums.true_false.UNKNOWN }}"
-                     {% if form.personal_effects == enums.true_false.UNKNOWN %}checked{% endif %}>
-              <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
-                  Unknown
-              </label>
-            </div>
-          </div>
-      </div>
-      </div>
-      </div>
-      <div class="nhsuk-form-group additional-info">
-        <fieldset class="nhsuk-fieldset">
-          <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">
-            <label class="nhsuk-label" for="personal_effects_details">Enter details below</label>
-
-
-            {% if errors.personal_effects_details %}
-              <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_personal_effects_details">{{ errors.personal_effects_details }}</span>
-            {% endif %}
-
-            <textarea id="personal_effects_details"
-                class="nhsuk-textarea medex-textarea{% if errors.personal_effects_details %} nhsuk-textarea--error{% endif %}"
-                name="personal_effects_details">{{form.personal_effects_details}}</textarea>
-          </div>
-        </fieldset>
-      </div>
+                    <input id="care_organisation" type="text" name="care_organisation" value="{{form.care_organisation}}"
+                           class="nhsuk-input nhsuk-input--width-20 {% if errors.care_organisation %}nhsuk-input--error{% endif %}">
+                </div>
+            </fieldset>
+        </div>
     </div>
-  </div>
+
+    <!-- Funeral arrangements -->
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group {% if errors.funeral_arrangements %}nhsuk-form-group--error{% endif %}">
+
+                <fieldset class="nhsuk-fieldset">
+                    <legend class="nhsuk-fieldset__legend">
+                        Funeral arrangements
+                    </legend>
+
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                                           id="arrangements-1" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.CREMATION }}"
+                                           {% if form.funeral_arrangements == enums.funeral_arrangements.CREMATION %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="arrangements-1">
+                                        Cremation
+                                    </label>
+                                </div>
+
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                                           id="arrangements-2" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.BURIAL }}"
+                                           {% if form.funeral_arrangements == enums.funeral_arrangements.BURIAL %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="arrangements-2">
+                                        Burial
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                                           id="arrangements-3" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.BURIED_AT_SEA }}"
+                                           {% if form.funeral_arrangements == enums.funeral_arrangements.BURIED_AT_SEA %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="arrangements-3">
+                                        Buried at sea
+                                    </label>
+                                </div>
+
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                                           id="arrangements-4" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.REPATRIATION }}"
+                                           {% if form.funeral_arrangements == enums.funeral_arrangements.REPATRIATION %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="arrangements-4">
+                                        Repatriation
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nhsuk-grid-column-one-third">
+                            <div class="nhsuk-radios">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.funeral_arrangements %}nhsuk-input--error{% endif %}"
+                                           id="arrangements-5" name="funeral_arrangements" type="radio" value="{{ enums.funeral_arrangements.UNKNOWN }}"
+                                           {% if form.funeral_arrangements == enums.funeral_arrangements.UNKNOWN %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="arrangements-5">
+                                        Unknown
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div id="implant-devices">
+                <div class="nhsuk-radios">
+                    <div class="nhsuk-form-group {% if errors.implanted_devices %}nhsuk-form-group--error{% endif %}">
+                        <fieldset class="nhsuk-fieldset">
+                            <legend class="nhsuk-fieldset__legend">
+                                Does the patient have any devices implanted that could cause issues at cremation?
+                            </legend>
+
+                            <div class="nhsuk-grid-row">
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-1" name="implanted_devices" type="radio" value="{{ enums.true_false.TRUE }}"
+                                               {% if form.implanted_devices == enums.true_false.TRUE %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-1">
+                                            Yes
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-2" name="implanted_devices" type="radio" value="{{ enums.true_false.FALSE }}"
+                                               {% if form.implanted_devices == enums.true_false.FALSE %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-2">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
+                                               id="implant-devices-3" name="implanted_devices" type="radio" value="{{ enums.true_false.UNKNOWN }}"
+                                               {% if form.implanted_devices == enums.true_false.UNKNOWN %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label" for="implant-devices-3">
+                                            Unknown
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group additional-info">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="implanted_devices_details">Enter details below</label>
+
+
+                        {% if errors.implanted_devices_details %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
+                        {% endif %}
+
+                        <textarea id="implanted_devices_details"
+                                  class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
+                                  name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="funeral_directors">Funeral directors</label>
+
+                        {% if errors.funeral_directors %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_funeral_directors">{{ errors.funeral_directors }}</span>
+                        {% endif %}
+
+                        <input id="funeral_directors" type="text" name="funeral_directors" value="{{form.funeral_directors}}"
+                               class="nhsuk-input nhsuk-input--width-20 {% if errors.funeral_directors %}nhsuk-input--error{% endif %}">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div id="personal-effects" class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-radios">
+                <div class="nhsuk-form-group {% if errors.personal_effects %}nhsuk-form-group--error{% endif %}">
+                    <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend">
+                            Personal effects
+                        </legend>
+
+                        <p class="nhsuk-hint">Is there any property to collect from the ward?</p>
+
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-one-third">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-1" name="personal_effects" type="radio" value="{{ enums.true_false.TRUE }}"
+                                           {% if form.personal_effects == enums.true_false.TRUE %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-1">
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-third">
+                                <div class="nhsuk-radios__item">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-2" name="personal_effects" type="radio" value="{{ enums.true_false.FALSE }}"
+                                           {% if form.personal_effects == enums.true_false.FALSE %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-2">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
+                                <div class="nhsuk-radios__item ">
+                                    <input class="nhsuk-radios__input {% if errors.personal_effects %}nhsuk-input--error{% endif %}"
+                                           id="personal-effects-3" name="personal_effects" type="radio" value="{{ enums.true_false.UNKNOWN }}"
+                                           {% if form.personal_effects == enums.true_false.UNKNOWN %}checked{% endif %}>
+                                    <label class="nhsuk-label nhsuk-radios__label" for="personal-effects-3">
+                                        Unknown
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group additional-info">
+                <fieldset class="nhsuk-fieldset">
+                    <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="personal_effects_details">Enter details below</label>
+
+
+                        {% if errors.personal_effects_details %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_personal_effects_details">{{ errors.personal_effects_details }}</span>
+                        {% endif %}
+
+                        <textarea id="personal_effects_details"
+                                  class="nhsuk-textarea medex-textarea{% if errors.personal_effects_details %} nhsuk-textarea--error{% endif %}"
+                                  name="personal_effects_details">{{form.personal_effects_details}}</textarea>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
 </div>
+
