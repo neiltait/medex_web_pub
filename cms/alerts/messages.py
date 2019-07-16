@@ -56,6 +56,7 @@ class NhsNumberErrors:
     CONTAINS_INVALID_CHARACTERS = "This NHS number includes invalid characters"
     CONTAINS_WHITESPACE = "This NHS number includes spaces"
     DUPLICATE = "This NHS number already exists on another case"
+    INVALID = "This NHS number is invalid"
 
 
 class ApiErrorMessages:

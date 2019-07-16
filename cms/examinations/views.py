@@ -192,7 +192,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
         error_count = self.primary_form.error_count + self.secondary_form.error_count + \
-            self.bereaved_form.error_count + self.urgency_form.error_count
+                      self.bereaved_form.error_count + self.urgency_form.error_count
 
         return {
             'session_user': self.user,
@@ -211,7 +211,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def _validate_patient_details_forms(self):
         return self.primary_form.is_valid() and self.secondary_form.is_valid() \
-            and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
+               and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
 class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
@@ -369,7 +369,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if amend_type and not form:
             latest_for_type = event_list.get_latest_of_type(amend_type)
             if latest_for_type:
-                form_data[latest_for_type.form_type] = latest_for_type\
+                form_data[latest_for_type.form_type] = latest_for_type \
                     .as_amendment_form(medical_team.qap, patient_details.representatives).make_active()
             else:
                 form_type = '%sEventForm' % amend_type

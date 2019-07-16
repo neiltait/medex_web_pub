@@ -213,18 +213,26 @@ class PrimaryExaminationInformationForm:
     def register_known_api_errors(self, api_errors):
         known_errors = []
         if "NhsNumber" in api_errors:
-            if api_errors["NhsNumber"] == "ContainsWhitespace":
-                self.errors["nhs_number"] = api_error_messages.nhs_number.CONTAINS_WHITESPACE
+            if enums.errors.CONTAINS_WHITESPACE in api_errors["NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_WHITESPACE
                 self.errors["count"] += 1
-                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'ContainsWhitespace'}]
-            elif api_errors["NhsNumber"] == "ContainsInvalidCharacters":
-                self.errors["nhs_number"] = api_error_messages.nhs_number.CONTAINS_INVALID_CHARACTERS
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_WHITESPACE}]
+
+            if enums.errors.CONTAINS_INVALID_CHARACTERS in api_errors["NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_INVALID_CHARACTERS
                 self.errors["count"] += 1
-                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'ContainsInvalidCharacters'}]
-            elif api_errors["NhsNumber"] == "DuplicateNhsNumber":
-                self.errors["nhs_number"] = api_error_messages.nhs_number.DUPLICATE
+                known_errors = known_errors + [
+                    {'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_INVALID_CHARACTERS}]
+
+            if enums.errors.INVALID in api_errors["NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.INVALID
                 self.errors["count"] += 1
-                known_errors = known_errors + [{'field':'NhsNumber', 'error_code': 'DuplicateNhsNumber'}]
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.INVALID}]
+
+            if enums.errors.DUPLICATE in api_errors["NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
 
         return known_errors
 
