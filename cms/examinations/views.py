@@ -175,19 +175,35 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             response = PatientDetails.update(examination_id, submission, self.user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
             elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(self.primary_form, response)
+
             else:
+                # scenario 1 - success
                 saved = True
                 self.examination.case_header = PatientHeader(response.json().get("header"))
         else:
+            # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self._set_patient_details_context(saved)
 
         return render(request, self.template, context, status=status_code)
+
+    def __process_api_error(self, primary_form, response):
+        known_errors = primary_form.register_known_api_errors(response.json())
+        if len(known_errors) > 0:
+            for known_error in known_errors:
+                log_api_error('case creation', known_error)
+            status_code = response.status_code
+        else:
+            log_api_error('case creation', response.text)
+            status_code = response.status_code
+        return status_code
 
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()

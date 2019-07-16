@@ -234,6 +234,28 @@ class PrimaryExaminationInformationForm:
                 self.errors["count"] += 1
                 known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
 
+        if "examinationId.NhsNumber" in api_errors:
+            if enums.errors.CONTAINS_WHITESPACE in api_errors["examinationId.NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_WHITESPACE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_WHITESPACE}]
+
+            if enums.errors.CONTAINS_INVALID_CHARACTERS in api_errors["examinationId.NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_INVALID_CHARACTERS
+                self.errors["count"] += 1
+                known_errors = known_errors + [
+                    {'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_INVALID_CHARACTERS}]
+
+            if enums.errors.INVALID in api_errors["examinationId.NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.INVALID
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.INVALID}]
+
+            if enums.errors.DUPLICATE in api_errors["examinationId.NhsNumber"]:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
+
         return known_errors
 
     def to_object(self):
