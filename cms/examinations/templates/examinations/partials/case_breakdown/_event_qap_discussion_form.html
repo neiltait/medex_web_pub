@@ -298,7 +298,7 @@
                 <div class="nhsuk-form-group {% if form.errors.outcome_decision %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
 
                     <fieldset class="nhsuk-fieldset">
-                        <span class="nhsuk-hint" id="example-hint">
+                        <span class="nhsuk-hint" id="decision-hint">
                           What was decided about the cause of death?
                     </span>
                         <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.outcome_decision }}</span>
@@ -393,7 +393,7 @@
                         <label class="nhsuk-label" for="qap_discussion_revised_1a">
                             1a
                         </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
+                        <textarea id="qap_discussion_revised_1a" class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1a"
                                   rows="2">{{ form.cause_of_death.section_1a }}</textarea>
                     </div>
 
@@ -401,7 +401,7 @@
                         <label class="nhsuk-label" for="qap_discussion_revised_1b">
                             1b
                         </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
+                        <textarea id="qap_discussion_revised_1b" class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1b"
                                   rows="2">{{ form.cause_of_death.section_1b }}</textarea>
                     </div>
 
@@ -410,7 +410,7 @@
                         <label class="nhsuk-label" for="qap_discussion_revised_1c">
                             1c
                         </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
+                        <textarea id="qap_discussion_revised_1c" class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_1c"
                                   rows="2">{{ form.cause_of_death.section_1c }}</textarea>
                     </div>
 
@@ -419,7 +419,7 @@
                         <label class="nhsuk-label" for="qap_discussion_revised_2">
                             2
                         </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
+                        <textarea id="qap_discussion_revised_2" class="nhsuk-textarea medex-textarea" name="qap_discussion_revised_2"
                                   rows="2">{{ form.cause_of_death.section_2 }}</textarea>
                     </div>
                 </div>
@@ -430,10 +430,10 @@
     <div id="qap-discussion__save-buttons" class="nhsuk-form-group margin-bottom">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <button id="submit-btn" class="nhsuk-button" type="submit" value="qap-discussion"
+                <button class="nhsuk-button add-event-btn" type="submit" value="qap-discussion"
                         name="add-event-to-timeline">Add event to timeline
                 </button>
-                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                <button class="nhsuk-button nhsuk-button--secondary add-another-btn" type="submit"
                         value="qap-discussion" name="save-as-draft">Save as draft
                 </button>
             </div>

@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 {% if session_user %}
-    <div class="header__nav">
+    <div class="header__nav" role="navigation">
         <div class="container">
             <div class="flex-row vertical-center">
                 <div class="nhsuk-header__logo">
@@ -15,7 +15,7 @@
                         </svg>
                     </a>
                 </div>
-                <div class="title">
+                <div class="title" id="title">
                     Medical Examiners Service
                 </div>
             </div>

@@ -8,9 +8,9 @@
         {% if form.errors.me_thoughts %}
         <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_details">{{ form.errors.me_thoughts }}</span>{% endif %}
 
-        <span class="nhsuk-hint" id="more-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
+        <span class="nhsuk-hint" id="more-scrutiny-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom" id="me-thoughts" name="me-thoughts" rows="5"
-                  aria-describedby="more-detail-hint">{{ form.me_thoughts }}</textarea>
+                  aria-describedby="more-scrutiny-detail-hint">{{ form.me_thoughts }}</textarea>
     </div>
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
@@ -112,7 +112,7 @@
             </label>
             {% if form.errors.overall_outcome %}
             <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_outcome">{{ form.errors.overall_outcome }}</span>{% endif %}
-            <span class="nhsuk-hint" id="outcome-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
+            <span class="nhsuk-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
             <div class="nhsuk-radios nhsuk-radios--inline">
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops"
@@ -223,12 +223,12 @@
             died.</p>
     </div>
     <div class="nhsuk-form-group margin-bottom">
-        <div class="nhsuk-grid-row" id="other-notes-section">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <button id="submit-btn" class="nhsuk-button" type="submit" value="pre-scrutiny"
+                <button class="nhsuk-button add-event-btn" type="submit" value="pre-scrutiny"
                         name="add-event-to-timeline">Add event to timeline
                 </button>
-                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary"
+                <button class="nhsuk-button nhsuk-button--secondary add-another-btn"
                         type="submit"
                         value="pre-scrutiny" name="save-as-draft">Save as draft
                 </button>
