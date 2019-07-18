@@ -116,6 +116,21 @@ class TimelineEventTypes:
     CASE_CLOSED_TYPE = 'caseClosed'
 
 
+class SystemValidationErrors:
+    DUPLICATE = "Duplicate"
+    CONTAINS_WHITESPACE = "ContainsWhitespace"
+    CONTAINS_INVALID_CHARACTERS = "ContainsInvalidCharacters"
+    INVALID = "Invalid"
+    REQUIRED = "Required"
+    MAXIMUM_LENGTH_150 = "MaximumLength150"
+    MINIMUM_LENGTH_1 = "MinimumLengthOf1"
+    INVALID_FORMAT = "InvalidFormat"
+    END_DATE_NOT_FOUND = "EndDateNotFound"
+    END_DATE_BEFORE_START_DATE = "EndDateBeforeStartDate"
+    ID_NOT_FOUND = "IdNotFound"
+    UNKNOWN = "Unknown"
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -131,6 +146,7 @@ class APIStrings:
     examination_sections = ExaminationSections()
     timeline_event_keys = TimelineEventKeys()
     timeline_event_types = TimelineEventTypes()
+    errors = SystemValidationErrors()
 
 
 enums = APIStrings()
