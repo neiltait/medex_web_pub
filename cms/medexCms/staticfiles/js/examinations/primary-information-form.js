@@ -408,5 +408,5 @@ AgeCalculator.prototype = {
 $(function () // execute once the DOM has loaded
 {
     new Form($(".primary-info-form"));
-
+    new SavePromptForm($("#examination__create--form"))
 });

@@ -23,7 +23,7 @@
 
             <div class="nhsuk-checkboxes">
                 <div class="nhsuk-checkboxes__item">
-                    <input id="scrutiny-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
+                    <input id="scrutiny-confirmation" type="checkbox" name="scrutiny-confirmation" class="nhsuk-checkboxes__input"
                            {% if not case_outcome.scrutiny_actions_complete or not session_user.user_id == case_outcome.me_id %}disabled{% endif %} />
                     <label class="nhsuk-label nhsuk-checkboxes__label" for="scrutiny-confirmation">
                         Confirm scrutiny

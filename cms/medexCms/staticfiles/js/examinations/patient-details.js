@@ -10,15 +10,15 @@
       this.saveBar = this.wrapper.find('.sticky-save');
       this.form = this.wrapper.find('form');
       this.hasChanges = false;
-      this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
-      this.initialiseTabs();
+
+      this.initialiseSaveForm();
       this.initialiseInputs();
       this.setupAdditionalNotes();
       this.setupAddRemovePanels();
     },
 
-    initialiseTabs: function () {
-      this.tabBlock = new TabBlock(this.wrapper.find('.examination__tab-bar'), this.getHasChanges.bind(this), this.tabChangeModal);
+    initialiseSaveForm() {
+      new SavePromptForm(this.form)
     },
 
     setupAdditionalNotes: function() {
