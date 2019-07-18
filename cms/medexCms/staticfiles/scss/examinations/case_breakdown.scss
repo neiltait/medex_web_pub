@@ -22,13 +22,14 @@
   }
 }
 
-#submit-btn {
+.submit-btn {
   margin-right: $medex-spacing-md;
   width: 15.79rem;
 }
 
-#add-another-btn {
+.add-another-btn {
   width: 15.79rem;
+  margin-left: $medex-spacing-md;
 }
 
 .case-breakdown-form-group {
@@ -81,12 +82,12 @@
 }
 
 #bereavement-discussion__save-buttons {
-  #submit-btn {
-    margin-right: $medex-spacing-md;
+  .add-event-btn {
+    margin-right: $medex-spacing-xs;
     width: 15.79rem;
   }
 
-  #add-another-btn {
+  .add-another-btn {
     width: 15.79rem;
   }
 
