@@ -107,7 +107,7 @@
                 <div class="nhsuk-radios">
                   <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                         id="level-1" name="permission_level" type="radio" value="national" {% if form.permission_level == 'national' %}checked{% endif %}>
+                         id="level-1" name="permission_level" type="radio" value="national" {% if form.permission_level == 'national' %}checked{% endif %} {% if locations.national == None %}disabled{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="level-1">
                       National
                     </label>
@@ -115,14 +115,14 @@
 
                   <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                         id="level-2" name="permission_level" type="radio" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %}>
+                         id="level-2" name="permission_level" type="radio" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %} {% if locations.regions|length == 0 %}disabled{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="level-2">
                       Regional
                     </label>
                   </div>
                     <div class="nhsuk-radios__item">
                       <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                           id="level-3" name="permission_level" type="radio" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %}>
+                           id="level-3" name="permission_level" type="radio" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %} {% if locations.trusts|length == 0 %}disabled{% endif %}>
                       <label class="nhsuk-label nhsuk-radios__label" for="level-3">
                         Trust
                       </label>
@@ -133,7 +133,9 @@
           </div>
         </div>
 
-        <input name="national" value="{{national}}" hidden />
+        {% if location.national %}
+            <input name="national" value="{{location.national.location_id}}" hidden />
+        {% endif %}
 
         <div class="nhsuk-grid-row">
           <div class="nhsuk-grid-column-full">
@@ -148,7 +150,7 @@
 
               <select class="nhsuk-select" id="region" name="region" value="{{ form.region }}">
                 <option value="" disabled hidden selected>Select an region</option>
-                {% for region in regions %}
+                {% for region in locations.regions %}
                   <option value="{{ region.location_id }}" {% if region.location_id == form.region %}selected{% endif %}>{{ region.name }}</option>
                 {% endfor %}
               </select>
@@ -174,7 +176,7 @@
                 </div>
                 <div class="options-list">
                   <p class="placeholder options-list--placeholder">Please enter at least 3 characters to search</p>
-                  {% for trust in trusts %}
+                  {% for trust in locations.trusts %}
                     <option value="{{trust.location_id}}">{{trust.name}}</option>
                   {% endfor %}
                 </div>

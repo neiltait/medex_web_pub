@@ -3,7 +3,7 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
-from locations.models import Location
+from locations.models import Location, LocationCollection
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
 from permissions.models import Permission
@@ -53,15 +53,14 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
         regions = self.user.get_permitted_regions()
         national = Location.get_national_location_id(self.user.auth_token)
 
+        locations = self.user.get_location_collection()
         return {
             'session_user': self.user,
             'sub_heading': 'Add role and permission level',
             'form': form,
             'submit_path': 'add_permission',
             'invalid': invalid,
-            'trusts': trusts,
-            'regions': regions,
-            'national': national,
+            'locations': locations,
             'managed_user': self.managed_user,
         }
 

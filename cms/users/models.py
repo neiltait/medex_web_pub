@@ -190,6 +190,9 @@ class User:
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
 
+    def get_location_collection(self):
+        return Location.load_location_collection_for_user(self.auth_token)
+
     def default_filter_user(self):
         return self.user_id if self.is_me() and not self.is_meo() else None
 
