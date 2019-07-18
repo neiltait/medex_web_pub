@@ -76,9 +76,12 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def __process_api_error(self, form, response):
         known_errors = form.register_known_api_errors(response.json())
-        if len(known_errors) > 0:
-            for known_error in known_errors:
-                log_api_error('case creation', known_error)
+        unknown_errors = form.register_unknown_api_errors(response.json())
+        all_errors = known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for error in all_errors:
+                log_api_error('case creation', error)
             status_code = response.status_code
         else:
             log_api_error('case creation', response.text)

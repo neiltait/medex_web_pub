@@ -248,7 +248,7 @@ class PrimaryExaminationInformationForm:
                     self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
                     self.errors["count"] += 1
                     return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
-        return None
+        return []
 
     def __get_nhs_number_errors(self, api_errors):
         nhs_errors = None

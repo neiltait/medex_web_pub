@@ -1580,6 +1580,27 @@ class ExaminationMocks:
         return response
 
     @classmethod
+    def get_unsuccessful_patient_details_nhs_number_unknown_error(cls):
+        response = Response()
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        response._content = json.dumps({"NhsNumber": ["Anything else"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_patient_details_nhs_number_duplicate_error(cls):
+        response = Response()
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        response._content = json.dumps({"NhsNumber": ["Duplicate"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_patient_details_nhs_number_invalid_error(cls):
+        response = Response()
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        response._content = json.dumps({"NhsNumber": ["Invalid"]}).encode('utf-8')
+        return response
+
+    @classmethod
     def get_successful_case_breakdown_load_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK

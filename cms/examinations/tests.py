@@ -70,7 +70,7 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
         form = self.get_context_value(response.context, "form")
 
-        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.DUPLICATE)
 
     @patch('examinations.request_handler.post_new_examination',
@@ -80,7 +80,7 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
         form = self.get_context_value(response.context, "form")
 
-        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_WHITESPACE)
 
     @patch('examinations.request_handler.post_new_examination',
@@ -90,7 +90,7 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
         form = self.get_context_value(response.context, "form")
 
-        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_INVALID_CHARACTERS)
 
     @patch('examinations.request_handler.post_new_examination',
@@ -100,7 +100,7 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
         form = self.get_context_value(response.context, "form")
 
-        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
 
 
@@ -111,7 +111,7 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
         form = self.get_context_value(response.context, "form")
 
-        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.UNKNOWN)
 
     # Edit case tests
@@ -171,6 +171,42 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code,
                          ExaminationMocks.get_unsuccessful_patient_details_update_response().status_code)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_unknown_error())
+    def test_patient_details_form_raises_nhs_unknown_error_if_unfamiliar_error_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.UNKNOWN)
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_duplicate_error())
+    def test_patient_details_form_raises_nhs_duplicate_error_if_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.DUPLICATE)
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_invalid_error())
+    def test_patient_details_form_raises_nhs_invalid_error_if_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
 
     def test_submitting_a_valid_form_that_passes_on_the_api_returns_reloads_the_form(self):
         self.set_auth_cookies()
