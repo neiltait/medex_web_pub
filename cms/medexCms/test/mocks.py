@@ -1475,6 +1475,41 @@ class ExaminationMocks:
         return response
 
     @classmethod
+    def get_unsuccessful_case_creation_response_nhs_duplicate(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps({"NhsNumber":["Duplicate"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_creation_response_nhs_whitespace(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps( {"NhsNumber":["ContainsWhitespace"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_creation_response_nhs_invalid_characters(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps({"NhsNumber":["ContainsInvalidCharacters"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_creation_response_nhs_invalid(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps({"NhsNumber":["Invalid"]}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_case_creation_response_nhs_any_other_error(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps({"NhsNumber":["AnythingElse"]}).encode('utf-8')
+        return response
+
+    @classmethod
     def get_successful_case_load_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK

@@ -128,6 +128,7 @@ class SystemValidationErrors:
     END_DATE_NOT_FOUND = "EndDateNotFound"
     END_DATE_BEFORE_START_DATE = "EndDateBeforeStartDate"
     ID_NOT_FOUND = "IdNotFound"
+    UNKNOWN = "Unknown"
 
 
 class APIStrings:

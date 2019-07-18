@@ -238,6 +238,18 @@ class PrimaryExaminationInformationForm:
 
         return known_errors
 
+    def register_unknown_api_errors(self, api_errors):
+        KNOWN_API_ERROR_LIST = [enums.errors.CONTAINS_WHITESPACE, enums.errors.CONTAINS_INVALID_CHARACTERS,
+                                enums.errors.INVALID, enums.errors.DUPLICATE]
+        nhs_number_errors = self.__get_nhs_number_errors(api_errors)
+        if nhs_number_errors:
+            for error in nhs_number_errors:
+                if not error in KNOWN_API_ERROR_LIST:
+                    self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
+                    self.errors["count"] += 1
+                    return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
+        return None
+
     def __get_nhs_number_errors(self, api_errors):
         nhs_errors = None
         if "NhsNumber" in api_errors:

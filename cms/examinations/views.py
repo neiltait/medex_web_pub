@@ -196,9 +196,12 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def __process_api_error(self, primary_form, response):
         known_errors = primary_form.register_known_api_errors(response.json())
-        if len(known_errors) > 0:
-            for known_error in known_errors:
-                log_api_error('case creation', known_error)
+        unknown_errors = primary_form.register_unknown_api_errors(response.json())
+        all_errors = known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('case creation', all_errors)
             status_code = response.status_code
         else:
             log_api_error('case creation', response.text)

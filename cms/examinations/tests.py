@@ -2,6 +2,7 @@ from rest_framework import status
 
 from unittest.mock import patch
 
+from alerts.messages import ApiErrorMessages
 from examinations.forms.timeline_events import PreScrutinyEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, \
     OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 
@@ -60,6 +61,58 @@ class ExaminationsViewsTests(MedExTestCase):
         response = self.client.post('/cases/create', form_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/create.html')
+
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_duplicate())
+    def test_create_case_endpoint_raises_nhs_duplicate_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.DUPLICATE)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_whitespace())
+    def test_create_case_endpoint_raises_nhs_whitespace_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_WHITESPACE)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_invalid_characters())
+    def test_create_case_endpoint_raises_nhs_invalid_characters_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_INVALID_CHARACTERS)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_invalid())
+    def test_create_case_endpoint_raises_nhs_invalid_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
+
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_any_other_error())
+    def test_create_case_endpoint_raises_nhs_unknown_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors.count, 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.UNKNOWN)
 
     # Edit case tests
 
