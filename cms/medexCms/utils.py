@@ -121,3 +121,7 @@ def bool_to_string(bool_value):
 
 def get_code_version():
     return settings.VERSION
+
+def no_cache(response):
+    response['Cache-Control'] = 'no-cache'
+    return response
