@@ -1,3 +1,4 @@
+from django.views.decorators.cache import never_cache
 from rest_framework import status
 from django.shortcuts import render, redirect
 
@@ -12,12 +13,14 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
     permission_required = 'can_create_user_permission'
     template = 'users/permission_builder.html'
 
+    @never_cache
     def get(self, request, user_id):
         status_code = status.HTTP_200_OK
 
         context = self.__set_add_permission_context(PermissionBuilderForm(), False)
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request, user_id):
         post_body = request.POST
         status_code = status.HTTP_200_OK

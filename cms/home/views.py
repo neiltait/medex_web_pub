@@ -13,6 +13,7 @@ from home.forms import IndexFilterForm
 from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
+from django.views.decorators.cache import never_cache
 
 from users.models import User
 
@@ -20,6 +21,7 @@ from users.models import User
 class DashboardView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         query_params = request.GET
@@ -45,6 +47,7 @@ class DashboardView(LoginRequiredMixin, View):
 
 class LoginCallbackView(View):
 
+    @never_cache
     def get(self, request):
         token_response = request_handler.create_session(request.GET.get('code'))
         response = redirect_to_landing()
@@ -65,6 +68,7 @@ class LoginRefreshView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(LoginRefreshView, self).dispatch(request, *args, **kwargs)
 
+    @never_cache
     def post(self, request):
         refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
         if refresh_token:
@@ -89,6 +93,7 @@ class LoginRefreshView(View):
 class LoginView(LoggedInMixin, View):
     template = 'home/login.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         context = {
@@ -104,6 +109,7 @@ class LoginView(LoggedInMixin, View):
 
 class LogoutView(View):
 
+    @never_cache
     def get(self, request):
         user = User.initialise_with_token(request)
         user.logout()
@@ -120,6 +126,7 @@ class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template = 'home/settings_index.html'
     permission_required = 'can_get_users'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         users = User.get_all(self.user.auth_token)

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import never_cache
 from django.views.generic.base import View
 from rest_framework import status
 
@@ -28,11 +29,13 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_create_examination'
     template = "examinations/create.html"
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False)
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request):
         add_another = False
         post_body = request.POST
@@ -104,7 +107,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class EditExaminationView(View):
-
+    @never_cache
     def get(self, request, examination_id):
         return redirect('/cases/' + examination_id + '/patient-details')
 
@@ -141,6 +144,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.bereaved_form = None
         self.urgency_form = None
 
+    @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
@@ -153,6 +157,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
@@ -242,6 +247,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
 
+    @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
@@ -251,6 +257,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
@@ -301,6 +308,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.medical_team = None
         self.patient_details = None
 
+    @never_cache
     def get(self, request, examination_id):
         self._load_breakdown(examination_id)
         if self.error:
@@ -314,6 +322,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
         self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
@@ -411,6 +420,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def __init__(self):
         self.status_code = status.HTTP_200_OK
 
+    @never_cache
     def get(self, request, examination_id):
         self._load_case_outcome(examination_id)
         if self.error:
@@ -420,6 +430,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
@@ -459,6 +470,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         query_params = request.GET
