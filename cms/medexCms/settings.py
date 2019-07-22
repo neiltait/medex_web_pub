@@ -53,6 +53,7 @@ ALLOWED_HOSTS = [
     'medex-web-prd.frontend.prd.medex.cloud',
     'medex-uat.methods.co.uk',
     'medex.methods.co.uk',
+    'medex-web-pre-ukw.frontend.pre.medex.cloud',
 ]
 
 
