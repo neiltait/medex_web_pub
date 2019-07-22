@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import never_cache
 from django.views.generic.base import View
 from rest_framework import status
 
@@ -22,11 +23,13 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_create_examination'
     template = "examinations/create.html"
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False)
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request):
         add_another = False
         post_body = request.POST
@@ -66,11 +69,11 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "add_another": add_another,
         }
 
-
+@never_cache
 def edit_examination(request, examination_id):
     return redirect('/cases/' + examination_id + '/patient-details')
 
-
+@never_cache
 def examination_patient_details(request, examination_id):
     user = User.initialise_with_token(request)
 
@@ -185,7 +188,7 @@ def __set_examination_patient_details_context(user, examination, primary_form, s
         "saved": saved,
     }
 
-
+@never_cache
 def examination_medical_team(request, examination_id):
     # get the current user
     user = User.initialise_with_token(request)
@@ -271,7 +274,7 @@ def __set_medical_team_context(user, medical_team, form, saved):
         'saved': saved,
     }
 
-
+@never_cache
 def edit_examination_case_breakdown(request, examination_id):
     user = User.initialise_with_token(request)
     status_code = status.HTTP_200_OK
@@ -383,7 +386,7 @@ def __prepare_forms(event_list, medical_team, patient_details, form, amend_type)
 
     return form_data
 
-
+@never_cache
 def examination_case_outcome(request, examination_id):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
@@ -466,6 +469,7 @@ def __set_examination_case_outcome_context(user, case_outcome):
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         query_params = request.GET

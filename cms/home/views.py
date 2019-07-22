@@ -10,6 +10,7 @@ from home.forms import IndexFilterForm
 from medexCms.mixins import LoginRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
+from django.views.decorators.cache import never_cache
 
 from users.models import User
 
@@ -17,6 +18,7 @@ from users.models import User
 class DashboardView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         query_params = request.GET
@@ -39,7 +41,7 @@ class DashboardView(LoginRequiredMixin, View):
             'pagination_url': 'index',
         }
 
-
+@never_cache
 def login_callback(request):
     token_response = request_handler.create_session(request.GET.get('code'))
     response = redirect_to_landing()
@@ -50,6 +52,7 @@ def login_callback(request):
     return response
 
 
+@never_cache
 def login(request):
     user = User.initialise_with_token(request)
     if user.check_logged_in():
@@ -72,6 +75,7 @@ def login(request):
     return render(request, template, context, status=status_code)
 
 
+@never_cache
 def logout(request):
     user = User.initialise_with_token(request)
     user.logout()
@@ -82,6 +86,7 @@ def logout(request):
     return response
 
 
+@never_cache
 def settings_index(request):
     user = User.initialise_with_token(request)
     if not user.check_logged_in():
