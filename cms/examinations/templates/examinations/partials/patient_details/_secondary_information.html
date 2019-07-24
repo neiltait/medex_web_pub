@@ -184,7 +184,7 @@
             <div id="implant-devices">
                 <div class="nhsuk-radios">
                     <div class="nhsuk-form-group {% if errors.implanted_devices %}nhsuk-form-group--error{% endif %}">
-                        <fieldset class="nhsuk-fieldset">
+                        <fieldset class="nhsuk-fieldset textarea-margin">
                             <legend class="nhsuk-fieldset__legend">
                                 Does the patient have any devices implanted that could cause issues at cremation?
                             </legend>
@@ -210,7 +210,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="nhsuk-grid-column-one-third  nhsuk-u-visually-hidden">
+                                <div class="nhsuk-grid-column-one-third nhsuk-u-visually-hidden">
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input {% if errors.implanted_devices %}nhsuk-input--error{% endif %}"
                                                id="implant-devices-3" name="implanted_devices" type="radio" value="{{ enums.true_false.UNKNOWN }}"
@@ -222,32 +222,34 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full">
+                                <div class="nhsuk-form-group additional-info">
+                                    <fieldset class="nhsuk-fieldset">
+                                        <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
+                                            <label class="nhsuk-label" for="implanted_devices_details">Enter details
+                                                below</label>
+
+
+                                            {% if errors.implanted_devices_details %}
+                                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
+                                            {% endif %}
+
+                                            <textarea id="implanted_devices_details"
+                                                      class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
+                                                      name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group additional-info">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group {% if errors.implanted_devices_details %}nhsuk-form-group--error{% endif %}">
-                        <label class="nhsuk-label" for="implanted_devices_details">Enter details below</label>
 
-
-                        {% if errors.implanted_devices_details %}
-                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_implanted_devices_details">{{ errors.implanted_devices_details }}</span>
-                        {% endif %}
-
-                        <textarea id="implanted_devices_details"
-                                  class="nhsuk-textarea medex-textarea{% if errors.implanted_devices_details %} nhsuk-textarea--error{% endif %}"
-                                  name="implanted_devices_details">{{form.implanted_devices_details}}</textarea>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </div>
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group">
@@ -271,7 +273,7 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-radios">
                 <div class="nhsuk-form-group {% if errors.personal_effects %}nhsuk-form-group--error{% endif %}">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset textarea-margin">
                         <legend class="nhsuk-fieldset__legend">
                             Personal effects
                         </legend>
@@ -313,27 +315,28 @@
                             </div>
                         </div>
                     </fieldset>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group additional-info">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">
-                        <label class="nhsuk-label" for="personal_effects_details">Enter details below</label>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full">
+                            <div class="nhsuk-form-group additional-info">
+                                <fieldset class="nhsuk-fieldset">
+                                    <div class="nhsuk-form-group {% if errors.personal_effects_details %}nhsuk-form-group--error{% endif %}">
+                                        <label class="nhsuk-label" for="personal_effects_details">Enter details
+                                            below</label>
 
 
-                        {% if errors.personal_effects_details %}
-                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_personal_effects_details">{{ errors.personal_effects_details }}</span>
-                        {% endif %}
+                                        {% if errors.personal_effects_details %}
+                                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_personal_effects_details">{{ errors.personal_effects_details }}</span>
+                                        {% endif %}
 
-                        <textarea id="personal_effects_details"
-                                  class="nhsuk-textarea medex-textarea{% if errors.personal_effects_details %} nhsuk-textarea--error{% endif %}"
-                                  name="personal_effects_details">{{form.personal_effects_details}}</textarea>
+                                        <textarea id="personal_effects_details"
+                                                  class="nhsuk-textarea medex-textarea{% if errors.personal_effects_details %} nhsuk-textarea--error{% endif %}"
+                                                  name="personal_effects_details">{{form.personal_effects_details}}</textarea>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
                     </div>
-                </fieldset>
+                </div>
             </div>
         </div>
     </div>
