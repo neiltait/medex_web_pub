@@ -65,3 +65,23 @@ def get_tab_change_modal_config():
 
 def text_field_is_not_null(field):
     return field and len(field.strip()) > 0
+
+
+class ReportGenerator():
+    """ Class ReportGenerator """
+
+    @staticmethod
+    def create_report(template, data, filename="report.odt"):
+        from secretary import Renderer
+
+        engine = Renderer()
+        result = engine.render(template, data=data)
+
+        import tempfile
+        with tempfile.NamedTemporaryFile() as output:
+            output.write(result)
+            output.flush()
+            from django.http import FileResponse
+            response = FileResponse(open(output.name, 'rb'), as_attachment=True, filename=filename)
+
+        return response
