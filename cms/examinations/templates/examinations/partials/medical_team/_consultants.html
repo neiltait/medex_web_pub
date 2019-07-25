@@ -9,20 +9,23 @@
     </div>
 
 
-
     <div class="medex-form-section medex-form-section--first">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group {% if errors.consultant_1 %}nhsuk-form-group--error{% endif %}">
+                    <div class="nhsuk-form-group--field-indicator {% if errors.consultant_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="consultant_name_1">
                             Consultant responsible for care
                         </label>
                         {% if errors.consultant_1 %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_1 }}</span>{% endif %}
                         <input class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_1 %}nhsuk-input--error{% endif %}"
                                id="consultant_name_1" name="consultant_name_1" value="{{ form.consultant_1.name }}" type="text">
+                        <div class="medex-field-indicator">
+                            Required field
+                        </div>
                     </div>
                 </fieldset>
+
             </div>
             <div class="nhsuk-grid-column-one-half">
                 <fieldset class="nhsuk-fieldset">
@@ -55,8 +58,8 @@
                             Personal phone / bleep number
                         </label>
                         {% if errors.consultant_phone_number_1 %}
-                            <span
-                                    class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_1 }}</span>{% endif %}
+                        <span
+                                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_1 }}</span>{% endif %}
                         <input
                                 class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_1 %}nhsuk-input--error{% endif %}"
                                 id="consultant_phone_number_1" name="consultant_phone_number_1"
@@ -102,8 +105,8 @@
                                 Second consultant responsible for care
                             </label>
                             {% if errors.consultant_2 %}
-                                <span
-                                        class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_2 }}</span>{% endif %}
+                            <span
+                                    class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_2 }}</span>{% endif %}
                             <input
                                     class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_2 %}nhsuk-input--error{% endif %}"
                                     id="consultant_name_2" name="consultant_name_2"
@@ -149,17 +152,17 @@
                         </div>
                     </fieldset>
                 </div>
-                 <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group">
-                        <label class="nhsuk-label" for="gmc_number_consultant_2">
-                            GMC number
-                        </label>
-                        <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_2" name="gmc_number_consultant_2"
-                               value="{{form.consultant_2.gmc_number}}" type="text">
-                    </div>
-                </fieldset>
-            </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gmc_number_consultant_2">
+                                GMC number
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_2" name="gmc_number_consultant_2"
+                                   value="{{form.consultant_2.gmc_number}}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
                 <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-2">
                     <button class="medex-hyperlink-button additional-notes-button">Add a note</button>
                     <div class="nhsuk-form-group medex-hidden additional-notes-panel">
@@ -182,7 +185,7 @@
                                 Third consultant responsible for care
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_name_3" name="consultant_name_3"
-                                    value="{{ form.consultant_3.name }}" type="text">
+                                   value="{{ form.consultant_3.name }}" type="text">
                         </div>
                     </fieldset>
                 </div>
@@ -221,17 +224,17 @@
                         </div>
                     </fieldset>
                 </div>
-                 <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group">
-                        <label class="nhsuk-label" for="gmc-number-consultant-3">
-                            GMC number
-                        </label>
-                        <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_3" name="gmc_number_consultant_3"
-                               value="{{form.consultant_3.gmc_number}}" type="text">
-                    </div>
-                </fieldset>
-            </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-form-group">
+                            <label class="nhsuk-label" for="gmc-number-consultant-3">
+                                GMC number
+                            </label>
+                            <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_3" name="gmc_number_consultant_3"
+                                   value="{{form.consultant_3.gmc_number}}" type="text">
+                        </div>
+                    </fieldset>
+                </div>
                 <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-3">
                     <button class="medex-hyperlink-button additional-notes-button">Add a note</button>
                     <div class="nhsuk-form-group medex-hidden additional-notes-panel">

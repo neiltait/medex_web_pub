@@ -19,6 +19,7 @@
 
     font-size: $nhs-heading-l-size;
     line-height: $nhs-heading-l-line-height;
+    font-weight: bold;
   }
 }
 
@@ -45,6 +46,13 @@
   padding-top: 0rem;
   padding-left: $medex-spacing-lg;
   border-left: $nhs-light-grey 3px solid;
+}
+
+.medex-hint {
+    color: $nhs-grey;
+    font-size: 19px;
+    margin-bottom: 16px;
+    line-height: 1.5;
 }
 
 #pre-scrutiny {

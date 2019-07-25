@@ -2,8 +2,8 @@
     {% if form.event_id %}<input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>{% endif %}
     <div class="nhs-form-group">
         <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-half">
-                <label class="nhsuk-label nhsuk-u-font-weight-bold margin-bottom">
+            <div class="nhsuk-grid-column-full">
+                <label class="nhsuk-label nhsuk-u-font-weight-bold">
                     Who is the discussion with?
                 </label>
             </div>
@@ -11,7 +11,10 @@
 
         <div class="nhsuk-grid-row {% if form.existing_representative == None %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
+                    <legend class="nhsuk-u-visually-hidden" id="bereaved-representative">
+                        Existing representative
+                    </legend>
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
@@ -109,7 +112,7 @@
 
         <div id="bereaved-rep-form"
              class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_participant_name %}nhsuk-form-group--error{% endif %}">
-            <div class="nhsuk-grid-row margin-top">
+            <div class="nhsuk-grid-row">
                 {% if form.errors.bereaved_participant_name %}
                     <div class="nhsuk-grid-column-full">
                         <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_details">{{ form.errors.bereaved_participant_name }}</span>
@@ -226,15 +229,15 @@
         <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.bereaved_time_of_conversation %}nhsuk-form-group--error{% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
-                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date-of-conversation" role="group">
+                        <legend class="nhsuk-fieldset__legend">
                             Date of conversation
                         </legend>
 
                         {% if form.errors.bereaved_time_of_conversation %}
                             <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_date">{{ form.errors.bereaved_time_of_conversation }}</span>
                         {% endif %}
-                        <div class="nhsuk-date-input margin-top" id="date-of-conversation-day">
+                        <div class="nhsuk-date-input margin-bottom" id="date-of-conversation">
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
                                     <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
@@ -290,7 +293,10 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="discussion-hint">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-discussion-could-not-happen">
+                        <legend class="nhsuk-u-visually-hidden">
+                            Discussion could not happen
+                        </legend>
                         <div class="nhsuk-checkboxes">
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
@@ -300,7 +306,7 @@
                                         {% if form.discussion_could_not_happen == enums.true_false.TRUE %}
                                        checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
-                                       for="bereaved_discussion_could_not_happen">
+                                       for="bereaved-discussion-could-not-happen">
                                     Tick if this discussion with a representative was unable to happen at all
                                 </label>
                             </div>
@@ -319,14 +325,14 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <div class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_discussion_details %}nhsuk-form-group--error{% endif %}">
-                        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="bereavement-discussion-details"
+                        <label class="nhsuk-label nhsuk-u-font-weight-bold margin-bottom" for="bereavement-discussion-details"
                                id="bereavement-discussion-details">
                             Details of the discussion?
                         </label>
                         {% if form.errors.bereaved_discussion_details %}
                             <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_details">{{ form.errors.bereaved_discussion_details }}</span>
                         {% endif %}
-                        <textarea class="nhsuk-textarea medex-textarea"
+                        <textarea class="nhsuk-textarea medex-textarea" aria-labelledby="bereavement-discussion-details"
                                   name="bereaved_discussion_details"
                                   rows="6">{{ form.discussion_details }}</textarea>
                     </div>
@@ -348,7 +354,7 @@
                                 {% if form.errors.bereaved_discussion_outcome %}
                                     <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_outcome">{{ form.errors.bereaved_discussion_outcome }}</span>
                                 {% endif %}
-                                <span class="nhsuk-hint">
+                                <span class="medex-hint">
                                 What was the ultimate outcome of the conversation with the family member or representative?
                             </span>
                                 <div class="nhsuk-radios nhsuk-radios--inline">

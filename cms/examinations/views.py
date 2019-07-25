@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import never_cache
 from django.views.generic.base import View
 from rest_framework import status
 
@@ -28,11 +29,13 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_create_examination'
     template = "examinations/create.html"
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         context = self.__set_create_examination_context(PrimaryExaminationInformationForm(), False)
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request):
         add_another = False
         post_body = request.POST
@@ -43,22 +46,50 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
             if response.ok:
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
-                    examination_id = response.json()['examinationId']
-                    return redirect_to_examination(examination_id)
+                    # scenario 1 - success
+                    return self.__successful_post(response)
                 else:
-                    add_another = True
-                    form = PrimaryExaminationInformationForm()
-                    status_code = status.HTTP_200_OK
+                    # scenario 1b - success and add another
+                    add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
-                log_api_error('case creation', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(form, response)
         else:
+            # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " "\
-            + fallback_to(post_body.get("last_name"), "")
+        context = self.__set_return_to_create_examination_context(add_another, form, post_body)
         return render(request, self.template, context, status=status_code)
+
+    def __successful_post(self, response):
+        examination_id = response.json()['examinationId']
+        return redirect_to_examination(examination_id)
+
+    def __reset_form_to_add_another(self, add_another, form):
+        add_another = True
+        form = PrimaryExaminationInformationForm()
+        status_code = status.HTTP_200_OK
+        return add_another, form, status_code
+
+    def __set_return_to_create_examination_context(self, add_another, form, post_body):
+        context = self.__set_create_examination_context(form, add_another)
+        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " \
+                               + fallback_to(post_body.get("last_name"), "")
+        return context
+
+    def __process_api_error(self, form, response):
+        known_errors = form.register_known_api_errors(response.json())
+        unknown_errors = form.register_unknown_api_errors(response.json())
+        all_errors = known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for error in all_errors:
+                log_api_error('case creation', error)
+            status_code = response.status_code
+        else:
+            log_api_error('case creation', response.text)
+            status_code = response.status_code
+        return status_code
 
     def __set_create_examination_context(self, form, add_another):
         me_offices = self.user.get_permitted_me_offices()
@@ -76,7 +107,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class EditExaminationView(View):
-
+    @never_cache
     def get(self, request, examination_id):
         return redirect('/cases/' + examination_id + '/patient-details')
 
@@ -113,6 +144,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.bereaved_form = None
         self.urgency_form = None
 
+    @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
@@ -125,6 +157,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
@@ -150,24 +183,43 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             response = PatientDetails.update(examination_id, submission, self.user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
             elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(self.primary_form, response)
+
             else:
+                # scenario 1 - success
                 saved = True
                 self.examination.case_header = PatientHeader(response.json().get("header"))
         else:
+            # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self._set_patient_details_context(saved)
 
         return render(request, self.template, context, status=status_code)
 
+    def __process_api_error(self, primary_form, response):
+        known_errors = primary_form.register_known_api_errors(response.json())
+        unknown_errors = primary_form.register_unknown_api_errors(response.json())
+        all_errors = known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('case creation', all_errors)
+            status_code = response.status_code
+        else:
+            log_api_error('case creation', response.text)
+            status_code = response.status_code
+        return status_code
+
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
         error_count = self.primary_form.error_count + self.secondary_form.error_count + \
-            self.bereaved_form.error_count + self.urgency_form.error_count
+                      self.bereaved_form.error_count + self.urgency_form.error_count
 
         return {
             'session_user': self.user,
@@ -186,7 +238,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def _validate_patient_details_forms(self):
         return self.primary_form.is_valid() and self.secondary_form.is_valid() \
-            and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
+               and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
 class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):
@@ -195,6 +247,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
 
+    @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
@@ -204,6 +257,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
@@ -254,6 +308,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.medical_team = None
         self.patient_details = None
 
+    @never_cache
     def get(self, request, examination_id):
         self._load_breakdown(examination_id)
         if self.error:
@@ -267,6 +322,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
         self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
@@ -344,7 +400,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if amend_type and not form:
             latest_for_type = event_list.get_latest_of_type(amend_type)
             if latest_for_type:
-                form_data[latest_for_type.form_type] = latest_for_type\
+                form_data[latest_for_type.form_type] = latest_for_type \
                     .as_amendment_form(medical_team.qap, patient_details.representatives).make_active()
             else:
                 form_type = '%sEventForm' % amend_type
@@ -364,6 +420,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def __init__(self):
         self.status_code = status.HTTP_200_OK
 
+    @never_cache
     def get(self, request, examination_id):
         self._load_case_outcome(examination_id)
         if self.error:
@@ -373,6 +430,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
+    @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
@@ -412,6 +470,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         query_params = request.GET

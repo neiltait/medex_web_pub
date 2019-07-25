@@ -57,7 +57,6 @@
         startWatcher: function () {
             var that = this;
             this.picker.change(function (e) {
-                console.log('changing form type')
                 that.forms[that.picker[0].value].show();
                 that.hideOtherForms(that.picker[0].value);
                 that.text.show();
@@ -261,6 +260,9 @@
         for (var i = 0; i < radioToggleGroups.length; i++) {
             new RadioTogglePanelGroup(radioToggleGroups)
         }
+
+        var mainForm = $('.form');
+        new SavePromptForm(mainForm);
 
         initPreScrutiny();
         initQAPDiscussion();

@@ -21,3 +21,9 @@
 .expanded-margin {
     margin-right: medex-spacing(4);
 }
+
+.nhsuk-form-group {
+    &--field-indicator {
+        margin-bottom: 12px;
+    }
+}

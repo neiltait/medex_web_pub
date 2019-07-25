@@ -1,5 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 
@@ -209,6 +209,54 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         return self.errors["count"] == 0
+
+    def register_known_api_errors(self, api_errors):
+        known_errors = []
+        nhs_number_errors = self.__get_nhs_number_errors(api_errors)
+
+        if "NhsNumber" in api_errors:
+            if enums.errors.CONTAINS_WHITESPACE in nhs_number_errors:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_WHITESPACE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_WHITESPACE}]
+
+            if enums.errors.CONTAINS_INVALID_CHARACTERS in nhs_number_errors:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_INVALID_CHARACTERS
+                self.errors["count"] += 1
+                known_errors = known_errors + [
+                    {'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_INVALID_CHARACTERS}]
+
+            if enums.errors.INVALID in nhs_number_errors:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.INVALID
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.INVALID}]
+
+            if enums.errors.DUPLICATE in nhs_number_errors:
+                self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
+                self.errors["count"] += 1
+                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
+
+        return known_errors
+
+    def register_unknown_api_errors(self, api_errors):
+        KNOWN_API_ERROR_LIST = [enums.errors.CONTAINS_WHITESPACE, enums.errors.CONTAINS_INVALID_CHARACTERS,
+                                enums.errors.INVALID, enums.errors.DUPLICATE]
+        nhs_number_errors = self.__get_nhs_number_errors(api_errors)
+        if nhs_number_errors:
+            for error in nhs_number_errors:
+                if not error in KNOWN_API_ERROR_LIST:
+                    self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
+                    self.errors["count"] += 1
+                    return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
+        return []
+
+    def __get_nhs_number_errors(self, api_errors):
+        nhs_errors = None
+        if "NhsNumber" in api_errors:
+            nhs_errors = api_errors["NhsNumber"]
+        elif "examinationId.NhsNumber" in api_errors:
+            nhs_errors = api_errors["examinationId.NhsNumber"]
+        return nhs_errors
 
     def to_object(self):
         dob = NONE_DATE

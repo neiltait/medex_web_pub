@@ -35,6 +35,18 @@
   width: 100%;
 }
 
+.medex-hint {
+    color: $nhs-grey !important;
+    font-size: 19px !important;
+}
+
+.medex-field-indicator {
+    font-size: 14px;
+    color: $nhs-blue;
+    margin-top: $medex-spacing-xs;
+    margin-bottom: $medex-spacing-md;
+}
+
 .radiobutton {
   &__list {
     justify-content: space-between;
@@ -155,11 +167,12 @@
    /*border is optional*/
    border-bottom:1px solid #444;
    cursor: pointer;
+   margin-bottom: $medex-spacing-md;
 }
 
 .hospital-number {
   &__list-item {
-    margin-bottom: medex-spacing(3);
+    margin-bottom: medex-spacing(2);
   }
 
   &__group {

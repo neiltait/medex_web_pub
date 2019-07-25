@@ -3,7 +3,7 @@
         <!-- Representative -->
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-            <span class="nhsuk-hint">Enter information regarding the patient's bereaved family or representative handling their affairs.</span>
+                <span class="medex-hint">Enter information regarding the patient's bereaved family or representative handling their affairs.</span>
             </div>
         </div>
         <div class="nhsuk-grid-row">
@@ -30,7 +30,7 @@
                         <label class="nhsuk-label" for="relationship_1">Relationship</label>
 
                         {% if errors.relationship_1 %}
-                        <span class="nhsuk-error-message medex-font-default-override"  automation-id="ve_relationship_1">{{ errors.relationship_1 }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_relationship_1">{{ errors.relationship_1 }}</span>
                         {% endif %}
 
                         <input id="relationship_1" type="text" name="relationship_1" value="{{form.relationship_1}}"
@@ -39,13 +39,15 @@
                 </fieldset>
             </div>
 
+
             <div class="nhsuk-grid-column-one-half">
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
-                        <div class="nhsuk-radios nhsuk-radios--inline">
-                            <div class="nhsuk-form-group {% if errors.present_death_1 %}nhsuk-form-group--error{% endif %}">
-                                <label class="nhsuk-label">Present at death</label>
-
+                        <legend class="nhsuk-fieldset__legend">
+                            Present at death
+                        </legend>
+                        <div class="nhsuk-form-group {% if errors.present_death_1 %}nhsuk-form-group--error{% endif %}">
+                            <div class="nhsuk-radios nhsuk-radios--inline">
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.present_death_1 %}nhsuk-input--error{% endif %}"
                                            id="present_1-1" name="present_death_1" type="radio" value="Yes"
@@ -96,10 +98,11 @@
             <div class="nhsuk-grid-column-one-half">
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend">
+                            Informed
+                        </legend>
                         <div class="nhsuk-radios nhsuk-radios--inline">
                             <div class="nhsuk-form-group {% if errors.present_death_1 %}nhsuk-form-group--error{% endif %}">
-                                <label class="nhsuk-label">Informed</label>
-
                                 <div class="nhsuk-radios__item">
                                     <input class="nhsuk-radios__input {% if errors.informed_1 %}nhsuk-input--error{% endif %}"
                                            id="informed_1-1" name="informed_1" type="radio" value="{{ enums.yes_no.YES }}"
@@ -137,7 +140,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group {% if errors.date_of_appointment_1 %}nhsuk-form-group--error{% endif %}">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="appointment-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_1" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Appointment date
                         </legend>
@@ -200,11 +203,13 @@
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_1 %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-hint" for="appointment_additional_details_1">Enter any additional details or context about the bereaved</label>
+                            <label class="medex-hint" for="appointment_additional_details_1">Enter any additional
+                                details or
+                                context about the bereaved</label>
 
 
                             {% if errors.appointment_additional_details_1 %}
-                                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_1">{{ errors.appointment_additional_details_1 }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_1">{{ errors.appointment_additional_details_1 }}</span>
                             {% endif %}
 
                             <textarea id="appointment_additional_details_1"
@@ -350,7 +355,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group {% if errors.date_of_appointment_2 %}nhsuk-form-group--error{% endif %}">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="appointment-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_2" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Appointment date
                         </legend>
@@ -408,18 +413,19 @@
         </div>
 
 
-
         <!-- Additional details -->
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_2 %}nhsuk-form-group--error{% endif %}">
-                            <label class="nhsuk-hint" for="appointment_additional_details_2">Enter any additional details or context about the bereaved</label>
+                            <label class="medex-hint" for="appointment_additional_details_2">Enter any additional
+                                details or
+                                context about the bereaved</label>
 
 
                             {% if errors.appointment_additional_details_2 %}
-                                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_2">{{ errors.appointment_additional_details_2 }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_appointment_additional_details_2">{{ errors.appointment_additional_details_2 }}</span>
                             {% endif %}
 
                             <textarea id="appointment_additional_details_2"
