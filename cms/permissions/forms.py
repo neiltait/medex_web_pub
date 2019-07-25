@@ -27,18 +27,18 @@ class PermissionBuilderForm:
 
 
     @classmethod
-    def load_from_permission(cls, permission, trust_list, region_list, national_id):
+    def load_from_permission(cls, permission, locations):
         form = PermissionBuilderForm()
         form.role = permission.role_type
 
-        if permission.location_id == national_id:
-            form.national = national_id
-        elif permission.location_id in [trust.location_id for trust in trust_list]:
-            trust = [trust for trust in trust_list if trust.location_id==permission.location_id][0]
+        if locations.national and permission.location_id == locations.national.location_id:
+            form.national = locations.national.location_id
+        elif permission.location_id in [trust.location_id for trust in locations.trusts]:
+            trust = [trust for trust in locations.trusts if trust.location_id==permission.location_id][0]
             form.trust = trust.location_id
             form.trust_name = trust.name
 
-        elif permission.location_id in [region.location_id for region in region_list]:
+        elif permission.location_id in [region.location_id for region in locations.regions]:
             form.region = permission.location_id
 
         return form

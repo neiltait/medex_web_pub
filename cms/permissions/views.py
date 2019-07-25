@@ -52,9 +52,6 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
         return render(request, self.template, context, status=status_code)
 
     def __set_add_permission_context(self, form, invalid):
-        trusts = self.user.get_permitted_trusts()
-        regions = self.user.get_permitted_regions()
-        national = Location.get_national_location_id(self.user.auth_token)
 
         locations = self.user.get_location_collection()
         return {
@@ -103,21 +100,16 @@ class EditPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUser
         return render(request, self.template, context, status=status_code)
 
     def __set_edit_permission_context(self, permission, invalid, posted_form=None):
-        trusts = self.user.get_permitted_trusts()
-        regions = self.user.get_permitted_regions()
-        national = Location.get_national_location_id(self.user.auth_token)
 
-        form = posted_form if posted_form else PermissionBuilderForm.load_from_permission(permission, trusts, regions,
-                                                                                          national)
+        locations = self.user.get_location_collection()
+        form = posted_form if posted_form else PermissionBuilderForm.load_from_permission(permission, locations)
         return {
             'session_user': self.user,
             'sub_heading': 'Edit role and permission level',
             'form': form,
             'submit_path': 'edit_permission',
             'invalid': invalid,
-            'trusts': trusts,
-            'regions': regions,
-            'national': national,
+            'locations': locations,
             'managed_user': self.managed_user,
             'permission': permission,
         }
