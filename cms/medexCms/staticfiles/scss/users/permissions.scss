@@ -82,37 +82,17 @@ body {
     .small-print {
       color: $nhs-light-grey;
     }
-
-    .button-margin {
-      margin-right: $medex-spacing-md;
-    }
   }
+ }
 
 .manage-page {
   margin-bottom: $medex-spacing-xl;
 
-  .link-margin {
-    margin-left: $medex-spacing-md;
+    .link-margin {
+        margin-bottom: $medex-spacing-sm;
   }
 
-  .margin-bottom {
-    margin-bottom: $medex-spacing-xl;
+    .margin-bottom {
+        margin-bottom: $medex-spacing-xl;
   }
-
-  .medex-link {
-    font-size: 1rem;
-  }
-}
-
-#permission-builder-form {
-  margin-bottom: $medex-spacing-xl;
-
-  .link-margin {
-    margin-bottom: $medex-spacing-sm;
-  }
-
-  .margin-bottom {
-    margin-bottom: $medex-spacing-lg;
-  }
-
 }
