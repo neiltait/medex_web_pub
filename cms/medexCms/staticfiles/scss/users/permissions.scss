@@ -88,10 +88,14 @@ body {
   margin-bottom: $medex-spacing-xl;
 
   .link-margin {
-    margin-bottom: $medex-spacing-sm;
+    margin-left: $medex-spacing-sm;
   }
 
   .margin-bottom {
     margin-bottom: $medex-spacing-xl;
+  }
+
+  .medex-link {
+    font-size: $nhs-body-l-size;
   }
 }
