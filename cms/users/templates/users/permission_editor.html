@@ -162,10 +162,6 @@
                 Trust
               </label>
 
-              {% if form.trust_error %}
-                <span class="nhsuk-error-message medex-font-default-override">{{ form.trust_error }}</span>
-              {% endif %}
-
               <div class="search-dropdown">
                 <div class="nhsuk-form-group {% if errors.me_office %}nhsuk-form-group--error{% endif %}">
                     {% if form.trust_error %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_office">{{ form.trust_error }}</span>{% endif %}
