@@ -41,58 +41,57 @@ body {
   }
 }
 
-  #permission-builder-form {
-    margin-bottom: 7rem;
+#permission-builder-form {
+  margin-bottom: 7rem;
 
-    #level-radio-buttons, #trust-selector, #region-selector {
-      display: none;
+  #level-radio-buttons, #trust-selector, #region-selector {
+    display: none;
+  }
+
+  .form-item {
+    width: 100%;
+    margin-bottom: 3rem;
+
+    &--header {
+      display: block;
+      margin-bottom: 0.75rem;
     }
 
-    .form-item {
+    .option-column {
+      margin-right: 2rem;
+    }
+
+    input {
+      width: 50%;
+
+      &.error {
+        border: 1.5px solid $error-border;
+      }
+    }
+
+    .dropdown {
       width: 100%;
-      margin-bottom: 3rem;
-
-      &--header {
-        display: block;
-        margin-bottom: 0.75rem;
-      }
-
-      .option-column {
-        margin-right: 2rem;
-      }
-
-      input {
-        width: 50%;
-
-        &.error {
-          border: 1.5px solid $error-border;
-        }
-      }
-
-      .dropdown {
-        width: 100%;
-        max-width: unset;
-      }
-
-      .notification {
-        margin-top: 0;
-      }
+      max-width: unset;
     }
 
-    .small-print {
-      color: $nhs-light-grey;
+    .notification {
+      margin-top: 0;
     }
   }
- }
+
+  .small-print {
+    color: $nhs-light-grey;
+  }
+}
 
 .manage-page {
   margin-bottom: $medex-spacing-xl;
 
-    .link-margin {
-        margin-bottom: $medex-spacing-sm;
+  .link-margin {
+    margin-bottom: $medex-spacing-sm;
   }
 
-    .margin-bottom {
-        margin-bottom: $medex-spacing-xl;
+  .margin-bottom {
+    margin-bottom: $medex-spacing-xl;
   }
 }
