@@ -56,7 +56,7 @@
                 {% endif %}
 
                 <div class="nhsuk-radios">
-                  <div class="nhsuk-grid-row">
+                  <div class="nhsuk-grid-row margin-bottom">
                     <div class="nhsuk-grid-column-one-half">
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
@@ -155,7 +155,7 @@
           </div>
         </div>
 
-        <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-row margin-bottom">
           <div class="nhsuk-grid-column-full">
             <div id='trust-selector' class="nhsuk-form-group {% if form.trust_error %}nhsuk-form-group--error{% endif %}">
               <label class="nhsuk-label" for="trust">
@@ -183,8 +183,8 @@
 
         <div class="nhsuk-grid-row">
           <div class="nhsuk-grid-column-full">
-            <input id="submit-btn" class="nhsuk-button" type="submit" value="{{form.submit_btn_text}}"/>
-              <button id="cancel-btn" class="nhsuk-button nhsuk-button--secondary" href="{% url 'manage_user' user_id=managed_user.user_id %}">Cancel</button>
+            <input id="submit-btn" class="nhsuk-button button-margin" type="submit" value="{{form.submit_btn_text}}"/>
+            <a id="cancel-btn" class="nhsuk-button nhsuk-button--secondary" href="{% url 'manage_user' user_id=managed_user.user_id %}">Cancel</a>
           </div>
         </div>
 
