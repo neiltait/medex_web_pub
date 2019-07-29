@@ -600,7 +600,11 @@ class BereavedDiscussionEventForm:
     # properties
     active = False
     event_id = ''
+
     use_existing_bereaved = False
+    use_custom_bereaved = True
+    use_no_bereaved = False
+
     discussion_representative_type = ''
     existing_representative = None
     alternate_representative = None
@@ -637,6 +641,7 @@ class BereavedDiscussionEventForm:
         self.existing_representative = representatives[0]
         self.discussion_representative_type = enums.people.BEREAVED_REP
         self.use_existing_bereaved = True
+        self.use_custom_bereaved = False
 
     def __init_representatives_from_draft(self, form_data):
         self.__init_existing_representative(form_data)
@@ -650,12 +655,24 @@ class BereavedDiscussionEventForm:
     def __set_use_existing_bereaved(self):
         if self.discussion_representative_type == enums.people.BEREAVED_REP:
             self.use_existing_bereaved = True
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = False
         elif self.discussion_representative_type == enums.people.OTHER:
             self.use_existing_bereaved = False
+            self.use_custom_bereaved = True
+            self.use_no_bereaved = False
+        elif self.discussion_representative_type == enums.people.NOBODY:
+            self.use_existing_bereaved = False
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = True
         elif self.existing_representative:
             self.use_existing_bereaved = True
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = False
         else:
             self.use_existing_bereaved = False
+            self.use_custom_bereaved = True
+            self.use_no_bereaved = False
 
     def __init_alternate_representative(self, form_data):
         alternate_bereaved_data = {
@@ -793,7 +810,7 @@ class BereavedDiscussionEventForm:
             if self.existing_representative is not None:
                 self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = enums.people.OTHER
+                self.discussion_representative_type = enums.people.NOBODY
         else:
             if draft_participant.equals(self.existing_representative):
                 self.discussion_representative_type = enums.people.BEREAVED_REP
