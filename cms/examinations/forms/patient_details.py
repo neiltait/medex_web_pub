@@ -7,7 +7,7 @@ from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT
 class PrimaryExaminationInformationForm:
     CREATE_AND_CONTINUE_FLAG = 'create-and-continue'
     NHS_MIN_LENGTH = 10
-    NHS_MAX_LENGTH = 13
+    NHS_MAX_LENGTH = 17
 
     def __init__(self, request=None):
         self.initialise_errors()
