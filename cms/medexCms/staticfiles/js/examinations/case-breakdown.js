@@ -294,12 +294,20 @@
             this.noRep = this.form.find("#bereaved-no-rep");
             this.repDetails = this.form.find("#bereaved-rep-details");
             this.repForm = this.form.find("#bereaved-rep-form");
+            this.unableCheckbox = this.form.find("#bereaved-discussion-could-not-happen");
+            this.dayOfConversation = this.form.find("#doc-day");
+            this.monthOfConversation = this.form.find("#doc-month");
+            this.yearOfConversation = this.form.find("#doc-year");
+            this.timeOfConversation = this.form.find("#doc-time");
+            this.discussionDetails = this.form.find("#bereavement-discussion-details");
+
             this.showHideRepTypePanels();
 
             this.concernsRadio = this.form.find("#bereavment-discussion-outcome-concerns");
             this.noConcernsRadio = this.form.find("#bereavement-discussion-outcome-no-concerns");
             this.concernsPanel = this.form.find("#bereavement-discussion-concerned-outcomes");
             this.showHideConcernsPanel();
+            this.enableOrDisableAllControls();
 
             this.startWatchers();
         },
@@ -348,6 +356,23 @@
             this.noConcernsRadio.change(function () {
                 that.showHideConcernsPanel()
             });
+
+            this.unableCheckbox.change(function() {
+                that.enableOrDisableAllControls();
+            })
+        },
+
+        enableOrDisableAllControls: function() {
+            let that = this;
+            var disable = this.unableCheckbox.prop('checked');
+            this.dayOfConversation[0].disabled = disable;
+            this.monthOfConversation[0].disabled = disable;
+            this.yearOfConversation[0].disabled = disable;
+            this.timeOfConversation[0].disabled = disable;
+            this.discussionDetails[0].disabled = disable;
+            this.noConcernsRadio[0].disabled = disable;
+            this.concernsRadio[0].disabled = disable;
+
         }
     };
 
