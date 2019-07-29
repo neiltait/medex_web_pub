@@ -62,6 +62,7 @@ class APIPeopleStrings:
     QAP = 'qap'
     BEREAVED_REP = 'bereaved-representative'
     OTHER = 'other'
+    NOBODY = 'nobody'
 
 
 class UserRoleTypes:

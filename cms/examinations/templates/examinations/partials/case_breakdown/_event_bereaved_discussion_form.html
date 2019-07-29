@@ -8,50 +8,15 @@
                 </label>
             </div>
         </div>
-        <div class="nhsuk-grid-row {% if form.existing_representative == None %}{% endif %}">
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
-                    <legend class="nhsuk-u-visually-hidden" id="bereaved-representative">
-                        Existing representative
-                    </legend>
-                    <div class="class=nhsuk-radios nhsuk-radios--inline">
-                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="bereaved-existing-rep"
-                                       name="bereaved_rep_type" type="radio"
-                                       value="{{ enums.people.BEREAVED_REP }}"
-                                       {% if form.use_existing_bereaved == True %} checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label"
-                                       for="bereaved-existing-rep">
-                                    Add representative's details
-                                </label>
-                            </div>
-                        </div>
-                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input" id="bereaved-new-rep"
-                                       name="bereaved_rep_type"
-                                       type="radio" value="{{ enums.people.OTHER }}"
-                                       {% if form.use_existing_bereaved == False %} checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label"
-                                       for="bereaved-new-rep">
-                                    No representative available
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
 
-        <div class="nhsuk-grid-row {% if form.existing_representative == None %}nhsuk-u-visually-hidden{% endif %}">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-form-group">
                 <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
                     <legend class="nhsuk-u-visually-hidden" id="bereaved-representative">
                         Existing representative
                     </legend>
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
-                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios {% if form.existing_representative == None %}nhsuk-u-visually-hidden{% endif %}">
                             <div class="nhsuk-radios__item">
                                 <input class="nhsuk-radios__input" id="bereaved-existing-rep"
                                        name="bereaved_rep_type" type="radio"
@@ -71,7 +36,18 @@
                                        {% if form.use_existing_bereaved == False %} checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="bereaved-new-rep">
-                                    Another representative
+                                    Add representative's details
+                                </label>
+                            </div>
+                        </div>
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios {% if form.existing_representative %}nhsuk-u-visually-hidden{% endif %}">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input" id="bereaved-no-rep"
+                                       name="bereaved_rep_type"
+                                       type="radio" value="{{ enums.people.NOBODY }}">
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="bereaved-no-rep">
+                                    No representative is available
                                 </label>
                             </div>
                         </div>
