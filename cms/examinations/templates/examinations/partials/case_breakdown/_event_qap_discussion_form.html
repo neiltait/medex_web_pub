@@ -72,8 +72,7 @@
                                 <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_organisation">
                                     Organisation
                                 </label>
-                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_organisation">{{ qap.organisation
-                                    }}</p>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_organisation">{{ qap.organisation }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -85,8 +84,7 @@
                                 <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_phone_number">
                                     Personal phone/ bleep number
                                 </label>
-                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_phone_number">{{ qap.phone_number
-                                    }}</p>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_phone_number">{{ qap.phone_number }}</p>
                             </div>
                         </fieldset>
                     </div>
@@ -211,6 +209,7 @@
                         <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="qap_time_of_conversation"
                                name="qap_time_of_conversation"
                                type="time"
+                               step="60"
                                value="{{ form.time_of_conversation }}">
                     </div>
                 </div>

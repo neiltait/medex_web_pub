@@ -48,9 +48,10 @@ SavePromptWithMultipleForms.prototype = {
     setup: function () {
 
         for (var i = 0; i < this.forms.length; i++) {
+            var that = this;
             this.content.push(this.serializeIncludingDisabled(this.forms[i]))
             this.forms[i].submit(function (e) {
-                this.submittedAsForm = true;
+                that.submittedAsForm = true;
             });
         }
         this.bindWindow();
