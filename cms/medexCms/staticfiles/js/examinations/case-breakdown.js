@@ -291,6 +291,7 @@
         setup: function () {
             this.newRep = this.form.find("#bereaved-new-rep");
             this.existingRep = this.form.find("#bereaved-existing-rep");
+            this.noRep = this.form.find("#bereaved-no-rep");
             this.repDetails = this.form.find("#bereaved-rep-details");
             this.repForm = this.form.find("#bereaved-rep-form");
             this.showHideRepTypePanels();
@@ -307,6 +308,9 @@
             let selectedButton = this.form.find('input[name=bereaved_rep_type]:checked');
             if (selectedButton.val() === 'bereaved-representative') {
                 this.repDetails.show();
+                this.repForm.hide();
+            } else if (selectedButton.val() === 'nobody') {
+                this.repDetails.hide();
                 this.repForm.hide();
             } else {
                 this.repForm.show();
@@ -330,6 +334,10 @@
             });
 
             this.existingRep.change(function () {
+                that.showHideRepTypePanels();
+            });
+
+            this.noRep.change(function () {
                 that.showHideRepTypePanels();
             });
 
