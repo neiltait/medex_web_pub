@@ -347,6 +347,8 @@
 
             this.noRep.change(function () {
                 that.showHideRepTypePanels();
+                that.unableCheckbox.prop('checked', true);
+                that.enableOrDisableAllControls();
             });
 
             this.concernsRadio.change(function () {
