@@ -84,12 +84,12 @@ class UsersViewsTest(MedExTestCase):
         self.assertTemplateUsed(response, 'users/permission_builder.html')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_settings_page(self):
+    def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_manage_user_page(self):
         self.set_auth_cookies()
         submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
         response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/settings')
+        self.assertEqual(response.url, '/users/%s/manage' % UserMocks.USER_ID)
 
     def test_a_valid_form_that_succeeds_on_api_returns_a_blank_permissions_page_if_add_another_selected(self):
         self.set_auth_cookies()

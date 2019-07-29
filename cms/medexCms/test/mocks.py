@@ -50,7 +50,7 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+            "userId": "1",
             "firstName": "Joe",
             "lastName": "Bloggs",
             "emailAddress": "joe.bloggs@nhs.uk",
