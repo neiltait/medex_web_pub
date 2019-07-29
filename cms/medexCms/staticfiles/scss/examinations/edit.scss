@@ -5,10 +5,10 @@
   margin-top: 0;
 
   .form-section {
-    padding: 1rem 2rem;
+    padding: $medex-spacing-md $medex-spacing-lg;
 
     &.large-bottom-margin {
-      margin-bottom: 2rem;
+      margin-bottom: $medex-spacing-lg;
     }
 
     &:nth-child(odd) {
@@ -23,7 +23,7 @@
     z-index: 100;
 
     width: 100%;
-    padding: 0.5rem;
+    padding: $medex-spacing-sm;
 
     text-align: right;
 
@@ -34,7 +34,7 @@
 }
 
 .case-header {
-  margin-bottom: 3rem;
+  margin-bottom: $medex-spacing-xl;
 
   .patient-name {
     font-size: $nhs-heading-l-size;
@@ -55,7 +55,7 @@
 
     .tab-item {
       flex-grow: 1;
-      padding: 20px;
+      padding: $medex-spacing-md;
       text-align: center;
       text-decoration: none;
 
@@ -63,45 +63,45 @@
       background-color: $nhs-dark-blue;
       color: $white;
 
-      border-radius: 5px 5px 0px 0px;
+      border-radius: 5px 5px 0 0;
       border-right: 2px solid $white;
 
       cursor: pointer;
 
-      &:last-of-type {
-        border: none;
-      }
-
       &:focus {
         z-index: 1000;
-        border: none;
+        border-color: transparent;
       }
 
       &:hover {
         text-decoration: underline;
         box-shadow: 0 0 0 0 $nhs-light-grey !important;
+        border-right: 2px solid $white;
+      }
+
+      &:last-of-type {
+        border: none;
       }
 
       &.active {
         background-color: $white;
         color: $nhs-dark-blue;
-        border-top: 7px solid $nhs-dark-blue;
-        padding-top: 13px;
+        border-top: $medex-spacing-xs solid $nhs-dark-blue;
+        padding-top: calc(#{$medex-spacing-md} - #{$medex-spacing-xs});
         text-decoration: none !important;
       }
-
     }
   }
 }
 
 
 .hint-text {
-  color: $nhs-grey-2;
+  color: $nhs-grey;
 }
 
 #confirm-message {
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
+  padding-top: $medex-spacing-md;
+  padding-bottom: $medex-spacing-md;
 }
 
 .success-message {

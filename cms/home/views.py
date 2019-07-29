@@ -1,13 +1,16 @@
+import json
+
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View
 
 from rest_framework import status
 
-from errors.utils import log_unexpected_method
-from errors.views import __handle_method_not_allowed_error, __handle_not_permitted_error
 from home.forms import IndexFilterForm
-from medexCms.mixins import LoginRequiredMixin
+from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 from django.views.decorators.cache import never_cache
@@ -24,7 +27,7 @@ class DashboardView(LoginRequiredMixin, View):
         query_params = request.GET
 
         page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-        page_size = 20
+        page_size = 25
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
@@ -41,25 +44,57 @@ class DashboardView(LoginRequiredMixin, View):
             'pagination_url': 'index',
         }
 
-@never_cache
-def login_callback(request):
-    token_response = request_handler.create_session(request.GET.get('code'))
-    response = redirect_to_landing()
-    id_token = token_response.json().get('id_token')
-    auth_token = token_response.json().get('access_token')
-    response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-    response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-    return response
+
+class LoginCallbackView(View):
+
+    @never_cache
+    def get(self, request):
+        token_response = request_handler.create_session(request.GET.get('code'))
+        response = redirect_to_landing()
+        id_token = token_response.json().get('id_token')
+        auth_token = token_response.json().get('access_token')
+        refresh_token = token_response.json().get('refresh_token')
+        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+        response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+        response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                            max_age=settings.REFRESH_PERIOD)
+
+        return response
 
 
-@never_cache
-def login(request):
-    user = User.initialise_with_token(request)
-    if user.check_logged_in():
-        return redirect_to_landing()
+class LoginRefreshView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(LoginRefreshView, self).dispatch(request, *args, **kwargs)
 
-    if request.method == "GET":
-        template = 'home/login.html'
+    @never_cache
+    def post(self, request):
+        refresh_token = request.COOKIES.get(settings.REFRESH_TOKEN_NAME)
+        if refresh_token:
+            token_response = request_handler.refresh_session(refresh_token)
+            response = HttpResponse(json.dumps({"status": "success"}), content_type="application/json", status=200)
+
+            id_token = token_response.json().get('id_token')
+            auth_token = token_response.json().get('access_token')
+            refresh_token = token_response.json().get('refresh_token')
+            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
+            response.set_cookie(settings.ID_TOKEN_NAME, id_token)
+            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+            response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
+                                max_age=settings.REFRESH_PERIOD)
+
+            return response
+
+        return HttpResponse(json.dumps({"error": "could not refresh", "code": 400}),
+                            content_type="application/json", status=400)
+
+
+class LoginView(LoggedInMixin, View):
+    template = 'home/login.html'
+
+    @never_cache
+    def get(self, request):
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',
@@ -68,42 +103,39 @@ def login(request):
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
         }
-    else:
-        log_unexpected_method(request.method, 'login')
-        template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, template, context, status=status_code)
+        return render(request, self.template, context, status=status_code)
 
 
-@never_cache
-def logout(request):
-    user = User.initialise_with_token(request)
-    user.logout()
+class LogoutView(View):
 
-    response = redirect_to_login()
-    response.delete_cookie(settings.AUTH_TOKEN_NAME)
-    response.delete_cookie(settings.ID_TOKEN_NAME)
-    return response
+    @never_cache
+    def get(self, request):
+        user = User.initialise_with_token(request)
+        user.logout()
+
+        response = redirect_to_login()
+        response.delete_cookie(settings.AUTH_TOKEN_NAME)
+        response.delete_cookie(settings.ID_TOKEN_NAME)
+        response.delete_cookie(settings.REFRESH_TOKEN_NAME)
+        response.delete_cookie(settings.DO_NOT_REFRESH_COOKIE)
+        return response
 
 
-@never_cache
-def settings_index(request):
-    user = User.initialise_with_token(request)
-    if not user.check_logged_in():
-        return redirect_to_login()
-    if not user.permitted_actions.can_access_settings_index():
-        template, context, status_code = __handle_not_permitted_error(user)
+class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    template = 'home/settings_index.html'
+    permission_required = 'can_get_users'
 
-    elif request.method == 'GET':
-        template = 'home/settings_index.html'
+    @never_cache
+    def get(self, request):
         status_code = status.HTTP_200_OK
+        users = User.get_all(self.user.auth_token)
+
         context = {
-            'session_user': user,
+            'session_user': self.user,
             'page_heading': 'Settings',
             'sub_heading': 'Overview',
+            'user_count': len(users)
         }
-    else:
-        log_unexpected_method(request.method, 'settings index')
-        template, context, status_code = __handle_method_not_allowed_error(user)
 
-    return render(request, template, context, status=status_code)
+        return render(request, self.template, context, status=status_code)

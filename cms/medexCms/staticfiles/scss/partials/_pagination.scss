@@ -1,0 +1,55 @@
+
+.medex-pagination {
+  margin-bottom: 15px;
+
+  &__previous {
+    padding-top: 5px;
+    text-align: left;
+  }
+
+  &__next {
+    padding-top: 5px;
+    text-align: right;
+  }
+
+  &__item {
+    display: inline-block;
+
+    &-spacer {
+      padding: 5px 10px;
+    }
+
+    &-list {
+      text-align: center;
+    }
+
+    &-active {
+      display: block;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: $white;
+      background-color: #005EA5;
+      font-weight: 700;
+      border: 1px solid #005EA5;
+      pointer-events: none;
+      cursor: default;
+
+      &:hover, &:focus {
+        color: #0B0C0C;
+        background: none;
+      }
+    }
+
+    &-link {
+      display: block;
+      padding: 5px 10px;
+      text-decoration: none;
+      border: 1px solid $nhs-light-grey;
+
+      &:hover, &:focus {
+        background: #F8F8F8;
+        outline: 3px solid #FFBF47;
+      }
+    }
+  }
+}

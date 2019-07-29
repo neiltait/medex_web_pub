@@ -6,20 +6,20 @@
             Review of patient records by the Medical Examiner assigned to this case
         </label>
         {% if form.errors.me_thoughts %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.me_thoughts }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_details">{{ form.errors.me_thoughts }}</span>{% endif %}
 
-        <span class="nhsuk-hint" id="more-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
+        <span class="nhsuk-hint" id="more-scrutiny-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom" id="me-thoughts" name="me-thoughts" rows="5"
-                  aria-describedby="more-detail-hint">{{ form.me_thoughts }}</textarea>
+                  aria-describedby="more-scrutiny-detail-hint">{{ form.me_thoughts }}</textarea>
     </div>
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
-            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
+            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
                 Overall circumstances of death
-            </label>
+            </legend>
             {% if form.errors.circumstances_of_death %}
-            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.circumstances_of_death }}</span>
+            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_death_circumstances">{{ form.errors.circumstances_of_death }}</span>
             {% endif %}
 
             <span class="nhsuk-hint"
@@ -75,7 +75,7 @@
             Possible cause of death established during the review of records by Medical Examiner
         </label>
         {% if form.errors.possible_cod %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.possible_cod }}</span>{% endif %}
+        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_cause_of_death">{{ form.errors.possible_cod }}</span>{% endif %}
 
         <label class="nhsuk-label" for="possible-cod-1a">
             1a
@@ -105,14 +105,14 @@
     </div>
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.overall_outcome %}nhsuk-form-group--error{% endif %}">
-        <div>
-            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="outcome-of-pre-scrutiny"
-                   id="outcome-of-pre-scrutiny">
+        <fieldset class="nhsuk-fieldset">
+            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="outcome-of-pre-scrutiny"
+                    id="outcome-of-pre-scrutiny">
                 Overall outcome after ME review of records
-            </label>
+            </legend>
             {% if form.errors.overall_outcome %}
-            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.overall_outcome }}</span>{% endif %}
-            <span class="nhsuk-hint" id="outcome-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
+            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_me_review_outcome">{{ form.errors.overall_outcome }}</span>{% endif %}
+            <span class="nhsuk-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
             <div class="nhsuk-radios nhsuk-radios--inline">
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops"
@@ -131,89 +131,90 @@
                     </label>
                 </div>
             </div>
-        </div>
+        </fieldset>
+    </div>
 
-        <div id="pre-scrutiny__coroner-decision">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <div class="nhsuk-form-group {% if form.errors.coroner_outcome %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
+    <div id="pre-scrutiny__coroner-decision">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group {% if form.errors.coroner_outcome %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
 
-                        <fieldset class="nhsuk-fieldset">
-                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.coroner_outcome }}</span>
-                            <div class="nhsuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input pre-scrutiny-coroner-outcome-decision-radio"
-                                           id="pre-scrutiny-coroner-outcome-decision-1"
-                                           name="coroner-outcome"
-                                           type="radio" value="{{ enums.outcomes.CORONER_100A }}"
-                                           {% if form.coroner_outcome == enums.outcomes.CORONER_100A %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="pre-scrutiny-coroner-outcome-decision-1">
-                                        For permission to issue an MCCD with 100a
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input pre-scrutiny-coroner-outcome-decision-radio"
-                                           id="pre-scrutiny-coroner-outcome-decision-2"
-                                           name="coroner-outcome" type="radio"
-                                           value="{{ enums.outcomes.CORONER_INVESTIGATION }}"
-                                           {% if form.coroner_outcome == enums.outcomes.CORONER_INVESTIGATION %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="pre-scrutiny-coroner-outcome-decision-2">
-                                        For an investigation
-                                    </label>
-                                </div>
+                    <fieldset class="nhsuk-fieldset">
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.coroner_outcome }}</span>
+                        <div class="nhsuk-radios">
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input pre-scrutiny-coroner-outcome-decision-radio"
+                                       id="pre-scrutiny-coroner-outcome-decision-1"
+                                       name="coroner-outcome"
+                                       type="radio" value="{{ enums.outcomes.CORONER_100A }}"
+                                       {% if form.coroner_outcome == enums.outcomes.CORONER_100A %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="pre-scrutiny-coroner-outcome-decision-1">
+                                    For permission to issue an MCCD with 100a
+                                </label>
                             </div>
-                        </fieldset>
-                    </div>
+                            <div class="nhsuk-radios__item">
+                                <input class="nhsuk-radios__input pre-scrutiny-coroner-outcome-decision-radio"
+                                       id="pre-scrutiny-coroner-outcome-decision-2"
+                                       name="coroner-outcome" type="radio"
+                                       value="{{ enums.outcomes.CORONER_INVESTIGATION }}"
+                                       {% if form.coroner_outcome == enums.outcomes.CORONER_INVESTIGATION %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-radios__label"
+                                       for="pre-scrutiny-coroner-outcome-decision-2">
+                                    For an investigation
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
     </div>
 
 
-
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.governance_review %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review"
-               id="governance-review">
-            Clinical governance review or learning opportunity
-        </label>
-        {% if form.errors.governance_review %}
-        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.governance_review }}</span>{% endif %}
+        <fieldset class="nhsuk-fieldset">
+            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review"
+                    id="governance-review">
+                Clinical governance review or learning opportunity
+            </legend>
+            {% if form.errors.governance_review %}
+            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_clinical_governance">{{ form.errors.governance_review }}</span>{% endif %}
 
-        <span class="nhsuk-hint"
-              id="governance-hint">Is there any reason why this case should be referred for a review?</span>
-        <div class="nhsuk-radios nhsuk-radios--inline">
-            <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-1"
-                       name="gr" type="radio"
-                       value="{{ enums.yes_no.YES }}" {% if form.governance_review == enums.yes_no.YES %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label"
-                       for="governance-review-1">
-                    Yes
-                </label>
+            <span class="nhsuk-hint"
+                  id="governance-hint">Is there any reason why this case should be referred for a review?</span>
+            <div class="nhsuk-radios nhsuk-radios--inline">
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="governance-review-1"
+                           name="gr" type="radio"
+                           value="{{ enums.yes_no.YES }}" {% if form.governance_review == enums.yes_no.YES %}checked{% endif %}>
+                    <label class="nhsuk-label nhsuk-radios__label"
+                           for="governance-review-1">
+                        Yes
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="governance-review-2"
+                           name="gr" type="radio"
+                           value="{{ enums.yes_no.NO }}" {% if form.governance_review == enums.yes_no.NO %}checked{% endif %}>
+                    <label class="nhsuk-label nhsuk-radios__label"
+                           for="governance-review-2">
+                        No
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="governance-review-3" name="gr"
+                           type="radio"
+                           value="{{ enums.yes_no.UNKNOWN }}" {% if form.governance_review == enums.yes_no.UNKNOWN %}checked{% endif %}>
+                    <label class="nhsuk-label nhsuk-radios__label" for="governance-review-3">
+                        Unknown
+                    </label>
+                </div>
             </div>
-            <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-2"
-                       name="gr" type="radio"
-                       value="{{ enums.yes_no.NO }}" {% if form.governance_review == enums.yes_no.NO %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label"
-                       for="governance-review-2">
-                    No
-                </label>
-            </div>
-            <div class="nhsuk-radios__item">
-                <input class="nhsuk-radios__input" id="governance-review-3" name="gr"
-                       type="radio"
-                       value="{{ enums.yes_no.UNKNOWN }}" {% if form.governance_review == enums.yes_no.UNKNOWN %}checked{% endif %}>
-                <label class="nhsuk-label nhsuk-radios__label" for="governance-review-3">
-                    Unknown
-                </label>
-            </div>
-            <textarea class="nhsuk-textarea"
-                      id="governance-review-text"
-                      name="grt" rows="2" aria-describedby="gr">{{ form.governance_review_text }}</textarea>
-        </div>
+        </fieldset>
+        <textarea class="nhsuk-textarea"
+                  id="governance-review-text"
+                  name="grt" rows="2" aria-label="governance-review-text">{{ form.governance_review_text }}</textarea>
     </div>
 
     <div class="nhsuk-warning-callout disclaimer-margin">
@@ -223,12 +224,12 @@
             died.</p>
     </div>
     <div class="nhsuk-form-group margin-bottom">
-        <div class="nhsuk-grid-row" id="other-notes-section">
+        <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <button id="submit-btn" class="nhsuk-button" type="submit" value="pre-scrutiny"
+                <button class="nhsuk-button add-event-btn" type="submit" value="pre-scrutiny"
                         name="add-event-to-timeline">Add event to timeline
                 </button>
-                <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary"
+                <button class="nhsuk-button nhsuk-button--secondary add-another-btn"
                         type="submit"
                         value="pre-scrutiny" name="save-as-draft">Save as draft
                 </button>

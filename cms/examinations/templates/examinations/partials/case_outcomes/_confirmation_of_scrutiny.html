@@ -17,13 +17,13 @@
     </p>
 
     {% if not case_outcome.scrutiny_confirmed %}
-        <form id="scrutiny-form" action="{% url 'view_examination_case_outcome' examination_id=examination_id %}"
+        <form id="scrutiny-form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
               method="post">
             {% csrf_token %}
 
             <div class="nhsuk-checkboxes">
                 <div class="nhsuk-checkboxes__item">
-                    <input id="scrutiny-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
+                    <input id="scrutiny-confirmation" type="checkbox" name="scrutiny-confirmation" class="nhsuk-checkboxes__input"
                            {% if not case_outcome.scrutiny_actions_complete or not session_user.user_id == case_outcome.me_id %}disabled{% endif %} />
                     <label class="nhsuk-label nhsuk-checkboxes__label" for="scrutiny-confirmation">
                         Confirm scrutiny

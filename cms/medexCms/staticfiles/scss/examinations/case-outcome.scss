@@ -4,22 +4,22 @@
     padding: 3rem 2rem 6rem;
 
     .page-subheading {
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
+        margin-top: $medex-spacing-md;
+        margin-bottom: $medex-spacing-md;
     }
 
     .case-summary {
         border: 6px solid $nhs-aqua-green;
         color: $nhs-grey;
-        margin-bottom: 5rem;
+        margin-bottom: medex-spacing(9);
 
         .conversation-outcomes {
-            padding: 3rem 4rem;
+            padding: $medex-spacing-xl;
             border-right: 6px solid $nhs-aqua-green;
             width: 50%;
 
             .outcome {
-                margin-bottom: 15px;
+                margin-bottom: $medex-spacing-md;
 
                 p {
                     margin-bottom: 0;
@@ -43,7 +43,7 @@
             text-align: center;
 
             .outcome {
-                margin-bottom: 15px;
+                margin-bottom: $medex-spacing-md;
                 text-transform: uppercase;
 
                 .outcome-description-heading {
@@ -62,38 +62,38 @@
 
     .scrutiny-confirmation {
         background-color: $nhs-pale-grey;
-        margin-left: -2rem;
-        margin-right: -2rem;
+        margin-left: calc(-#{$medex-spacing-lg});
+        margin-right: calc(-#{$medex-spacing-lg});
 
-        padding: 3.5rem 2rem 6rem;
+        padding: $medex-spacing-xl $medex-spacing-lg medex-spacing(9);
 
         .scrutiny-confirmed-tick {
             height: 3.5rem;
             width: 4.2rem;
             background: url("/static/images/scrutiny_complete_tick.svg") no-repeat;
-            margin-top: 3rem;
-            margin-bottom: 3rem;
+            margin-top: $medex-spacing-xl;
+            margin-bottom: $medex-spacing-xl;
         }
 
         .scrutiny-date-label {
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-bottom: $medex-spacing-md;
         }
 
         #confirm-scrutiny-button {
-            margin-top: 5rem;
+            margin-top: $medex-spacing-xl;
             margin-bottom: 0;
         }
 
         .me-name {
             font-size: $nhs-heading-m-size;
             font-weight: bold;
-            margin-bottom: 0.5rem
+            margin-bottom: $medex-spacing-sm
         }
 
         .me-role {
             color: $nhs-grey;
-            margin-bottom: 1rem;
+            margin-bottom: $medex-spacing-md;
         }
     }
 
@@ -124,22 +124,22 @@
     }
 
     .outstanding-items {
-        margin-top: 7rem;
+        margin-top: $medex-spacing-xl;
 
         .outstanding-item {
-            margin: 2rem 0rem 4rem;
+            margin: $medex-spacing-lg 0 $medex-spacing-xl;
 
             .nhsuk-radios__item {
-                margin-right: 4rem;
+                margin-right: $medex-spacing-xl;
             }
         }
     }
 
     .close-case {
         background-color: $nhs-pale-grey;
-        padding: 6rem 2rem 7rem;
-        margin-left: -2rem;
-        margin-right: -2rem;
+        padding: $medex-spacing-xl $medex-spacing-lg $medex-spacing-xl;
+        margin-left: calc(-#{$medex-spacing-lg});
+        margin-right: calc(-#{$medex-spacing-lg});
 
         .page-subheading {
             margin-top: 0;
@@ -147,12 +147,12 @@
 
         .submit-btn {
             width: 100%;
-            margin-top: 1.5rem;
+            margin-top: $medex-spacing-md;
         }
 
         .hint-text {
             margin: 0;
-            padding: 1rem 1.5rem;
+            padding: $medex-spacing-md;
         }
     }
 }

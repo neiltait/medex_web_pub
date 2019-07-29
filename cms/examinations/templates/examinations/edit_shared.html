@@ -59,22 +59,22 @@
     <div class="examination__tab-bar">
         <div class="form-tabs flex-row baseline">
             <a class="tab-item {% if "patient-details" in request.path %}active{% endif %}" id="patient-details-tab"
-            href="{% url 'edit_examination_patient_details' examination_id=examination_id %}">
+            href="{% url 'edit_patient_details' examination_id=examination_id %}">
             Patient details
             </a>
 
             <a class="tab-item {% if "medical-team" in request.path %}active{% endif %}" id="medical-team-tab"
-            href="{% url 'edit_examination_medical_team' examination_id=examination_id %}">
+            href="{% url 'edit_medical_team' examination_id=examination_id %}">
             Medical team
             </a>
 
             <a class="tab-item {% if "case-breakdown" in request.path %}active{% endif %}" id="case-breakdown-tab"
-            href="{% url 'edit_examination_case_breakdown' examination_id=examination_id %}">
+            href="{% url 'edit_case_breakdown' examination_id=examination_id %}">
             Case breakdown
             </a>
 
             <a class="tab-item {% if "case-outcome" in request.path %}active{% endif %}" id="case-outcomes-tab"
-            href="{% url 'view_examination_case_outcome' examination_id=examination_id %}">
+            href="{% url 'view_case_outcome' examination_id=examination_id %}">
             Case outcomes
             </a>
         </div>

@@ -11,7 +11,10 @@
 
         <div class="nhsuk-grid-row {% if form.existing_representative == None %}nhsuk-u-visually-hidden{% endif %}">
             <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
+                    <legend class="nhsuk-u-visually-hidden" id="bereaved-representative">
+                        Existing representative
+                    </legend>
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-grid-column-one-half nhsuk-radios">
                             <div class="nhsuk-radios__item">
@@ -112,7 +115,7 @@
             <div class="nhsuk-grid-row margin-top">
                 {% if form.errors.bereaved_participant_name %}
                     <div class="nhsuk-grid-column-full">
-                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_participant_name }}</span>
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_details">{{ form.errors.bereaved_participant_name }}</span>
                     </div>
                 {% endif %}
                 <div class="nhsuk-grid-column-one-half">
@@ -226,15 +229,15 @@
         <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.bereaved_time_of_conversation %}nhsuk-form-group--error{% endif %}">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date-of-conversation" role="group">
                         <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                             Date of conversation
                         </legend>
 
                         {% if form.errors.bereaved_time_of_conversation %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_time_of_conversation }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_date">{{ form.errors.bereaved_time_of_conversation }}</span>
                         {% endif %}
-                        <div class="nhsuk-date-input margin-top" id="doc-day">
+                        <div class="nhsuk-date-input margin-top" id="date-of-conversation">
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
                                     <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
@@ -282,6 +285,7 @@
                     <input class="nhsuk-input nhsuk-input--width-4" id="input-width-4"
                            name="bereaved_time_of_conversation"
                            type="time"
+                           step="60"
                            value="{{ form.time_of_conversation }}">
                 </div>
             </div>
@@ -290,7 +294,10 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="discussion-hint">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-discussion-could-not-happen">
+                        <legend class="nhsuk-u-visually-hidden">
+                            Discussion could not happen
+                        </legend>
                         <div class="nhsuk-checkboxes">
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
@@ -300,7 +307,7 @@
                                         {% if form.discussion_could_not_happen == enums.true_false.TRUE %}
                                        checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-checkboxes__label"
-                                       for="bereaved_discussion_could_not_happen">
+                                       for="bereaved-discussion-could-not-happen">
                                     Tick if this discussion with a representative was unable to happen at all
                                 </label>
                             </div>
@@ -324,9 +331,9 @@
                             Details of the discussion?
                         </label>
                         {% if form.errors.bereaved_discussion_details %}
-                            <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_details }}</span>
+                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_details">{{ form.errors.bereaved_discussion_details }}</span>
                         {% endif %}
-                        <textarea class="nhsuk-textarea medex-textarea"
+                        <textarea class="nhsuk-textarea medex-textarea" aria-labelledby="bereavement-discussion-details"
                                   name="bereaved_discussion_details"
                                   rows="6">{{ form.discussion_details }}</textarea>
                     </div>
@@ -346,9 +353,9 @@
                                     Outcome
                                 </legend>
                                 {% if form.errors.bereaved_discussion_outcome %}
-                                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_discussion_outcome }}</span>
+                                    <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_outcome">{{ form.errors.bereaved_discussion_outcome }}</span>
                                 {% endif %}
-                                <span class="nhsuk-hint" id="outcome-hint">
+                                <span class="nhsuk-hint">
                                 What was the ultimate outcome of the conversation with the family member or representative?
                             </span>
                                 <div class="nhsuk-radios nhsuk-radios--inline">
@@ -437,10 +444,10 @@
         <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <button id="submit-btn" class="nhsuk-button" type="submit" value="bereaved-discussion"
-                            name="add-event-to-timeline">Add to timeline
+                    <button class="nhsuk-button add-event-btn" type="submit" value="bereaved-discussion"
+                            name="add-event-to-timeline">Add event to timeline
                     </button>
-                    <button id="add-another-btn" class="nhsuk-button nhsuk-button--secondary" type="submit"
+                    <button class="nhsuk-button nhsuk-button--secondary add-another-btn" type="submit"
                             value="bereaved-discussion"
                             name="save-as-draft">Save as draft
                     </button>

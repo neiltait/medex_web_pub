@@ -1,3 +1,5 @@
+@import "spacing";
+
 /* Colour vars */
 $nhs-grey: #425563;
 $nhs-grey-2: #768692;
@@ -28,7 +30,9 @@ $disabled-input-color:$nhs-light-grey;
 $primary-font: Arial;
 $primary-font-color: $black;
 $default-font-size: 19px;
-$default-line-height: 28px;
+$default-line-height: 1.5;
+$nhs-heading-xxl-size: 72px;
+$nhs-heading-xxl-line-height: 80px;
 $nhs-heading-xl-size: 48px;
 $nhs-heading-xl-line-height: 56px;
 $nhs-heading-l-size: 32px;
@@ -46,6 +50,8 @@ $nhs-body-s-line-height: 28px;
 $link-size: 19px;
 $link-line-height: 28px;
 
+$nhs-font-weight-regular: 400;
+$nhs-font-weight-bold: 600;
 
 /* Notification vars */
 $error-color: #aa1414;
@@ -66,5 +72,5 @@ $focus-color: #FFB81C;
 /* Component vars */
 $nhs-radios-size: 36px;
 $nhs-radios-internal-size: 20px;
-$nhs-radios-label-padding-left-right: 5px;
-$nhs-radios-focus-width: 4px;
+$nhs-radios-label-padding-left-right: medex-spacing(1);
+$nhs-radios-focus-width: medex-spacing(1);

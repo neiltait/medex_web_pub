@@ -24,15 +24,15 @@ This respository contains the source code for the Medical Examiners Service CMS,
 
 ### Sandbox
 
-[![Build Status](https://dev.azure.com/DougMills/medical_examiner_front_end/_apis/build/status/methodsanalytics.medical_examiner_front_end_docker?branchName=master)](https://dev.azure.com/DougMills/medical_examiner_front_end/_build/latest?definitionId=6&branchName=master)
+[![Build Status](https://dev.azure.com/DougMills/medical_examiner_front_end/_apis/build/status/methodsanalytics.medex-cms-sandbox?branchName=master)](https://dev.azure.com/DougMills/medical_examiner_front_end/_build/latest?definitionId=5&branchName=master)
 
 ### Staging
 
-Environment and pipeline still to be set up
+[![Build Status](https://dev.azure.com/DougMills/medical_examiner_front_end/_apis/build/status/methodsanalytics.medex-cms-staging?branchName=development)](https://dev.azure.com/DougMills/medical_examiner_front_end/_build/latest?definitionId=13&branchName=development)
 
-### Production
+### Production/UAT
 
-Environment and pipeline still to be set up
+_Environment and pipeline still to be set up_
 
 ## Development
 
@@ -52,19 +52,36 @@ This project uses the following technologies:
 Running the project locally requires the following environment variables to be set:
 
 - API_URL - this is the address for the Data API. (Defaults to 'http://localhost:9000')
-- CMS_URL - this is the domain the cms is running on. (Defaults to 'http://localhost:12000')
+- CMS_URL - this is the domain the CMS is running on. (Defaults to 'http://localhost:12000')
 - OP_DOMAIN - the domain name for the OKTA auth service used in this environment
 - OP_ISSUER - the method and the auth service being used to authenticate (Defaults to '/oauth/default')
 - OP_ID - the client ID provide by OKTA
 - OP_SECRET - the client secret provided by OKTA
 
+An additional optional environment variable can be set, LOCAL. This variable can be set to True or False (default), setting it to True will cause the CMS to use its on internal mock API for all requests. 
+
 #### Starting the server
 
-The local server can be started by running the following command from the root directory of the project:
+The local server can be started by running one of the following commands from the root directory of the project:
+
+To run in docker container:
 
 ```
 docker-compose up
 ```
+
+To run directly  on local machine:
+```
+python manage.py runserver 0.0.0.0:8000
+```
+
+#### Commands
+
+There are commands setup in the bin directory of the project, that allow easy use of common commands inside the docker container.
+
+- container - takes you on to the containers command line.
+- manage - can be passed arguments to run standard django manage.py commands.
+- shell - takes you on to the python shell command line for the project.
 
 ### Testing
 
@@ -74,35 +91,113 @@ The project is developed using the TDD approach, using the unittest module for w
 
 The target coverage level for the project is:
 
-- &lt;80% coverage for unit testing
+- &gt;80% coverage for unit testing
 - Feature tests for each user feature, covering all probable scenarios.
 
+We are also developing to the PyFlakes and pycodestyle coding standards which are been checked using the Python flake8 package.
+
 #### Commands
+_These commands can be used when you are running the code using the docker container_ 
 
 The unit tests can be run with the 'test' command in the bin directory, or can be run with a coverage report using the 'coverage' command in the bin directory. The generated coverage report can then be viewed by opening the 'index.html' file in the 'htmlcov' directory.
 
-### Feature development
+The linter  can be run  with the 'lint' command in the bin directory. 
 
-Feature development in this project is following the git-flow development pattern.
+### Branching
 
-When starting a new project feature you should create a new branch named in the format 'feature/`ticket-id`-`branch-name`'
+Development in this project is following the git-flow development pattern.
+
+When starting a new project feature you should create a new branch named in the correct format for what you are working on (see below for naming conventions)
 
 Once development on the branch is complete, the branch should be pushed to the Github repository and a pull request should be opened against the master branch.
 
 The pull request must be reviewed by at least one of the other developers on the project team. In order for the request to be accepted, there must be unit tests in place for the new code in the feature, the CI pipeline must have passed and the new code must pass a code quality review.
 
+#### Naming conventions
+
+##### Features
+
+Feature branches should be named using the following pattern 'feature/`ticket-id`-`branch-name`'
+
+##### Bugs
+
+Bug fix branches should be named using the following pattern 'bug/`ticket-id`-`branch-name`'
+
+##### Refactoring
+
+Refactoring branches should be named using the following pattern 'refactor/`ticket-id (if exists)`-`branch-name`'
+
 ## Continuous Integration and Deployment Pipeline
 
-THe continuous integration and deployment pipeline for this project is implemented using Azure pipelines.
+The continuous integration and deployment pipeline for this project is implemented using Azure DevOps pipelines.
 
 ### Continuous Integration
 
-The continuous integration pipeline for the project is defined in the 'azure-pipelines.yml' file in the root of the project.
+The continuous integration pipeline for the project is defined in yml files in the root of the project, all starting with 'azure-pipelines'.
 
-The pipeline should run on every push to Github on every branch, it runs the tests and builds a container image which it pushes to Azure container storage.
+There are 4 pipelines defined in the project.
+
+#### Development test
+_Defined in 'azure-pipelines.yml'_
+
+This pipeline should run on every push to Github from feature, bug and refactor branches. All this pipeline does is run the tests to regression check the new code.
+
+#### Sandbox
+_Defined in 'azure-pipelines-sandbox.yml'_
+
+This pipeline should run on every push to Github on the development branch. This pipeline runs the tests and, if they pass, builds a docker container and pushes it to the sandbox container registry.
+
+#### Staging
+_Defined in 'azure-pipelines-staging.yml'_
+
+This pipeline should run on every push to Github from a release branch. This pipeline runs the tests and, if they pass, builds a docker container and pushes it to the staging container registry.
+
+#### Production/UAT
+
+_Defined in 'azure-pipelines-new-azure-subscription.yml'_
+
 
 ### Continuous Deployment
 
-The continuous deployment pipeline is defined through the Azure pipeline UI.
+The continuous deployment pipeline is defined through the Azure DevOps pipeline UI.
 
-For the sandbox environment it runs when the CI pipeline on the master branch of the repository passes, it pulls the container generated by the CI build on to the WebApp server and starts the container.
+There are 3 pipelines setup for the project.
+
+#### Sandbox
+
+The pipeline runs when the sandbox CI pipeline passes, it pulls the container generated by the CI build on to the WebApp server and starts the container.
+
+#### Staging
+
+The pipeline runs when the a new container is pushed to the staging container registry, it pulls the container on to the WebApp server and starts the container.
+
+#### Production/UAT
+
+The pipeline runs when the a new container is pushed to the production/UAT container registry, it pulls the container on to the WebApp server and starts the container.
+
+### Releases
+
+Releases of the code are following the major/minor/patch pattern for release numbering.
+
+#### Creating a release
+
+New releases can be generated manually or by using the 'release' command in the bin directory.
+
+##### Manual release process
+
+- update the version number with in the version.txt file
+- create a new branch named in the pattern 'release/v`version number`' (e.g. release/v0.0.1)
+- push the branch to Github
+
+##### Automated release process
+
+- ensure there are no uncommitted changes in your local repository
+- call the 'release' command in the bin directory, passing as a parameter either major/minor/patch.
+
+#### Finishing a release
+
+Once a release has been signed off and deployed to production, you need to:
+
+- merge the release branch into master and to development.
+- tag master with the release number at the point it was merged in.
+- delete the release branch

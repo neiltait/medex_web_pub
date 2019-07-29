@@ -10,25 +10,25 @@
       this.saveBar = this.wrapper.find('.sticky-save');
       this.form = this.wrapper.find('form');
       this.hasChanges = false;
-      this.tabChangeModal = new ChangeTabModal($('#tab-change-modal'), this.forceSave.bind(this));
-      this.initialiseTabs();
+
+      this.initialiseSaveForm();
       this.initialiseInputs();
       this.setupAdditionalNotes();
       this.setupAddRemovePanels();
     },
 
-    initialiseTabs: function () {
-      this.tabBlock = new TabBlock(this.wrapper.find('.examination__tab-bar'), this.getHasChanges.bind(this), this.tabChangeModal);
+    initialiseSaveForm() {
+      new SavePromptForm(this.form)
     },
 
-    setupAdditionalNotes() {
+    setupAdditionalNotes: function() {
       var additionalNotesFields = $('.additional-notes');
       for (var i = 0; i < additionalNotesFields.length; i++) {
         new AdditionalNotesSection(additionalNotesFields[i]);
       }
     },
 
-    setupAddRemovePanels() {
+    setupAddRemovePanels: function() {
       var addRemovePanelSection = $('#add-remove-panel-section');
       var consultantCount = $('#consultant-count').val();
       var optionalConsultantCount = consultantCount && parseInt(consultantCount) > 1 ? parseInt(consultantCount) - 1 : 0;

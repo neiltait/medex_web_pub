@@ -26,7 +26,7 @@ def get_medical_examiners_list_for_examination(auth_token, examination_id):
         return [convert_user(user) for user in UserMocks.get_me_user_list()]
     else:
         response_users = MedexRequest.get(auth_token, "%s/examination/%s/users/role/medical_examiner" % (
-        settings.API_URL, examination_id)).json()['users']
+            settings.API_URL, examination_id)).json()['users']
         return [convert_user(response_user) for response_user in response_users]
 
 
@@ -35,7 +35,7 @@ def get_medical_examiners_officers_list_for_examination(auth_token, examination_
         return [convert_user(user) for user in UserMocks.get_meo_user_list()]
     else:
         response_users = MedexRequest.get(auth_token, "%s/examination/%s/users/role/medical_examiner_officer" % (
-        settings.API_URL, examination_id)).json()['users']
+            settings.API_URL, examination_id)).json()['users']
         return [convert_user(response_user) for response_user in response_users]
 
 

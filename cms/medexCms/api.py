@@ -77,6 +77,60 @@ class APIGPNotifiedStatus:
     NA = 'NA'
 
 
+class ExaminationSections:
+    PATIENT_DETAILS = 'patient_details'
+    MEDICAL_TEAM = 'medical_team'
+    CASE_BREAKDOWN = 'case_breakdown'
+    CASE_OUTCOMES = 'case_outcomes'
+
+
+class TimelineEventKeys:
+    QAP_DISCUSSION_EVENT_KEY = 'qapDiscussion'
+    OTHER_EVENT_KEY = 'otherEvents'
+    ADMISSION_NOTES_EVENT_KEY = 'admissionNotes'
+    MEO_SUMMARY_EVENT_KEY = 'meoSummary'
+    MEDICAL_HISTORY_EVENT_KEY = 'medicalHistory'
+    BEREAVED_DISCUSSION_EVENT_KEY = 'bereavedDiscussion'
+    PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
+    INITIAL_EVENT_KEY = 'patientDeathEvent'
+    CASE_CLOSED_EVENT_KEY = 'caseClosed'
+
+    @classmethod
+    def all(cls):
+        return [
+            cls.QAP_DISCUSSION_EVENT_KEY, cls.OTHER_EVENT_KEY, cls.ADMISSION_NOTES_EVENT_KEY, cls.MEO_SUMMARY_EVENT_KEY,
+            cls.MEDICAL_HISTORY_EVENT_KEY, cls.BEREAVED_DISCUSSION_EVENT_KEY, cls.PRE_SCRUTINY_EVENT_KEY,
+            cls.CASE_CLOSED_EVENT_KEY, cls.INITIAL_EVENT_KEY
+        ]
+
+
+class TimelineEventTypes:
+    OTHER_EVENT_TYPE = 'Other'
+    PRE_SCRUTINY_EVENT_TYPE = 'PreScrutiny'
+    BEREAVED_DISCUSSION_EVENT_TYPE = 'BereavedDiscussion'
+    MEO_SUMMARY_EVENT_TYPE = 'MeoSummary'
+    QAP_DISCUSSION_EVENT_TYPE = 'QapDiscussion'
+    MEDICAL_HISTORY_EVENT_TYPE = 'MedicalHistory'
+    ADMISSION_NOTES_EVENT_TYPE = 'Admission'
+    INITIAL_EVENT_TYPE = 'patientDeathEvent'
+    CASE_CLOSED_TYPE = 'caseClosed'
+
+
+class SystemValidationErrors:
+    DUPLICATE = "Duplicate"
+    CONTAINS_WHITESPACE = "ContainsWhitespace"
+    CONTAINS_INVALID_CHARACTERS = "ContainsInvalidCharacters"
+    INVALID = "Invalid"
+    REQUIRED = "Required"
+    MAXIMUM_LENGTH_150 = "MaximumLength150"
+    MINIMUM_LENGTH_1 = "MinimumLengthOf1"
+    INVALID_FORMAT = "InvalidFormat"
+    END_DATE_NOT_FOUND = "EndDateNotFound"
+    END_DATE_BEFORE_START_DATE = "EndDateBeforeStartDate"
+    ID_NOT_FOUND = "IdNotFound"
+    UNKNOWN = "Unknown"
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
@@ -89,6 +143,10 @@ class APIStrings:
     cod_status = APICauseOfDeathStatuses()
     role_types = UserRoleTypes()
     gp_notified_status = APIGPNotifiedStatus()
+    examination_sections = ExaminationSections()
+    timeline_event_keys = TimelineEventKeys()
+    timeline_event_types = TimelineEventTypes()
+    errors = SystemValidationErrors()
 
 
 enums = APIStrings()

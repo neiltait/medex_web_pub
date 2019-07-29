@@ -39,12 +39,28 @@ NO_ROLES = 'You do not currently have roles assigned to your account, please con
 
 NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
+
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
+
 
 def ErrorSelectionRequiredMessage(field_name):
     return ("Please select a value for %s") % field_name
 
+
 def ErrorFieldTooLong(character_max):
     return ("Please enter fewer than %d characters") % character_max
 
+
+class NhsNumberErrors:
+    CONTAINS_INVALID_CHARACTERS = "This NHS number includes invalid characters"
+    CONTAINS_WHITESPACE = "This NHS number includes spaces"
+    DUPLICATE = "This NHS number already exists on another case"
+    INVALID = "This NHS number is invalid"
+    UNKNOWN = "There is a problem with this NHS number"
+
+
+class ApiErrorMessages:
+    nhs_numbers = NhsNumberErrors()
+
+api_error_messages = ApiErrorMessages()

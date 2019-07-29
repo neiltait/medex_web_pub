@@ -4,7 +4,10 @@
 @import 'partials/buttons';
 @import 'partials/forms';
 @import 'partials/modals';
+@import 'partials/pagination';
 @import 'variables';
+@import 'typography';
+@import "spacing";
 
 html {
   font-size: $default-font-size;
@@ -33,25 +36,22 @@ p {
 }
 
 .page-content {
-  margin-top: 4rem;
+  margin-top: medex-spacing(9);
 
   .page-title {
+    @extend .xl-heading-base;
     margin-top: 0px;
-    font-size: $nhs-heading-xl-size;
-    line-height: $nhs-heading-xl-line-height;
     margin-bottom: 0px;
   }
 
   .page-subheading {
-    font-size: $nhs-heading-l-size;
-    line-height: $nhs-heading-l-line-height;
+    @extend .l-heading-base;
     font-weight: 100;
   }
 }
 
 .small-print {
-  font-size: $nhs-body-s-size;
-  line-height: $nhs-body-s-line-height;
+  @extend .s-body-base;
 }
 
 .flex-row {

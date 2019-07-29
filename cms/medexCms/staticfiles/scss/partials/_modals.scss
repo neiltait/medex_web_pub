@@ -32,12 +32,10 @@
         margin-bottom: 0;
         font-size: 1rem;
       }
-
-      .modal-cancel-btn {
+      .modal-btn {
         padding: 0.4em 0.75em;
         border-radius: 4px;
 
-        background-color: $nhs-red;
         border: 2px solid transparent;
         box-shadow: 0 4px 0 #3f0000;
 
@@ -46,6 +44,22 @@
         font-weight: 600;
 
         cursor: pointer;
+
+        &__cancel {
+          background-color: $nhs-grey;
+
+          &:hover {
+            background-color: #384854;
+          }
+        }
+
+        &__destructive {
+          background-color: $nhs-red;
+
+          &:hover {
+            background-color: #aa1414;
+          }
+        }
       }
     }
   }

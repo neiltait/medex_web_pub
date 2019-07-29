@@ -1,15 +1,15 @@
 from django.conf.urls import url
 from django.urls import include, path
 
-from home import views
-from home.views import DashboardView
+from home.views import DashboardView, LoginView, LogoutView, SettingsIndexView, LoginCallbackView, LoginRefreshView
 
 urlpatterns = [
-  path('', DashboardView.as_view(), name='index'),
-  path('login', views.login, name='login'),
-  path('login-callback', views.login_callback, name='login_callback'),
-  path('logout', views.logout, name='logout'),
-  path('settings', views.settings_index, name='settings_index'),
-  url(r'^users/', include('users.urls')),
-  url(r'^cases/', include('examinations.urls')),
+    path('', DashboardView.as_view(), name='index'),
+    path('login', LoginView.as_view(), name='login'),
+    path('login-callback', LoginCallbackView.as_view(), name='login_callback'),
+    path('login-refresh', LoginRefreshView.as_view(), name='login_refresh'),
+    path('logout', LogoutView.as_view(), name='logout'),
+    path('settings', SettingsIndexView.as_view(), name='settings_index'),
+    url(r'^users/', include('users.urls')),
+    url(r'^cases/', include('examinations.urls')),
 ]

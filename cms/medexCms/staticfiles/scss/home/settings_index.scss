@@ -1,0 +1,38 @@
+@import '../typography';
+
+
+.settings-index {
+    margin-bottom: 192px;
+
+    .page-title {
+        margin-bottom: 24px;
+    }
+
+    .page-subheading {
+        font-weight: bold;
+    }
+
+    .service-overview {
+        margin-bottom: 68px;
+
+        .trusts {
+            margin-right: 110px;
+        }
+
+        .trusts-count, .users-count {
+            @extend .xxl-heading-base;
+            font-weight: bold;
+        }
+
+        .users-label, .trusts-label {
+            @extend .l-heading-base;
+            margin-top: 36px;
+            font-weight: bold;
+        }
+    }
+
+    .add-user-btn {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}

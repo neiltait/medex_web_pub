@@ -1,0 +1,15 @@
+@import '../variables';
+@import "../spacing";
+
+.age_at_death {
+  &__label {
+    text-align: center;
+    font-weight: $nhs-font-weight-bold;
+    margin-bottom: 0;
+
+    &--unknown {
+      color: $nhs-grey-2;
+      font-weight: $nhs-font-weight-regular;
+    }
+  }
+}
