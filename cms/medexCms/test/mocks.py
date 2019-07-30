@@ -133,6 +133,7 @@ class SessionMocks:
 
 class UserMocks:
     USER_ID = 1
+    PERMISSION_ID = "123-456-789"
 
     @classmethod
     def get_empty_user_dict(cls):
@@ -258,7 +259,7 @@ class UserMocks:
 
 
 class PermissionMocks:
-    PERMISSION_ID = 1
+    PERMISSION_ID = '123-456-789'
     ME_TYPE = 'me'
     MEO_TYPE = 'meo'
 
@@ -296,6 +297,28 @@ class PermissionMocks:
             "userId": "abc-def-ghi",
             "locationId": "jkl-mno-pqr",
             "userRole": 0,
+        }
+
+    @classmethod
+    def get_permission_builder_form_mock_data(cls):
+        return {
+            'role': '1',
+            'permission_level': 'national',
+            'region': '',
+            'trust': '',
+            'national': 'blah',
+            'trust_name': 'etc'
+        }
+
+    @classmethod
+    def get_permission_builder_invalid_form_mock_data(cls):
+        return {
+            'role': '',
+            'permission_level': '',
+            'region': '',
+            'trust': '',
+            'national': '',
+            'trust_name': ''
         }
 
     @classmethod

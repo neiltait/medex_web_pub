@@ -50,6 +50,8 @@ class UsersViewsTest(MedExTestCase):
 class PermissionViewsTests(MedExTestCase):
     # Add permission tests
 
+    """ GENERAL """
+
     def test_landing_on_the_add_permission_page_loads_the_correct_template(self):
         self.set_auth_cookies()
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
@@ -109,15 +111,45 @@ class PermissionViewsTests(MedExTestCase):
     """ UPDATE """
 
     def test_submitting_an_update_form_that_succeeds_on_api_redirects_to_the_manage_user_page(self):
-        pass
+        # Given - some valid permission update data'
+        self.set_auth_cookies()
+        data = PermissionMocks.get_permission_builder_form_mock_data()
+
+        # When - we submit to the update endpoint (mocked to always return success)'
+        response = self.client.post('/users/%s/edit_permission/%s' % (UserMocks.USER_ID, PermissionMocks.PERMISSION_ID),
+                                    data)
+
+        # Then - we should be get successful and redirect to the manage users page'
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/users/%s/manage' % UserMocks.USER_ID)
 
     def test_submitting_an_update_form_that_errors_on_cms_returns_error(self):
-        pass
+        # Given - some invalid permission update data'
+        self.set_auth_cookies()
+        data = PermissionMocks.get_permission_builder_invalid_form_mock_data()
+
+        # When - we submit to the update endpoint (mocked to always return success if it gets to the api)'
+        response = self.client.post('/users/%s/edit_permission/%s' % (UserMocks.USER_ID, PermissionMocks.PERMISSION_ID),
+                                    data)
+
+        # Then - we should be get failure and stay on the editor page'
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'users/permission_editor.html')
 
     @patch('permissions.request_handler.update_permission',
-           return_value=PermissionMocks.get_successful_permission_update_response())
+           return_value=PermissionMocks.get_unsuccessful_permission_update_response())
     def test_submitting_a_valid_update_form_that_errors_on_api_returns_error(self, mock_permission_update):
-        pass
+        # Given - some valid permission update data'
+        self.set_auth_cookies()
+        data = PermissionMocks.get_permission_builder_form_mock_data()
+
+        # When - we submit to the update endpoint (mocked to always return failure if it gets to the api)'
+        response = self.client.post('/users/%s/edit_permission/%s' % (UserMocks.USER_ID, PermissionMocks.PERMISSION_ID),
+                                    data)
+
+        # Then - we should be get server failure and stay on the editor page'
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTemplateUsed(response, 'users/permission_editor.html')
 
     """ DELETE """
 
