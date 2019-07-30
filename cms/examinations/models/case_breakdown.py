@@ -2,7 +2,6 @@ from rest_framework import status
 
 from errors.utils import handle_error, logger, log_unexpected_api_response
 from examinations import request_handler
-from examinations.models.core import CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
 from medexCms.api import enums
@@ -104,100 +103,3 @@ class ExaminationEventList:
 
     def get_latest_of_type(self, event_type):
         return self.latests.get(event_type)
-
-    def get_latest_me_scrutiny_cause_of_death(self):
-        events = [event for event in self.events if
-                  event.event_type == enums.timeline_event_types.PRE_SCRUTINY_EVENT_TYPE and event.is_latest is True]
-        if len(events) == 0:
-            return None
-        else:
-            return self.get_scrutiny_cause_of_death(events[0])
-
-    def get_latest_agreed_cause_of_death(self):
-        events = [event for event in self.events if
-                  event.event_type == enums.timeline_event_types.QAP_DISCUSSION_EVENT_TYPE and event.is_latest is True]
-        if len(events) == 0:
-            return None
-        else:
-            latest = self.get_agreed_cause_of_death(events[0])
-            if latest.status == enums.cod_status.MCCD_FROM_ME:
-                self.__get_cause_of_death_from_me_scrutiny(latest)
-            return latest
-
-    def __get_cause_of_death_from_me_scrutiny(self, latest):
-        latest_me_scrutiny = self.get_latest_me_scrutiny_cause_of_death()
-        if latest_me_scrutiny:
-            latest.medical_examiner = latest_me_scrutiny.medical_examiner
-            latest.section_1a = latest_me_scrutiny.section_1a
-            latest.section_1b = latest_me_scrutiny.section_1b
-            latest.section_1c = latest_me_scrutiny.section_1c
-            latest.section_2 = latest_me_scrutiny.section_2
-
-    @staticmethod
-    def get_scrutiny_cause_of_death(me_scrutiny_event):
-        """
-        get the cause of death agreed in me scrutiny
-        :param me_scrutiny_event:
-        :return: CauseOfDeathProposal
-        """
-        cause_of_death = CauseOfDeathProposal()
-        cause_of_death.creation_date = me_scrutiny_event.created_date
-        cause_of_death.medical_examiner = me_scrutiny_event.user_full_name
-        cause_of_death.section_1a = me_scrutiny_event.cause_of_death_1a
-        cause_of_death.section_1b = me_scrutiny_event.cause_of_death_1b
-        cause_of_death.section_1c = me_scrutiny_event.cause_of_death_1c
-        cause_of_death.section_2 = me_scrutiny_event.cause_of_death_2
-        return cause_of_death
-
-    @staticmethod
-    def get_agreed_cause_of_death(qap_event):
-        """
-        get the cause of death agreed in qap discussion
-        :param qap_event: CaseQapDiscussionEvent
-        :return: CauseOfDeathProposal
-        """
-        from examinations.models.medical_team import MedicalTeamMember
-
-        cause_of_death = CauseOfDeathProposal()
-        cause_of_death.creation_date = qap_event.created_date
-        cause_of_death.medical_examiner = qap_event.user_full_name
-        cause_of_death.qap = MedicalTeamMember(
-            name=qap_event.participant_name,
-            role=qap_event.participant_role,
-            organisation=qap_event.participant_organisation,
-            phone_number=qap_event.participant_phone_number,
-        )
-
-        ExaminationEventList.__calculate_qap_cause_of_death_status(cause_of_death, qap_event)
-
-        cause_of_death.section_1a = qap_event.cause_of_death_1a
-        cause_of_death.section_1b = qap_event.cause_of_death_1b
-        cause_of_death.section_1c = qap_event.cause_of_death_1c
-        cause_of_death.section_2 = qap_event.cause_of_death_2
-
-        return cause_of_death
-
-    @staticmethod
-    def __calculate_qap_cause_of_death_status(cause_of_death, qap_event):
-        """
-        extract current status from a qap discussion event
-        :param cause_of_death: CauseOfDeathProposal
-        :param qap_event: CaseQapDiscussionEvent
-        :return:
-        """
-        cause_of_death.status = enums.cod_status.NOT_DISCUSSED
-        outcome_from_event = qap_event.qap_discussion_outcome
-        if qap_event.discussion_unable_happen is True:
-            cause_of_death.status = enums.cod_status.DISCUSSION_NOT_POSSIBLE
-
-        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP:
-            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP
-
-        elif outcome_from_event == enums.outcomes.MCCD_FROM_ME:
-            cause_of_death.status = enums.cod_status.MCCD_FROM_ME
-
-        elif outcome_from_event == enums.outcomes.MCCD_FROM_QAP_AND_ME:
-            cause_of_death.status = enums.cod_status.MCCD_FROM_QAP_AND_ME
-
-        elif outcome_from_event == enums.outcomes.CORONER:
-            cause_of_death.status = enums.cod_status.CORONER

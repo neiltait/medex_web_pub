@@ -1,5 +1,5 @@
 from alerts import messages
-from examinations.models.core import CauseOfDeathProposal
+from examinations.models.core import CauseOfDeath
 from medexCms.api import enums
 from medexCms.utils import fallback_to, validate_date_time_field, API_DATE_FORMAT, pop_if_falsey, build_date, \
     validate_date, date_is_valid_or_empty, validate_is_not_blank
@@ -244,7 +244,7 @@ class QapDiscussionEventForm:
         self.qap_discussion_organisation = fallback_to(form_data.get('qap-other__organisation'), '')
         self.qap_discussion_phone_number = fallback_to(form_data.get('qap-other__phone-number'), '')
 
-        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death = CauseOfDeath()
         self.cause_of_death.section_1a = fallback_to(form_data.get('qap_discussion_revised_1a'), '')
         self.cause_of_death.section_1b = fallback_to(form_data.get('qap_discussion_revised_1b'), '')
         self.cause_of_death.section_1c = fallback_to(form_data.get('qap_discussion_revised_1c'), '')
@@ -294,7 +294,7 @@ class QapDiscussionEventForm:
         return self
 
     def __fill_cause_of_death_from_draft(self, draft):
-        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death = CauseOfDeath()
         self.cause_of_death.section_1a = draft.cause_of_death_1a
         self.cause_of_death.section_1b = draft.cause_of_death_1b
         self.cause_of_death.section_1c = draft.cause_of_death_1c

@@ -105,17 +105,9 @@ class ExaminationOverview:
         return True if self.urgency_score and self.urgency_score > 0 and self.open else False
 
 
-class CauseOfDeathProposal:
-    date_format = '%d.%m.%Y'
-    time_format = "%H:%M"
+class CauseOfDeath:
 
     def __init__(self):
-        from users.models import User
-
-        self.medical_examiner = User()
-        self.qap = None
-        self.status = enums.cod_status.NOT_DISCUSSED
-        self.creation_date = ''
         self.section_1a = ''
         self.section_1b = ''
         self.section_1c = ''
@@ -123,30 +115,11 @@ class CauseOfDeathProposal:
 
     def to_object(self):
         return {
-            'medical_examiner': get_user_presenter(self.medical_examiner),
-            'creation_date': self.creation_date,
-            'qap': get_medical_team_member_presenter(self.qap),
-            'status': self.status,
             'section_1a': self.section_1a,
             'section_1b': self.section_1b,
             'section_1c': self.section_1c,
             'section_2': self.section_2
         }
-
-    def display_date(self):
-        if self.creation_date:
-            date = parse_datetime(self.creation_date)
-            if date.date() == datetime.today().date():
-                return 'Today at %s' % date.strftime(self.time_format)
-            elif date.date() == datetime.today().date() - timedelta(days=1):
-                return 'Yesterday at %s' % date.strftime(self.time_format)
-            else:
-                time = date.strftime(self.time_format)
-                date = date.strftime(self.date_format)
-                return "%s at %s" % (date, time)
-        else:
-            return None
-
 
 class PatientHeader:
     date_format = '%d.%m.%Y'
