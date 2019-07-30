@@ -27,3 +27,11 @@ class MedexRequest:
             'content-type': 'application/json-patch+json'
         }
         return requests.put(url, data=json.dumps(data), headers=headers, verify=False)
+
+    @classmethod
+    def delete(cls, auth_token, url, params={}):
+        headers = {
+            'authorization': 'bearer ' + auth_token,
+            'content-type': 'application/json-patch+json'
+        }
+        return requests.delete(url, headers=headers, params=params, verify=False)

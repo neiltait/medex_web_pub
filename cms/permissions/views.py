@@ -1,11 +1,13 @@
+from django.views import View
 from django.views.decorators.cache import never_cache
 from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
-from locations.models import Location
+from locations.models import Location, LocationCollection
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
+from permissions.models import Permission
 from users.views import ManageUserBaseView
 
 
@@ -35,7 +37,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
                 if add_another:
                     form = PermissionBuilderForm()
                 else:
-                    return redirect('/settings')
+                    return redirect('/users/%s/manage' % self.user.user_id)
             else:
                 invalid = True
                 log_api_error('permission creation', response.text)
@@ -50,18 +52,76 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
         return render(request, self.template, context, status=status_code)
 
     def __set_add_permission_context(self, form, invalid):
-        trusts = self.user.get_permitted_trusts()
-        regions = self.user.get_permitted_regions()
-        national = Location.get_national_location_id(self.user.auth_token)
 
+        locations = self.user.get_location_collection()
         return {
             'session_user': self.user,
             'sub_heading': 'Add role and permission level',
             'form': form,
             'submit_path': 'add_permission',
             'invalid': invalid,
-            'trusts': trusts,
-            'regions': regions,
-            'national': national,
+            'locations': locations,
             'managed_user': self.managed_user,
         }
+
+
+class EditPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView):
+    permission_required = 'can_update_user_permission'
+    template = 'users/permission_editor.html'
+
+    def get(self, request, user_id, permission_id):
+        status_code = status.HTTP_200_OK
+
+        permission = Permission.load_by_id(user_id, permission_id, self.user.auth_token)
+
+        context = self.__set_edit_permission_context(permission, False)
+        return render(request, self.template, context, status=status_code)
+
+    def post(self, request, user_id, permission_id):
+        post_body = request.POST
+        form = PermissionBuilderForm(post_body)
+
+        if form.is_valid():
+            response = self.managed_user.update_permission(form, permission_id, self.user.auth_token)
+
+            if response.ok:
+                return redirect('/users/%s/manage' % self.managed_user.user_id)
+            else:
+                invalid = True
+                log_api_error('permission creation', response.text)
+                status_code = response.status_code
+        else:
+            invalid = True
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        permission = Permission.load_by_id(user_id, permission_id, self.user.auth_token)
+        context = self.__set_edit_permission_context(permission, invalid, posted_form=form)
+
+        return render(request, self.template, context, status=status_code)
+
+    def __set_edit_permission_context(self, permission, invalid, posted_form=None):
+
+        locations = self.user.get_location_collection()
+        form = posted_form if posted_form else PermissionBuilderForm.load_from_permission(permission, locations)
+        return {
+            'session_user': self.user,
+            'sub_heading': 'Edit role and permission level',
+            'form': form,
+            'submit_path': 'edit_permission',
+            'invalid': invalid,
+            'locations': locations,
+            'managed_user': self.managed_user,
+            'permission': permission,
+        }
+
+
+class DeletePermissionView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_delete_user_permission'
+
+    def get(self, request, user_id, permission_id):
+        Permission.delete(user_id, permission_id, auth_token=self.user.auth_token)
+
+        return self.__redirect_to_manage_user(user_id)
+
+    def __redirect_to_manage_user(self, user_id):
+        return redirect('/users/%s/manage' % user_id)

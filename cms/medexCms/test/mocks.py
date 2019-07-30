@@ -50,7 +50,7 @@ class SessionMocks:
     @classmethod
     def get_validate_response_user_dict(cls):
         return {
-            "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+            "userId": "1",
             "firstName": "Joe",
             "lastName": "Bloggs",
             "emailAddress": "joe.bloggs@nhs.uk",
@@ -130,8 +130,10 @@ class SessionMocks:
         response._content = json.dumps(cls.get_refresh_token()).encode('utf-8')
         return response
 
+
 class UserMocks:
     USER_ID = 1
+    PERMISSION_ID = "123-456-789"
 
     @classmethod
     def get_empty_user_dict(cls):
@@ -257,18 +259,9 @@ class UserMocks:
 
 
 class PermissionMocks:
-    PERMISSION_ID = 1
+    PERMISSION_ID = '123-456-789'
     ME_TYPE = 'me'
     MEO_TYPE = 'meo'
-
-    @classmethod
-    def get_meo_permission_dict(cls):
-        return {
-            "permissionId": "123-456-789",
-            "userId": "abc-def-ghi",
-            "locationId": "jkl-mno-pqr",
-            "userRole": '0',
-        }
 
     @classmethod
     def get_me_permission_dict(cls):
@@ -276,7 +269,56 @@ class PermissionMocks:
             "permissionId": "123-456-789",
             "userId": "abc-def-ghi",
             "locationId": "jkl-mno-pqr",
-            "userRole": '1',
+            "userRole": 'MedicalExaminer',
+        }
+
+    @classmethod
+    def get_meo_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 'MedicalExaminerOfficer',
+        }
+
+    @classmethod
+    def get_legacy_me_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 1,
+        }
+
+    @classmethod
+    def get_legacy_meo_permission_dict(cls):
+        return {
+            "permissionId": "123-456-789",
+            "userId": "abc-def-ghi",
+            "locationId": "jkl-mno-pqr",
+            "userRole": 0,
+        }
+
+    @classmethod
+    def get_permission_builder_form_mock_data(cls):
+        return {
+            'role': '1',
+            'permission_level': 'national',
+            'region': '',
+            'trust': '',
+            'national': 'blah',
+            'trust_name': 'etc'
+        }
+
+    @classmethod
+    def get_permission_builder_invalid_form_mock_data(cls):
+        return {
+            'role': '',
+            'permission_level': '',
+            'region': '',
+            'trust': '',
+            'national': '',
+            'trust_name': ''
         }
 
     @classmethod
@@ -301,6 +343,12 @@ class PermissionMocks:
         }
 
     @classmethod
+    def get_user_single_permission_response_content(cls, role_type=ME_TYPE):
+        permission_dict = cls.get_me_permission_dict() if role_type == cls.ME_TYPE else cls.get_meo_permission_dict()
+        permission_dict["success"] = True
+        return permission_dict
+
+    @classmethod
     def get_successful_permission_creation_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
@@ -322,7 +370,42 @@ class PermissionMocks:
         return response
 
     @classmethod
+    def get_successful_single_permission_load_response(cls, role_type=ME_TYPE):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_user_single_permission_response_content(role_type)).encode('utf-8')
+        return response
+
+    @classmethod
     def get_unsuccessful_permission_load_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps(None).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_permission_delete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'permissionId': cls.PERMISSION_ID}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_permission_delete_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        response._content = json.dumps(None).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_permission_update_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'permissionId': cls.PERMISSION_ID}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_permission_update_response(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
         response._content = json.dumps(None).encode('utf-8')
@@ -384,6 +467,48 @@ class LocationsMocks:
                 'locationId': '3',
                 'name': 'Gloucester Hospital ME Office',
             }
+        ]
+
+    @classmethod
+    def get_list_of_locations(self):
+        from locations.models import Location
+        return [
+            {
+                'locationId': '1',
+                'name': 'National',
+                'parentId': '1',
+                'type': Location.NATIONAL_TYPE
+            },
+            {
+                'locationId': '2',
+                'name': 'North',
+                'parentId': '1',
+                'type': Location.REGIONAL_TYPE
+            },
+            {
+                'locationId': '3',
+                'name': 'South',
+                'parentId': '1',
+                'type': Location.REGIONAL_TYPE
+            },
+            {
+                'locationId': '4',
+                'name': 'Heaven',
+                'parentId': '3',
+                'type': Location.TRUST_TYPE
+            },
+            {
+                'locationId': '5',
+                'name': 'Earth',
+                'parentId': '3',
+                'type': Location.TRUST_TYPE
+            },
+            {
+                'locationId': '6',
+                'name': 'Hell',
+                'parentId': '2',
+                'type': Location.TRUST_TYPE
+            },
         ]
 
 
@@ -1478,35 +1603,35 @@ class ExaminationMocks:
     def get_unsuccessful_case_creation_response_nhs_duplicate(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps({"NhsNumber":["Duplicate"]}).encode('utf-8')
+        response._content = json.dumps({"NhsNumber": ["Duplicate"]}).encode('utf-8')
         return response
 
     @classmethod
     def get_unsuccessful_case_creation_response_nhs_whitespace(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps( {"NhsNumber":["ContainsWhitespace"]}).encode('utf-8')
+        response._content = json.dumps({"NhsNumber": ["ContainsWhitespace"]}).encode('utf-8')
         return response
 
     @classmethod
     def get_unsuccessful_case_creation_response_nhs_invalid_characters(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps({"NhsNumber":["ContainsInvalidCharacters"]}).encode('utf-8')
+        response._content = json.dumps({"NhsNumber": ["ContainsInvalidCharacters"]}).encode('utf-8')
         return response
 
     @classmethod
     def get_unsuccessful_case_creation_response_nhs_invalid(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps({"NhsNumber":["Invalid"]}).encode('utf-8')
+        response._content = json.dumps({"NhsNumber": ["Invalid"]}).encode('utf-8')
         return response
 
     @classmethod
     def get_unsuccessful_case_creation_response_nhs_any_other_error(cls):
         response = Response()
         response.status_code = status.HTTP_400_BAD_REQUEST
-        response._content = json.dumps({"NhsNumber":["AnythingElse"]}).encode('utf-8')
+        response._content = json.dumps({"NhsNumber": ["AnythingElse"]}).encode('utf-8')
         return response
 
     @classmethod
@@ -1576,7 +1701,7 @@ class ExaminationMocks:
     def get_unsuccessful_patient_details_update_response(cls):
         response = Response()
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        response._content = json.dumps({"errors":{}}).encode('utf-8')
+        response._content = json.dumps({"errors": {}}).encode('utf-8')
         return response
 
     @classmethod

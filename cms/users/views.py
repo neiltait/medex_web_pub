@@ -74,3 +74,18 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+
+class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
+    permission_required = 'can_get_users'
+    template = 'users/manage.html'
+
+    def get(self, request, user_id):
+        status_code = status.HTTP_200_OK
+        context = {
+            'session_user': self.user,
+            'managed_user': self.managed_user,
+        }
+
+        return render(request, self.template, context, status=status_code)
+

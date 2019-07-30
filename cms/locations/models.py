@@ -3,7 +3,6 @@ from .utils import filter_trusts, filter_regions, filter_sites, filter_national
 
 
 class Location:
-
     NATIONAL_TYPE = 'National'
     REGIONAL_TYPE = 'Region'
     TRUST_TYPE = 'Trust'
@@ -65,3 +64,36 @@ class Location:
         locations_data = cls.get_locations_list(auth_token)
         national = filter_national(locations_data)
         return national.location_id
+
+    @classmethod
+    def load_location_collection_for_user(cls, auth_token):
+        locations = request_handler.get_permitted_locations_list(auth_token)
+        return LocationCollection(locations)
+
+
+class LocationCollection:
+
+    def __init__(self, location_list):
+        self.all = location_list
+
+    def all(self):
+        return self.all
+
+    @property
+    def trusts(self):
+        return filter_trusts(self.all)
+
+    @property
+    def sites(self):
+        return filter_sites(self.all)
+
+    @property
+    def regions(self):
+        return filter_regions(self.all)
+
+    @property
+    def national(self):
+        if len([n for n in self.all if n.get('type') == 'National']) > 0:
+            return filter_national(self.all)
+        else:
+            return None
