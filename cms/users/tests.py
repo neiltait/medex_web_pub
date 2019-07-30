@@ -46,6 +46,8 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/users/%s/add_permission' % UserMocks.USER_ID)
 
+
+class PermissionViewsTests(MedExTestCase):
     # Add permission tests
 
     def test_landing_on_the_add_permission_page_loads_the_correct_template(self):
@@ -60,12 +62,32 @@ class UsersViewsTest(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
 
+    """ GET """
+
     @patch('users.request_handler.load_by_id', return_value=UserMocks.get_unsuccessful_single_user_load_response())
     def test_landing_on_the_add_permission_page_loads_the_correct_template_if_the_user_cant_be_found(self,
                                                                                                      mock_user_load):
         self.set_auth_cookies()
         response = self.client.get('/users/%s/add_permission' % UserMocks.USER_ID)
         self.assertTemplateUsed(response, 'errors/base_error.html')
+
+    """ POST """
+
+    def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_manage_user_page(self):
+        self.set_auth_cookies()
+        submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
+        response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/users/%s/manage' % UserMocks.USER_ID)
+
+    def test_a_valid_form_that_succeeds_on_api_returns_a_blank_permissions_page_if_add_another_selected(self):
+        self.set_auth_cookies()
+        submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': '', 'add_another': 'true'}
+        response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        context_form = self.get_context_value(response.context, 'form')
+        self.assertIsNone(context_form.permission_level)
+        self.assertIsNone(context_form.role)
 
     def test_submitting_an_invalid_form_returns_a_bad_request_response_and_an_error_message(self):
         self.set_auth_cookies()
@@ -84,21 +106,23 @@ class UsersViewsTest(MedExTestCase):
         self.assertTemplateUsed(response, 'users/permission_builder.html')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_submitting_a_valid_form_that_succeeds_on_api_returns_the_a_redirect_to_the_manage_user_page(self):
-        self.set_auth_cookies()
-        submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': ''}
-        response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(response.url, '/users/%s/manage' % UserMocks.USER_ID)
+    """ UPDATE """
 
-    def test_a_valid_form_that_succeeds_on_api_returns_a_blank_permissions_page_if_add_another_selected(self):
-        self.set_auth_cookies()
-        submission = {'role': 'me', 'permission_level': 'national', 'region': '', 'trust': '', 'add_another': 'true'}
-        response = self.client.post('/users/%s/add_permission' % UserMocks.USER_ID, submission)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        context_form = self.get_context_value(response.context, 'form')
-        self.assertIsNone(context_form.permission_level)
-        self.assertIsNone(context_form.role)
+    def test_submitting_an_update_form_that_succeeds_on_api_redirects_to_the_manage_user_page(self):
+        pass
+
+    def test_submitting_an_update_form_that_errors_on_cms_returns_error(self):
+        pass
+
+    @patch('permissions.request_handler.update_permission',
+           return_value=PermissionMocks.get_successful_permission_update_response())
+    def test_submitting_a_valid_update_form_that_errors_on_api_returns_error(self, mock_permission_update):
+        pass
+
+    """ DELETE """
+
+    def test_submitting_a_valid_delete_that_succeeds_on_api_redirects_to_the_manage_user_page(self):
+        pass
 
 
 class UsersFormsTests(MedExTestCase):

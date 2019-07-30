@@ -35,7 +35,7 @@ def delete_permission(permission_id, user_id, auth_token):
 
 def update_permission(permission, user_id, permission_id, auth_token):
     if settings.LOCAL:
-        return PermissionMocks.get_successful_permission_creation_response()
+        return PermissionMocks.get_successful_permission_update_response()
     else:
         return MedexRequest.put(auth_token,
                                 '%s/users/%s/permissions/%s' % (settings.API_URL, user_id, permission_id),
