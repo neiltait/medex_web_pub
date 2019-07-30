@@ -5,6 +5,7 @@ from datetime import datetime
 from requests.models import Response
 from rest_framework import status
 
+from locations.models import Location
 from medexCms import settings
 from medexCms.utils import NONE_DATE, API_DATE_FORMAT
 
@@ -467,6 +468,47 @@ class LocationsMocks:
                 'locationId': '3',
                 'name': 'Gloucester Hospital ME Office',
             }
+        ]
+
+    @classmethod
+    def get_list_of_locations(self):
+        return [
+            {
+                'locationId': '1',
+                'name': 'National',
+                'parentId': '1',
+                'type': Location.NATIONAL_TYPE
+            },
+            {
+                'locationId': '2',
+                'name': 'North',
+                'parentId': '1',
+                'type': Location.REGIONAL_TYPE
+            },
+            {
+                'locationId': '3',
+                'name': 'South',
+                'parentId': '1',
+                'type': Location.REGIONAL_TYPE
+            },
+            {
+                'locationId': '4',
+                'name': 'Heaven',
+                'parentId': '3',
+                'type': Location.TRUST_TYPE
+            },
+            {
+                'locationId': '5',
+                'name': 'Earth',
+                'parentId': '3',
+                'type': Location.TRUST_TYPE
+            },
+            {
+                'locationId': '6',
+                'name': 'Hell',
+                'parentId': '2',
+                'type': Location.TRUST_TYPE
+            },
         ]
 
 
