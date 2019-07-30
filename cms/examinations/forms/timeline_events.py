@@ -495,6 +495,7 @@ class AdmissionNotesEventForm:
             form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
+        self.route_of_admission = fallback_to(form_data.get('latest_admission_route'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
         self.errors = {'count': 0}
 
@@ -524,6 +525,12 @@ class AdmissionNotesEventForm:
             self.errors['count'] += 1
             self.errors['latest_admission_immediate_referral'] = messages.ErrorSelectionRequiredMessage(
                 'immediate referral')
+
+        if self.route_of_admission == '':
+            self.errors['count'] += 1
+            self.errors['latest_admission_route'] = messages.ErrorFieldRequiredMessage(
+                'admission route'
+            )
 
     def check_valid_draft(self):
         if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
