@@ -5,6 +5,7 @@ from examinations import request_handler
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
 from medexCms.api import enums
+from medexCms.utils import fallback_to
 
 
 class CaseBreakdown:
@@ -13,6 +14,8 @@ class CaseBreakdown:
         from examinations.models.core import PatientHeader
 
         self.case_header = PatientHeader(obj_dict.get("header"))
+
+        self.prepopulated_items = PrePopulatedItemList(obj_dict.get('caseBreakdown'))
 
         # parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.case_header.date_of_death,
@@ -31,6 +34,44 @@ class CaseBreakdown:
             return CaseBreakdown(response.json(), medical_team), None
         else:
             return None, handle_error(response, {'type': 'case', 'action': 'loading'})
+
+
+class PrePopulatedItemList:
+    def __init__(self, timeline_items):
+        self.qap = self.__get_prepopulated_values_for_qap_discussion(
+            timeline_items.get("qapDiscussion").get("prepopulated"))
+        self.bereaved = self.__get_prepopulated_values_for_bereaved_discussion(
+            timeline_items.get("bereavedDiscussion").get("prepopulated"))
+
+    def __get_prepopulated_values_for_qap_discussion(self, obj_dict):
+        return {
+            "section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
+            "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
+            "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
+            "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
+            "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
+                                               enums.prescrutiny_status.NOT_HAPPENED),
+            "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
+            "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
+            "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), "")
+        }
+
+    def __get_prepopulated_values_for_bereaved_discussion(self, obj_dict):
+        return {
+            "section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
+            "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
+            "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
+            "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
+            "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
+                                               enums.prescrutiny_status.NOT_HAPPENED),
+            "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
+            "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
+            "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), ""),
+            "qap_discussion_status": fallback_to(obj_dict.get("qapDiscussionStatus"), enums.qap_discussion_status.NO_RECORD),
+            "qap_name_for_latest_qap_discussion": fallback_to(obj_dict.get("qapNameForLatestQAPDiscussion"), ""),
+            "date_of_latest_qap_discussion": fallback_to(obj_dict.get("dateOfLatestQAPDiscussion"), ""),
+            "user_for_latest_qap_discussion": fallback_to(obj_dict.get("userForLatestQAPDiscussion"), "")
+        }
 
 
 class ExaminationEventList:
