@@ -154,7 +154,15 @@ class PermissionViewsTests(MedExTestCase):
     """ DELETE """
 
     def test_submitting_a_valid_delete_that_succeeds_on_api_redirects_to_the_manage_user_page(self):
-        pass
+        # Given - some valid delete data'
+        self.set_auth_cookies()
+
+        # When - we submit to the delete endpoint
+        response = self.client.get('/users/%s/delete_permission/%s' % (UserMocks.USER_ID, PermissionMocks.PERMISSION_ID))
+
+        # Then - we should get redirected to the manage user page
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/users/%s/manage' % UserMocks.USER_ID)
 
 
 class UsersFormsTests(MedExTestCase):
