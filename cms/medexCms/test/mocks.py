@@ -5,7 +5,6 @@ from datetime import datetime
 from requests.models import Response
 from rest_framework import status
 
-from locations.models import Location
 from medexCms import settings
 from medexCms.utils import NONE_DATE, API_DATE_FORMAT
 
@@ -472,6 +471,7 @@ class LocationsMocks:
 
     @classmethod
     def get_list_of_locations(self):
+        from locations.models import Location
         return [
             {
                 'locationId': '1',
