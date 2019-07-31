@@ -1,5 +1,5 @@
-{% if proposed_cause_of_death %}
-    <div id="{{ prefix }}-cause-of-death-panel" class="cause-of-death-expandable">
+{% if case_status %}
+    <div id="qap-cause-of-death-panel" class="cause-of-death-expandable">
         <div class="expandable-header">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-two-thirds">
@@ -23,8 +23,8 @@
                     <div>
                         <h3 class="nhsuk-heading-s">Cause of death established during the review of records by Medical Examiner</h3>
                         <p class="nhsuk-body"><span
-                                class="nhsuk-u-font-weight-bold">{{ proposed_cause_of_death.medical_examiner }}</span>
-                            on <span class="nhsuk-u-font-weight-bold">{{ proposed_cause_of_death.display_date }}</span>
+                                class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span>
+                            on <span class="nhsuk-u-font-weight-bold">{{ case_status.latest_pre_scrutiny_display_date }}</span>
                         </p>
                     </div>
 
@@ -36,7 +36,7 @@
                             1a
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
-                                  rows="2" disabled>{{ proposed_cause_of_death.section_1a }}</textarea>
+                                  rows="2" disabled>{{ case_status.section_1a }}</textarea>
                     </div>
 
                     <div>
@@ -44,7 +44,7 @@
                             1b
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
-                                  rows="2" disabled>{{ proposed_cause_of_death.section_1b }}</textarea>
+                                  rows="2" disabled>{{ case_status.section_1b }}</textarea>
                     </div>
 
 
@@ -53,7 +53,7 @@
                             1c
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
-                                  rows="2" disabled>{{ proposed_cause_of_death.section_1c }}</textarea>
+                                  rows="2" disabled>{{ case_status.section_1c }}</textarea>
                     </div>
 
 
@@ -62,7 +62,7 @@
                             2
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
-                                  rows="2" disabled>{{ proposed_cause_of_death.section_2 }}</textarea>
+                                  rows="2" disabled>{{ case_status.section_2 }}</textarea>
                     </div>
                 </div>
             </div>
