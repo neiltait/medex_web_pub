@@ -25,6 +25,7 @@ class APIRouteOfAdmission:
     OUTPATIENT = "FromOutpatientClinic"
     UNKNOWN = "Unknown"
 
+
 class APIRouteOfAdmissionIntegers:
     AE = 0
     WARD = 1
