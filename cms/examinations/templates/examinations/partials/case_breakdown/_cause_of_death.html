@@ -20,50 +20,67 @@
         <div class="expandable-body">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <div>
-                        <h3 class="nhsuk-heading-s">Cause of death established during the review of records by Medical Examiner</h3>
-                        <p class="nhsuk-body"><span
-                                class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span>
-                            on <span class="nhsuk-u-font-weight-bold">{{ case_status.latest_pre_scrutiny_display_date }}</span>
+                    {% if case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
+                        <div class="">
+                            <p class="nhsuk-body">
+                                <span>
+                                    A proposed cause of death for this case is still pending because
+                                </span>
+                            </p>
+                            <p class="nhsuk-body margin-bottom">
+                                <span class="nhsuk-u-font-weight-bold">
+                                    &#x25CF; ME review of records has not been added to the timeline
+                                </span>
+                            </p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <h3 class="nhsuk-heading-s">Cause of death established during the review of records by
+                                Medical Examiner</h3>
+                            <p class="nhsuk-body"><span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span>
+                                on <span
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.date_of_latest_pre_scrutiny }}</span>
+                            </p>
+                        </div>
+
+                        <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
+                            It is proposed that {{ patient.full_name }} died from
                         </p>
-                    </div>
+                        <div>
+                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
+                                1a
+                            </label>
+                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
+                                      rows="2" disabled>{{ case_status.section_1a }}</textarea>
+                        </div>
 
-                    <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
-                        It is proposed that {{ patient.full_name }} died from
-                    </p>
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
-                            1a
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
-                                  rows="2" disabled>{{ case_status.section_1a }}</textarea>
-                    </div>
-
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
-                            1b
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
-                                  rows="2" disabled>{{ case_status.section_1b }}</textarea>
-                    </div>
+                        <div>
+                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
+                                1b
+                            </label>
+                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
+                                      rows="2" disabled>{{ case_status.section_1b }}</textarea>
+                        </div>
 
 
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
-                            1c
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
-                                  rows="2" disabled>{{ case_status.section_1c }}</textarea>
-                    </div>
+                        <div>
+                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
+                                1c
+                            </label>
+                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
+                                      rows="2" disabled>{{ case_status.section_1c }}</textarea>
+                        </div>
 
 
-                    <div>
-                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
-                            2
-                        </label>
-                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
-                                  rows="2" disabled>{{ case_status.section_2 }}</textarea>
-                    </div>
+                        <div>
+                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
+                                2
+                            </label>
+                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
+                                      rows="2" disabled>{{ case_status.section_2 }}</textarea>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
