@@ -178,7 +178,7 @@
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-ae"
                                                name="latest_admission_route"
-                                               type="radio" value="ae">
+                                               type="radio" value="{{ enums.route_of_admission.AE }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-ae">
                                             A&E
@@ -187,7 +187,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-transfer"
-                                               name="latest_admission_route" type="radio" value="transfer">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.TRANSFER }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-transfer">
                                             Transfer from another hospital
@@ -196,7 +196,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-unknown"
-                                               name="latest_admission_route" type="radio" value="unknown">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.UNKNOWN }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-paramedic">
                                             Unknown
@@ -207,7 +207,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-ward"
-                                               name="latest_admission_route" type="radio" value="ward">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.WARD }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-ward">
                                             Direct to the ward
@@ -216,7 +216,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-paramedic"
-                                               name="latest_admission_route" type="radio" value="paramedic">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.PARAMEDIC }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-paramedic">
                                             Paramedic to specialist center
@@ -227,7 +227,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-gp"
-                                               name="latest_admission_route" type="radio" value="gp">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.GP }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-gp">
                                             GP referral
@@ -236,7 +236,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-outpatient"
-                                               name="latest_admission_route" type="radio" value="outpatient">
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.OUTPATIENT }}">
                                         <label class="nhsuk-label nhsuk-radios__label"
                                                for="latest-admission-outpatient">
                                             From outpatient clinic

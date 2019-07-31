@@ -15,13 +15,14 @@ class APIYesNoStrings:
     NO = "No"
     UNKNOWN = "Unknown"
 
+
 class APIRouteOfAdmission:
     AE = "AccidentAndEmergency"
-    DIRECT_TO_WARD = "DirectToWard"
-    GP_REFERRAL = "GPReferral"
-    TRANSFER_OTHER_HOSPITAL = "TransferFromAnotherHospital"
-    PARAMEDIC_TO_CENTER = "ParamedicToSpecialistCenter"
-    FROM_OUTPATIENT_CLINIC = "FromOutpatientClinic"
+    WARD = "DirectToWard"
+    GP = "GPReferral"
+    TRANSFER = "TransferFromAnotherHospital"
+    PARAMEDIC = "ParamedicToSpecialistCenter"
+    OUTPATIENT = "FromOutpatientClinic"
     UNKNOWN = "Unknown"
 
 
