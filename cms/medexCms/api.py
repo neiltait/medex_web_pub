@@ -25,6 +25,15 @@ class APIRouteOfAdmission:
     OUTPATIENT = "FromOutpatientClinic"
     UNKNOWN = "Unknown"
 
+class APIRouteOfAdmissionIntegers:
+    AE = 0
+    WARD = 1
+    GP = 2
+    TRANSFER = 3
+    PARAMEDIC = 4
+    OUTPATIENT = 5
+    UNKNOWN = 6
+
 
 class APIFuneralArrangements:
     CREMATION = "Cremation"
@@ -146,6 +155,7 @@ class APIStrings:
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
     route_of_admission = APIRouteOfAdmission()
+    route_of_admission_integers = APIRouteOfAdmissionIntegers()
     funeral_arrangements = APIFuneralArrangements()
     cod = APICircumstancesOfDeath()
     outcomes = APIOutcomes()
