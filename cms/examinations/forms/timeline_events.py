@@ -573,6 +573,7 @@ class AdmissionNotesEventForm:
             "admittedDateUnknown": True if self.admission_date_unknown else None,
             "admittedTime": self.admission_time if self.admission_time else None,
             "admittedTimeUnknown": True if self.admission_time_unknown else None,
+            "routeOfAdmission": self.route_of_admission,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
@@ -585,6 +586,7 @@ class AdmissionNotesEventForm:
         self.admission_time = draft.admitted_time
         self.admission_time_unknown = draft.admitted_time_unknown
         self.admission_notes = draft.body
+        self.route_of_admission = draft.route_of_admission
         self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
 

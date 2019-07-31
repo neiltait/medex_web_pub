@@ -164,7 +164,9 @@
                         <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
                             Route of hospital admission
                         </legend>
-
+                        {% if form.errors.route_of_admission %}
+                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.route_of_admission }}</span>
+                    {% endif %}
                         <span class="nhsuk-hint" id="example-hint">
                               How was the patient admitted?
                         </span>
