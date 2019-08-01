@@ -33,19 +33,36 @@
                         </p>
                     </div>
                 {% else %}
-                    <div>
-                        <div class="expandable-body__context-section">
-                            <p class="nhsuk-body-m">Cause of death established by medical examiner <span
-                                    class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_qap_discussion }}</span>
-                                and QAP
-                                <span class="nhsuk-u-font-weight-bold">{{ case_status.qap_name_for_latest_qap_discussion }}</span>
-                                on <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_qap_discussion }}</span>
-                                at <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_qap_discussion }}</span>
-                            </p>
+                    {% if case_status.qap_discussion_status == enums.qap_discussion_status.COULD_NOT_HAPPEN %}
+                        <div>
+                            <div class="expandable-body__context-section">
+                                <p class="nhsuk-body-m">Discussion with QAP was unable to happen</p>
+                                <p class="nhsuk-body-m">Cause of death established during the review of records by
+                                    medical
+                                    examiner <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
+                                    on <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
+                                    at <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div>
+                            <div class="expandable-body__context-section">
+                                <p class="nhsuk-body-m">Cause of death established by medical examiner <span
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_qap_discussion }}</span>
+                                    and QAP
+                                    <span class="nhsuk-u-font-weight-bold">{{ case_status.qap_name_for_latest_qap_discussion }}</span>
+                                    on <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_qap_discussion }}</span>
+                                    at <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_qap_discussion }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
 
                     <div>
                         <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
