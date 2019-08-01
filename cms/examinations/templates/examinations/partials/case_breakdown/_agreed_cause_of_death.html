@@ -21,13 +21,16 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <div>
-                        <h3 class="nhsuk-heading-s">Cause of death agreed by Medical Examiner and QAP</h3>
-                        <p class="nhsuk-body"><span
-                                class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span> and <span
-                                class="nhsuk-u-font-weight-bold">{{ case_status.qap_name_for_latest_qap_discussion }}</span>
-                            on <span
-                                    class="nhsuk-u-font-weight-bold">{{ case_status.latest_qap_discussion_display_date }}</span>
-                        </p>
+                        <div class="expandable-body__context-section">
+                            <p class="nhsuk-body-m">Cause of death established by medical examiner <span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_qap_discussion }}</span> and QAP
+                                <span class="nhsuk-u-font-weight-bold">{{ case_status.qap_name_for_latest_qap_discussion }}</span>
+                                on <span
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_qap_discussion }}</span>
+                                at <span
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_qap_discussion }}</span>
+                            </p>
+                        </div>
                     </div>
 
                     <div>

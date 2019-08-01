@@ -5,7 +5,7 @@ from examinations import request_handler
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
 from medexCms.api import enums
-from medexCms.utils import fallback_to
+from medexCms.utils import fallback_to, reformat_datetime
 
 
 class CaseBreakdown:
@@ -37,6 +37,9 @@ class CaseBreakdown:
 
 
 class PrePopulatedItemList:
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+
     def __init__(self, timeline_items):
         self.qap = self.__get_prepopulated_values_for_qap_discussion(
             timeline_items.get("qapDiscussion").get("prepopulated"))
@@ -44,34 +47,43 @@ class PrePopulatedItemList:
             timeline_items.get("bereavedDiscussion").get("prepopulated"))
 
     def __get_prepopulated_values_for_qap_discussion(self, obj_dict):
-        return {
-            "section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
-            "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
-            "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
-            "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
-            "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
-                                               enums.prescrutiny_status.NOT_HAPPENED),
-            "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
-            "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
-            "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), "")
-        }
+        return {"section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
+                "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
+                "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
+                "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
+                "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
+                                                   enums.prescrutiny_status.NOT_HAPPENED),
+                "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
+                "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
+                "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), ""),
+                "display_date_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
+                                                                         self.date_format),
+                "display_time_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
+                                                                         self.time_format)}
 
     def __get_prepopulated_values_for_bereaved_discussion(self, obj_dict):
-        return {
-            "section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
-            "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
-            "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
-            "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
-            "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
-                                               enums.prescrutiny_status.NOT_HAPPENED),
-            "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
-            "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
-            "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), ""),
-            "qap_discussion_status": fallback_to(obj_dict.get("qapDiscussionStatus"), enums.qap_discussion_status.NO_RECORD),
-            "qap_name_for_latest_qap_discussion": fallback_to(obj_dict.get("qapNameForLatestQAPDiscussion"), ""),
-            "date_of_latest_qap_discussion": fallback_to(obj_dict.get("dateOfLatestQAPDiscussion"), ""),
-            "user_for_latest_qap_discussion": fallback_to(obj_dict.get("userForLatestQAPDiscussion"), "")
-        }
+        return {"section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
+                "section_1b": fallback_to(obj_dict.get("causeOfDeath1b"), ""),
+                "section_1c": fallback_to(obj_dict.get("causeOfDeath1c"), ""),
+                "section_2": fallback_to(obj_dict.get("causeOfDeath2"), ""),
+                "pre_scrutiny_status": fallback_to(obj_dict.get("preScrutinyStatus"),
+                                                   enums.prescrutiny_status.NOT_HAPPENED),
+                "medical_examiner": fallback_to(obj_dict.get("medicalExaminer"), ""),
+                "date_of_latest_pre_scrutiny": fallback_to(obj_dict.get("dateOfLatestPreScrutiny"), ""),
+                "user_for_latest_pre_scrutiny": fallback_to(obj_dict.get("userForLatestPrescrutiny"), ""),
+                "qap_discussion_status": fallback_to(obj_dict.get("qapDiscussionStatus"),
+                                                     enums.qap_discussion_status.NO_RECORD),
+                "qap_name_for_latest_qap_discussion": fallback_to(obj_dict.get("qapNameForLatestQAPDiscussion"), ""),
+                "date_of_latest_qap_discussion": fallback_to(obj_dict.get("dateOfLatestQAPDiscussion"), ""),
+                "user_for_latest_qap_discussion": fallback_to(obj_dict.get("userForLatestQAPDiscussion"), ""),
+                "display_date_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
+                                                                         self.date_format),
+                "display_time_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
+                                                                         self.time_format),
+                "display_date_of_latest_qap_discussion": reformat_datetime(obj_dict.get("dateOfLatestQAPDiscussion"),
+                                                                           self.date_format),
+                "display_time_of_latest_qap_discussion": reformat_datetime(obj_dict.get("dateOfLatestQAPDiscussion"),
+                                                                           self.time_format)}
 
 
 class ExaminationEventList:

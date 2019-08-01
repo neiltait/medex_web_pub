@@ -34,13 +34,10 @@
                             </p>
                         </div>
                     {% else %}
-                        <div>
-                            <h3 class="nhsuk-heading-s">Cause of death established during the review of records by
-                                Medical Examiner</h3>
-                            <p class="nhsuk-body"><span
-                                    class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span>
-                                on <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.date_of_latest_pre_scrutiny }}</span>
+                        <div class="expandable-body__context-section">
+                            <p class="nhsuk-body-m">Cause of death established during the review of records by medical examiner <span class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
+                                on <span class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
+                                at <span class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
                             </p>
                         </div>
 
