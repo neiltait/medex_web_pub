@@ -9,6 +9,7 @@ class PermissionBuilderForm:
         self.permission_level_error = None
         self.trust_error = None
         self.region_error = None
+        self.trust_name = None
 
         if request:
             self.role = request.get('role')
@@ -16,12 +17,31 @@ class PermissionBuilderForm:
             self.region = request.get('region')
             self.trust = request.get('trust')
             self.national = request.get('national')
+            self.trust_name = request.get('trust_name')
         else:
             self.role = None
             self.permission_level = None
             self.region = None
             self.trust = None
             self.national = None
+
+
+    @classmethod
+    def load_from_permission(cls, permission, locations):
+        form = PermissionBuilderForm()
+        form.role = permission.role_type
+
+        if locations.national and permission.location_id == locations.national.location_id:
+            form.national = locations.national.location_id
+        elif permission.location_id in [trust.location_id for trust in locations.trusts]:
+            trust = [trust for trust in locations.trusts if trust.location_id==permission.location_id][0]
+            form.trust = trust.location_id
+            form.trust_name = trust.name
+
+        elif permission.location_id in [region.location_id for region in locations.regions]:
+            form.region = permission.location_id
+
+        return form
 
     def is_valid(self):
 
