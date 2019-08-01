@@ -1,97 +1,88 @@
-{% if case_status %}
-    <div id="qap-cause-of-death-panel" class="cause-of-death-expandable">
-        <div class="expandable-header">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-two-thirds">
-                    <h3 class="nhsuk-heading-s">
-                        Proposed cause of death
-                    </h3>
-                </div>
+<div id="qap-cause-of-death-panel" class="cause-of-death-expandable">
+    <div class="expandable-header">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+                <h3 class="nhsuk-heading-s">
+                    Proposed cause of death
+                </h3>
+            </div>
 
-                <div class="nhsuk-grid-column-one-third">
-                    <div class="controls flex-row">
-                        <div class="chevron-down"></div>
-                        <div class="chevron-up"></div>
-                    </div>
+            <div class="nhsuk-grid-column-one-third">
+                <div class="controls flex-row">
+                    <div class="chevron-down"></div>
+                    <div class="chevron-up"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="expandable-body">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    {% if case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
-                        <div class="">
-                            <p class="nhsuk-body">
+    <div class="expandable-body">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                {% if case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
+                    <div class="expandable-body__no-cod-explanation">
+                        <p class="nhsuk-body">
                                 <span>
                                     A proposed cause of death for this case is still pending because
                                 </span>
-                            </p>
-                            <p class="nhsuk-body margin-bottom">
+                        </p>
+                        <p class="nhsuk-body">
                                 <span class="nhsuk-u-font-weight-bold">
                                     &#x25CF; ME review of records has not been added to the timeline
                                 </span>
-                            </p>
-                        </div>
-                    {% else %}
-                        <div class="expandable-body__context-section">
-                            <p class="nhsuk-body-m">Cause of death established during the review of records by medical examiner <span class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
-                                on <span class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
-                                at <span class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
-                            </p>
-                        </div>
-
-                        <p class="nhsuk-body-m">
-                            It is proposed that <span class="nhsuk-u-font-weight-bold"> {{ patient.full_name }}</span> died from
                         </p>
-                        <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
-                                1a
-                            </label>
-                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
-                                      rows="2" disabled>{{ case_status.section_1a }}</textarea>
-                        </div>
+                    </div>
+                {% else %}
+                    <div class="expandable-body__context-section">
+                        <p class="nhsuk-body-m">Cause of death established during the review of records by medical
+                            examiner <span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
+                            on <span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
+                            at <span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
+                        </p>
+                    </div>
 
-                        <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
-                                1b
-                            </label>
-                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
-                                      rows="2" disabled>{{ case_status.section_1b }}</textarea>
-                        </div>
+                    <p class="nhsuk-body-m">
+                        It is proposed that <span class="nhsuk-u-font-weight-bold"> {{ patient.full_name }}</span> died
+                        from
+                    </p>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
+                            1a
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1a"
+                                  rows="2" disabled>{{ case_status.section_1a }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
+                            1b
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1b"
+                                  rows="2" disabled>{{ case_status.section_1b }}</textarea>
+                    </div>
 
 
-                        <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
-                                1c
-                            </label>
-                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
-                                      rows="2" disabled>{{ case_status.section_1c }}</textarea>
-                        </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
+                            1c
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_1c"
+                                  rows="2" disabled>{{ case_status.section_1c }}</textarea>
+                    </div>
 
 
-                        <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
-                                2
-                            </label>
-                            <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
-                                      rows="2" disabled>{{ case_status.section_2 }}</textarea>
-                        </div>
-                    {% endif %}
-                </div>
+                    <div>
+                        <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
+                            2
+                        </label>
+                        <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_cause_of_death_2"
+                                  rows="2" disabled>{{ case_status.section_2 }}</textarea>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
-{% else %}
-    <div id="qap-cause-of-death-panel" class="cause-of-death-expandable">
-        <div class="expandable-header">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-two-thirds">
-                    <h3 class="nhsuk-heading-s">
-                        Proposed cause of death
-                    </h3>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endif %}
+</div>
