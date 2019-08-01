@@ -25,35 +25,16 @@
                         <p class="nhsuk-body"><span
                                 class="nhsuk-u-font-weight-bold">{{ case_status.medical_examiner }}</span> and <span
                                 class="nhsuk-u-font-weight-bold">{{ case_status.qap_name_for_latest_qap_discussion }}</span>
-                            on <span class="nhsuk-u-font-weight-bold">{{ case_status.latest_qap_discussion_display_date }}</span>
+                            on <span
+                                    class="nhsuk-u-font-weight-bold">{{ case_status.latest_qap_discussion_display_date }}</span>
                         </p>
-
-{#                        {% if agreed_cause_of_death.status == enums.cod_status.NOT_DISCUSSED %}#}
-{#                            <h3 class="nhsuk-heading-s">Cause of death established during the review of records by Medical Examiner</h3>#}
-{#                            <p class="nhsuk-body"><span#}
-{#                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>#}
-{#                                on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Pending discussion with QAP</span>#}
-{#                            </p>#}
-{#                        {% elif agreed_cause_of_death.status == enums.cod_status.NOT_POSSIBLE %}#}
-{#                            <h3 class="nhsuk-heading-s">Cause of death established during the review of records by Medical Examiner</h3>#}
-{#                            <p class="nhsuk-body"><span#}
-{#                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span>#}
-{#                                on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }} - Discussion with QAP was not possible</span>#}
-{#                            </p>#}
-{#                        {% else %}#}
-{#                            <h3 class="nhsuk-heading-s">Cause of death agreed by Medical Examiner and QAP</h3>#}
-{#                            <p class="nhsuk-body"><span#}
-{#                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.medical_examiner }}</span> and <span#}
-{#                                    class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.qap.name }}</span>#}
-{#                                on <span class="nhsuk-u-font-weight-bold">{{ agreed_cause_of_death.display_date }}</span>#}
-{#                            </p>#}
-{#                        {% endif %}#}
                     </div>
 
-
-                    <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
-                        It is proposed that {{ patient.full_name }} died from
-                    </p>
+                    <div>
+                        <p class="nhsuk-body-m nhsuk-u-font-weight-bold">
+                            It is proposed that {{ patient.full_name }} died from
+                        </p>
+                    </div>
                     <div>
                         <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
                             1a
