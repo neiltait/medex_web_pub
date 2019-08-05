@@ -16,6 +16,16 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIRouteOfAdmission:
+    AE = "AccidentAndEmergency"
+    WARD = "DirectToWard"
+    GP = "GPReferral"
+    TRANSFER = "TransferFromAnotherHospital"
+    PARAMEDIC = "ParamedicToSpecialistCenter"
+    OUTPATIENT = "FromOutpatientClinic"
+    UNKNOWN = "Unknown"
+
+
 class APIFuneralArrangements:
     CREMATION = "Cremation"
     BURIAL = "Burial"
@@ -142,6 +152,7 @@ class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
+    route_of_admission = APIRouteOfAdmission()
     funeral_arrangements = APIFuneralArrangements()
     cod = APICircumstancesOfDeath()
     outcomes = APIOutcomes()

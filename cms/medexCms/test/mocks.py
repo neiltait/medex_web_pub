@@ -1414,6 +1414,7 @@ class ExaminationMocks:
                             "admittedDate": "",
                             "admittedTime": "",
                             "immediateCoronerReferral": False,
+                            "routeOfAdmission": "",
                             "created": "2019-03-12T10:30:43.019Z",
                         }
                     ],
@@ -1426,6 +1427,7 @@ class ExaminationMocks:
                         "admittedDate": "",
                         "admittedTime": "",
                         "immediateCoronerReferral": False,
+                        "routeOfAdmission": "",
                         "created": "2019-03-12T10:30:43.019Z",
                     },
                     "usersDraft": {
@@ -1437,6 +1439,7 @@ class ExaminationMocks:
                         "admittedDate": "",
                         "admittedTime": "",
                         "immediateCoronerReferral": False,
+                        "routeOfAdmission": "",
                         "created": "2019-03-12T10:30:43.019Z",
                     }
                 }
