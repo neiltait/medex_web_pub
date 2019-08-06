@@ -250,6 +250,12 @@ class PrimaryExaminationInformationForm:
                     return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
         return []
 
+    def register_form_errors(self, api_errors):
+        if 'message' in api_errors:
+            self.errors['count'] += 1
+            self.errors['form'] = api_errors['message']
+        return [{'field': 'MedicalTeamForm', 'error_code': 500}]
+
     def __get_nhs_number_errors(self, api_errors):
         nhs_errors = None
         if "NhsNumber" in api_errors:
