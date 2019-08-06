@@ -156,3 +156,18 @@ class MedicalTeamMembersForm:
             obj['generalPractitioner'] = self.gp.to_object()
 
         return obj
+
+    def register_known_api_errors(self, api_errors):
+        # register errors for known fields with standard messages
+        known_errors = []
+        return known_errors
+
+    def register_unknown_api_errors(self, api_errors):
+        # register errors for unknown fields with standard messages
+        return []
+
+    def register_form_errors(self, api_errors):
+        if 'message' in api_errors:
+            self.errors['count'] += 1
+            self.errors['form'] = api_errors['message']
+        return [{'field': 'MedicalTeamForm', 'error_code': 500}]

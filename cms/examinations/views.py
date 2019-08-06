@@ -78,9 +78,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return context
 
     def __process_api_error(self, form, response):
+        form_errors = form.register_form_errors(response.json())
         known_errors = form.register_known_api_errors(response.json())
         unknown_errors = form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for error in all_errors:
@@ -203,9 +204,10 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return render(request, self.template, context, status=status_code)
 
     def __process_api_error(self, primary_form, response):
+        form_errors = primary_form.register_form_errors(response.json())
         known_errors = primary_form.register_known_api_errors(response.json())
         unknown_errors = primary_form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for all_errors in all_errors:
@@ -268,11 +270,15 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
             response = self.examination.update(form.to_object(), self.user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
             elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(form, response)
+
             else:
+                # scenario 1a - success
                 saved = True
                 status_code = response.status_code
         else:
@@ -280,6 +286,21 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         context = self._set_context(form, saved)
         return render(request, self.template, context, status=status_code)
+
+    def __process_api_error(self, medical_team_form, response):
+        form_errors = medical_team_form.register_form_errors(response.json())
+        known_errors = medical_team_form.register_known_api_errors(response.json())
+        unknown_errors = medical_team_form.register_unknown_api_errors(response.json())
+        all_errors = form_errors + known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('medical team', all_errors)
+            status_code = response.status_code
+        else:
+            log_api_error('medical team', response.text)
+            status_code = response.status_code
+        return status_code
 
     def _set_context(self, form, saved):
         return {
