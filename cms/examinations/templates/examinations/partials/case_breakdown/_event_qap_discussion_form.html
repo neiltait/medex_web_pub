@@ -3,7 +3,7 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <label class="nhsuk-label nhsuk-u-font-weight-bold">
+            <label class="nhsuk-label nhsuk-u-font-weight-bold margin-bottom">
                 Who is the discussion with?
             </label>
         </div>
@@ -78,6 +78,16 @@
                     </div>
                 </div>
                 <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <fieldset class="nhsuk-fieldset">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_gmc_number">
+                                    GMC Number
+                                </label>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_gmc_number">{{ qap.gmc_number }}</p>
+                            </div>
+                        </fieldset>
+                    </div>
                     <div class="nhsuk-grid-column-one-half">
                         <fieldset class="nhsuk-fieldset">
                             <div class="nhsuk-form-group">
@@ -156,91 +166,99 @@
 
     <div id="qap-discussion__date-time">
         <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.time_of_conversation %}nhsuk-form-group--error{% endif %}">
-
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
-                    <div class="medex-text-checkbox-group__textbox">
-                        <fieldset class="nhsuk-fieldset" aria-describedby="date_of_conversation">
-                            <legend class="nhsuk-fieldset__legend">
-                                Date of conversation
-                            </legend>
-                            {% if form.errors.time_of_conversation %}
-                            <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_qap_discussion_date">{{ form.errors.time_of_conversation }}</span>{% endif %}
-                            <div class="nhsuk-date-input margin-bottom" id="date_of_conversation">
-                                <div class="nhsuk-date-input__item">
-                                    <label class="nhsuk-label nhsuk-date-input__label" for="qap_day_of_conversation">
-                                        Day
-                                    </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                           id="qap_day_of_conversation" name="qap_day_of_conversation"
-                                           type="number"
-                                           pattern="[0-9]*"
-                                           value="{{ form.day_of_conversation }}">
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="qap_month_of_conversation">
-                                        Month
-                                    </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
-                                           id="qap_month_of_conversation" name="qap_month_of_conversation"
-                                           type="number"
-                                           pattern="[0-9]*"
-                                           value="{{ form.month_of_conversation }}">
-                                </div>
-                                <div class="nhsuk-date-input__item">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="qap_year_of_conversation">
-                                        Year
-                                    </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
-                                           id="qap_year_of_conversation" name="qap_year_of_conversation"
-                                           type="number"
-                                           pattern="[0-9]*"
-                                           value="{{ form.year_of_conversation }}">
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
-                        <label class="nhsuk-label" for="qap_time_of_conversation">
-                            Time of conversation
-                        </label>
-                        <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="qap_time_of_conversation"
-                               name="qap_time_of_conversation"
-                               type="time"
-                               step="60"
-                               value="{{ form.time_of_conversation }}">
+            <fieldset class="nhsuk-fieldset" aria-describedby="date_of_conversation">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <legend class="nhsuk-fieldset__legend">
+                            Date of conversation
+                        </legend>
+                        {% if form.errors.time_of_conversation %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_qap_discussion_date">{{ form.errors.time_of_conversation }}</span>{% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="qap-discussion__discussion-could-not-happen" class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-checkboxes">
-                        <div class="nhsuk-checkboxes__item">
-                            <input class="nhsuk-checkboxes__input" id="qap-discussion-could-not-happen"
-                                   name="qap_discussion_could_not_happen"
-                                   value="{{ enums.yes_no.YES }}"
-                                   type="checkbox"
-                                   {% if form.discussion_could_not_happen == enums.yes_no.YES %}
-                                   checked{% endif %}>
-                            <label class="nhsuk-label nhsuk-checkboxes__label"
-                                   for="qap-discussion-could-not-happen">
-                                Tick if this discussion with a qap was unable to happen at all
-                            </label>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full">
+                                <div class="nhsuk-date-input margin-bottom" id="date_of_conversation">
+                                    <div class="nhsuk-date-input__item">
+                                        <label class="nhsuk-label nhsuk-date-input__label" for="qap_day_of_conversation">
+                                            Day
+                                        </label>
+                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                               id="qap_day_of_conversation" name="qap_day_of_conversation"
+                                               type="number"
+                                               pattern="[0-9]*"
+                                               value="{{ form.day_of_conversation }}">
+                                    </div>
+                                    <div class="nhsuk-date-input__item">
+                                        <label class="nhsuk-label nhsuk-date-input__label"
+                                               for="qap_month_of_conversation">
+                                            Month
+                                        </label>
+                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                               id="qap_month_of_conversation" name="qap_month_of_conversation"
+                                               type="number"
+                                               pattern="[0-9]*"
+                                               value="{{ form.month_of_conversation }}">
+                                    </div>
+                                    <div class="nhsuk-date-input__item">
+                                        <label class="nhsuk-label nhsuk-date-input__label"
+                                               for="qap_year_of_conversation">
+                                            Year
+                                        </label>
+                                        <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                               id="qap_year_of_conversation" name="qap_year_of_conversation"
+                                               type="number"
+                                               pattern="[0-9]*"
+                                               value="{{ form.year_of_conversation }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full">
+                            <div class="medex-text-checkbox-group__textbox" id="time_of_death_group">
+                                <label class="nhsuk-label" for="qap_time_of_conversation">
+                                    Time of conversation
+                                </label>
+                                <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="qap_time_of_conversation"
+                                       name="qap_time_of_conversation"
+                                       type="time"
+                                       step="60"
+                                       value="{{ form.time_of_conversation }}">
+                            </div>
                         </div>
                     </div>
-                </fieldset>
-
-            </div>
+                </div>
+                <div class="nhsuk-grid-column-one-half">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full">
+                            <div id="qap-discussion__discussion-could-not-happen">
+                                <div class="nhsuk-form-group">
+                                    <div class="nhsuk-checkboxes margin-top-lg">
+                                        <div class="nhsuk-checkboxes__item">
+                                            <input class="nhsuk-checkboxes__input" id="qap-discussion-could-not-happen"
+                                                   name="qap_discussion_could_not_happen"
+                                                   value="{{ enums.yes_no.YES }}"
+                                                   type="checkbox"
+                                                   {% if form.discussion_could_not_happen == enums.yes_no.YES %}
+                                                   checked{% endif %}>
+                                            <label class="nhsuk-label nhsuk-checkboxes__label"
+                                                   for="qap-discussion-could-not-happen">
+                                                Discussion unable to happen
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
+
 
     {% include "examinations/partials/case_breakdown/_cause_of_death.html" with prefix="qap" %}
 
@@ -249,7 +267,7 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
                     <label class="nhsuk-label nhsuk-u-font-weight-bold margin-section" for="qap_discussion_details">
-                        Details of the discussion?
+                        Details of the discussion
                     </label>
                     <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_qap_discussion_details">{{ form.errors.details }}</span>
                     <textarea class="nhsuk-textarea medex-textarea" name="qap_discussion_details" id="qap_discussion_details"
@@ -301,6 +319,8 @@
     <div id="qap-discussion__outcome-decision">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
+
+
                 <div class="nhsuk-form-group {% if form.errors.outcome_decision %}nhsuk-form-group--error{% else %}inset-text-panel{% endif %}">
 
                     <fieldset class="nhsuk-fieldset">
