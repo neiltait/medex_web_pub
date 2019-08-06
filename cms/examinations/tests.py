@@ -508,6 +508,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': '',
             'add-event-to-timeline': False
         }
 
@@ -527,6 +528,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -546,6 +548,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -565,6 +568,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': 'no',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': True
         }
 
@@ -671,6 +675,25 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_when_admission_route_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = 'ae'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_when_admission_route_not_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 1)
+
 
     """
     PRE-SCRUTINY

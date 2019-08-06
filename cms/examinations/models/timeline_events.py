@@ -367,6 +367,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.admitted_time = obj_dict.get('admittedTime')
         self.admitted_time_unknown = obj_dict.get('admittedTimeUnknown')
         self.immediate_coroner_referral = obj_dict.get('immediateCoronerReferral')
+        self.route_of_admission = obj_dict.get('routeOfAdmission')
         self.published = obj_dict.get('isFinal')
         self.dod = dod
         self.is_latest = self.event_id == latest_id

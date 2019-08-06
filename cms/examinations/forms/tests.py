@@ -519,6 +519,7 @@ class TimelineEventFormsTests(MedExTestCase):
         admission_time_unknown = False
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
         coroner_referral = 'no'
+        route_of_admission = 'ae'
         add_event_to_timeline = 'admission-notes'
 
         form_data = {
@@ -529,6 +530,7 @@ class TimelineEventFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
+            'latest_admission_route': route_of_admission,
             'latest_admission_immediate_referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }
@@ -539,6 +541,7 @@ class TimelineEventFormsTests(MedExTestCase):
         self.assertEqual(result.get("notes"), admission_notes)
         self.assertEqual(result.get("admittedDate"), form.admission_date())
         self.assertEqual(result.get("admittedTime"), admission_time)
+        self.assertEqual(result.get('routeOfAdmission'), route_of_admission)
         self.assertEqual(result.get("immediateCoronerReferral"), False)
         self.assertEqual(result.get("isFinal"), True)
 
@@ -550,6 +553,7 @@ class TimelineEventFormsTests(MedExTestCase):
         admission_time = '10:00'
         admission_time_unknown = enums.true_false.FALSE
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        route_of_admission = 'ae'
         coroner_referral = 'no'
         add_event_to_timeline = 'admission-notes'
 
@@ -561,6 +565,7 @@ class TimelineEventFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
+            'latest_admission_route': route_of_admission,
             'latest-admission-suspect-referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }
