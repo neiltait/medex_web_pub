@@ -32,42 +32,40 @@
                                 </span>
                         </p>
                     </div>
-                {% else %}
-                    {% if case_status.qap_discussion_status == enums.qap_discussion_status.COULD_NOT_HAPPEN %}
-                        {% if case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
-                            <div class="expandable-body__no-cod-explanation">
-                                <p class="nhsuk-body">
+                {% elif case_status.qap_discussion_status == enums.qap_discussion_status.COULD_NOT_HAPPEN and case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
+                    <div class="expandable-body__no-cod-explanation">
+                        <p class="nhsuk-body">
                                 <span>
                                     A proposed cause of death for this case is still pending because
                                 </span>
-                                </p>
-                                <p class="nhsuk-body">
+                        </p>
+                        <p class="nhsuk-body">
                                 <span class="nhsuk-u-font-weight-bold">
                                     &#x25CF; ME review of records has not been added to the timeline
                                 </span>
-                                </p>
-                                <p class="nhsuk-body">
+                        </p>
+                        <p class="nhsuk-body">
                                 <span class="nhsuk-u-font-weight-bold">
                                     &#x25CF; QAP discussion was unable to happen
                                 </span>
+                        </p>
+                    </div>
+                {% else %}
+                    {% if case_status.qap_discussion_status == enums.qap_discussion_status.COULD_NOT_HAPPEN %}
+                        <div>
+                            <div class="expandable-body__context-section">
+                                <p class="nhsuk-body-m">Discussion with QAP was unable to happen</p>
+                                <p class="nhsuk-body-m">Cause of death established during the review of records by
+                                    medical
+                                    examiner <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
+                                    on <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
+                                    at <span
+                                            class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
                                 </p>
                             </div>
-                        {% else %}
-                            <div>
-                                <div class="expandable-body__context-section">
-                                    <p class="nhsuk-body-m">Discussion with QAP was unable to happen</p>
-                                    <p class="nhsuk-body-m">Cause of death established during the review of records by
-                                        medical
-                                        examiner <span
-                                                class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
-                                        on <span
-                                                class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
-                                        at <span
-                                                class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        {% endif %}
+                        </div>
                     {% else %}
                         <div>
                             <div class="expandable-body__context-section">
