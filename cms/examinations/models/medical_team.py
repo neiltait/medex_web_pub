@@ -60,13 +60,7 @@ class MedicalTeam:
 
     def update(self, submission, auth_token):
         response = request_handler.update_medical_team(self.examination_id, submission, auth_token)
-        error = None
-
-        if not response.ok:
-            log_api_error('patient details update', response.text)
-            error = handle_error(response, {"action": "updating", "type": "medical team"})
-
-        return error
+        return response
 
 
 class MedicalTeamMember:
