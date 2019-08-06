@@ -1,5 +1,6 @@
 from alerts.messages import ErrorFieldTooLong, ErrorFieldRequiredMessage
 from examinations.models.medical_team import MedicalTeamMember
+from medexCms.utils import fallback_to, pop_if_falsey
 
 
 class MedicalTeamMembersForm:
@@ -140,10 +141,13 @@ class MedicalTeamMembersForm:
         obj = {
             "consultantResponsible": self.consultant_1.to_object(),
             "consultantsOther": consultants_other,
-            "nursingTeamInformation": self.nursing_team_information,
+            "nursingTeamInformation": fallback_to(self.nursing_team_information, ''),
             "medicalExaminerUserId": self.medical_examiner,
             "medicalExaminerOfficerUserId": self.medical_examiners_officer,
         }
+
+        pop_if_falsey("medicalExaminerUserId", obj)
+        pop_if_falsey("medicalExaminerOfficerUserId", obj)
 
         if self.qap.has_name():
             obj['qap'] = self.qap.to_object()
