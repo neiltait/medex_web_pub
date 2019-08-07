@@ -10,6 +10,11 @@
 
     <form id="outstanding-items-form" class="form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
           method="post">
+
+        <!-- Prevent implicit submission of the form -->
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+        <!-- ... -->
         {% csrf_token %}
         <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
 
@@ -37,7 +42,7 @@
         </fieldset>
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset"  {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
+            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
                 <legend class="nhsuk-fieldset__legend">
                     Cremation form
                 </legend>
@@ -48,21 +53,21 @@
                 <div class="nhsuk-radios nhsuk-radios--inline">
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="crem-form-1" name="cremation_form" type="radio"
-                               value="{{enums.yes_no.YES}}" {% if case_outcome.cremation_form_status == enums.yes_no.YES %}checked{% endif %}>
+                               value="{{enums.yes_no.YES}}" {% if case_outcome.cremation_form_status== enums.yes_no.YES %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="crem-form-1">
                             Yes
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="crem-form-2" name="cremation_form" type="radio"
-                               value="{{enums.yes_no.NO}}" {% if case_outcome.cremation_form_status == enums.yes_no.NO %}checked{% endif %}>
+                               value="{{enums.yes_no.NO}}" {% if case_outcome.cremation_form_status== enums.yes_no.NO %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="crem-form-2">
                             No
                         </label>
                     </div>
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="crem-form-3" name="cremation_form" type="radio"
-                               value="{{enums.yes_no.UNKNOWN}}" {% if case_outcome.cremation_form_status == enums.yes_no.UNKNOWN %}checked{% endif %}>
+                               value="{{enums.yes_no.UNKNOWN}}" {% if case_outcome.cremation_form_status== enums.yes_no.UNKNOWN %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="crem-form-3">
                             Not yet known
                         </label>
@@ -85,7 +90,7 @@
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="gp-notified-1" name="gp_notified" type="radio"
                                value="{{enums.gp_notified_status.NOTIFIED}}"
-                               {% if case_outcome.gp_notified_status == enums.gp_notified_status.NOTIFIED %}checked{% endif %}>
+                               {% if case_outcome.gp_notified_status== enums.gp_notified_status.NOTIFIED %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-1">
                             GP notified
                         </label>
@@ -93,7 +98,7 @@
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="gp-notified-2" name="gp_notified" type="radio"
                                value="{{enums.gp_notified_status.NOT_NOTIFIED}}"
-                               {% if case_outcome.gp_notified_status == enums.gp_notified_status.NOT_NOTIFIED %}checked{% endif %}>
+                               {% if case_outcome.gp_notified_status== enums.gp_notified_status.NOT_NOTIFIED %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-2">
                             GP unable to be notified
                         </label>
@@ -101,7 +106,7 @@
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="gp-notified-3" name="gp_notified" type="radio"
                                value="{{enums.gp_notified_status.NA}}"
-                               {% if case_outcome.gp_notified_status == enums.gp_notified_status.NA %}checked{% endif %}>
+                               {% if case_outcome.gp_notified_status== enums.gp_notified_status.NA %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="gp-notified-3">
                             N/A
                         </label>

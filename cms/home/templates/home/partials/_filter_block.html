@@ -3,8 +3,16 @@
 <div id="filter-block" class="filters-block">
     {% if closed_list %}
     <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
+        <!-- Prevent implicit submission of the form -->
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+        <!-- ... -->
         {% else %}
         <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
+            <!-- Prevent implicit submission of the form -->
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+            <!-- ... -->
             {% endif %}
             <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden/>
 
@@ -18,7 +26,7 @@
                     <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}" aria-label="filter-location">
                         <option value="all">All</option>
                         {% for location in session_user.index_overview.filter_locations %}
-                        <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
+                        <option value={{ location.location_id }} {% if location.location_id== form.location %}selected{% endif %}>
                             {{ location.name }}
                         </option>
                         {% endfor %}
@@ -29,7 +37,7 @@
                     <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}" aria-label="filter-person">
                         <option value="all">All</option>
                         {% for person in session_user.index_overview.filter_people %}
-                        <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
+                        <option value={{ person.person_id }} {% if person.person_id== form.person %}selected{% endif %}>
                             {{ person.name }}
                         </option>
                         {% endfor %}
