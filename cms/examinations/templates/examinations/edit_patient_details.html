@@ -22,6 +22,11 @@
 <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
       action="{% url 'edit_examination' examination_id=examination_id %}/patient-details" method="post"
       data-error-count="{{ error_count }}" autocomplete="off">
+    <!-- Prevent implicit submission of the form -->
+    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+    <!-- ... -->
+
     <input type="text" style="display:none">
 
 
