@@ -8,10 +8,16 @@
             <p>
                 Outcome of ME review of records
             </p>
-
-            <p class="outcome-description">
+            {% if case_outcome.display_pre_scrutiny_outcome == None %}
+             <p class="outcome-description">
                 {{case_outcome.display_pre_scrutiny_outcome}}
             </p>
+            {% else %}
+             <p class="outcome-description">
+                {{case_outcome.display_pre_scrutiny_outcome}}
+            </p>
+            {% endif %}
+
             {% if session_user.permitted_actions.permitted_forms.preScrutinyEvent %}
             <p>
                 <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=PreScrutiny">Not correct?</a>
@@ -23,10 +29,17 @@
             <p>
                 Outcome of QAP/ME discussion
             </p>
-
+{% if case_outcome.display_qap_outcome == None %}
             <p class="outcome-description">
-                {{case_outcome.display_qap_outcome}}
+                Pending
             </p>
+            {% else %}
+            <p class="outcome-description">
+                 {{case_outcome.display_qap_outcome}}
+            </p>
+            {% endif %}
+
+
             {% if session_user.permitted_actions.permitted_forms.qapDiscussionEvent %}
             <p>
                 <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=QapDiscussion">Not correct?</a>
@@ -38,10 +51,16 @@
             <p>
                 Outcome of representative discussion
             </p>
-
+            {% if case_outcome.display_representative_outcome == None %}
             <p class="outcome-description">
                 {{case_outcome.display_representative_outcome}}
             </p>
+            {% else %}
+            <p class="outcome-description">
+                {{case_outcome.display_representative_outcome}}
+            </p>
+            {% endif % %}
+
             {% if session_user.permitted_actions.permitted_forms.bereavedDiscussionEvent %}
             <p>
                 <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=BereavedDiscussion">Not correct?</a>
