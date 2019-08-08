@@ -49,7 +49,6 @@ class APIOutcomes:
     MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
     MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
     MCCD_FROM_QAP_AND_ME = 'MccdCauseOfDeathAgreedByQAPandME'
-    PENDING = 'Pending'
 
 
 class APICauseOfDeathStatuses:
