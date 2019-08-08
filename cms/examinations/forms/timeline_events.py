@@ -413,7 +413,6 @@ class QapDiscussionEventForm:
         }
 
     def __full_discussion_request(self):
-
         name, role, organisation, phone_number = self.__participant_for_request()
 
         date_of_conversation = self.__calculate_full_date_of_conversation()
@@ -435,7 +434,6 @@ class QapDiscussionEventForm:
             "causeOfDeath1b": self.cause_of_death.section_1b,
             "causeOfDeath1c": self.cause_of_death.section_1c,
             "causeOfDeath2": self.cause_of_death.section_2,
-            "timeOfConversation": self.time_of_conversation,
             "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else None
         }
         pop_if_falsey("dateOfConversation", result)
