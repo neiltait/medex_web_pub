@@ -403,7 +403,7 @@ class QapDiscussionEventForm:
         if self.discussion_could_not_happen == enums.yes_no.YES:
             return self.__discussion_did_not_happen_request()
         else:
-            return self.__full_discussion_request()
+            return self.__participant_for_request()
 
     def __discussion_did_not_happen_request(self):
         return {
