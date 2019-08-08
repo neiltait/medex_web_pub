@@ -586,7 +586,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the data is not empty
-        self.assertGreater(len(request), 0)
+        self.assertEqual(request, None)
 
     def test_qap_discussion__request__maps_conversation_day_month_year_time_to_single_api_date(self):
         # Given form data with specific dates
