@@ -615,7 +615,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 1 - qap updates the decision
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP)
+        self.assertEquals(request, enums.outcomes.MCCD_FROM_QAP)
 
     def test_qap_discussion__request__maps_mccd_and_me_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -628,7 +628,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 2 - me's first decision
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_ME)
+        self.assertEquals(request, enums.outcomes.MCCD_FROM_ME)
 
     def test_qap_discussion__request__maps_mccd_and_agreement_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -641,7 +641,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to option 3 - agreement
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.MCCD_FROM_QAP_AND_ME)
+        self.assertEquals(request, enums.outcomes.MCCD_FROM_QAP_AND_ME)
 
     def test_qap_discussion__request__maps_refer_to_coroner_and_100a_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -654,7 +654,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER_100A)
+        self.assertEquals(request, enums.outcomes.CORONER_100A)
 
     def test_qap_discussion__request__maps_refer_to_coroner_and_investigation_combination_to_single_field(self):
         # Given form data with outcome that mccd is to be produced with decision version 1
@@ -667,7 +667,7 @@ class TimelineEventFormsTests(MedExTestCase):
         request = form.for_request()
 
         # then the outcome is mapped to coroner referral
-        self.assertEquals(request['qapDiscussionOutcome'], enums.outcomes.CORONER_INVESTIGATION)
+        self.assertEquals(request, enums.outcomes.CORONER_INVESTIGATION)
 
     def test_qap_discussion__request__maps_default_qap_to_participant_if_discussion_type_qap_selected(self):
         # Given form data with the Default Qap radio button selected

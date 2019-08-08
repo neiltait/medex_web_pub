@@ -1549,14 +1549,12 @@ class ExaminationMocks:
             'qap-other__role': 'Alternate Qap',
             'qap-other__organisation': 'Alternate Org',
             'qap-other__phone-number': 'Alternate phone',
-
             'qap_day_of_conversation': '18',
             'qap_month_of_conversation': '4',
             'qap_year_of_conversation': '2019',
             'qap_time_of_conversation': '11:20',
-
             'qap-discussion-outcome': 'mccd',
-            'qap-dicussion-outcome-decision': 'outcome-decision-1',
+            'qap-discussion-outcome-decision': 'outcome-decision-1',
         }
 
     @classmethod
