@@ -1,6 +1,4 @@
-from rest_framework import status
-
-from errors.utils import handle_error, logger, log_unexpected_api_response
+from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
 from examinations.models.core import CauseOfDeathProposal
 from examinations.models.medical_team import MedicalTeam
@@ -11,13 +9,13 @@ from medexCms.api import enums
 class CaseBreakdown:
 
     def __init__(self, obj_dict, medical_team):
-        from examinations.models.core import PatientHeader
+        from examinations.presenters.core import PatientHeader
 
         self.case_header = PatientHeader(obj_dict.get("header"))
 
         # parse data
         self.event_list = ExaminationEventList(obj_dict.get('caseBreakdown'), self.case_header.date_of_death,
-                                               self.case_header.full_name, "MEO")
+                                               self.case_header.full_name)
         self.event_list.sort_events_oldest_to_newest()
         self.event_list.add_event_numbers()
         self.medical_team = medical_team
@@ -25,18 +23,23 @@ class CaseBreakdown:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
+        case_breakdown = None
+        error = None
 
-        medical_team = MedicalTeam.load_by_id(examination_id, auth_token)
-
-        if response.status_code == status.HTTP_200_OK:
-            return CaseBreakdown(response.json(), medical_team), None
+        if response.ok:
+            medical_team, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
+            if medical_team_error:
+                error = medical_team_error
+            else:
+                case_breakdown = CaseBreakdown(response.json(), medical_team)
         else:
-            return None, handle_error(response, {'type': 'case', 'action': 'loading'})
+            error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
+        return case_breakdown, error
 
 
 class ExaminationEventList:
 
-    def __init__(self, timeline_items, dod, patient_name, user_role):
+    def __init__(self, timeline_items, dod, patient_name):
         self.events = []
         self.drafts = {}
         self.latests = {}
@@ -48,15 +51,15 @@ class ExaminationEventList:
         self.bereaved_discussion_draft = None
         self.me_scrutiny_draft = None
         self.dod = dod
-        self.parse_events(timeline_items, patient_name, user_role)
+        self.parse_events(timeline_items, patient_name)
 
-    def parse_events(self, timeline_items, patient_name, user_role):
+    def parse_events(self, timeline_items, patient_name):
         for key, event_type in timeline_items.items():
             if key == enums.timeline_event_keys.INITIAL_EVENT_KEY and event_type:
-                self.events.append(CaseInitialEvent(event_type, patient_name, user_role))
+                self.events.append(CaseInitialEvent(event_type, patient_name))
 
             elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
-                self.events.append(CaseClosedEvent(event_type, patient_name, user_role))
+                self.events.append(CaseClosedEvent(event_type, patient_name))
 
             elif key in enums.timeline_event_keys.all() and event_type:
                 for event in event_type['history']:

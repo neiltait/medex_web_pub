@@ -121,6 +121,10 @@ def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
 
 
+def key_not_empty(key, obj_dict):
+    return key in obj_dict and obj_dict[key]
+
+
 def get_code_version():
     return settings.VERSION
 

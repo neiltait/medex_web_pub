@@ -20,6 +20,9 @@ class MedExTestCase(SimpleTestCase):
     def assertIsNone(self, value):
         self.assertIsTrue(value is None)
 
+    def assertIsNotNone(self, value):
+        self.assertIsTrue(value is not None)
+
     def set_auth_cookies(self):
         self.client.cookies = SimpleCookie(SessionMocks.get_auth_cookies())
 
