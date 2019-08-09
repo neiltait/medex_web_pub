@@ -26,5 +26,8 @@ class MedExTestCase(SimpleTestCase):
     def set_auth_cookies(self):
         self.client.cookies = SimpleCookie(SessionMocks.get_auth_cookies())
 
+    def clear_auth_cookies(self):
+        self.client.cookies = SimpleCookie(SessionMocks.get_empty_cookies())
+
     def get_context_value(self, context, key):
         return context[key]

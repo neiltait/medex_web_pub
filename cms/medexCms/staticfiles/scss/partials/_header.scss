@@ -85,7 +85,7 @@
               color: $nhs-blue;
               z-index: 20;
               min-width: 120px;
-              text-align: right;
+              text-align: left;
 
               .nav-dropdown--item {
                 border-bottom: 1px solid $nhs-blue;
@@ -94,6 +94,13 @@
                 &:last-of-type {
                   border-bottom: 0;
                 }
+              }
+            }
+
+            .nav-dropdown--link {
+              color: $nhs-blue;
+              &:hover {
+                color: $white;
               }
             }
 

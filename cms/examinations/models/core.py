@@ -69,17 +69,7 @@ class Examination:
 
     @classmethod
     def create(cls, submission, auth_token):
-        examination = None
-        error = None
-        response = request_handler.post_new_examination(submission, auth_token)
-
-        if response.ok:
-            examination = Examination(submission, response.json().get('examinationId'))
-        else:
-            log_api_error('case creation', response.text)
-            error = handle_error(response, {"action": "create", "type": "case"})
-
-        return examination, error
+        return request_handler.post_new_examination(submission, auth_token)
 
 
 class ExaminationOverview:

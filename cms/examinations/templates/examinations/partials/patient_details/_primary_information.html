@@ -63,14 +63,14 @@
                             </label>
                         </div>
                     </div>
-                    <div class="nhsuk-form-group" id="more-gender-detail-area">
+                </fieldset>
+                 <div class="nhsuk-form-group" id="more-gender-detail-area">
                         <label class="nhsuk-label" for="gender_details">
                             Please enter details below
                         </label>
                         <textarea class="nhsuk-textarea medex-textarea"
                                   id="gender_details" name="gender_details" rows="3">{{ form.gender_details }}</textarea>
                     </div>
-                </fieldset>
             </div>
         </div>
     </div>
@@ -105,14 +105,14 @@
             </div>
         </div>
         <div class="nhsuk-grid-column-one-half">
-            <div class="form-item">
+            <div class="nhsuk-form-group hospital-number__group">
                 <div class="hospital-number__list-item" id="hospital_number_1">
-                    <label class="nhsuk-label" for="hospital_number_1" id="hospital_number_1_label">
+                    <label class="nhsuk-label" for="hospital_number_1_textbox" id="hospital_number_1_label">
                         Hospital number
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_1_textbox"
                            name="hospital_number_1" type="text"
-                           value="{{ form.hospital_number_1 }}" placeholder="Optional">
+                           value="{{ form.hospital_number_1 }}">
                 </div>
                 <div class="hospital-number__list-item medex-hidden" id="hospital_number_2">
                     <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_2_label">
@@ -120,7 +120,7 @@
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_2_textbox"
                            name="hospital_number_2" type="text"
-                           value="{{ form.hospital_number_2 }}" placeholder="Optional">
+                           value="{{ form.hospital_number_2 }}">
                 </div>
                 <div class="hospital-number__list-item medex-hidden" id="hospital_number_3">
                     <label class="nhsuk-label" for="hospital_number_2" id="hospital_number_3_label">
@@ -128,19 +128,23 @@
                     </label>
                     <input class="nhsuk-input nhsuk-input--width-10" id="hospital_number_3_textbox"
                            name="hospital_number_3" type="text"
-                           value="{{ form.hospital_number_3 }}" placeholder="Optional">
+                           value="{{ form.hospital_number_3 }}">
+                </div>
+                <div class="medex-field-indicator">
+                    Optional field
                 </div>
                 <button class="medex-hyperlink-button" id="hospital-number__add-btn">Add another</button>
             </div>
         </div>
     </div>
 
+
     <!-- Dates -->
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_birth" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Date of birth
                         </legend>
@@ -158,8 +162,7 @@
                             </div>
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="month_of_birth">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="month_of_birth">
                                         Month
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
@@ -170,8 +173,7 @@
                             </div>
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
-                                    <label class="nhsuk-label nhsuk-date-input__label"
-                                           for="year_of_birth">
+                                    <label class="nhsuk-label nhsuk-date-input__label" for="year_of_birth">
                                         Year
                                     </label>
                                     <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
@@ -203,7 +205,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="dob-hint" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_death" role="group">
                         <legend class="nhsuk-fieldset__legend">
                             Date of death
                         </legend>
@@ -284,11 +286,12 @@
                     <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_death"
                            name="time_of_death"
                            type="time"
+                           step="60"
                            value="{{ form.time_of_death }}">
                 </div>
 
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="nationality-hint">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="time_of_death_not_known">
                         <div class="nhsuk-checkboxes">
                             <div class="nhsuk-checkboxes__item">
                                 <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"

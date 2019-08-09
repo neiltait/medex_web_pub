@@ -127,3 +127,8 @@ def key_not_empty(key, obj_dict):
 
 def get_code_version():
     return settings.VERSION
+
+
+def no_cache(response):
+    response['Cache-Control'] = 'no-cache'
+    return response

@@ -49,7 +49,7 @@ Form.prototype = {
         this.meOfficeDropdown = this.form.find('#me_office_dropdown');
         this.setupMeOffice();
 
-        this.submitButton = this.form.find("#submit-btn");
+        this.submitButton = this.form.find(".submit-btn");
         this.setupSubmitButton();
 
         this.errorAlert = this.form.find("#error_alert");
@@ -62,8 +62,8 @@ Form.prototype = {
 
     },
     initialiseFormWithData: function () {
-        for (inputGroup of this.inputGroups) {
-            inputGroup.enabledOrDisable();
+        for(var i = 0; i < this.inputGroups.length; i++) {
+            this.inputGroups[i].enabledOrDisable();
         }
 
         if (this.hospitalNumber3Textbox.val() !== '') {
@@ -212,7 +212,7 @@ Form.prototype = {
     },
     setValidationRequired: function () {
         this.showValidation = true;
-        for (inputGroup of this.inputGroups) {
+        for (var i = 0; i < this.inputGroups.length; i++) {
             inputGroup.showValidation = true;
         }
     },
@@ -284,16 +284,16 @@ TextInputsCheckboxGroup.prototype = {
     },
     setupTextboxesHandler: function () {
         var that = this;
-        for (textInput of that.textboxes) {
-            textInput.on('change keyup paste mouseup', function () {
+        for (var i = 0; i < that.textboxes.length; i++) {
+            this.textboxes[i].on('change keyup paste mouseup', function () {
                 that.checkbox.prop("disabled", that.anyTextBoxesHaveContent(that.textboxes));
                 that.validateAndHighlightTextInputsCheckboxGroup();
             })
         }
     },
     anyTextBoxesHaveContent: function () {
-        for (textInput of this.textboxes) {
-            if (textInput.val() !== '') {
+        for (var i = 0; i < this.textboxes.length; i++) {
+            if (this.textboxes[i].val() !== '') {
                 return true
             }
         }
@@ -302,13 +302,13 @@ TextInputsCheckboxGroup.prototype = {
     validateAndHighlightTextInputsCheckboxGroup: function () {
 
         if (!this.showValidation || this.validateTextInputsCheckboxGroup()) {
-            for (textInput of this.textboxes) {
-                textInput.removeClass("error")
+            for (var i = 0; i < this.textboxes.length; i++) {
+                this.textboxes[i].removeClass("error")
             }
             this.checkbox.removeClass("error")
         } else {
-            for (textInput of this.textboxes) {
-                textInput.addClass("error")
+            for (var i = 0; i < this.textboxes.length; i++) {
+                this.textboxes[i].addClass("error")
             }
             this.checkbox.addClass("error")
         }
@@ -317,8 +317,8 @@ TextInputsCheckboxGroup.prototype = {
         return this.allTextBoxesHaveContent() || this.checkbox.prop('checked')
     },
     allTextBoxesHaveContent: function () {
-        for (textInput of this.textboxes) {
-            if (textInput.val() === '') {
+        for (var i = 0; i < this.textboxes.length; i++) {
+            if (this.textboxes[i].val() === '') {
                 return false
             }
         }
@@ -408,5 +408,5 @@ AgeCalculator.prototype = {
 $(function () // execute once the DOM has loaded
 {
     new Form($(".primary-info-form"));
-
+    new SavePromptForm($("#examination__create--form"))
 });

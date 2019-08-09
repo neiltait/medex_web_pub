@@ -17,25 +17,6 @@ from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT
 
 
 class ExaminationsCoreModelsTests(MedExTestCase):
-    # Examination tests
-
-    def test_examination_create_returns_an_examination_object_if_creation_succeeds(self):
-        form_data = ExaminationMocks.get_minimal_create_case_form_data()
-        form = PrimaryExaminationInformationForm(form_data)
-        examination, error = Examination.create(form.to_object(), SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(error)
-        self.assertIsNotNone(examination)
-        self.assertEquals(type(examination), Examination)
-
-    @patch('examinations.request_handler.post_new_examination',
-           return_value=ExaminationMocks.get_unsuccessful_case_creation_response())
-    def test_examination_create_returns_an_error_object_if_creation_fails(self, mock_examination_creation):
-        form_data = ExaminationMocks.get_minimal_create_case_form_data()
-        form = PrimaryExaminationInformationForm(form_data)
-        examination, error = Examination.create(form.to_object(), SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(examination)
-        self.assertIsNotNone(error)
-        self.assertEquals(type(error), GenericError)
 
     # ExaminationOverview tests
 
@@ -264,36 +245,6 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
-
-    def test_patient_details_update_returns_no_error_if_update_succeeds(self):
-        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                                SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(load_error)
-        self.assertIsNotNone(patient_details)
-        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
-                                       SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(error)
-
-    def test_patient_details_update_updates_the_patient_header_on_success(self):
-        updated_header_content = ExaminationMocks.get_patient_details_update_response_content().get('header')
-        self.assertNotEqual(ExaminationMocks.get_patient_details_load_response_content().get('givenNames'),
-                            updated_header_content.get('givenNames'))
-
-        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                                SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(load_error)
-        self.assertIsNotNone(patient_details)
-
-        starting_patient_header = patient_details.case_header
-        self.assertEquals(starting_patient_header.given_names,
-                          ExaminationMocks.get_patient_details_load_response_content().get('givenNames'))
-
-        error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
-                                       SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(error)
-
-        ending_patient_header = patient_details.case_header
-        self.assertEquals(ending_patient_header.given_names, updated_header_content.get('givenNames'))
 
     @patch('examinations.request_handler.update_patient_details',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())

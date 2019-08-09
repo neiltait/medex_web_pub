@@ -1,5 +1,7 @@
 import json
 
+from examinations.constants import get_display_short_user_role, get_display_user_role
+from medexCms.utils import fallback_to
 from permissions import request_handler
 
 
@@ -15,15 +17,36 @@ class Permission:
         self.permission_id = obj_dict.get("permissionId")
         self.user_id = obj_dict.get("userId")
         self.location_id = obj_dict.get("locationId")
-        self.user_role = obj_dict.get("userRole")
+        self.location_name = fallback_to(obj_dict.get("locationName"), self.location_id)
+
+        # TODO: Revert to commented code when API team have updated Permissions endpoint
+        # self.user_role = obj_dict.get("userRole")
+        role = obj_dict.get("userRole")
+        self.user_role = self.ROLES.get(str(role)) if isinstance(role, int) else role
 
     @property
     def role_type(self):
-        return self.ROLES[str(self.user_role)]
+        return self.user_role
 
     @classmethod
     def create(cls, submission, user_id, auth_token):
         return request_handler.create_permission(json.dumps(submission), user_id, auth_token)
+
+    @classmethod
+    def delete(cls, user_id, permission_id, auth_token):
+        return request_handler.delete_permission(permission_id, user_id, auth_token)
+
+    def user_display_role(self):
+        return get_display_user_role(self.user_role)
+
+    @classmethod
+    def update(cls, submission, user_id, permission_id, auth_token):
+        return request_handler.update_permission(submission, user_id, permission_id, auth_token)
+
+    @classmethod
+    def load_by_id(cls, user_id, permission_id, auth_token):
+        response = request_handler.load_single_permission_for_user(user_id, permission_id, auth_token)
+        return Permission(obj_dict=response.json())
 
 
 class PermittedActions:
@@ -46,7 +69,7 @@ class PermittedActions:
         self.can_get_examinations = obj_dict.get("GetExaminations") if obj_dict else False
         self.can_get_examination = obj_dict.get("GetExamination") if obj_dict else False
         self.can_create_examination = obj_dict.get("CreateExamination") if obj_dict else False
-        self.can_assign_examination_to_medical_examiner = obj_dict.get("AssignExaminationToMedicalExaminer")\
+        self.can_assign_examination_to_medical_examiner = obj_dict.get("AssignExaminationToMedicalExaminer") \
             if obj_dict else False
         self.can_update_examination = obj_dict.get("UpdateExamination") if obj_dict else False
         self.can_update_examination_state = obj_dict.get("UpdateExaminationState") if obj_dict else False

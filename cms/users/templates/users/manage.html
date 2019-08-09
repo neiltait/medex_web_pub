@@ -1,0 +1,70 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block page %}
+<div class="manage-page">
+    <div class="nhsuk-width-container">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-heading-xl">
+                    {{ managed_user }}
+                </div>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full nhsuk-heading-l">
+                Current permissions and locations
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+
+                <div class="nhsuk-table-responsive">
+                    <table class="nhsuk-table">
+                        <thead class="nhsuk-table__head">
+                        <tr class="nhsuk-table__row">
+                            <th class="nhsuk-table__header" scope="col">Role</th>
+                            <th class="nhsuk-table__header" scope="col">Location</th>
+                            <th class="nhsuk-table__header" scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="nhsuk-table__body">
+                        {% for permission in managed_user.permission_objects %}
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell"> {{ permission.user_display_role }}</td>
+                            <td class="nhsuk-table__cell "> {{ permission.location_name }}</td>
+                            <td class="nhsuk-table__cell ">
+                                <div class="nhsuk-grid-column-one-half">
+                                    <a href='{% url 'edit_permission' user_id=managed_user.user_id permission_id=permission.permission_id %}'>Edit</a>
+                                    <a href='{% url 'delete_permission' user_id=managed_user.user_id permission_id=permission.permission_id %}'>Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <h2 class="nhsuk-heading-l">
+                    Manage this user
+                </h2>
+            </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <a class="medex-link link-margin" href='{% url 'add_permission' user_id=managed_user.user_id %}'>Add another permission</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

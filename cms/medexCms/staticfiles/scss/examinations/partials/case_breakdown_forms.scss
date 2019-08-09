@@ -1,10 +1,10 @@
 @import "cause_of_death";
 
 .case-event-forms {
-    margin-top: 3rem;
+    margin-top: $medex-spacing-xl;
 
     .form-picker {
-        margin-top: 2.5rem;
+        margin-top: $medex-spacing-lg;
     }
 
     .event-form {
@@ -17,5 +17,11 @@
 
     #hidden-text {
         display: none;
+    }
+
+    .add-event-header {
+        font-size: $nhs-heading-m-size;
+        font-weight: bold;
+        margin-bottom: 16px;
     }
 }

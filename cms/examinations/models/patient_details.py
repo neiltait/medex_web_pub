@@ -188,16 +188,7 @@ class PatientDetails:
         return patient_details, error
 
     def update(self, submission, auth_token):
-        response = request_handler.update_patient_details(self.id, submission, auth_token)
-        error = None
-
-        if response.ok:
-            self.case_header = PatientHeader(response.json().get('header'))
-        else:
-            log_api_error('patient details update', response.text)
-            error = handle_error(response, {"action": "updating", "type": "patient details"})
-
-        return error
+        return request_handler.update_patient_details(self.id, submission, auth_token)
 
     def full_name(self):
         return "%s %s" % (self.given_names, self.surname)

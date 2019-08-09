@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import never_cache
 from django.views.generic.base import View
 
 from rest_framework import status
@@ -25,11 +26,13 @@ class CreateUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_invite_user'
     template = 'users/new.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         context = self.__set_create_user_context(CreateUserForm(), False)
         return render(request, self.template, context, status=status_code)
 
+    @never_cache
     def post(self, request):
         form = CreateUserForm(request.POST)
 
@@ -60,6 +63,7 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_get_users'
     template = 'users/list.html'
 
+    @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
         users = User.get_all(self.user.auth_token)
@@ -70,3 +74,18 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+
+class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
+    permission_required = 'can_get_users'
+    template = 'users/manage.html'
+
+    def get(self, request, user_id):
+        status_code = status.HTTP_200_OK
+        context = {
+            'session_user': self.user,
+            'managed_user': self.managed_user,
+        }
+
+        return render(request, self.template, context, status=status_code)
+

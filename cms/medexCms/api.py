@@ -16,6 +16,16 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIRouteOfAdmission:
+    AE = "AccidentAndEmergency"
+    WARD = "DirectToWard"
+    GP = "GPReferral"
+    TRANSFER = "TransferFromAnotherHospital"
+    PARAMEDIC = "ParamedicToSpecialistCenter"
+    OUTPATIENT = "FromOutpatientClinic"
+    UNKNOWN = "Unknown"
+
+
 class APIFuneralArrangements:
     CREMATION = "Cremation"
     BURIAL = "Burial"
@@ -62,6 +72,13 @@ class APIPeopleStrings:
     QAP = 'qap'
     BEREAVED_REP = 'bereaved-representative'
     OTHER = 'other'
+
+
+class APIRoles:
+    ME = 'MedicalExaminer'
+    MEO = 'MedicalExaminerOfficer'
+    SERVICE_ADMIN = 'ServiceAdministrator'
+    SERVICE_OWNER = 'ServiceOwner'
 
 
 class UserRoleTypes:
@@ -116,21 +133,39 @@ class TimelineEventTypes:
     CASE_CLOSED_TYPE = 'caseClosed'
 
 
+class SystemValidationErrors:
+    DUPLICATE = "Duplicate"
+    CONTAINS_WHITESPACE = "ContainsWhitespace"
+    CONTAINS_INVALID_CHARACTERS = "ContainsInvalidCharacters"
+    INVALID = "Invalid"
+    REQUIRED = "Required"
+    MAXIMUM_LENGTH_150 = "MaximumLength150"
+    MINIMUM_LENGTH_1 = "MinimumLengthOf1"
+    INVALID_FORMAT = "InvalidFormat"
+    END_DATE_NOT_FOUND = "EndDateNotFound"
+    END_DATE_BEFORE_START_DATE = "EndDateBeforeStartDate"
+    ID_NOT_FOUND = "IdNotFound"
+    UNKNOWN = "Unknown"
+
+
 class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
+    route_of_admission = APIRouteOfAdmission()
     funeral_arrangements = APIFuneralArrangements()
     cod = APICircumstancesOfDeath()
     outcomes = APIOutcomes()
     discussion = APIDiscussionOutcomes()
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
+    roles = APIRoles()
     role_types = UserRoleTypes()
     gp_notified_status = APIGPNotifiedStatus()
     examination_sections = ExaminationSections()
     timeline_event_keys = TimelineEventKeys()
     timeline_event_types = TimelineEventTypes()
+    errors = SystemValidationErrors()
 
 
 enums = APIStrings()

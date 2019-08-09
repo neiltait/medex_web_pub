@@ -2,6 +2,7 @@ from rest_framework import status
 
 from unittest.mock import patch
 
+from alerts.messages import ApiErrorMessages
 from examinations.forms.timeline_events import PreScrutinyEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, \
     OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 
@@ -61,6 +62,58 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/create.html')
 
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_duplicate())
+    def test_create_case_endpoint_raises_nhs_duplicate_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.DUPLICATE)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_whitespace())
+    def test_create_case_endpoint_raises_nhs_whitespace_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_WHITESPACE)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_invalid_characters())
+    def test_create_case_endpoint_raises_nhs_invalid_characters_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.CONTAINS_INVALID_CHARACTERS)
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_invalid())
+    def test_create_case_endpoint_raises_nhs_invalid_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
+
+
+    @patch('examinations.request_handler.post_new_examination',
+           return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_any_other_error())
+    def test_create_case_endpoint_raises_nhs_unknown_error_if_raised_by_api(self, mock_case_create):
+        self.set_auth_cookies()
+        response = self.client.post('/cases/create', ExaminationMocks.get_minimal_create_case_form_data())
+        form = self.get_context_value(response.context, "form")
+
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.UNKNOWN)
+
     # Edit case tests
 
     @patch('users.request_handler.validate_session',
@@ -118,6 +171,42 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code,
                          ExaminationMocks.get_unsuccessful_patient_details_update_response().status_code)
         self.assertTemplateUsed(response, 'examinations/edit_patient_details.html')
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_unknown_error())
+    def test_patient_details_form_raises_nhs_unknown_error_if_unfamiliar_error_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.UNKNOWN)
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_duplicate_error())
+    def test_patient_details_form_raises_nhs_duplicate_error_if_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.DUPLICATE)
+
+    @patch('examinations.request_handler.update_patient_details',
+           return_value=ExaminationMocks.get_unsuccessful_patient_details_nhs_number_invalid_error())
+    def test_patient_details_form_raises_nhs_invalid_error_if_raised_by_api(self, mock_update):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_minimal_create_case_form_data()
+        form_data.update(ExaminationMocks.get_patient_details_bereaved_form_data())
+        response = self.client.post('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        form = self.get_context_value(response.context, "form")
+        self.assertEqual(form.errors["count"], 1)
+        self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
 
     def test_submitting_a_valid_form_that_passes_on_the_api_returns_reloads_the_form(self):
         self.set_auth_cookies()
@@ -419,6 +508,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': '',
             'add-event-to-timeline': False
         }
 
@@ -438,6 +528,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -457,6 +548,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -476,6 +568,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': 'no',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': True
         }
 
@@ -582,6 +675,25 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_when_admission_route_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = 'ae'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_when_admission_route_not_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 1)
+
 
     """
     PRE-SCRUTINY

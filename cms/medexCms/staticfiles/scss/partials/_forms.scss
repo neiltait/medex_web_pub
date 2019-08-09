@@ -1,23 +1,8 @@
 @import '../variables';
+@import '../spacing';
 
 .form {
-  margin-top: 3.5rem;
-
-  .form-row {
-    margin-bottom: 0.66em;
-
-    .form-field {
-      font-size: $default-font-size;
-      color: $primary-font-color;
-      border: 1.5px solid $black;
-      padding: 0.33em 0.5em;
-      margin-right: 10px;
-
-      &::placeholder {
-        color: $nhs-light-grey;
-      }
-    }
-  }
+  margin-top: medex-spacing(9);
 
   &.error {
     margin-top: 1rem;
@@ -48,6 +33,18 @@
 }
 .medex-textarea {
   width: 100%;
+}
+
+.medex-hint {
+    color: $nhs-grey !important;
+    font-size: 19px !important;
+}
+
+.medex-field-indicator {
+    font-size: 14px;
+    color: $nhs-blue;
+    margin-top: $medex-spacing-xs;
+    margin-bottom: $medex-spacing-md;
 }
 
 .radiobutton {
@@ -170,17 +167,22 @@
    /*border is optional*/
    border-bottom:1px solid #444;
    cursor: pointer;
+   margin-bottom: $medex-spacing-md;
 }
 
 .hospital-number {
   &__list-item {
-    margin-bottom: 1rem;
+    margin-bottom: medex-spacing(2);
+  }
+
+  &__group {
+    margin-bottom: medex-spacing(3);
   }
 }
 
 .medex-text-checkbox-group {
   &__textbox {
-    margin-bottom: .5rem;
+    margin-bottom: medex-spacing(2);
   }
 }
 
@@ -202,8 +204,8 @@
     input {
       font-size: $default-font-size;
       line-height: $default-line-height;
-      padding: 0.33em 1em;
-      border: 0px;
+      padding: medex-spacing(2) medex-spacing(3);
+      border: 0;
       width: 100% !important;
       box-sizing: border-box;
     }
@@ -222,12 +224,12 @@
     &--placeholder {
       font-size: $nhs-body-s-size;
       color: $nhs-light-grey;
-      padding: 0.33em 1em;
+      padding: medex-spacing(2) medex-spacing(3);
       margin: 0;
     }
 
     option {
-      padding: 0.33em 1em;
+      padding: medex-spacing(2) medex-spacing(3);
       display: none;
 
       &:hover {

@@ -1,6 +1,5 @@
 <div class="content">
-
-    <div {% if card_content.discussion_unable_happen == False %} class="nhsuk-u-visually-hidden" {% endif %}>
+    <div {% if card_content.discussion_unable_happen == enums.true_false.FALSE %} class="nhsuk-u-visually-hidden" {% endif %}>
         <div class="bereaved-discussion">
             <label>
                 Outcomes of discussion
@@ -12,7 +11,7 @@
         </div>
     </div>
 
-    <div {% if card_content.discussion_unable_happen == True %} class="nhsuk-u-visually-hidden" {% endif %}>
+    <div {% if card_content.discussion_unable_happen == enums.true_false.TRUE %} class="nhsuk-u-visually-hidden" {% endif %}>
         <div class="hideable-content">
             <div class="bereaved-discussion">
                 <label>

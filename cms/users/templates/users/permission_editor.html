@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block page %}
-  <div class="permission-builder-page">
+  <div class="permission-editor-page">
     {% if managed_user %}
       {% if invalid %}
           <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
@@ -39,7 +39,7 @@
         {{ sub_heading}}
       </h2>
 
-      <form id="permission-builder-form" class="form{% if invalid %} error{% endif %}" action="{% url submit_path user_id=managed_user.user_id %}" method="post">
+      <form id="permission-builder-form" class="form{% if invalid %} error{% endif %}" action="{% url submit_path user_id=managed_user.user_id permission_id=permission.permission_id %}" method="post">
         {% csrf_token %}
 
         <div class="nhsuk-grid-row">
@@ -56,11 +56,11 @@
                 {% endif %}
 
                 <div class="nhsuk-radios">
-                  <div class="nhsuk-grid-row">
+                  <div class="nhsuk-grid-row margin-bottom">
                     <div class="nhsuk-grid-column-one-half">
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                            id="role-1" name="role" type="radio" value="1" {% if form.role == '1' %}checked{% endif %}>
+                            id="role-1" name="role" type="radio" value="1" {% if form.role == 'MedicalExaminer' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-1">
                           ME
                         </label>
@@ -68,7 +68,7 @@
 
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                             id="role-2" name="role" type="radio" value="0" {% if form.role == '0' %}checked{% endif %}>
+                             id="role-2" name="role" type="radio" value="0" {% if form.role == 'MedicalExaminerOfficer' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-2">
                           MEO
                         </label>
@@ -78,7 +78,7 @@
                     <div class="nhsuk-grid-column-one-half">
                       <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input {% if form.role_error %}nhsuk-input--error{% endif %}"
-                             id="role-3" name="role" type="radio" value="2" {% if form.role == '2' %}checked{% endif %}>
+                             id="role-3" name="role" type="radio" value="2" {% if form.role == 'ServiceOwner' %}checked{% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="role-3">
                           System admin only
                         </label>
@@ -106,7 +106,7 @@
                 <div class="nhsuk-radios">
                   <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                         id="level-1" name="permission_level" type="radio" value="national" {% if form.permission_level == 'national' %}checked{% endif %} {% if locations.national == None %}disabled{% endif %}>
+                         id="level-1" name="permission_level" type="radio" value="national" {% if form.national %}checked{% endif %}  {% if locations.national == None %}disabled{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="level-1">
                       National
                     </label>
@@ -114,14 +114,14 @@
 
                   <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                         id="level-2" name="permission_level" type="radio" value="regional" {% if form.permission_level == 'regional' %}checked{% endif %} {% if locations.regions|length == 0 %}disabled{% endif %}>
+                         id="level-2" name="permission_level" type="radio" value="regional" {% if form.region %}checked{% endif %} {% if locations.regions|length == 0 %}disabled{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="level-2">
                       Regional
                     </label>
                   </div>
                     <div class="nhsuk-radios__item">
                       <input class="nhsuk-radios__input {% if form.permission_level_error %}nhsuk-input--error{% endif %}"
-                           id="level-3" name="permission_level" type="radio" value="trust" {% if form.permission_level == 'trust' %}checked{% endif %} {% if locations.trusts|length == 0 %}disabled{% endif %}>
+                           id="level-3" name="permission_level" type="radio" value="trust" {% if form.trust %}checked{% endif %} {% if locations.trusts|length == 0 %}disabled{% endif %}>
                       <label class="nhsuk-label nhsuk-radios__label" for="level-3">
                         Trust
                       </label>
@@ -132,9 +132,7 @@
           </div>
         </div>
 
-        {% if location.national %}
-            <input name="national" value="{{location.national.location_id}}" hidden />
-        {% endif %}
+        <input name="national" value="{{national}}" hidden />
 
         <div class="nhsuk-grid-row">
           <div class="nhsuk-grid-column-full">
@@ -149,7 +147,7 @@
 
               <select class="nhsuk-select" id="region" name="region" value="{{ form.region }}">
                 <option value="" disabled hidden selected>Select an region</option>
-                {% for region in locations.regions %}
+                {% for region in regions %}
                   <option value="{{ region.location_id }}" {% if region.location_id == form.region %}selected{% endif %}>{{ region.name }}</option>
                 {% endfor %}
               </select>
@@ -157,7 +155,7 @@
           </div>
         </div>
 
-        <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-row margin-bottom">
           <div class="nhsuk-grid-column-full">
             <div id='trust-selector' class="nhsuk-form-group {% if form.trust_error %}nhsuk-form-group--error{% endif %}">
               <label class="nhsuk-label" for="trust">
@@ -170,7 +168,7 @@
                     <select class="nhsuk-select" id="trust" name="trust" value="{{ form.me_office }}">
                         <option value="" disabled hidden selected>Select an office</option>
                         {% for trust in locations.trusts %}
-                            <option value="{{ trust.location_id }}">{{ trust.name }}</option>
+                            <option value="{{ trust.location_id }}"  {% if trust.location_id == form.trust %}selected{% endif %}>{{ trust.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -179,19 +177,13 @@
           </div>
         </div>
 
-        <input type="text" name="add_another" value="false" hidden>
-
         <div class="nhsuk-grid-row">
           <div class="nhsuk-grid-column-full">
-            <input id="submit-btn" class="nhsuk-button" type="submit" value="{{form.submit_btn_text}}"/>
+            <input id="submit-btn" class="nhsuk-button button-margin" type="submit" value="{{form.submit_btn_text}}"/>
+            <a id="cancel-btn" class="nhsuk-button nhsuk-button--secondary" href="{% url 'manage_user' user_id=managed_user.user_id %}">Cancel</a>
           </div>
         </div>
 
-        <div class="nhsuk-grid-row">
-          <div class="nhsuk-grid-column-full">
-            <button id="add-another" class="nhsuk-button nhsuk-button--secondary">Save and add another permission</button>
-          </div>
-        </div>
       </form>
     {% else %}
       {% for alert in alerts %}
