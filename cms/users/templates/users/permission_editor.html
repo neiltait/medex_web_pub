@@ -146,7 +146,7 @@
               {% endif %}
 
               <select class="nhsuk-select" id="region" name="region" value="{{ form.region }}">
-                <option value="" disabled hidden selected>Select an region</option>
+                <option value="" disabled hidden selected>Select a region</option>
                 {% for region in regions %}
                   <option value="{{ region.location_id }}" {% if region.location_id == form.region %}selected{% endif %}>{{ region.name }}</option>
                 {% endfor %}
