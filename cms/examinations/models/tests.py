@@ -298,13 +298,13 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
 
-    def test_medical_team_update_returns_no_error_if_update_succeeds(self):
-        medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(load_error)
-        self.assertIsNotNone(medical_team)
-        error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
-                                    SessionMocks.ACCESS_TOKEN)
-        self.assertIsNone(error)
+    # def test_medical_team_update_returns_no_error_if_update_succeeds(self):
+    #     medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+    #     self.assertIsNone(load_error)
+    #     self.assertIsNotNone(medical_team)
+    #     error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
+    #                                 SessionMocks.ACCESS_TOKEN)
+    #     self.assertIsNone(error)
 
     @patch('examinations.request_handler.update_medical_team',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_update_response())
