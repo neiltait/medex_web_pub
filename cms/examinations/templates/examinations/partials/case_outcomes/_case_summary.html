@@ -55,7 +55,7 @@
             </p>
             {% if case_outcome.display_representative_outcome == None %}
             <p class="outcome-description">
-                {{case_outcome.display_representative_outcome}}
+                Pending
             </p>
             {% else %}
             <p class="outcome-description">
@@ -77,7 +77,7 @@
 
             {% if case_outcome.display_representative_outcome == None or case_outcome.display_qap_outcome == None or case_outcome.display_pre_scrutiny_outcome == None %}
             <p class="outcome-description-heading">
-                CASE OUTCOME PENDING
+                OUTCOME PENDING
             </p>
             {% else %}
             <p class="outcome-description-heading">
