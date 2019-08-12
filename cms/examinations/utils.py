@@ -75,7 +75,7 @@ class ReportGenerator():
         from secretary import Renderer
 
         engine = Renderer()
-        result = engine.render(template, data=data)
+        result = engine.render(template, patient=data)
 
         import tempfile
         with tempfile.NamedTemporaryFile() as output:
