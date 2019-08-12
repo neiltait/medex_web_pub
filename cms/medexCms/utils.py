@@ -105,6 +105,14 @@ def parse_datetime(datetime_string):
         return None
 
 
+def reformat_datetime(datetime_string, new_format, default_value=''):
+    if datetime_string:
+        full_date_time = parse_datetime(datetime_string)
+        return full_date_time.strftime(new_format) if full_date_time else default_value
+    else:
+        return default_value
+
+
 def fallback_to(value, default_value):
     return value if value is not None else default_value
 

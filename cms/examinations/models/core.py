@@ -115,7 +115,8 @@ class ExaminationOverview:
     def calc_age(self):
         if self.date_of_death and self.date_of_birth:
             return self.date_of_death.year - self.date_of_birth.year - (
-                (self.date_of_death.month, self.date_of_death.day) < (self.date_of_birth.month, self.date_of_birth.day))
+                    (self.date_of_death.month, self.date_of_death.day) < (
+            self.date_of_birth.month, self.date_of_birth.day))
         else:
             return None
 
@@ -123,21 +124,75 @@ class ExaminationOverview:
         return True if self.urgency_score and self.urgency_score > 0 and self.open else False
 
 
-class CauseOfDeathProposal:
-    date_format = '%d.%m.%Y'
-    time_format = "%H:%M"
+class CauseOfDeath:
 
     def __init__(self):
-        from users.models import User
-
-        self.medical_examiner = User()
-        self.qap = None
-        self.status = enums.cod_status.NOT_DISCUSSED
-        self.creation_date = ''
         self.section_1a = ''
         self.section_1b = ''
         self.section_1c = ''
         self.section_2 = ''
+
+    def to_object(self):
+        return {
+            'section_1a': self.section_1a,
+            'section_1b': self.section_1b,
+            'section_1c': self.section_1c,
+            'section_2': self.section_2
+        }
+
+
+class PatientHeader:
+    date_format = '%d.%m.%Y'
+
+    def __init__(self, obj_dict):
+        self.given_names = ''
+        self.surname = ''
+        self.urgency_score = 0
+        self.nhs_number = ''
+        self.id = ''
+        self.time_of_death = ''
+        self.date_of_birth = ''
+        self.date_of_death = ''
+        self.appointment_date = ''
+        self.appointment_time = ''
+        self.last_admission = ''
+        self.case_created_date = ''
+        self.admission_notes_added = ''
+        self.ready_for_me_scrutiny = ''
+        self.unassigned = ''
+        self.have_been_scrutinised = ''
+        self.pending_admission_notes = ''
+        self.pending_discussion_with_qap = ''
+        self.pending_discussion_with_representative = ''
+        self.pending_scrutiny_notes = ''
+        self.have_final_case_outstanding_outcomes = ''
+
+        if obj_dict:
+            self.urgency_score = obj_dict.get("urgencyScore")
+            self.given_names = obj_dict.get("givenNames")
+            self.surname = obj_dict.get("surname")
+            self.nhs_number = obj_dict.get("nhsNumber")
+            self.id = obj_dict.get("examinationId")
+            self.time_of_death = obj_dict.get("timeOfDeath")
+            self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
+            self.date_of_death = parse_datetime(obj_dict.get("dateOfDeath"))
+            self.appointment_date = parse_datetime(obj_dict.get("appointmentDate"))
+            self.appointment_time = obj_dict.get("appointmentTime")
+            self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
+            self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+            self.admission_notes_added = obj_dict.get("admissionNotesHaveBeenAdded")
+            self.ready_for_me_scrutiny = obj_dict.get("readyForMEScrutiny")
+            self.unassigned = obj_dict.get("unassigned")
+            self.have_been_scrutinised = obj_dict.get("haveBeenScrutinisedByME")
+            self.pending_admission_notes = obj_dict.get("pendingAdmissionNotes")
+            self.pending_discussion_with_qap = obj_dict.get("pendingDiscussionWithQAP")
+            self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
+            self.pending_scrutiny_notes = obj_dict.get("pendingScrutinyNotes")
+            self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
+
+    @property
+    def full_name(self):
+        return "%s %s" % (self.given_names, self.surname)
 
     # TODO confirm this function is unneeded
     # def to_object(self):

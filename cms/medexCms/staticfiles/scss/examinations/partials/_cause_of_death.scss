@@ -40,7 +40,6 @@
       margin-bottom: 0;
 
       .controls {
-
         .chevron-down {
           display: none;
         }
@@ -49,6 +48,7 @@
           display: block;
         }
       }
+
     }
   }
 
@@ -67,6 +67,15 @@
 
     &.expanded {
       display: block;
+    }
+
+
+    &__context-section {
+      margin-bottom: $medex-spacing-xl;
+    }
+
+    &__no-cod-explanation {
+      margin-bottom: $medex-spacing-xl;
     }
   }
 

@@ -1149,6 +1149,7 @@ class ExaminationMocks:
                         "isFinal": False,
                         "eventType": "Other"
                     },
+                    "prepopulated": {}
                 },
                 "preScrutiny": {
                     "history": [
@@ -1215,7 +1216,8 @@ class ExaminationMocks:
                         "outcomeOfPreScrutiny": "IssueAnMccd",
                         "clinicalGovernanceReview": "Yes",
                         "clinicalGovernanceReviewText": "Palliative care were called too late."
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "bereavedDiscussion": {
                     "history": [
@@ -1282,6 +1284,20 @@ class ExaminationMocks:
                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                              "consectetur adipiscing elit, sed do eiusmod tempor",
                         "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
+                    },
+                    "prepopulated": {
+                        "medicalExaminer": "Dr Tom Ridd",
+                        "preScrutinyStatus": "PrescrutinyHappened",
+                        "dateOfLatestPreScrutiny": "2019-07-20T14:58:16.5538732+00:00",
+                        "userForLatestPrescrutiny": "Dr Tom Ridd",
+                        "qapDiscussionStatus": "HappenedWithRevisions",
+                        "dateOfLatestQAPDiscussion": "2019-07-22T14:58:16.5538732+00:00",
+                        "userForLatestQAPDiscussion": "Dr Tom Ridd",
+                        "qapNameForLatestQAPDiscussion": "Dr Noelle Legrain",
+                        "causeOfDeath1a": "a",
+                        "causeOfDeath1b": "b",
+                        "causeOfDeath1c": "c",
+                        "causeOfDeath2": "d"
                     }
                 },
                 "meoSummary": {
@@ -1325,7 +1341,8 @@ class ExaminationMocks:
                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                           "consectetur adipiscing elit, sed do eiusmod tempor"
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "qapDiscussion": {
                     "history": [
@@ -1401,6 +1418,16 @@ class ExaminationMocks:
                         "causeOfDeath1b": "",
                         "causeOfDeath1c": "",
                         "causeOfDeath2": ""
+                    },
+                    "prepopulated": {
+                        "causeOfDeath1a": "a",
+                        "causeOfDeath1b": "b",
+                        "causeOfDeath1c": "c",
+                        "causeOfDeath2": "d",
+                        "medicalExaminer": "Dr Tom Ridd",
+                        "preScrutinyStatus": "PrescrutinyHappened",
+                        "dateOfLatestPreScrutiny": "2019-07-22T14:58:16.5538732+00:00",
+                        "userForLatestPrescrutiny": "Dr Tom Ridd"
                     }
                 },
                 "medicalHistory": {
@@ -1453,7 +1480,8 @@ class ExaminationMocks:
                                 "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
                                 "dolor sit amet, consectetur adipiscing elit, and alsotext "
                                 "goes here"
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "admissionNotes": {
                     "history": [
@@ -1493,7 +1521,8 @@ class ExaminationMocks:
                         "immediateCoronerReferral": False,
                         "routeOfAdmission": "",
                         "created": "2019-03-12T10:30:43.019Z",
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "caseClosed": {
                     "dateCaseClosed": "2019-07-04T14:41:53.7341611+00:00",
@@ -1561,37 +1590,44 @@ class ExaminationMocks:
                 "otherEvents": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "preScrutiny": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "bereavedDiscussion": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "meoSummary": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "qapDiscussion": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "medicalHistory": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "admissionNotes": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 }
             },
             "errors": {},
@@ -2029,7 +2065,6 @@ class DatatypeMocks:
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_modes_of_disposal_list()).encode('utf-8')
         return response
-
 
     @classmethod
     def get_unsuccessful_modes_of_disposal_response(cls):

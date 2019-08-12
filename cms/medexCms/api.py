@@ -41,6 +41,18 @@ class APICircumstancesOfDeath:
     END_OF_LIFE_CARE_PLAN = 'PartOfAnIndividualisedEndOfLifeCarePlan'
 
 
+class APIPrescrutinyStatus:
+    HAPPENED = "PrescrutinyHappened"
+    NOT_HAPPENED = "PrescrutinyNotHappened"
+
+
+class APIQapDiscussionStatus:
+    HAPPENED_NO_REVISION = 'HappenedNoRevision'
+    HAPPENED_WITH_REVISIONs = 'HappenedWithRevisions'
+    COULD_NOT_HAPPEN = 'CouldNotHappen'
+    NO_RECORD = 'NoRecord'
+
+
 class APIOutcomes:
     MCCD = 'IssueAnMccd'
     CORONER_100A = 'ReferToCoronerFor100a'
@@ -166,6 +178,8 @@ class APIStrings:
     timeline_event_keys = TimelineEventKeys()
     timeline_event_types = TimelineEventTypes()
     errors = SystemValidationErrors()
+    prescrutiny_status = APIPrescrutinyStatus()
+    qap_discussion_status = APIQapDiscussionStatus()
 
 
 enums = APIStrings()
