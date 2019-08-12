@@ -1,25 +1,23 @@
-from rest_framework import status
-
-from errors.utils import log_api_error
+from errors.utils import log_api_error, handle_error
 from examinations import request_handler
 
-from medexCms.utils import fallback_to
+from medexCms.utils import fallback_to, key_not_empty
 
 
 class MedicalTeam:
 
     def __init__(self, obj_dict, examination_id):
-        from examinations.models.core import PatientHeader
+        from examinations.presenters.core import PatientHeader
 
         self.examination_id = examination_id
         self.case_header = PatientHeader(obj_dict.get("header"))
         self.consultant_responsible = MedicalTeamMember.from_dict(
             obj_dict['consultantResponsible']) if obj_dict['consultantResponsible'] else None
-        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if obj_dict['qap'] else None
+        self.qap = MedicalTeamMember.from_dict(obj_dict['qap']) if key_not_empty('qap', obj_dict) else None
         self.general_practitioner = MedicalTeamMember.from_dict(
-            obj_dict['generalPractitioner']) if obj_dict['generalPractitioner'] else None
+            obj_dict['generalPractitioner']) if key_not_empty('generalPractitioner', obj_dict) else None
 
-        if "consultantsOther" in obj_dict and obj_dict["consultantsOther"] is not None:
+        if key_not_empty("consultantsOther", obj_dict):
             self.consultants_other = [MedicalTeamMember.from_dict(consultant) for consultant in
                                       obj_dict['consultantsOther']]
         else:
@@ -49,17 +47,26 @@ class MedicalTeam:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_medical_team_by_id(examination_id, auth_token)
+        medical_team = None
+        error = None
 
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            return MedicalTeam(response.json(), examination_id)
+        if response.ok:
+            medical_team = MedicalTeam(response.json(), examination_id)
         else:
             log_api_error('medical team load', response.text)
-            return None
+            error = handle_error(response, {"action": "loading", "type": "medical team"})
+
+        return medical_team, error
 
     def update(self, submission, auth_token):
-        return request_handler.update_medical_team(self.examination_id, submission, auth_token)
+        response = request_handler.update_medical_team(self.examination_id, submission, auth_token)
+        error = None
+
+        if not response.ok:
+            log_api_error('patient details update', response.text)
+            error = handle_error(response, {"action": "updating", "type": "medical team"})
+
+        return error
 
 
 class MedicalTeamMember:
@@ -87,7 +94,7 @@ class MedicalTeamMember:
                                  notes=notes, gmc_number=gmc_number)
 
     def has_name(self):
-        return self.name and len(self.name.strip()) > 0
+        return True if self.name and len(self.name.strip()) > 0 else False
 
     def has_valid_name(self):
         return len(self.name.strip()) < 250

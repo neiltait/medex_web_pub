@@ -2,7 +2,7 @@ from rest_framework import status
 
 from errors.utils import log_api_error, handle_error
 from examinations import request_handler
-from examinations.models.core import PatientHeader
+from examinations.presenters.core import PatientHeader
 from medexCms.api import enums
 from medexCms.utils import parse_datetime
 

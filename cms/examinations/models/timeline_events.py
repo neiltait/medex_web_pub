@@ -68,13 +68,12 @@ class CaseInitialEvent(CaseEvent):
     event_type = enums.timeline_event_types.INITIAL_EVENT_TYPE
     css_type = 'initial'
 
-    def __init__(self, obj_dict, patient_name, user_role):
+    def __init__(self, obj_dict, patient_name):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
         self.user_full_name = obj_dict.get('userFullName')
         self.user_role = obj_dict.get('usersRole')
-        self.user_role = user_role
         self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
@@ -111,7 +110,7 @@ class CaseClosedEvent(CaseEvent):
     event_type = enums.timeline_event_types.CASE_CLOSED_TYPE
     css_type = 'case-closed'
 
-    def __init__(self, obj_dict, patient_name, user_role):
+    def __init__(self, obj_dict, patient_name):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')

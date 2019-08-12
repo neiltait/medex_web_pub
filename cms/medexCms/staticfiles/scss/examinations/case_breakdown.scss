@@ -23,6 +23,11 @@
   }
 }
 
+.cod-textarea {
+    font-weight: bold;
+    padding-left: $medex-spacing-xl;
+}
+
 .submit-btn {
   margin-right: $medex-spacing-md;
   width: 15.79rem;
@@ -45,6 +50,7 @@
 .inset-text-panel {
   padding-top: 0rem;
   padding-left: $medex-spacing-lg;
+  margin-left: 18.5px;
   border-left: $nhs-light-grey 3px solid;
 }
 
@@ -74,6 +80,10 @@
 
   .margin-bottom {
     margin-bottom: $medex-spacing-md;
+  }
+
+  .margin-top-lg {
+    padding-top: 2.75rem;
   }
 
   .margin-top {
@@ -117,3 +127,6 @@
     }
 }
 
+.margin-top-lg {
+  padding-top: 2.75rem;
+}
