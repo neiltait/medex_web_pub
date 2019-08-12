@@ -295,7 +295,6 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
 
-
     def __process_api_error(self, medical_team_form, response):
         form_errors = medical_team_form.register_form_errors(response.json())
         known_errors = medical_team_form.register_known_api_errors(response.json())
@@ -345,7 +344,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             return render_error(request, self.user, self.error)
 
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details,  error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -355,7 +354,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
     @never_cache
     def post(self, request, examination_id):
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details,error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
