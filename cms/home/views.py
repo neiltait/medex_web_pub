@@ -54,12 +54,11 @@ class LoginCallbackView(View):
         id_token = token_response.json().get('id_token')
         auth_token = token_response.json().get('access_token')
         refresh_token = token_response.json().get('refresh_token')
-        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-        response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token, secure=settings.REQUIRE_HTTPS)
+        response.set_cookie(settings.ID_TOKEN_NAME, id_token, secure=settings.REQUIRE_HTTPS)
+        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token, secure=settings.REQUIRE_HTTPS)
         response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
-                            max_age=settings.REFRESH_PERIOD)
-
+                            max_age=settings.REFRESH_PERIOD, secure=settings.REQUIRE_HTTPS)
         return response
 
 
@@ -78,11 +77,11 @@ class LoginRefreshView(View):
             id_token = token_response.json().get('id_token')
             auth_token = token_response.json().get('access_token')
             refresh_token = token_response.json().get('refresh_token')
-            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-            response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token, secure=settings.REQUIRE_HTTPS)
+            response.set_cookie(settings.ID_TOKEN_NAME, id_token, secure=settings.REQUIRE_HTTPS)
+            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token, secure=settings.REQUIRE_HTTPS)
             response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
-                                max_age=settings.REFRESH_PERIOD)
+                                max_age=settings.REFRESH_PERIOD, secure=settings.REQUIRE_HTTPS)
 
             return response
 
