@@ -78,9 +78,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return context
 
     def __process_api_error(self, form, response):
+        form_errors = form.register_form_errors(response.json())
         known_errors = form.register_known_api_errors(response.json())
         unknown_errors = form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for error in all_errors:
@@ -207,9 +208,10 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return render(request, self.template, context, status=status_code)
 
     def __process_api_error(self, primary_form, response):
+        form_errors = primary_form.register_form_errors(response.json())
         known_errors = primary_form.register_known_api_errors(response.json())
         unknown_errors = primary_form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for all_errors in all_errors:
@@ -274,13 +276,18 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         self.form = MedicalTeamMembersForm(request=post_body)
 
         if self.form.is_valid():
-            error = self.examination.update(self.form.to_object(), self.user.auth_token)
+            response = self.examination.update(self.form.to_object(), self.user.auth_token)
 
-            if error:
-                status_code = error.status_code
+            if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
+                return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
+            elif response.status_code != status.HTTP_200_OK:
+                # scenario 2 - api error
+                status_code = self.__process_api_error(self.form, response)
+
             else:
-                if get_body.get('nextTab'):
-                    return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+                # scenario 1a - success
                 saved = True
         else:
             status_code = status.HTTP_400_BAD_REQUEST
@@ -288,7 +295,22 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
 
-    def _set_context(self, saved):
+    def __process_api_error(self, medical_team_form, response):
+        form_errors = medical_team_form.register_form_errors(response.json())
+        known_errors = medical_team_form.register_known_api_errors(response.json())
+        unknown_errors = medical_team_form.register_unknown_api_errors(response.json())
+        all_errors = form_errors + known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('medical team', all_errors)
+            status_code = response.status_code
+        else:
+            log_api_error('medical team', response.text)
+            status_code = response.status_code
+        return status_code
+
+    def _set_context(self, form, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
@@ -322,7 +344,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             return render_error(request, self.user, self.error)
 
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details,  error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -332,7 +354,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
     @never_cache
     def post(self, request, examination_id):
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details,error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
