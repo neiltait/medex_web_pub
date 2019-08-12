@@ -17,6 +17,7 @@ from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
+from examinations.reports import CoronerDownloadReport
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_examination, render_error
@@ -528,6 +529,6 @@ class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, Vie
 
     @never_cache
     def get(self, request, examination_id):
-        data = {'forename': 'Tarquin', 'surname': 'Bear', 'nhs_number': 'h0n3y'}
+        report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
 
-        return ReportGenerator.create_report(self.template, data, filename="report.odt")
+        return ReportGenerator.create_report(self.template, report.to_object(), filename="report.odt")
