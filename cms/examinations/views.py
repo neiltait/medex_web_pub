@@ -14,12 +14,12 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
 from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.models.case_breakdown import CaseBreakdown
 from examinations.models.case_outcomes import CaseOutcome
-from examinations.models.core import Examination, PatientHeader
+from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
 from home.forms import IndexFilterForm
-from home.utils import render_404, redirect_to_examination, render_error
+from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from medexCms.utils import fallback_to
@@ -40,10 +40,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         add_another = False
         post_body = request.POST
         form = PrimaryExaminationInformationForm(post_body)
+        patient_name = None
 
         if form.is_valid():
             response = Examination.create(form.to_object(), self.user.auth_token)
-
             if response.ok:
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
                     # scenario 1 - success
@@ -78,9 +78,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return context
 
     def __process_api_error(self, form, response):
+        form_errors = form.register_form_errors(response.json())
         known_errors = form.register_known_api_errors(response.json())
         unknown_errors = form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for error in all_errors:
@@ -102,7 +103,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "form": form,
             "enums": enums,
             "errors": form.errors,
-            "add_another": add_another,
+            "add_another": add_another
         }
 
 
@@ -114,11 +115,15 @@ class EditExaminationView(View):
 
 class EditExaminationSectionBaseView(View):
 
+    def __init__(self):
+        self.examination = None
+        self.error = None
+
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -126,8 +131,8 @@ class EditExaminationSectionBaseView(View):
         else:
             log_internal_error('EditExaminationSectionBaseView section load', 'Unknown examination section requested')
 
-        if self.examination is None:
-            return render_404(request, self.user, self.examination_section)
+        if self.error is not None:
+            return render_error(request, self.user, self.error)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -143,6 +148,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.secondary_form = None
         self.bereaved_form = None
         self.urgency_form = None
+        super().__init__()
 
     @never_cache
     def get(self, request, examination_id):
@@ -180,7 +186,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             submission.update(self.urgency_form.for_request())
             submission['id'] = examination_id
 
-            response = PatientDetails.update(examination_id, submission, self.user.auth_token)
+            response = self.examination.update(submission, self.user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab
@@ -191,9 +197,8 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
                 status_code = self.__process_api_error(self.primary_form, response)
 
             else:
-                # scenario 1 - success
+                # scenario 1a - success
                 saved = True
-                self.examination.case_header = PatientHeader(response.json().get("header"))
         else:
             # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
@@ -203,9 +208,10 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return render(request, self.template, context, status=status_code)
 
     def __process_api_error(self, primary_form, response):
+        form_errors = primary_form.register_form_errors(response.json())
         known_errors = primary_form.register_known_api_errors(response.json())
         unknown_errors = primary_form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for all_errors in all_errors:
@@ -247,13 +253,17 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
 
+    def __init__(self):
+        self.form = None
+        super().__init__()
+
     @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
-        form = MedicalTeamMembersForm(medical_team=self.examination)
+        self.form = MedicalTeamMembersForm(medical_team=self.examination)
 
-        context = self._set_context(form, False)
+        context = self._set_context(False)
 
         return render(request, self.template, context, status=status_code)
 
@@ -261,36 +271,55 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
+        status_code = status.HTTP_200_OK
         saved = False
-        form = MedicalTeamMembersForm(request=post_body)
+        self.form = MedicalTeamMembersForm(request=post_body)
 
-        if form.is_valid():
-            response = self.examination.update(form.to_object(), self.user.auth_token)
+        if self.form.is_valid():
+            response = self.examination.update(self.form.to_object(), self.user.auth_token)
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
             elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(self.form, response)
+
             else:
+                # scenario 1a - success
                 saved = True
-                status_code = response.status_code
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self._set_context(form, saved)
+        context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
+
+    def __process_api_error(self, medical_team_form, response):
+        form_errors = medical_team_form.register_form_errors(response.json())
+        known_errors = medical_team_form.register_known_api_errors(response.json())
+        unknown_errors = medical_team_form.register_unknown_api_errors(response.json())
+        all_errors = form_errors + known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('medical team', all_errors)
+            status_code = response.status_code
+        else:
+            log_api_error('medical team', response.text)
+            status_code = response.status_code
+        return status_code
 
     def _set_context(self, form, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
             'patient': self.examination.case_header,
-            'form': form,
+            'form': self.form,
             'medical_examiners': self.examination.medical_examiner_lookup,
             'medical_examiners_officers': self.examination.medical_examiner_officer_lookup,
-            'error_count': form.error_count,
-            'errors': form.errors,
+            'error_count': self.form.error_count,
+            'errors': self.form.errors,
             'tab_modal': self.modal_config,
             'saved': saved,
         }
@@ -314,8 +343,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if self.error:
             return render_error(request, self.user, self.error)
 
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -324,8 +353,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     @never_cache
     def post(self, request, examination_id):
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
@@ -350,10 +379,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
-            'proposed_cause_of_death': self.examination.event_list.get_latest_me_scrutiny_cause_of_death(),
-            'agreed_cause_of_death': self.examination.event_list.get_latest_agreed_cause_of_death(),
+            'pre_populated': self.examination.prepopulated_items,
             'case_breakdown': self.examination,
-            'bereaved_form': {"use_default_bereaved": True},
             'patient': self.examination.case_header,
             'form_data': form_data,
             'enums': enums,

@@ -666,28 +666,7 @@ class ExaminationMocks:
     @classmethod
     def get_patient_details_load_response_content(cls):
         return {
-            "header": {
-                "urgencyScore": 0,
-                "givenNames": "John",
-                "surname": "Doe",
-                "nhsNumber": "123-456-7890",
-                "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
-                "timeOfDeath": "10:00",
-                "dateOfBirth": "1919-04-15T10:00:01.174Z",
-                "dateOfDeath": "2019-04-15T10:00:01.174Z",
-                "appointmentDate": "2019-04-15T11:37:01.174Z",
-                "appointmentTime": "09:00",
-                "lastAdmission": "2019-04-15T11:37:01.174Z",
-                "caseCreatedDate": "2019-04-15T11:37:01.174Z",
-                "admissionNotesHaveBeenAdded": True,
-                "readyForMEScrutiny": True,
-                "unassigned": True,
-                "haveBeenScrutinisedByME": True,
-                "pendingAdmissionNotes": True,
-                "pendingDiscussionWithQAP": True,
-                "pendingDiscussionWithRepresentative": True,
-                "haveFinalCaseOutstandingOutcomes": True
-            },
+            "header": cls.get_patient_header_content(),
             "id": "1",
             "culturalPriority": True,
             "faithPriority": True,
@@ -729,6 +708,37 @@ class ExaminationMocks:
             ],
             "errors": {
 
+            },
+            "success": True
+        }
+
+    @classmethod
+    def get_patient_details_update_response_content(cls):
+        header_content = cls.get_patient_header_content()
+        header_content['givenNames'] = "James"
+        return {
+            "header": header_content,
+            "errors": {
+                "additionalProp1": [
+                    "string"
+                ],
+                "additionalProp2": [
+                    "string"
+                ],
+                "additionalProp3": [
+                    "string"
+                ]
+            },
+            "lookups": {
+                "additionalProp1": [
+                    {}
+                ],
+                "additionalProp2": [
+                    {}
+                ],
+                "additionalProp3": [
+                    {}
+                ]
             },
             "success": True
         }
@@ -897,6 +907,48 @@ class ExaminationMocks:
                 },
                 "success": "true"
             }
+
+    @classmethod
+    def get_case_overview_content(cls):
+        return {
+            "urgencyScore": 1,
+            "givenNames": "John",
+            "surname": "Doe",
+            "nhsNumber": "123-456-78910",
+            "examinationId": "1",
+            "timeOfDeath": "10:48",
+            "dateOfBirth": "1935-09-18T10:48:15.749Z",
+            "dateOfDeath": "2019-03-18T10:48:15.749Z",
+            "appointmentDate": "2019-03-18T10:48:15.749Z",
+            "appointmentTime": "15:48",
+            "lastAdmission": "2019-03-18T10:48:15.749Z",
+            "caseCreatedDate": "2019-03-18T10:48:15.749Z",
+        }
+
+    @classmethod
+    def get_patient_header_content(cls):
+        return {
+            "urgencyScore": 0,
+            "givenNames": "John",
+            "surname": "Doe",
+            "nhsNumber": "123-456-7890",
+            "examinationId": "KEK49GWR-GT42GW4-G42GGW4T-WG4G35",
+            "timeOfDeath": "10:00",
+            "dateOfBirth": "1919-04-15T10:00:01.174Z",
+            "dateOfDeath": "2019-04-15T10:00:01.174Z",
+            "appointmentDate": "2019-04-15T11:37:01.174Z",
+            "appointmentTime": "09:00",
+            "lastAdmission": "2019-04-15T11:37:01.174Z",
+            "caseCreatedDate": "2019-04-15T11:37:01.174Z",
+            "admissionNotesHaveBeenAdded": True,
+            "readyForMEScrutiny": True,
+            "unassigned": True,
+            "haveBeenScrutinisedByME": True,
+            "pendingAdmissionNotes": True,
+            "pendingDiscussionWithQAP": True,
+            "pendingDiscussionWithRepresentative": True,
+            "haveFinalCaseOutstandingOutcomes": True
+        }
 
     @classmethod
     def get_case_index_response_content(cls):
@@ -1097,13 +1149,14 @@ class ExaminationMocks:
                         "isFinal": False,
                         "eventType": "Other"
                     },
+                    "prepopulated": {}
                 },
                 "preScrutiny": {
                     "history": [
                         {
                             "eventId": "8FHWRFG-WE4T24TGF-WT4GW3R",
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:31:43.019Z",
                             "medicalExaminerThoughts": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                                        "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                                        "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1163,7 +1216,8 @@ class ExaminationMocks:
                         "outcomeOfPreScrutiny": "IssueAnMccd",
                         "clinicalGovernanceReview": "Yes",
                         "clinicalGovernanceReviewText": "Palliative care were called too late."
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "bereavedDiscussion": {
                     "history": [
@@ -1172,7 +1226,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "BereavedDiscussion",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:32:43.019Z",
                             "participantFullName": "Jane Doe",
                             "participantRelationship": "Wife",
                             "participantPhoneNumber": "01234 567890",
@@ -1230,6 +1284,20 @@ class ExaminationMocks:
                                              "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                              "consectetur adipiscing elit, sed do eiusmod tempor",
                         "bereavedDiscussionOutcome": "CouseOfDeathAccepted"
+                    },
+                    "prepopulated": {
+                        "medicalExaminer": "Dr Tom Ridd",
+                        "preScrutinyStatus": "PrescrutinyHappened",
+                        "dateOfLatestPreScrutiny": "2019-07-20T14:58:16.5538732+00:00",
+                        "userForLatestPrescrutiny": "Dr Tom Ridd",
+                        "qapDiscussionStatus": "HappenedWithRevisions",
+                        "dateOfLatestQAPDiscussion": "2019-07-22T14:58:16.5538732+00:00",
+                        "userForLatestQAPDiscussion": "Dr Tom Ridd",
+                        "qapNameForLatestQAPDiscussion": "Dr Noelle Legrain",
+                        "causeOfDeath1a": "a",
+                        "causeOfDeath1b": "b",
+                        "causeOfDeath1c": "c",
+                        "causeOfDeath2": "d"
                     }
                 },
                 "meoSummary": {
@@ -1239,7 +1307,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "MeoSummary",
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:33:43.019Z",
                             "summaryDetails": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                               "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                               "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1273,7 +1341,8 @@ class ExaminationMocks:
                                           "adipiscing elit, sed do eiusmod tempor incididunt ut laborr "
                                           "sit amet, consecteur dolore Lorem ipsum dolor sit amet, "
                                           "consectetur adipiscing elit, sed do eiusmod tempor"
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "qapDiscussion": {
                     "history": [
@@ -1282,7 +1351,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "isFinal": True,
                             "eventType": "QapDiscussion",
-                            "created": "2019-03-13T10:30:43.019Z",
+                            "created": "2019-03-13T10:34:43.019Z",
                             "participantRole": "Consultant",
                             "participantOrganisation": "A Hospital",
                             "participantPhoneNumber": "01234 567890",
@@ -1349,6 +1418,16 @@ class ExaminationMocks:
                         "causeOfDeath1b": "",
                         "causeOfDeath1c": "",
                         "causeOfDeath2": ""
+                    },
+                    "prepopulated": {
+                        "causeOfDeath1a": "a",
+                        "causeOfDeath1b": "b",
+                        "causeOfDeath1c": "c",
+                        "causeOfDeath2": "d",
+                        "medicalExaminer": "Dr Tom Ridd",
+                        "preScrutinyStatus": "PrescrutinyHappened",
+                        "dateOfLatestPreScrutiny": "2019-07-22T14:58:16.5538732+00:00",
+                        "userForLatestPrescrutiny": "Dr Tom Ridd"
                     }
                 },
                 "medicalHistory": {
@@ -1358,7 +1437,7 @@ class ExaminationMocks:
                             "userId": "WERGT-243TRGS-WE4TG-WERGT",
                             "eventType": "MedicalHistory",
                             "isFinal": True,
-                            "created": "2019-03-12T10:30:43.019Z",
+                            "created": "2019-03-12T10:35:43.019Z",
                             "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
                                     "sed do eiusmod tempor incididunt ut laborr sit amet, "
                                     "consecteur dolore Lorem ipsum dolor sit amet, consectetur "
@@ -1401,7 +1480,8 @@ class ExaminationMocks:
                                 "incididunt ut laborr sit amet, consecteur doloreLorem ipsum "
                                 "dolor sit amet, consectetur adipiscing elit, and alsotext "
                                 "goes here"
-                    }
+                    },
+                    "prepopulated": {}
                 },
                 "admissionNotes": {
                     "history": [
@@ -1441,7 +1521,19 @@ class ExaminationMocks:
                         "immediateCoronerReferral": False,
                         "routeOfAdmission": "",
                         "created": "2019-03-12T10:30:43.019Z",
-                    }
+                    },
+                    "prepopulated": {}
+                },
+                "caseClosed": {
+                    "dateCaseClosed": "2019-07-04T14:41:53.7341611+00:00",
+                    "eventType": "CaseClosed",
+                    "eventId": "2e07f19c-4db6-487c-a53b-79a646f408e3",
+                    "isFinal": True,
+                    "userId": "887b1f68-45d3-452f-8960-604b88389ec6",
+                    "created": "2019-07-04T14:41:53.7340362+00:00",
+                    "userFullName": "Matthew Nicks",
+                    "usersRole": "ServiceAdministrator",
+                    "caseOutcome": "IssueMCCD"
                 }
             },
             "errors": {
@@ -1498,37 +1590,44 @@ class ExaminationMocks:
                 "otherEvents": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "preScrutiny": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "bereavedDiscussion": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "meoSummary": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "qapDiscussion": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "medicalHistory": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 },
                 "admissionNotes": {
                     "history": [],
                     "latest": None,
-                    "usersDraft": None
+                    "usersDraft": None,
+                    "prepopulated": {}
                 }
             },
             "errors": {},
@@ -1549,14 +1648,12 @@ class ExaminationMocks:
             'qap-other__role': 'Alternate Qap',
             'qap-other__organisation': 'Alternate Org',
             'qap-other__phone-number': 'Alternate phone',
-
             'qap_day_of_conversation': '18',
             'qap_month_of_conversation': '4',
             'qap_year_of_conversation': '2019',
             'qap_time_of_conversation': '11:20',
-
             'qap-discussion-outcome': 'mccd',
-            'qap-dicussion-outcome-decision': 'outcome-decision-1',
+            'qap-discussion-outcome-decision': 'outcome-decision-1',
         }
 
     @classmethod
@@ -1697,7 +1794,7 @@ class ExaminationMocks:
     def get_successful_patient_details_update_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
-        response._content = json.dumps(cls.get_patient_details_load_response_content()).encode('utf-8')
+        response._content = json.dumps(cls.get_patient_details_update_response_content()).encode('utf-8')
         return response
 
     @classmethod
@@ -1751,10 +1848,24 @@ class ExaminationMocks:
         return response
 
     @classmethod
+    def get_unsuccessful_medical_team_load_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps('Not found').encode('utf-8')
+        return response
+
+    @classmethod
     def get_successful_medical_team_update_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_medical_team_load_response_content()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_medical_team_update_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps('Not found').encode('utf-8')
         return response
 
     @classmethod
@@ -1914,6 +2025,28 @@ class PeopleMocks:
             }
         ]
 
+    @classmethod
+    def get_medical_team_member_content(cls, key):
+        medical_team_members = {
+            'gp': {
+                "name": 'Dr Foster',
+                "role": 'GP',
+                "organisation": 'Fosters GP Surgery',
+                "phone": '01234 567890',
+                "notes": '',
+                "gmcNumber": '1234567890'
+            },
+            'consultant': {
+                "name": 'Dr Jones',
+                "role": 'Consultant',
+                "organisation": 'Jones GP Surgery',
+                "phone": '01234 098765',
+                "notes": '',
+                "gmcNumber": '0123456789'
+            }
+        }
+        return medical_team_members.get(key)
+
 
 class DatatypeMocks:
 
@@ -1925,3 +2058,17 @@ class DatatypeMocks:
             "BuriedAtSea": 2,
             "Repatriation": 3
         }
+
+    @classmethod
+    def get_successful_modes_of_disposal_list_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_modes_of_disposal_list()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_modes_of_disposal_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps('Not found').encode('utf-8')
+        return response

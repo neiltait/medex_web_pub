@@ -27,6 +27,11 @@
     </h1>
 
     <form id="new-user-form" class="form{% if invalid %} error{% endif %}" action="{% url 'create_user' %}" method="post">
+        <!-- Prevent implicit submission of the form -->
+    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+    <!-- ... -->
+
       {% csrf_token %}
 
       <div class="nhsuk-grid-row">
