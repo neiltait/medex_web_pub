@@ -236,6 +236,12 @@ class PrimaryExaminationInformationForm:
                 self.errors["count"] += 1
                 known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
 
+        if "DateOfBirth" in api_errors:
+            dob_errors = api_errors["DateOfBirth"]
+            if enums.errors.END_DATE_BEFORE_START_DATE in dob_errors:
+                self.errors["date_of_birth"] = api_error_messages.date_of_birth.DATE_OF_BIRTH_AFTER_DATE_OF_DEATH
+                self.errors["count"] += 1
+
         return known_errors
 
     def register_unknown_api_errors(self, api_errors):
