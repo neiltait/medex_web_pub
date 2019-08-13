@@ -37,7 +37,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
                 if add_another:
                     form = PermissionBuilderForm()
                 else:
-                    return redirect('/users/%s/manage' % self.user.user_id)
+                    return redirect('/users/%s/manage' % self.managed_user.user_id)
             else:
                 invalid = True
                 log_api_error('permission creation', response.text)
