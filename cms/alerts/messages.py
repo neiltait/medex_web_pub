@@ -39,6 +39,7 @@ NO_ROLES = 'You do not currently have roles assigned to your account, please con
 
 NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
+DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given'
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
@@ -60,7 +61,13 @@ class NhsNumberErrors:
     UNKNOWN = "There is a problem with this NHS number"
 
 
+class DateOfBirthErrors:
+    DATE_OF_BIRTH_AFTER_DATE_OF_DEATH = "Date of Birth is after Date of Death"
+
+
 class ApiErrorMessages:
     nhs_numbers = NhsNumberErrors()
+    date_of_birth = DateOfBirthErrors()
+
 
 api_error_messages = ApiErrorMessages()

@@ -1,5 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 
@@ -200,6 +200,12 @@ class PrimaryExaminationInformationForm:
             self.errors["date_of_death"] = DEATH_IS_NOT_AFTER_BIRTH
             self.errors["count"] += 1
 
+        if self.death_time_present_but_date_unknown():
+            self.errors["date_of_death"] = DEATH_DATE_MISSING_WHEN_TIME_GIVEN
+            self.errors["time_of_death"] = DEATH_DATE_MISSING_WHEN_TIME_GIVEN
+            self.errors["count"] += 1
+
+
         if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
             self.errors["place_of_death"] = ErrorFieldRequiredMessage("place of death")
             self.errors["count"] += 1
@@ -235,6 +241,12 @@ class PrimaryExaminationInformationForm:
                 self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
                 self.errors["count"] += 1
                 known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.DUPLICATE}]
+
+        if "DateOfBirth" in api_errors:
+            dob_errors = api_errors["DateOfBirth"]
+            if enums.errors.END_DATE_BEFORE_START_DATE in dob_errors:
+                self.errors["date_of_birth"] = api_error_messages.date_of_birth.DATE_OF_BIRTH_AFTER_DATE_OF_DEATH
+                self.errors["count"] += 1
 
         return known_errors
 
@@ -314,6 +326,12 @@ class PrimaryExaminationInformationForm:
                 return False
         else:
             return True
+
+    def death_time_present_but_date_unknown(self):
+        if self.date_of_death_not_known and not self.time_of_death_not_known:
+            return True
+        else:
+            return False
 
     def full_name(self):
         return "%s %s" % (self.first_name, self.last_name)
