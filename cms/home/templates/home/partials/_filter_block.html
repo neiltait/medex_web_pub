@@ -3,8 +3,16 @@
 <div id="filter-block" class="filters-block">
     {% if closed_list %}
     <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
+        <!-- Prevent implicit submission of the form -->
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+        <!-- ... -->
         {% else %}
         <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
+            <!-- Prevent implicit submission of the form -->
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+            <!-- ... -->
             {% endif %}
             <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden/>
 
