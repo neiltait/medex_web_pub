@@ -186,9 +186,9 @@ class PatientDetailsFormsTests(MedExTestCase):
         form.is_valid()
         self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('date of birth'))
 
-    def test_date_of_death_group_does_validate_if_checkbox_ticked(self):
+    def test_date_of_death_group_does_validate_if_checkbox_ticked_and_time_of_death_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm(
-            {'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True})
+            {'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True, 'time_of_death_not_known': True})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
 
@@ -213,6 +213,13 @@ class PatientDetailsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
         self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('date of death'))
+
+    def test_date_and_time_of_death_do_not_validate_if_unknown_but_time_is_known(self):
+        form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True,
+                                                  'time_of_death': '10:10'})
+        form.is_valid()
+        self.assertEqual(form.errors["date_of_death"], messages.DEATH_DATE_MISSING_WHEN_TIME_GIVEN)
+        self.assertEqual(form.errors["time_of_death"], messages.DEATH_DATE_MISSING_WHEN_TIME_GIVEN)
 
     def test_place_of_death_does_not_validate_if_missing(self):
         form = PrimaryExaminationInformationForm({'test': 'data'})
