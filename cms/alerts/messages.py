@@ -1,7 +1,3 @@
-from django import template
-
-register = template.Library()
-
 INVALID_CREDENTIALS = "Your email and password combination doesn't seem to work. Please try again"
 
 MISSING_CREDENTIALS = 'Please enter a User ID and Password'
@@ -44,7 +40,6 @@ NO_ROLES = 'You do not currently have roles assigned to your account, please con
 NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
 
-@register.filter(name='ErrorFieldRequiredMessage')
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
 
