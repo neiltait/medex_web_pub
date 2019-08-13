@@ -29,3 +29,9 @@ class CreateUserForm:
         return {
             "email": self.email_address,
         }
+
+    def register_response_errors(self, response):
+        if response.ok == False:
+            errors = response.json()
+            if 'Email' in errors.keys():
+                self.email_error = errors['Email'][0]
