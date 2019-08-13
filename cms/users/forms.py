@@ -33,5 +33,5 @@ class CreateUserForm:
     def register_response_errors(self, response):
         if response.ok == False:
             errors = response.json()
-            if 'Email' in errors.keys():
+            if errors and 'Email' in errors.keys():
                 self.email_error = errors['Email'][0]
