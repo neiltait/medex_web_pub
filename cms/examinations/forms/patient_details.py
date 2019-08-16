@@ -1,5 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, CustomErrorMessages
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 
@@ -127,7 +127,7 @@ class PrimaryExaminationInformationForm:
         self.errors["count"] = 0
 
         if self.first_name is None or len(self.first_name.strip()) == 0:
-            self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
+            self.errors["first_name"] = ErrorFieldRequiredMessage("a given name")
             self.errors["count"] += 1
 
         if self.first_name and len(self.first_name) > 150:
@@ -135,7 +135,7 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.last_name is None or len(self.last_name.strip()) == 0:
-            self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
+            self.errors["last_name"] = ErrorFieldRequiredMessage("a surname")
             self.errors["count"] += 1
 
         if self.last_name and len(self.last_name) > 150:
@@ -143,18 +143,18 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.gender is None:
-            self.errors["gender"] = ErrorFieldRequiredMessage("gender")
+            self.errors["gender"] = ErrorFieldRequiredMessage("a gender")
             self.errors["count"] += 1
 
         if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
-            self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
+            self.errors["gender"] = ErrorFieldRequiredMessage("some more information")
             self.errors["count"] += 1
 
         # check if nhs number group has content
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
-            self.errors["nhs_number"] = ErrorFieldRequiredMessage("NHS number")
+            self.errors["nhs_number"] = ErrorFieldRequiredMessage("an NHS number")
             self.errors["count"] += 1
 
         elif not self.nhs_number_not_known:
@@ -168,7 +168,19 @@ class PrimaryExaminationInformationForm:
         if not self.text_and_checkbox_group_is_valid(
                 [self.time_of_death], self.time_of_death_not_known
         ):
-            self.errors["time_of_death"] = ErrorFieldRequiredMessage("time of death")
+            self.errors["time_of_death"] = ErrorFieldRequiredMessage("a time of death")
+            self.errors["count"] += 1
+
+        if self.day_of_birth is None:
+            self.errors["day_of_birth"] = ErrorFieldRequiredMessage("a day of birth")
+            self.errors["count"] += 1
+
+        if self.month_of_birth is None:
+            self.errors["month_of_birth"] = ErrorFieldRequiredMessage("a month of birth")
+            self.errors["count"] += 1
+
+        if self.year_of_birth is None:
+            self.errors["year_of_birth"] = ErrorFieldRequiredMessage("a year of birth")
             self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(
@@ -207,11 +219,11 @@ class PrimaryExaminationInformationForm:
 
 
         if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
-            self.errors["place_of_death"] = ErrorFieldRequiredMessage("place of death")
+            self.errors["place_of_death"] = ErrorFieldRequiredMessage("a place of death")
             self.errors["count"] += 1
 
         if self.me_office is None:
-            self.errors["me_office"] = ErrorFieldRequiredMessage("ME office")
+            self.errors["me_office"] = ErrorFieldRequiredMessage("an ME office")
             self.errors["count"] += 1
 
         return self.errors["count"] == 0

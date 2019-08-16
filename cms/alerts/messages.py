@@ -64,16 +64,11 @@ class NhsNumberErrors:
 
 
 class CustomErrorMessages:
-    NO_GIVEN_NAME = "a given name"
-    NO_SURNAME = "a surname"
-    NO_GENDER = "a gender"
-    NO_TEXT_OTHER_GENDER = "other gender details"
     NO_DOD_DAY = "a day"
     NO_DOD_MONTH = "a month"
     NO_DOD_YEAR = "a year"
     DOD_IN_FUTURE = "Date of death must be in the past"
     NO_PLACE_OF_DEATH = "a place of death"
-    NO_ME_OFFICE = "an ME OFFICE"
 
 
 class DateOfBirthErrors:
