@@ -9,6 +9,9 @@ services:
       OP_ISSUER: ${OP_ISSUER}
       OP_ID: ${OP_ID}
       OP_SECRET: ${OP_SECRET}
+      REFRESH_PERIOD: ${REFRESH_PERIOD}
+      LOGOUT_IF_IDLE_PERIOD: ${LOGOUT_IF_IDLE_PERIOD}
+      REQUIRE_HTTPS: ${REQUIRE_HTTPS}
       LOCAL: ${LOCAL}
     build: ./cms
     command: python manage.py runserver 0.0.0.0:8000
