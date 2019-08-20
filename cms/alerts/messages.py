@@ -43,6 +43,8 @@ DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given
 
 NO_GENDER = "Please choose a gender"
 
+DOB_IN_FUTURE = "Date of birth must be in the past"
+
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name

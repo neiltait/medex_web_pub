@@ -1,7 +1,8 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
+from datetime import datetime
 
 
 class PrimaryExaminationInformationForm:
@@ -147,7 +148,7 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
-            self.errors["gender"] = ErrorFieldRequiredMessage("some more information for gendergit")
+            self.errors["gender"] = ErrorFieldRequiredMessage("some more information for gender")
             self.errors["count"] += 1
 
         # check if nhs number group has content
@@ -177,6 +178,9 @@ class PrimaryExaminationInformationForm:
         ):
             self.errors["date_of_birth"] = ErrorFieldRequiredMessage("a date of birth")
             self.errors["count"] += 1
+
+        if self.date_of_birth_in_future():
+            self.errors["date_of_birth"] = DOB_IN_FUTURE
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.day_of_death, self.month_of_death, self.year_of_death],
@@ -325,6 +329,16 @@ class PrimaryExaminationInformationForm:
                 return False
         else:
             return True
+
+    def date_of_birth_in_future(self):
+        valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+        if valid_date_of_birth:
+            date_of_birth = build_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+            current_date = datetime.today()
+            if date_of_birth > current_date:
+                return True
+        else:
+            return False
 
     def death_time_present_but_date_unknown(self):
         if self.date_of_death_not_known and not self.time_of_death_not_known:
