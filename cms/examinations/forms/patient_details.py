@@ -171,18 +171,6 @@ class PrimaryExaminationInformationForm:
             self.errors["time_of_death"] = ErrorFieldRequiredMessage("a time of death")
             self.errors["count"] += 1
 
-        if self.day_of_birth is None:
-            self.errors["day_of_birth"] = ErrorFieldRequiredMessage("a day of birth")
-            self.errors["count"] += 1
-
-        if self.month_of_birth is None:
-            self.errors["month_of_birth"] = ErrorFieldRequiredMessage("a month of birth")
-            self.errors["count"] += 1
-
-        if self.year_of_birth is None:
-            self.errors["year_of_birth"] = ErrorFieldRequiredMessage("a year of birth")
-            self.errors["count"] += 1
-
         if not self.text_and_checkbox_group_is_valid(
                 [self.day_of_birth, self.month_of_birth, self.year_of_birth],
                 self.date_of_birth_not_known,
@@ -216,7 +204,6 @@ class PrimaryExaminationInformationForm:
             self.errors["date_of_death"] = DEATH_DATE_MISSING_WHEN_TIME_GIVEN
             self.errors["time_of_death"] = DEATH_DATE_MISSING_WHEN_TIME_GIVEN
             self.errors["count"] += 1
-
 
         if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
             self.errors["place_of_death"] = ErrorFieldRequiredMessage("a place of death")
