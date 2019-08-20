@@ -41,6 +41,8 @@ NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
 
 DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given'
 
+NO_GENDER = "Please choose a gender"
+
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
@@ -63,25 +65,14 @@ class NhsNumberErrors:
     NO_NUMBER_AND_NO_UNKNOWN = "an NHS number"
 
 
-class CustomErrorMessages:
-    NO_DOD_DAY = "a day"
-    NO_DOD_MONTH = "a month"
-    NO_DOD_YEAR = "a year"
-    DOD_IN_FUTURE = "Date of death must be in the past"
-    NO_PLACE_OF_DEATH = "a place of death"
-
-
 class DateOfBirthErrors:
     DATE_OF_BIRTH_AFTER_DATE_OF_DEATH = "Date of birth is after date of death"
     DOB_IN_FUTURE = "Date of birth must be in the past"
-    NO_DOB_DAY = "a day"
-    NO_DOB_YEAR = "a year"
 
 
 class ApiErrorMessages:
     nhs_numbers = NhsNumberErrors()
     date_of_birth = DateOfBirthErrors()
-    custom_error_messages = CustomErrorMessages()
 
 
 api_error_messages = ApiErrorMessages()

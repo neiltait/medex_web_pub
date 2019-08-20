@@ -1,5 +1,5 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, CustomErrorMessages
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 
@@ -143,11 +143,11 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.gender is None:
-            self.errors["gender"] = ErrorFieldRequiredMessage("a gender")
+            self.errors["gender"] = NO_GENDER
             self.errors["count"] += 1
 
         if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
-            self.errors["gender"] = ErrorFieldRequiredMessage("some more information")
+            self.errors["gender"] = ErrorFieldRequiredMessage("some more information for gendergit")
             self.errors["count"] += 1
 
         # check if nhs number group has content
@@ -175,14 +175,14 @@ class PrimaryExaminationInformationForm:
                 [self.day_of_birth, self.month_of_birth, self.year_of_birth],
                 self.date_of_birth_not_known,
         ):
-            self.errors["date_of_birth"] = ErrorFieldRequiredMessage("date of birth")
+            self.errors["date_of_birth"] = ErrorFieldRequiredMessage("a date of birth")
             self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.day_of_death, self.month_of_death, self.year_of_death],
                 self.date_of_death_not_known,
         ):
-            self.errors["date_of_death"] = ErrorFieldRequiredMessage("date of death")
+            self.errors["date_of_death"] = ErrorFieldRequiredMessage("a date of death")
             self.errors["count"] += 1
 
         if not self.text_group_is_blank_or_contains_valid_date(self.day_of_death, self.month_of_death,
