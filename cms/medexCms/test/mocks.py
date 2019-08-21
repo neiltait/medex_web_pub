@@ -1897,6 +1897,20 @@ class ExaminationMocks:
         return response
 
     @classmethod
+    def get_successful_coroner_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_case_outcome_response_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_coroner_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
     def get_successful_scrutiny_complete_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK
