@@ -47,6 +47,8 @@ DOB_IN_FUTURE = "Date of birth must be in the past"
 
 DOD_IN_FUTURE = "Date of death must be in the past"
 
+ME_OFFICE = "Please choose an ME office"
+
 
 def ErrorFieldRequiredMessage(field_name):
     return ("Please enter %s") % field_name
