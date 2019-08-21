@@ -22,7 +22,7 @@ INVALID_DATE = 'Please enter a valid date'
 
 NAME_TOTAL_TOO_LONG = 'Please enter fewer than 250 characters in total'
 
-DEATH_IS_NOT_AFTER_BIRTH = 'Birth death must be before death date'
+DEATH_IS_NOT_AFTER_BIRTH = 'Birth date must be before death date'
 
 GENERAL_ERROR = 'There was an error whilst %s the %s'
 
@@ -44,6 +44,8 @@ DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given
 NO_GENDER = "Please choose a gender"
 
 DOB_IN_FUTURE = "Date of birth must be in the past"
+
+DOD_IN_FUTURE = "Date of death must be in the past"
 
 
 def ErrorFieldRequiredMessage(field_name):
