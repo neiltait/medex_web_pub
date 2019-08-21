@@ -677,3 +677,14 @@ class ExaminationsTimelineEventsModelsTests(MedExTestCase):
         event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_time(), CaseInitialEvent.UNKNOWN)
+
+
+class ExaminationsReportsTests(MedExTestCase):
+    pass
+    #
+    # @patch('examinations.request_handler.load_coroner_report', return_value=ExaminationMocks.get_unsuccessful_coroner_report_response())
+    # def test_load_coroner_report_by_id_returns_an_error_object_if_load_fails(self, mock_patient_details):
+    #     coroner_report, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+    #     self.assertIsNone(coroner_report)
+    #     self.assertIsNotNone(error)
+    #     self.assertEquals(type(error), NotFoundError)
