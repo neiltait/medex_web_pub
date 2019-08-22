@@ -42,7 +42,28 @@ class CaseBreakdown:
 class CaseStatus:
     def __init__(self, obj_dict):
         header = obj_dict.get("header")
-        self.name_entered = header.get('nameEntered')
+        self.basic_details_entered = (header.get('"basicDetailsEntered"'))
+        self.name_entered = header.get("nameEntered")
+        self.dob_entered = header.get("dobEntered")
+        self.dod_entered = header.get("dodEntered")
+        self.nhs_number_entered = header.get("nhsNumberEntered")
+        self.additional_details_entered = header.get("additionalDetailsEntered")
+        self.latest_admission_details_entered = header.get("latestAdmissionDetailsEntered")
+        self.doctor_in_charge_entered = header.get("doctorInChargeEntered")
+        self.qap_entered = header.get("qapEntered")
+        self.bereaved_info_entered = header.get("bereavedInfoEntered")
+        self.me_assigned = header.get("meAssigned")
+        self.is_scrutiny_completed = header.get("isScrutinyCompleted")
+        self.pre_scutiny_event_entered = header.get("preScrutinyEventEntered")
+        self.qap_discussion_event_entered = header.get("qapDiscussionEventEntered")
+        self.bereaved_discussion_event_entered = header.get("bereavedDiscussionEventEntered")
+        self.is_case_items_completed = header.get("isCaseItemsCompleted")
+        self.mccd_issued = header.get("mccdIssued")
+        self.cremation_form_info_entered = header.get("cremationFormInfoEntered")
+        self.gp_notified = header.get("gpNotified")
+        self.sent_to_coroner = header.get("sentToCoroner")
+        self.case_closed = header.get("caseClosed")
+        self.case_outcome = header.get("caseOutcome")
 
 
 class PrePopulatedItemList:
