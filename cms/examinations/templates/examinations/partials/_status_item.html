@@ -1,1 +1,12 @@
-<div>{{ status }} {{ label }}</div>
+
+
+{% if status %}
+
+
+<div><img src="images/scrutiny_complete_tick.svg"> {{ label }}</div>
+
+{% else %}
+
+<div>f{{ status }} {{ label }}</div>
+
+{% endif %}
