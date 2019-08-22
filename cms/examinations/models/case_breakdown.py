@@ -34,9 +34,15 @@ class CaseBreakdown:
                 error = medical_team_error
             else:
                 case_breakdown = CaseBreakdown(response.json(), medical_team)
+                case_status = CaseStatus(response.json())
         else:
             error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
-        return case_breakdown, error
+        return case_breakdown, case_status, error
+
+class CaseStatus:
+    def __init__(self, obj_dict):
+        header = obj_dict.get("header")
+        self.name_entered = header.get('nameEntered')
 
 
 class PrePopulatedItemList:
