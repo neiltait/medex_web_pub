@@ -10,19 +10,19 @@
     </span>
                     <div class="nhsuk-grid-row">
                         <div class="nhsuk-grid-column-one-quarter">
-                            <p>Basic details entered</p>
+                            <p>{{ case_status.basic_details_entered }}</p>
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <p>Additional details entered</p>
+                            <p>{{ case_status.additional_details_entered }}</p>
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <p>Scrutiny complete</p>
+                            <p>{{ case_status.is_scrutiny_completed }}</p>
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <p>Case items complete</p>
+                            <p>{{ case_status.is_case_items_completed }}</p>
                         </div>
 
                     </div>
@@ -36,22 +36,31 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-quarter">
-            <p>{{ case_status.basic_details_entered }}</p>
             <p>{{ case_status.name_entered }}</p>
             <p>{{ case_status.dob_entered }}</p>
             <p>{{ case_status.dod_entered }}</p>
+            <p>{{ case_status.nhs_number_entered}}</p>
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <p>nhsuk-grid-column-one-quarter</p>
+            <p>{{ case_status.latest_admission_details_entered }}</p>
+            <p>{{ case_status.doctor_in_charge_entered }}</p>
+            <p>{{ case_status.qap_entered }}</p>
+            <p>{{ case_status.bereaved_info_entered }}</p>
+            <p>{{ case_status.me_assigned }}</p>
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <p>nhsuk-grid-column-one-quarter</p>
+            <p>{{ case_status.have_been_scrutinised_by_ME }}</p>
+            <p>{{ case_status.qap_discussion_event_entered }}</p>
+            <p>{{ case_status.bereaved_discussion_event_entered }}</p>
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <p>nhsuk-grid-column-one-quarter</p>
+            <p>{{ case_status.mccd_issued }}</p>
+            <p>{{ case_status.cremation_form_info_entered }}</p>
+            <p>{{ case_status.gp_notified }}</p>
+            <p>{{ case_status.sent_to_coroner }}</p>
         </div>
 
     </div>

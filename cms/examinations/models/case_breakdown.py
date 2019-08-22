@@ -39,6 +39,7 @@ class CaseBreakdown:
             error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
         return case_breakdown, case_status, error
 
+
 class CaseStatus:
     def __init__(self, obj_dict):
         header = obj_dict.get("header")
@@ -64,6 +65,7 @@ class CaseStatus:
         self.sent_to_coroner = header.get("sentToCoroner")
         self.case_closed = header.get("caseClosed")
         self.case_outcome = header.get("caseOutcome")
+        self.have_been_scrutinised_by_ME = header.get("haveBeenScrutinisedByME")
 
 
 class PrePopulatedItemList:
