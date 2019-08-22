@@ -311,7 +311,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
             status_code = response.status_code
         return status_code
 
-    def _set_context(self, form, saved):
+    def _set_context(self, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
