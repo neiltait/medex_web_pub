@@ -21,7 +21,7 @@ class CoronerDownloadReport:
         "placeOfDeath": "string",
         "dateOfDeath": "2019-08-20T16:05:36.574Z",
         "timeOfDeath": "string",
-        "anyImplants": true,
+        "anyImplants": True,
         "implantDetails": "string",
         "latestBereavedDiscussion": {
             "userFullName": "string",
