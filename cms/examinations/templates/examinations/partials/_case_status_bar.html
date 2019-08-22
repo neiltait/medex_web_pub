@@ -10,19 +10,19 @@
     </span>
                     <div class="nhsuk-grid-row">
                         <div class="nhsuk-grid-column-one-quarter">
-                            <div>{{ case_status.basic_details_entered }} Basic details entered</div>
+                            {% include 'examinations/partials/_status_item.html' with label="Basic details entered<" status=case_status.basic_details_entered %}
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <div>{{ case_status.additional_details_entered }} Additional details entered</div>
+                            {% include 'examinations/partials/_status_item.html' with label="Additional details entered" status=case_status.additional_details_entered %}
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <div>{{ case_status.is_scrutiny_completed }} Scrutiny complete</div>
+                            {% include 'examinations/partials/_status_item.html' with label="Scrutiny complete" status=case_status.is_scrutiny_completed %}
                         </div>
 
                         <div class="nhsuk-grid-column-one-quarter">
-                            <div>{{ case_status.is_case_items_completed }} Case items complete</div>
+                            {% include 'examinations/partials/_status_item.html' with label="Case items complete" status=case_status.is_case_items_completed %}
                         </div>
 
                     </div>
@@ -36,33 +36,40 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-quarter">
-            <div>{{ case_status.name_entered }} Name</div>
-            <div>{{ case_status.dob_entered }} D.O.B</div>
-            <div>{{ case_status.dod_entered }} D.O.D</div>
-            <div>{{ case_status.nhs_number_entered}} NHS Number</div>
+
+            {% include 'examinations/partials/_status_item.html' with label="Name" status=case_status.name_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="D.O.B" status=case_status.dob_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="D.O.D" status=case_status.dod_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="NHS Number" status=case_status.nhs_number_entered %}
+
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <div>{{ case_status.latest_admission_details_entered }} Latest admission details</div>
-            <div>{{ case_status.doctor_in_charge_entered }}Doctor in charge of care</div>
-            <div>{{ case_status.qap_entered }} QAP</div>
-            <div>{{ case_status.bereaved_info_entered }}Bereaved information</div>
-            <div>{{ case_status.me_assigned }} ME assigned</div>
+
+            {% include 'examinations/partials/_status_item.html' with label="Latest admission details" status=case_status.latest_admission_details_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="E assigned" status=case_status.me_assigned %}
+
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <div>{{ case_status.have_been_scrutinised_by_ME }} ME review of records</div>
-            <div>{{ case_status.qap_discussion_event_entered }} QAP discussion</div>
-            <div>{{ case_status.bereaved_discussion_event_entered }} Bereaved discussion</div>
+
+            {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.have_been_scrutinised_by_ME %}
+            {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered %}
+
         </div>
 
         <div class="nhsuk-grid-column-one-quarter">
-            <div>{{ case_status.mccd_issued }} MCCD issued</div>
-            <div>{{ case_status.cremation_form_info_entered }} Cremation form info</div>
-            <div>{{ case_status.gp_notified }} GP notified</div>
-            <div>{{ case_status.sent_to_coroner }} Sent to coroner</div>
+
+            {% include 'examinations/partials/_status_item.html' with label="MCCD issued" status=case_status.mccd_issued %}
+            {% include 'examinations/partials/_status_item.html' with label="Cremation form info" status=case_status.cremation_form_info_entered %}
+            {% include 'examinations/partials/_status_item.html' with label="GP notified" status=case_status.qgp_notified %}
+            {% include 'examinations/partials/_status_item.html' with label="Sent to coroner" status=case_status.sent_to_coroner %}
+
         </div>
 
     </div>
-
 </div>
