@@ -151,18 +151,46 @@ class CoronerDownloadReport:
             else:
                 report.bereaved['concerns'] = ''
 
-            bereaved_data = data.get('latestBereavedDiscussion')
-            report.bereaved = {
-                'name': fallback_to(bereaved_data.get('participantFullName'), ''),
-                'relationship': fallback_to(bereaved_data.get('participantRelationship'), ''),
-                'phone': fallback_to(bereaved_data.get('participantPhoneNumber'), ''),
-                "informed": fallback_to(bereaved_data.get('informedOfDeath'), ''),
-                "result": fallback_to(bereaved_data.get('bereavedDiscussionOutcome'), ''),
+            qap_data = data.get('qap')
+            report.qap = {
+                'name': fallback_to(qap_data.get('name'), '') if qap_data else '',
+                'role': fallback_to(qap_data.get('role'), '') if qap_data else '',
+                'organisation': fallback_to(qap_data.get('organisation'), '') if qap_data else '',
+                'phone': fallback_to(qap_data.get('phone'), '') if qap_data else '',
+                'notes': fallback_to(qap_data.get('notes'), '') if qap_data else '',
+                'gmc': fallback_to(qap_data.get('gmcNumber'), '') if qap_data else '',
             }
-            if report.bereaved['result'] != enums.discussion.COD_ACCEPTED:
-                report.bereaved['concerns'] = fallback_to(bereaved_data.get('discussionDetails'), '')
-            else:
-                report.bereaved['concerns'] = ''
+
+            consultant_data = data.get('consultant')
+            report.consultant = {
+                'name': fallback_to(consultant_data.get('name'), '') if consultant_data else '',
+                'role': fallback_to(consultant_data.get('role'), '') if consultant_data else '',
+                'organisation': fallback_to(consultant_data.get('organisation'), '') if consultant_data else '',
+                'phone': fallback_to(consultant_data.get('phone'), '') if consultant_data else '',
+                'notes': fallback_to(consultant_data.get('notes'), '') if consultant_data else '',
+                'gmc': fallback_to(consultant_data.get('gmcNumber'), '') if consultant_data else '',
+            }
+
+            gp_data = data.get('gp')
+            report.gp = {
+                'name': fallback_to(gp_data.get('name'), '') if gp_data else '',
+                'role': fallback_to(gp_data.get('role'), '') if gp_data else '',
+                'organisation': fallback_to(gp_data.get('organisation'), '') if gp_data else '',
+                'phone': fallback_to(gp_data.get('phone'), '') if gp_data else '',
+                'notes': fallback_to(gp_data.get('notes'), '') if gp_data else '',
+                'gmc': fallback_to(gp_data.get('gmcNumber'), '') if gp_data else '',
+            }
+
+            latest_admission_data = data.get('latestAdmissionDetails')
+            report.latest_admission = {
+                'date': 'Unknown' if fallback_to(gp_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
+                'time': 'Unknown' if fallback_to(gp_data.get('admittedTimeUnknown'), False) else fallback_to(gp_data.get('admittedTime'), ''),
+                'location': '',
+                'notes': fallback_to(gp_data.get('notes'), '')
+            }
+
+            report.medical_history = fallback_to(gp_data.get('detailsAboutMedicalHistory'), '')
+
         else:
             errors['count'] += 1
             errors['report'] = "Could not download report"
