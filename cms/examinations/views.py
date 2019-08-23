@@ -525,10 +525,10 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
 
 class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_get_examination'
-    template = 'examinations/templates/reports/coroner-referral.odt'
+    template = 'examinations/templates/reports/coroner-referral-form.odt'
 
     @never_cache
     def get(self, request, examination_id):
         report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
 
-        return ReportGenerator.create_report(self.template, report.to_object(), filename="report.odt")
+        return ReportGenerator.create_report(self.template, report, filename="report.odt")

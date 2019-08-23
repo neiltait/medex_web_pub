@@ -71,11 +71,11 @@ class ReportGenerator():
     """ Class ReportGenerator """
 
     @staticmethod
-    def create_report(template, data, filename="report.odt"):
+    def create_report(template, report, filename="report.odt"):
         from secretary import Renderer
 
         engine = Renderer()
-        result = engine.render(template, patient=data)
+        result = engine.render(template, report=report)
 
         import tempfile
         with tempfile.NamedTemporaryFile() as output:
