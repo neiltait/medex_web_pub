@@ -8,7 +8,9 @@
 
 {% else %}
 
-<div>f{{ status }} {{ label }}</div>
+<div>
+   <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-cross.svg' %}" alt=""> {{ label }}
+</div>
 
 {% endif %}
 
