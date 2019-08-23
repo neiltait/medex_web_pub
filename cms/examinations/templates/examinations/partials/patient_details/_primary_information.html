@@ -142,20 +142,24 @@
     <!-- Dates -->
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
-            <div class="nhsuk-form-group {% if errors.date_of_birth %}nhsuk-form-group--error{% endif %}">
+            <div class="nhsuk-form-group {% if errors.date_of_birth or errors.day_of_birth or errors.month_of_birth or errors.year_of_birth %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
                     <fieldset class="nhsuk-fieldset" aria-describedby="date_of_birth" role="group">
                         <legend class="nhsuk-fieldset__legend" id="date_of_birth_label">
                             Date of birth
                         </legend>
-                        {% if errors.date_of_birth %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_date_of_birth">{{ errors.date_of_birth }}</span>{% endif %}
+                        {% if errors.date_of_birth %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_date_of_birth">
+                            <div>{{ errors.date_of_birth }}</div>
+                        </span>
+                        {% endif %}
                         <div class="nhsuk-date-input" id="date_of_birth">
                             <div class="nhsuk-date-input__item">
                                 <div class="nhsuk-form-group">
                                     <label class="nhsuk-label nhsuk-date-input__label" for="day_of_birth">
                                         Day
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input {% if errors.date_of_birth %}nhsuk-input--error{% endif %}"
                                            id="day_of_birth" name="day_of_birth" type="number" pattern="[0-9]*"
                                            {% if form.day_of_birth %}value="{{ form.day_of_birth }}" {% endif %}>
                                 </div>
@@ -165,7 +169,7 @@
                                     <label class="nhsuk-label nhsuk-date-input__label" for="month_of_birth">
                                         Month
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input {% if errors.date_of_birth %}nhsuk-input--error{% endif %}"
                                            id="month_of_birth" name="month_of_birth" type="number"
                                            pattern="[0-9]*"
                                            {% if form.month_of_birth %}value="{{ form.month_of_birth }}"{% endif %}>
@@ -176,7 +180,7 @@
                                     <label class="nhsuk-label nhsuk-date-input__label" for="year_of_birth">
                                         Year
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input {% if errors.date_of_birth %}nhsuk-input--error{% endif %}"
                                            id="year_of_birth" name="year_of_birth" type="number"
                                            pattern="[0-9]*"
                                            {% if form.year_of_birth %}value="{{ form.year_of_birth }}"{% endif %}>
@@ -216,7 +220,7 @@
                                     <label class="nhsuk-label nhsuk-date-input__label" for="day_of_death">
                                         Day
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input {% if errors.date_of_death %}nhsuk-input--error{% endif %}"
                                            id="day_of_death" name="day_of_death" type="number" pattern="[0-9]*"
                                            {% if form.day_of_death %}value="{{ form.day_of_death }}"{% endif %}>
                                 </div>
@@ -226,7 +230,7 @@
                                     <label class="nhsuk-label nhsuk-date-input__label" for="month_of_death">
                                         Month
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2 medex-input {% if errors.date_of_death %}nhsuk-input--error{% endif %}"
                                            id="month_of_death" name="month_of_death" type="number"
                                            pattern="[0-9]*"
                                            {% if form.month_of_death %}value="{{ form.month_of_death }}"{% endif %}>
@@ -237,7 +241,7 @@
                                     <label class="nhsuk-label nhsuk-date-input__label" for="year_of_death">
                                         Year
                                     </label>
-                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input"
+                                    <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4 medex-input {% if errors.date_of_death %}nhsuk-input--error{% endif %}"
                                            id="year_of_death" name="year_of_death" type="number"
                                            pattern="[0-9]*"
                                            {% if form.year_of_death %}value="{{ form.year_of_death }}"{% endif %}>
@@ -283,7 +287,7 @@
                         Time of death
                     </label>
                     {% if errors.time_of_death %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_time_of_death">{{ errors.time_of_death }}</span>{% endif %}
-                    <input class="nhsuk-input nhsuk-input--width-10 medex-input" id="time_of_death"
+                    <input class="nhsuk-input nhsuk-input--width-10 medex-input {% if errors.time_of_death %}nhsuk-input--error{% endif %}" id="time_of_death"
                            name="time_of_death"
                            type="time"
                            step="60"

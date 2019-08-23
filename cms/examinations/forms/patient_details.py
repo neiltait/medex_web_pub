@@ -1,7 +1,8 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, DOD_IN_FUTURE, ME_OFFICE
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
+from datetime import datetime
 
 
 class PrimaryExaminationInformationForm:
@@ -127,7 +128,7 @@ class PrimaryExaminationInformationForm:
         self.errors["count"] = 0
 
         if self.first_name is None or len(self.first_name.strip()) == 0:
-            self.errors["first_name"] = ErrorFieldRequiredMessage("first name")
+            self.errors["first_name"] = ErrorFieldRequiredMessage("a given name")
             self.errors["count"] += 1
 
         if self.first_name and len(self.first_name) > 150:
@@ -135,7 +136,7 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.last_name is None or len(self.last_name.strip()) == 0:
-            self.errors["last_name"] = ErrorFieldRequiredMessage("last name")
+            self.errors["last_name"] = ErrorFieldRequiredMessage("a surname")
             self.errors["count"] += 1
 
         if self.last_name and len(self.last_name) > 150:
@@ -143,18 +144,18 @@ class PrimaryExaminationInformationForm:
             self.errors["count"] += 1
 
         if self.gender is None:
-            self.errors["gender"] = ErrorFieldRequiredMessage("gender")
+            self.errors["gender"] = NO_GENDER
             self.errors["count"] += 1
 
         if self.gender == enums.gender.OTHER and (self.gender_details is None or len(self.gender_details.strip()) == 0):
-            self.errors["gender"] = ErrorFieldRequiredMessage("other gender details")
+            self.errors["gender"] = ErrorFieldRequiredMessage("some more information for gender")
             self.errors["count"] += 1
 
         # check if nhs number group has content
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
-            self.errors["nhs_number"] = ErrorFieldRequiredMessage("NHS number")
+            self.errors["nhs_number"] = ErrorFieldRequiredMessage("an NHS number")
             self.errors["count"] += 1
 
         elif not self.nhs_number_not_known:
@@ -168,21 +169,27 @@ class PrimaryExaminationInformationForm:
         if not self.text_and_checkbox_group_is_valid(
                 [self.time_of_death], self.time_of_death_not_known
         ):
-            self.errors["time_of_death"] = ErrorFieldRequiredMessage("time of death")
+            self.errors["time_of_death"] = ErrorFieldRequiredMessage("a time of death")
             self.errors["count"] += 1
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.day_of_birth, self.month_of_birth, self.year_of_birth],
                 self.date_of_birth_not_known,
         ):
-            self.errors["date_of_birth"] = ErrorFieldRequiredMessage("date of birth")
+            self.errors["date_of_birth"] = ErrorFieldRequiredMessage("a date of birth")
             self.errors["count"] += 1
+
+        if self.date_of_birth_in_future():
+            self.errors["date_of_birth"] = DOB_IN_FUTURE
+
+        if self.date_of_death_in_future():
+            self.errors["date_of_death"] = DOD_IN_FUTURE
 
         if not self.text_and_checkbox_group_is_valid(
                 [self.day_of_death, self.month_of_death, self.year_of_death],
                 self.date_of_death_not_known,
         ):
-            self.errors["date_of_death"] = ErrorFieldRequiredMessage("date of death")
+            self.errors["date_of_death"] = ErrorFieldRequiredMessage("a date of death")
             self.errors["count"] += 1
 
         if not self.text_group_is_blank_or_contains_valid_date(self.day_of_death, self.month_of_death,
@@ -205,13 +212,12 @@ class PrimaryExaminationInformationForm:
             self.errors["time_of_death"] = DEATH_DATE_MISSING_WHEN_TIME_GIVEN
             self.errors["count"] += 1
 
-
         if self.place_of_death is None or len(self.place_of_death.strip()) == 0:
-            self.errors["place_of_death"] = ErrorFieldRequiredMessage("place of death")
+            self.errors["place_of_death"] = ErrorFieldRequiredMessage("a place of death")
             self.errors["count"] += 1
 
         if self.me_office is None:
-            self.errors["me_office"] = ErrorFieldRequiredMessage("ME office")
+            self.errors["me_office"] = ME_OFFICE
             self.errors["count"] += 1
 
         return self.errors["count"] == 0
@@ -326,6 +332,26 @@ class PrimaryExaminationInformationForm:
                 return False
         else:
             return True
+
+    def date_of_birth_in_future(self):
+        valid_date_of_birth = validate_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+        if valid_date_of_birth:
+            date_of_birth = build_date(self.year_of_birth, self.month_of_birth, self.day_of_birth)
+            current_date = datetime.today()
+            if date_of_birth > current_date:
+                return True
+        else:
+            return False
+
+    def date_of_death_in_future(self):
+        valid_date_of_death = validate_date(self.year_of_death, self.month_of_death, self.day_of_death)
+        if valid_date_of_death:
+            date_of_death = build_date(self.year_of_death, self.month_of_death, self.day_of_death)
+            current_date = datetime.today()
+            if date_of_death > current_date:
+                return True
+        else:
+            return False
 
     def death_time_present_but_date_unknown(self):
         if self.date_of_death_not_known and not self.time_of_death_not_known:
