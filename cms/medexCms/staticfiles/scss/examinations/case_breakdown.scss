@@ -61,6 +61,29 @@
     line-height: 1.5;
 }
 
+#case-status-bar {
+
+    .margin-bottom {
+        margin-bottom: $medex-spacing-xl;
+    }
+
+    .small-font {
+        font-size: 16px !important;
+    }
+
+    .vertical-align {
+        vertical-align: middle;
+    }
+
+    .minus {
+        padding-right: 2px;
+        color: $nhs-grey;
+        font-weight: bold;
+    }
+
+
+}
+
 #pre-scrutiny {
 
   .margin-bottom {

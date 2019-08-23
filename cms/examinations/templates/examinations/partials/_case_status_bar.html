@@ -1,76 +1,150 @@
-<div class="nhsuk-grid-row">
+{% load staticfiles %}
+
+<div class="nhsuk-grid-row mobile-hidden" id="case-status-bar">
+    <div class="nhsuk-grid-column-full">
+        <details class="nhsuk-details nhsuk-expander">
+            <summary class="nhsuk-details__summary">
+                <div class="nhsuk-grid-row">
+
+                            <div class="nhsuk-grid-column-one-quarter small-font">
+
+                                {% if case_status.basic_details_entered %}
+
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-tick.svg' %}" alt="">Basic
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% else %}
+
+                                <div>
+                                    <svg class="nhsuk-icon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+     viewBox="0 -8 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+    .st0{fill:none;stroke:#AEB7BD;stroke-width:2;stroke-linecap:round;}
+</style>
+<path class="st0" d="M18.1,12H5.6"/>
+</svg>
+                                    Basic details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% endif %}
+<svg class="nhsuk-icon nhsuk-icon__plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" aria-hidden="true">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path fill="none" stroke="#fff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M12 8v8M8 12h8"></path>
+</svg>
+                            </div>
+
+                            <div class="nhsuk-grid-column-one-quarter small-font">
 
 
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <details class="nhsuk-details nhsuk-expander">
-                <summary class="nhsuk-details__summary">
-                    <span class="nhsuk-details__summary-text">
+                                {% if case_status.additional_details_entered %}
 
-    </span>
-                    <div class="nhsuk-grid-row">
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-tick.svg' %}" alt="">Additional
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
 
-                        <div class="nhsuk-grid-column-one-quarter">
-                            {% include 'examinations/partials/_status_item.html' with label="Basic details entered" status=case_status.basic_details_entered %}
-                        </div>
+                                {% else %}
 
-                        <div class="nhsuk-grid-column-one-quarter">
-                            {% include 'examinations/partials/_status_item.html' with label="Additional details entered" status=case_status.additional_details_entered %}
-                        </div>
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-cross.svg' %}" alt="">Additional
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
 
-                        <div class="nhsuk-grid-column-one-quarter">
-                            {% include 'examinations/partials/_status_item.html' with label="Scrutiny complete" status=case_status.is_scrutiny_completed %}
-                        </div>
+                                {% endif %}
 
-                        <div class="nhsuk-grid-column-one-quarter">
-                            {% include 'examinations/partials/_status_item.html' with label="Case items complete" status=case_status.is_case_items_completed %}
-                        </div>
+                            </div>
 
-                    </div>
-                </summary>
-            </details>
-        </div>
+                            <div class="nhsuk-grid-column-one-quarter small-font">
+
+                                {% if case_status.is_scrutiny_completed %}
+
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-tick.svg' %}" alt="">Scrutiny
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% else %}
+
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-cross.svg' %}" alt="">Scrutiny
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% endif %}
+
+                            </div>
+
+                    <div class="nhsuk-grid-column-one-quarter small-font">
+
+                                {% if case_status.is_case_items_completed %}
+
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-tick.svg' %}" alt="">Case items
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% else %}
+
+                                <div>
+                                    <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-cross.svg' %}" alt="">Case items
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% endif %}
+
+                            </div>
+                </div>
+            </summary>
 
 
-    </div>
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
 
+                    {% include 'examinations/partials/_status_item.html' with label="Name" status=case_status.name_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="D.O.B" status=case_status.dob_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="D.O.D" status=case_status.dod_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="NHS Number" status=case_status.nhs_number_entered %}
 
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-one-quarter">
+                </div>
 
-            {% include 'examinations/partials/_status_item.html' with label="Name" status=case_status.name_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="D.O.B" status=case_status.dob_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="D.O.D" status=case_status.dod_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="NHS Number" status=case_status.nhs_number_entered %}
+                <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
 
-        </div>
+                    {% include 'examinations/partials/_status_item.html' with label="Latest admission details" status=case_status.latest_admission_details_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="E assigned" status=case_status.me_assigned %}
 
-        <div class="nhsuk-grid-column-one-quarter">
+                </div>
 
-            {% include 'examinations/partials/_status_item.html' with label="Latest admission details" status=case_status.latest_admission_details_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="E assigned" status=case_status.me_assigned %}
+                <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
 
-        </div>
+                    {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.have_been_scrutinised_by_ME %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered %}
 
-        <div class="nhsuk-grid-column-one-quarter">
+                </div>
 
-            {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.have_been_scrutinised_by_ME %}
-            {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered %}
+                <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
 
-        </div>
+                    {% include 'examinations/partials/_status_item.html' with label="MCCD issued" status=case_status.mccd_issued %}
+                    {% include 'examinations/partials/_status_item.html' with label="Cremation form info" status=case_status.cremation_form_info_entered %}
+                    {% include 'examinations/partials/_status_item.html' with label="GP notified" status=case_status.qgp_notified %}
+                    {% include 'examinations/partials/_status_item.html' with label="Sent to coroner" status=case_status.sent_to_coroner %}
 
-        <div class="nhsuk-grid-column-one-quarter">
+                </div>
 
-            {% include 'examinations/partials/_status_item.html' with label="MCCD issued" status=case_status.mccd_issued %}
-            {% include 'examinations/partials/_status_item.html' with label="Cremation form info" status=case_status.cremation_form_info_entered %}
-            {% include 'examinations/partials/_status_item.html' with label="GP notified" status=case_status.qgp_notified %}
-            {% include 'examinations/partials/_status_item.html' with label="Sent to coroner" status=case_status.sent_to_coroner %}
-
-        </div>
-
+            </div>
+        </details>
     </div>
 </div>
