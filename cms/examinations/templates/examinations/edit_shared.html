@@ -48,6 +48,9 @@
     {% endif %}
 
     {% include 'examinations/partials/_case_header.html' %}
+    {% if "case-breakdown" in request.path %}
+        {% include 'examinations/partials/_case_status_bar.html' %}
+    {% endif %}
 
     <a name="details"></a>
 
