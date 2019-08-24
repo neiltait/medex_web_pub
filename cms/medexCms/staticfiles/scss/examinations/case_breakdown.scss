@@ -75,12 +75,18 @@
         vertical-align: middle;
     }
 
-    .minus {
-        padding-right: 2px;
-        color: $nhs-grey;
-        font-weight: bold;
+    .expander-padding {
+        padding: 0 0 38px 38px;
     }
 
+    .medex-cross {
+        height: 24px;
+        width: 24px;
+    }
+
+    .float-right {
+        float: right;
+    }
 
 }
 
