@@ -3,13 +3,13 @@
 {% if status %}
 
 <div>
-   <img class="nhsuk-icon nhsuk-icon__tick" src="{% static 'images/icon-tick.svg' %}" alt=""> {{ label }}
+   <img class="nhsuk-icon case-status-icon" src="{% static 'images/icon-tick.svg' %}" alt=""> {{ label }}
 </div>
 
 {% else %}
 
 <div>
-<img class="nhsuk-icon" src="{% static 'images/minus.svg' %}" alt=""> {{ label }}
+<img class="nhsuk-icon case-status-icon" src="{% static 'images/minus.svg' %}" alt=""> {{ label }}
 </div>
 
 {% endif %}
