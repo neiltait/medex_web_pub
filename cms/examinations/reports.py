@@ -4,89 +4,6 @@ from medexCms.utils import fallback_to, reformat_datetime
 
 
 class CoronerDownloadReport:
-    item = {
-        "givenNames": "string",
-        "surname": "string",
-        "nhsNumber": "string",
-        "ableToIssueMCCD": True,
-        "causeOfDeath1a": "string",
-        "causeOfDeath1b": "string",
-        "causeOfDeath1c": "string",
-        "causeOfDeath2": "string",
-        "dateOfBirth": "2019-08-20T16:05:36.574Z",
-        "gender": "Male",
-        "houseNameNumber": "string",
-        "street": "string",
-        "town": "string",
-        "county": "string",
-        "postcode": "string",
-        "placeOfDeath": "string",
-        "dateOfDeath": "2019-08-20T16:05:36.574Z",
-        "timeOfDeath": "string",
-        "anyImplants": True,
-        "implantDetails": "string",
-        "latestBereavedDiscussion": {
-            "userFullName": "string",
-            "usersRole": "string",
-            "created": "2019-08-20T16:05:36.574Z",
-            "eventId": "string",
-            "userId": "string",
-            "isFinal": True,
-            "eventType": "Other",
-            "participantFullName": "string",
-            "participantRelationship": "string",
-            "participantPhoneNumber": "string",
-            "presentAtDeath": "Yes",
-            "informedAtDeath": "Yes",
-            "dateOfConversation": "2019-08-20T16:05:36.574Z",
-            "timeOfConversation": "string",
-            "discussionUnableHappen": True,
-            "discussionUnableHappenDetails": "string",
-            "discussionDetails": "string",
-            "bereavedDiscussionOutcome": "CauseOfDeathAccepted"
-        },
-        "qap": {
-            "name": "string",
-            "role": "string",
-            "organisation": "string",
-            "phone": "string",
-            "notes": "string",
-            "gmcNumber": "string"
-        },
-        "consultant": {
-            "name": "string",
-            "role": "string",
-            "organisation": "string",
-            "phone": "string",
-            "notes": "string",
-            "gmcNumber": "string"
-        },
-        "gp": {
-            "name": "string",
-            "role": "string",
-            "organisation": "string",
-            "phone": "string",
-            "notes": "string",
-            "gmcNumber": "string"
-        },
-        "latestAdmissionDetails": {
-            "userFullName": "string",
-            "usersRole": "string",
-            "eventId": "string",
-            "userId": "string",
-            "notes": "string",
-            "isFinal": True,
-            "eventType": "Other",
-            "admittedDate": "2019-08-20T16:05:36.574Z",
-            "admittedDateUnknown": True,
-            "admittedTime": "string",
-            "admittedTimeUnknown": True,
-            "immediateCoronerReferral": True,
-            "created": "2019-08-20T16:05:36.574Z",
-            "routeOfAdmission": "AccidentAndEmergency"
-        },
-        "detailsAboutMedicalHistory": "string"
-    }
 
     def __init__(self):
         self.given_names = None
@@ -183,13 +100,13 @@ class CoronerDownloadReport:
 
             latest_admission_data = data.get('latestAdmissionDetails')
             report.latest_admission = {
-                'date': 'Unknown' if fallback_to(gp_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
-                'time': 'Unknown' if fallback_to(gp_data.get('admittedTimeUnknown'), False) else fallback_to(gp_data.get('admittedTime'), ''),
+                'date': 'Unknown' if fallback_to(latest_admission_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
+                'time': 'Unknown' if fallback_to(latest_admission_data.get('admittedTimeUnknown'), False) else fallback_to(latest_admission_data.get('admittedTime'), ''),
                 'location': '',
-                'notes': fallback_to(gp_data.get('notes'), '')
+                'notes': fallback_to(latest_admission_data.get('notes'), '')
             }
 
-            report.medical_history = fallback_to(gp_data.get('detailsAboutMedicalHistory'), '')
+            report.medical_history = fallback_to(data.get('detailsAboutMedicalHistory'), '')
 
         else:
             errors['count'] += 1
