@@ -27,6 +27,7 @@ class CaseBreakdown:
         response = request_handler.load_case_breakdown_by_id(examination_id, auth_token)
         case_breakdown = None
         error = None
+        case_status = None
 
         if response.ok:
             medical_team, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
