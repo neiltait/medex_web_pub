@@ -85,6 +85,14 @@
             margin-bottom: 0;
         }
 
+        .helper-text-top-margin {
+            margin-top: $medex-spacing-lg;
+        }
+
+        .helper-text {
+            font-size: $nhs-body-s-size !important;
+        }
+
         .me-name {
             font-size: $nhs-heading-m-size;
             font-weight: bold;
