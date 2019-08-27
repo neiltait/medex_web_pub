@@ -1,4 +1,4 @@
-from examinations.request_handler import load_coroner_report
+from examinations import request_handler
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
 
@@ -19,7 +19,7 @@ class CoronerDownloadReport:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
 
-        response = load_coroner_report(auth_token, examination_id)
+        response = request_handler.load_coroner_report(auth_token, examination_id)
         report = None
         errors = {'count': 0}
 
@@ -99,12 +99,20 @@ class CoronerDownloadReport:
             }
 
             latest_admission_data = data.get('latestAdmissionDetails')
-            report.latest_admission = {
-                'date': 'Unknown' if fallback_to(latest_admission_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
-                'time': 'Unknown' if fallback_to(latest_admission_data.get('admittedTimeUnknown'), False) else fallback_to(latest_admission_data.get('admittedTime'), ''),
-                'location': '',
-                'notes': fallback_to(latest_admission_data.get('notes'), '')
-            }
+            if latest_admission_data:
+                report.latest_admission = {
+                    'date': 'Unknown' if fallback_to(latest_admission_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
+                    'time': 'Unknown' if fallback_to(latest_admission_data.get('admittedTimeUnknown'), False) else fallback_to(latest_admission_data.get('admittedTime'), ''),
+                    'location': '',
+                    'notes': fallback_to(latest_admission_data.get('notes'), '')
+                }
+            else:
+                report.latest_admission = {
+                    'date': '',
+                    'time': '',
+                    'loaction': '',
+                    'notes': ''
+                }
 
             report.medical_history = fallback_to(data.get('detailsAboutMedicalHistory'), '')
 
