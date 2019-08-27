@@ -1,9 +1,9 @@
 {% load staticfiles %}
 
 <div class="nhsuk-grid-row mobile-hidden" id="case-status-bar">
-    <div class="nhsuk-grid-column-full">
+    <div class="nhsuk-grid-column-full padding-left">
         <details class="nhsuk-details nhsuk-expander">
-            <summary class="nhsuk-details__summary">
+            <summary class="nhsuk-details__summary status-padding">
                 <div class="nhsuk-grid-row">
 
                             <div class="nhsuk-grid-column-one-quarter small-font">
@@ -27,11 +27,8 @@
                                 </div>
 
                                 {% endif %}
-<svg xmlns="http://www.w3.org/2000/svg" fill="#005eb8" viewBox="0 0 24 24" width="26" aria-hidden="true">
-  <circle cx="12" cy="12" r="9"></circle>
-  <line fill="none" stroke="#fff" x1="12" x2="12" y1="9" y2="15" stroke-width="2" stroke-linecap="round"></line>
-  <line fill="none" stroke="#fff" y1="12" y2="12" x1="9" x2="15" stroke-width="2" stroke-linecap="round"></line>
-</svg>
+
+                            {% include 'examinations/partials/_status_expander.html' %}
 
                             </div>
 
@@ -58,11 +55,8 @@
                                 </div>
 
                                 {% endif %}
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#005eb8" viewBox="0 0 24 24" width="26" aria-hidden="true">
-  <circle cx="12" cy="12" r="9"></circle>
-  <line fill="none" stroke="#fff" x1="12" x2="12" y1="9" y2="15" stroke-width="2" stroke-linecap="round"></line>
-  <line fill="none" stroke="#fff" y1="12" y2="12" x1="9" x2="15" stroke-width="2" stroke-linecap="round"></line>
-</svg>
+
+        {% include 'examinations/partials/_status_expander.html' %}
 
                             </div>
 
@@ -88,11 +82,8 @@
                                 </div>
 
                                 {% endif %}
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#005eb8" viewBox="0 0 24 24" width="26" aria-hidden="true">
-  <circle cx="12" cy="12" r="9"></circle>
-  <line fill="none" stroke="#fff" x1="12" x2="12" y1="9" y2="15" stroke-width="2" stroke-linecap="round"></line>
-  <line fill="none" stroke="#fff" y1="12" y2="12" x1="9" x2="15" stroke-width="2" stroke-linecap="round"></line>
-</svg>
+
+      {% include 'examinations/partials/_status_expander.html' %}
 
                             </div>
 
@@ -117,11 +108,8 @@
                                 </div>
 
                                 {% endif %}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#005eb8" viewBox="0 0 24 24" width="26" aria-hidden="true">
-  <circle cx="12" cy="12" r="9"></circle>
-  <line fill="none" stroke="#fff" x1="12" x2="12" y1="9" y2="15" stroke-width="2" stroke-linecap="round"></line>
-  <line fill="none" stroke="#fff" y1="12" y2="12" x1="9" x2="15" stroke-width="2" stroke-linecap="round"></line>
-</svg>
+
+       {% include 'examinations/partials/_status_expander.html' %}
 
                             </div>
                 </div>
@@ -144,7 +132,7 @@
                     {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered %}
                     {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered %}
-                    {% include 'examinations/partials/_status_item.html' with label="E assigned" status=case_status.me_assigned %}
+                    {% include 'examinations/partials/_status_item.html' with label="ME assigned" status=case_status.me_assigned %}
 
                 </div>
 

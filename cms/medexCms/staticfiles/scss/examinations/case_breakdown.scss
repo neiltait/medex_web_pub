@@ -84,8 +84,34 @@
         width: 24px;
     }
 
+    .status-padding {
+        padding: 0px 0px 16px 0px !important;
+    }
+
     .float-right {
         float: right;
+    }
+
+    .padding-left {
+        padding-left: 36px;
+    }
+
+    .medex-plus {
+            display: block;
+        }
+
+        .medex-minus {
+            display: none;
+        }
+
+    .nhsuk-expander[open] {
+        .medex-plus {
+            display: none;
+        }
+
+        .medex-minus {
+            display: block;
+        }
     }
 
 }
