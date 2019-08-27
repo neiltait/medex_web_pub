@@ -339,6 +339,8 @@
             let that = this;
             this.newRep.change(function () {
                 that.showHideRepTypePanels();
+                that.unableCheckbox.prop('checked', false)
+                that.enableOrDisableAllControls();
             });
 
             this.existingRep.change(function () {
@@ -374,7 +376,6 @@
             this.discussionDetails[0].disabled = disable;
             this.noConcernsRadio[0].disabled = disable;
             this.concernsRadio[0].disabled = disable;
-
         }
     };
 
