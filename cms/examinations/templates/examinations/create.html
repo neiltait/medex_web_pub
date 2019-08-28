@@ -57,8 +57,8 @@
               action="{% url 'create_examination' %}" method="post" autocomplete='off'>
             <input type="text" style="display:none">
 
-            <!-- Prevent implicit submission of the form -->
-            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+            <!-- Prevent implicit submission of the form
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>-->
 
             <!-- ... -->
             {% csrf_token %}
