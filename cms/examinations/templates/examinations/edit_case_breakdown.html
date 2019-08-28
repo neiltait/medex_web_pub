@@ -17,10 +17,6 @@
       action="{% url 'edit_case_breakdown' examination_id=examination_id %}" method="post"
       data-error-count="{{ error_count }}">
 
-    <!-- Prevent implicit submission of the form
-    <button type="submit" disabled style="display: none" aria-hidden="true"></button> -->
-
-
     <!-- ... -->
 
     {% csrf_token %}
