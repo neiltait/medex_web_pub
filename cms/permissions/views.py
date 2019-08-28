@@ -74,8 +74,11 @@ class EditPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUser
 
         permission = Permission.load_by_id(user_id, permission_id, self.user.auth_token)
 
-        context = self.__set_edit_permission_context(permission, False)
-        return render(request, self.template, context, status=status_code)
+        if permission:
+            context = self.__set_edit_permission_context(permission, False)
+            return render(request, self.template, context, status=status_code)
+
+        return redirect('/users/%s/manage' % self.managed_user.user_id)
 
     def post(self, request, user_id, permission_id):
         post_body = request.POST

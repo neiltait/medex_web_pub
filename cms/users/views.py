@@ -19,6 +19,8 @@ class ManageUserBaseView(View):
         if self.managed_user is None:
             return render_404(request, self.user, 'user')
 
+        self.managed_user.load_permissions(self.user.auth_token)
+
         return super().dispatch(request, *args, **kwargs)
 
 

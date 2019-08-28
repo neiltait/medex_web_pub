@@ -177,6 +177,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-ae"
+                                               automation-id="latest-admission-ae"
                                                name="latest_admission_route"
                                                type="radio" value="{{ enums.route_of_admission.AE }}"
                                         {% if form.route_of_admission == enums.route_of_admission.AE %}checked{% endif %}>
@@ -188,6 +189,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-transfer"
+                                               automation-id="latest-admission-transfer"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.TRANSFER }}"
                                                {% if form.route_of_admission == enums.route_of_admission.TRANSFER %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
@@ -198,6 +200,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-unknown"
+                                               automation-id="latest-admission-unknown"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.UNKNOWN }}"
                                         {% if form.route_of_admission == enums.route_of_admission.UNKNOWN %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
@@ -210,6 +213,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-ward"
+                                               automation-id="latest-admission-ward"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.WARD }}"
                                         {% if form.route_of_admission == enums.route_of_admission.WARD %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
@@ -220,6 +224,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-paramedic"
+                                               automation-id="latest-admission-paramedic"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.PARAMEDIC }}"
                                         {% if form.route_of_admission == enums.route_of_admission.PARAMEDIC %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
@@ -232,6 +237,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-gp"
+                                               automation-id="latest-admission-gp"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.GP }}"
                                         {% if form.route_of_admission == enums.route_of_admission.GP %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
@@ -242,6 +248,7 @@
                                     <div class="nhsuk-radios__item">
                                         <input class="nhsuk-radios__input"
                                                id="latest-admission-outpatient"
+                                               automation-id="latest-admission-outpatient"
                                                name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.OUTPATIENT }}"
                                         {% if form.route_of_admission == enums.route_of_admission.OUTPATIENT %}checked{% endif %}>
                                         <label class="nhsuk-label nhsuk-radios__label"
