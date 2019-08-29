@@ -528,9 +528,7 @@ class AdmissionNotesEventForm:
 
         if self.route_of_admission == '':
             self.errors['count'] += 1
-            self.errors['latest_admission_route'] = messages.ErrorFieldRequiredMessage(
-                'admission route'
-            )
+            self.errors['route_of_admission'] = messages.ErrorFieldRequiredMessage('admission route')
 
     def check_valid_draft(self):
         if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
