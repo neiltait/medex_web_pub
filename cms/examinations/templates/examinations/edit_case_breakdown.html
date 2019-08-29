@@ -9,15 +9,13 @@
 {% block tab_js %}
 <script src="{% static 'js/examinations/timeline.js' %}"></script>
 <script src="{% static 'js/examinations/case-breakdown.js' %}"></script>
+<script src="{% static 'js/shared/disable-enter-on-inputs.js' %}"></script>
 {% endblock %}
 
 {% block tab_content %}
 <form id="examination__edit--form" class="form{% if invalid %} error{% endif %}"
       action="{% url 'edit_case_breakdown' examination_id=examination_id %}" method="post"
       data-error-count="{{ error_count }}">
-
-    <!-- Prevent implicit submission of the form -->
-    <button type="submit" disabled style="display: none" aria-hidden="true"></button>
 
     <!-- ... -->
 
