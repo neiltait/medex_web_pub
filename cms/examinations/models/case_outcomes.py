@@ -24,7 +24,8 @@ class CaseOutcome:
         enums.outcomes.MCCD_FROM_ME: 'MCCD to be issued, COD provided by ME',
         enums.outcomes.MCCD_FROM_QAP_AND_ME: 'MCCD to be issued, new COD reached',
         enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
-        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a'
+        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a',
+        enums.outcomes.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen'
     }
 
     REPRESENTATIVE_OUTCOMES = {
@@ -32,6 +33,7 @@ class CaseOutcome:
         enums.discussion.CONCERNS_CORONER: 'Refer to coroner for investigation, concerns raised',
         enums.discussion.CONCERNS_100A: 'Refer to coroner for 100a, concerns raised',
         enums.discussion.CONCERNS_ADDRESSED: 'MCCD to be issued, concerns addressed without coroner',
+        enums.discussion.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
