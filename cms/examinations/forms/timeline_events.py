@@ -605,6 +605,7 @@ class BereavedDiscussionEventForm:
     REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
     REQUEST_OUTCOME_100A = "ConcernsRequires100a"
     REQUEST_OUTCOME_ADDRESSED = "ConcernsAddressedWithoutCoroner"
+    REQUEST_OUTCOME_COULD_NOT_HAPPEN = "DiscussionUnableToHappen"
 
     # properties
     active = False
