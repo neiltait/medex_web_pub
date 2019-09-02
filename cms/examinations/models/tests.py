@@ -612,7 +612,7 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
             for event in events_list:
                 if previous_loop_date:
                     next_date = parse_datetime(event.created_date)
-                    if previous_loop_date > next_date:
+                    if next_date and previous_loop_date > next_date:
                         correctly_ordered = False
 
                 previous_loop_date = parse_datetime(event.created_date)
