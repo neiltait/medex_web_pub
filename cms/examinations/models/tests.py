@@ -498,8 +498,8 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
     # CaseBreakdown tests
 
     def test_case_breakdown_load_by_id_returns_case_breakdown_object_on_success(self):
-        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                         SessionMocks.ACCESS_TOKEN)
+        case_breakdown, case_status, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                      SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(case_breakdown)
         self.assertEquals(type(case_breakdown), CaseBreakdown)
@@ -507,7 +507,8 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
     @patch('examinations.request_handler.load_medical_team_by_id',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
     def test_case_breakdown_load_by_id_returns_an_error_object_if_medical_team_load_fails(self, mock_load):
-        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        case_breakdown, case_status, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                      SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(case_breakdown)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
@@ -515,7 +516,8 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
     @patch('examinations.request_handler.load_case_breakdown_by_id',
            return_value=ExaminationMocks.get_unsuccessful_case_breakdown_load_response())
     def test_case_breakdown_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
-        case_breakdown, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        case_breakdown, case_status, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                      SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(case_breakdown)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)

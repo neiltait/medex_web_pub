@@ -383,11 +383,12 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'case_breakdown': self.examination,
             'patient': self.examination.case_header,
             'form_data': form_data,
-            'enums': enums,
+            'case_status': self.case_status,
+            'enums': enums
         }
 
     def _load_breakdown(self, examination_id):
-        self.examination, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
+        self.examination, self.case_status, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
 
     def _prepare_forms(self, event_list, medical_team, patient_details, form, amend_type):
         pre_scrutiny_form = PreScrutinyEventForm()
