@@ -44,14 +44,17 @@ class CaseEvent:
     def display_date(self):
         if self.created_date:
             date = parse_datetime(self.created_date)
-            if date.date() == datetime.today().date():
-                return 'Today at %s' % date.strftime(self.time_format)
-            elif date.date() == datetime.today().date() - timedelta(days=1):
-                return 'Yesterday at %s' % date.strftime(self.time_format)
+            if date:
+                if date.date() == datetime.today().date():
+                    return 'Today at %s' % date.strftime(self.time_format)
+                elif date.date() == datetime.today().date() - timedelta(days=1):
+                    return 'Yesterday at %s' % date.strftime(self.time_format)
+                else:
+                    time = date.strftime(self.time_format)
+                    date = date.strftime(self.date_format)
+                    return "%s at %s" % (date, time)
             else:
-                time = date.strftime(self.time_format)
-                date = date.strftime(self.date_format)
-                return "%s at %s" % (date, time)
+                return None
         else:
             return None
 
