@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from errors.models import NotFoundError
-from examinations.models.case_breakdown import CaseBreakdown, ExaminationEventList
+from examinations.models.case_breakdown import CaseBreakdown, ExaminationEventList, CaseStatus
 from examinations.models.core import ExaminationOverview, CauseOfDeath
 from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
@@ -197,16 +197,25 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertEqual(patient_details.representatives[0].full_name, bereaved['fullName'])
 
     def test_patient_details_load_by_id_returns_a_patient_details_object_if_successful(self):
-        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        patient_details, case_status, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                        SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(patient_details)
         self.assertEquals(type(patient_details), PatientDetails)
+
+    def test_patient_details_load_by_id_returns_a_case_status_object_if_successful(self):
+        patient_details, case_status, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                        SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(case_status)
+        self.assertEquals(type(case_status), CaseStatus)
 
     @patch('examinations.request_handler.load_modes_of_disposal',
            return_value=DatatypeMocks.get_unsuccessful_modes_of_disposal_response())
     def test_patient_details_load_by_id_returns_an_error_object_if_modes_of_disposal_load_fails(self,
                                                                                                 mock_modes_of_disposal):
-        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        patient_details, case_status, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                        SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
@@ -214,7 +223,8 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
     @patch('examinations.request_handler.load_patient_details_by_id',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
     def test_patient_details_load_by_id_returns_an_error_object_if_load_fails(self, mock_patient_details):
-        patient_details, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        patient_details, case_status, error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                        SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(patient_details)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
@@ -222,8 +232,8 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
     @patch('examinations.request_handler.update_patient_details',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_update_response())
     def test_patient_details_update_returns_error_if_update_fails(self, mock_update):
-        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                                SessionMocks.ACCESS_TOKEN)
+        patient_details, case_status, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                             SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(load_error)
         self.assertIsNotNone(patient_details)
         error = patient_details.update(ExaminationMocks.get_patient_details_load_response_content(),
@@ -237,8 +247,8 @@ class ExaminationsPatientDetailsModelsTests(MedExTestCase):
         self.assertNotEqual(ExaminationMocks.get_patient_details_load_response_content().get('givenNames'),
                             updated_header_content.get('givenNames'))
 
-        patient_details, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
-                                                                SessionMocks.ACCESS_TOKEN)
+        patient_details, case_status, load_error = PatientDetails.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                             SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(load_error)
         self.assertIsNotNone(patient_details)
 
@@ -298,14 +308,6 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
         self.assertIsNone(medical_team)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
-
-    # def test_medical_team_update_returns_no_error_if_update_succeeds(self):
-    #     medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
-    #     self.assertIsNone(load_error)
-    #     self.assertIsNotNone(medical_team)
-    #     error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
-    #                                 SessionMocks.ACCESS_TOKEN)
-    #     self.assertIsNone(error)
 
     @patch('examinations.request_handler.update_medical_team',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_update_response())
@@ -504,6 +506,13 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
         self.assertIsNone(error)
         self.assertIsNotNone(case_breakdown)
         self.assertEquals(type(case_breakdown), CaseBreakdown)
+
+    def test_case_breakdown_load_by_id_returns_case_status_object_on_success(self):
+        case_breakdown, case_status, error = CaseBreakdown.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                      SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(error)
+        self.assertIsNotNone(case_status)
+        self.assertEquals(type(case_status), CaseStatus)
 
     @patch('examinations.request_handler.load_medical_team_by_id',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
