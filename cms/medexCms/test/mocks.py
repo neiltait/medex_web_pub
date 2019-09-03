@@ -947,7 +947,32 @@ class ExaminationMocks:
             "pendingAdmissionNotes": True,
             "pendingDiscussionWithQAP": True,
             "pendingDiscussionWithRepresentative": True,
-            "haveFinalCaseOutstandingOutcomes": True
+            "haveFinalCaseOutstandingOutcomes": True,
+            "haveUnknownBasicDetails": True,
+            "pendingScrutinyNotes": True,
+            "haveFinalCaseOutcomesOutstanding": True,
+            "basicDetailsEntered": True,
+            "nameEntered": True,
+            "dobEntered": True,
+            "dodEntered": True,
+            "nhsNumberEntered": True,
+            "additionalDetailsEntered": True,
+            "latestAdmissionDetailsEntered": True,
+            "doctorInChargeEntered": True,
+            "qapEntered": True,
+            "bereavedInfoEntered": True,
+            "meAssigned": True,
+            "isScrutinyCompleted": True,
+            "preScrutinyEventEntered": True,
+            "qapDiscussionEventEntered": True,
+            "bereavedDiscussionEventEntered": True,
+            "isCaseItemsCompleted": True,
+            "mccdIssued": True,
+            "cremationFormInfoEntered": True,
+            "gpNotified": True,
+            "sentToCoroner": True,
+            "caseClosed": True,
+            "caseOutcome": "ReferToCoroner"
         }
 
     @classmethod
