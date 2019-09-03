@@ -119,10 +119,11 @@ class EditExaminationSectionBaseView(View):
     def __init__(self):
         self.examination = None
         self.error = None
+        super().__init__()
 
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
             self.examination, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
@@ -337,6 +338,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = None
         self.medical_team = None
         self.patient_details = None
+        super().__init__()
 
     @never_cache
     def get(self, request, examination_id):
@@ -345,7 +347,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             return render_error(request, self.user, self.error)
 
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -355,7 +357,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
     @never_cache
     def post(self, request, examination_id):
         self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
