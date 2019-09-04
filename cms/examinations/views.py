@@ -125,7 +125,7 @@ class EditExaminationSectionBaseView(View):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
             self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -317,6 +317,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
+            'case_status': self.case_status,
             'patient': self.examination.case_header,
             'form': self.form,
             'medical_examiners': self.examination.medical_examiner_lookup,

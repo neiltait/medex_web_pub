@@ -1,6 +1,5 @@
 from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
-from examinations.models.medical_team import MedicalTeam
 from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
@@ -30,12 +29,12 @@ class CaseBreakdown:
         case_status = None
 
         if response.ok:
-            medical_team, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
+            from examinations.models.medical_team import MedicalTeam
+            medical_team, case_status, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
             if medical_team_error:
                 error = medical_team_error
             else:
                 case_breakdown = CaseBreakdown(response.json(), medical_team)
-                case_status = CaseStatus(response.json())
         else:
             error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
         return case_breakdown, case_status, error

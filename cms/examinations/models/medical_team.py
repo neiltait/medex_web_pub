@@ -1,5 +1,6 @@
 from errors.utils import log_api_error, handle_error
 from examinations import request_handler
+from examinations.models.case_breakdown import CaseStatus
 
 from medexCms.utils import fallback_to, key_not_empty
 
@@ -49,14 +50,16 @@ class MedicalTeam:
         response = request_handler.load_medical_team_by_id(examination_id, auth_token)
         medical_team = None
         error = None
+        case_status = None
 
         if response.ok:
             medical_team = MedicalTeam(response.json(), examination_id)
+            case_status = CaseStatus(response.json())
         else:
             log_api_error('medical team load', response.text)
             error = handle_error(response, {"action": "loading", "type": "medical team"})
 
-        return medical_team, error
+        return medical_team, case_status, error
 
     def update(self, submission, auth_token):
         response = request_handler.update_medical_team(self.examination_id, submission, auth_token)
