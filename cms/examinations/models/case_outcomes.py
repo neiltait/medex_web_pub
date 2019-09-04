@@ -2,6 +2,7 @@ from rest_framework import status
 
 from errors.utils import log_api_error, handle_error
 from examinations import request_handler
+from examinations.models.case_breakdown import CaseStatus
 from examinations.presenters.core import PatientHeader
 from medexCms.api import enums
 from medexCms.utils import parse_datetime
@@ -74,10 +75,10 @@ class CaseOutcome:
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseOutcome(response.json(), examination_id), None
+            return CaseOutcome(response.json(), examination_id), CaseStatus(response.json()), None
         else:
             log_api_error('case outcome load', response.text if response.content != 'null' else '')
-            return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+            return None, None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod
     def complete_scrutiny(cls, auth_token, examination_id):

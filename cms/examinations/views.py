@@ -340,6 +340,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = None
         self.medical_team = None
         self.patient_details = None
+        self.case_status = None
         super().__init__()
 
     @never_cache
@@ -348,7 +349,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if self.error:
             return render_error(request, self.user, self.error)
 
-        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, self.case_status, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
         self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
@@ -488,13 +489,14 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template, context, status=self.status_code)
 
     def _load_case_outcome(self, examination_id):
-        self.examination, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
+        self.examination, self.case_status, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
 
     def _set_context(self):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
             'case_outcome': self.examination,
+            'case_status': self.case_status,
             'patient': self.examination.case_header,
             'enums': enums,
         }
