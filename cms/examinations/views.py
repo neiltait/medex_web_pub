@@ -231,6 +231,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return {
             'session_user': self.user,
+            'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
             'primary_info_form': self.primary_form,
