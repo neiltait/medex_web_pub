@@ -2072,3 +2072,113 @@ class DatatypeMocks:
         response.status_code = status.HTTP_404_NOT_FOUND
         response._content = json.dumps('Not found').encode('utf-8')
         return response
+
+
+class ReportMocks:
+
+    @classmethod
+    def get_successful_coroner_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_coroner_report_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_empty_coroner_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_coroner_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_coroner_report_data(cls):
+        return {
+            "givenNames": "string",
+            "surname": "string",
+            "nhsNumber": "string",
+            "ableToIssueMCCD": True,
+            "causeOfDeath1a": "string",
+            "causeOfDeath1b": "string",
+            "causeOfDeath1c": "string",
+            "causeOfDeath2": "string",
+            "dateOfBirth": "2019-08-20T16:05:36.574Z",
+            "gender": "Male",
+            "houseNameNumber": "string",
+            "street": "string",
+            "town": "string",
+            "county": "string",
+            "postcode": "string",
+            "placeOfDeath": "string",
+            "dateOfDeath": "2019-08-20T16:05:36.574Z",
+            "timeOfDeath": "string",
+            "anyImplants": True,
+            "implantDetails": "string",
+            "latestBereavedDiscussion": {
+                "userFullName": "string",
+                "usersRole": "string",
+                "created": "2019-08-20T16:05:36.574Z",
+                "eventId": "string",
+                "userId": "string",
+                "isFinal": True,
+                "eventType": "Other",
+                "participantFullName": "string",
+                "participantRelationship": "string",
+                "participantPhoneNumber": "string",
+                "presentAtDeath": "Yes",
+                "informedAtDeath": "Yes",
+                "dateOfConversation": "2019-08-20T16:05:36.574Z",
+                "timeOfConversation": "string",
+                "discussionUnableHappen": True,
+                "discussionUnableHappenDetails": "string",
+                "discussionDetails": "string",
+                "bereavedDiscussionOutcome": "CauseOfDeathAccepted"
+            },
+            "qap": {
+                "name": "string",
+                "role": "string",
+                "organisation": "string",
+                "phone": "string",
+                "notes": "string",
+                "gmcNumber": "string"
+            },
+            "consultant": {
+                "name": "string",
+                "role": "string",
+                "organisation": "string",
+                "phone": "string",
+                "notes": "string",
+                "gmcNumber": "string"
+            },
+            "gp": {
+                "name": "string",
+                "role": "string",
+                "organisation": "string",
+                "phone": "string",
+                "notes": "string",
+                "gmcNumber": "string"
+            },
+            "latestAdmissionDetails": {
+                "userFullName": "string",
+                "usersRole": "string",
+                "eventId": "string",
+                "userId": "string",
+                "notes": "string",
+                "isFinal": True,
+                "eventType": "Other",
+                "admittedDate": "2019-08-20T16:05:36.574Z",
+                "admittedDateUnknown": True,
+                "admittedTime": "string",
+                "admittedTimeUnknown": True,
+                "immediateCoronerReferral": True,
+                "created": "2019-08-20T16:05:36.574Z",
+                "routeOfAdmission": "AccidentAndEmergency"
+            },
+            "detailsAboutMedicalHistory": "string"
+        }

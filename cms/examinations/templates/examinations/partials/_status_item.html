@@ -1,0 +1,18 @@
+{% load staticfiles %}
+
+{% if status %}
+
+<div>
+   <img class="nhsuk-icon case-status-icon" src="{% static 'images/icon-tick.svg' %}" alt=""> {{ label }}
+</div>
+
+{% else %}
+
+<div>
+<img class="nhsuk-icon case-status-icon" src="{% static 'images/minus.svg' %}" alt=""> {{ label }}
+</div>
+
+{% endif %}
+
+
+

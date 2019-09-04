@@ -17,7 +17,8 @@ from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
-from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
+from examinations.reports import CoronerDownloadReport
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
@@ -383,11 +384,12 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'case_breakdown': self.examination,
             'patient': self.examination.case_header,
             'form_data': form_data,
-            'enums': enums,
+            'case_status': self.case_status,
+            'enums': enums
         }
 
     def _load_breakdown(self, examination_id):
-        self.examination, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
+        self.examination, self.case_status, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
 
     def _prepare_forms(self, event_list, medical_team, patient_details, form, amend_type):
         pre_scrutiny_form = PreScrutinyEventForm()
@@ -520,3 +522,14 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
             'closed_list': True,
             'pagination_url': 'closed_examination_index',
         }
+
+
+class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_examination'
+    template = 'examinations/templates/reports/coroner-referral-form.odt'
+
+    @never_cache
+    def get(self, request, examination_id):
+        report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
+
+        return ReportGenerator.create_report(self.template, report, filename="report.odt")

@@ -155,4 +155,23 @@
             padding: $medex-spacing-md;
         }
     }
+
+    .document-download {
+        margin-top: $medex-spacing-md;
+        &-image {
+            height: 6rem;
+            width: 4rem;
+            background: url("/static/images/document_enabled.svg") no-repeat;
+            border: 2px solid $nhs-grey;
+            margin-bottom: $medex-spacing-lg;
+
+            &--disabled {
+                background: url("/static/images/document_disabled.svg") no-repeat;
+                border: 2px solid $nhs-light-grey;
+            }
+        }
+        &-hint {
+            margin-top: 0;
+        }
+    }
 }
