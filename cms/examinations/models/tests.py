@@ -296,25 +296,29 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     # MedicalTeam tests
 
     def test_medical_team_load_by_id_returns_a_medical_team_object_if_successful(self):
-        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(medical_team)
+        self.assertIsNotNone(case_status)
         self.assertEquals(type(medical_team), MedicalTeam)
 
     @patch('examinations.request_handler.load_medical_team_by_id',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
     def test_medical_team_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
-        medical_team, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(medical_team)
+        self.assertIsNone(case_status)
         self.assertIsNotNone(error)
         self.assertEquals(type(error), NotFoundError)
 
     @patch('examinations.request_handler.update_medical_team',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_update_response())
     def test_medical_team_update_returns_error_if_update_fails(self, mock_update):
-        medical_team, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(load_error)
+        self.assertIsNotNone(case_status)
         self.assertIsNotNone(medical_team)
+
         error = medical_team.update(ExaminationMocks.get_medical_team_load_response_content(),
                                     SessionMocks.ACCESS_TOKEN)
         self.assertIsNotNone(error)

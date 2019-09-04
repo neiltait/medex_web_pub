@@ -359,7 +359,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     @never_cache
     def post(self, request, examination_id):
-        self.medical_team, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, self.case_status, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
         self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
