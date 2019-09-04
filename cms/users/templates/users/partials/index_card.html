@@ -16,12 +16,12 @@
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
                     <p>
-                        {{user.active}}
+                        &nbsp;
                     </p>
                 </div>
 
                 <div class="nhsuk-grid-column-one-half">
-                    <a class="view-btn" href="{% url 'edit_user' user_id=user.user_id %}">
+                    <a class="view-btn" href="{% url 'manage_user' user_id=user.user_id %}">
                         Edit user
                     </a>
                 </div>

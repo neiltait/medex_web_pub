@@ -16,6 +16,16 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIRouteOfAdmission:
+    AE = "AccidentAndEmergency"
+    WARD = "DirectToWard"
+    GP = "GPReferral"
+    TRANSFER = "TransferFromAnotherHospital"
+    PARAMEDIC = "ParamedicToSpecialistCenter"
+    OUTPATIENT = "FromOutpatientClinic"
+    UNKNOWN = "Unknown"
+
+
 class APIFuneralArrangements:
     CREMATION = "Cremation"
     BURIAL = "Burial"
@@ -31,6 +41,18 @@ class APICircumstancesOfDeath:
     END_OF_LIFE_CARE_PLAN = 'PartOfAnIndividualisedEndOfLifeCarePlan'
 
 
+class APIPrescrutinyStatus:
+    HAPPENED = "PrescrutinyHappened"
+    NOT_HAPPENED = "PrescrutinyNotHappened"
+
+
+class APIQapDiscussionStatus:
+    HAPPENED_NO_REVISION = 'HappenedNoRevision'
+    HAPPENED_WITH_REVISIONs = 'HappenedWithRevisions'
+    COULD_NOT_HAPPEN = 'CouldNotHappen'
+    NO_RECORD = 'NoRecord'
+
+
 class APIOutcomes:
     MCCD = 'IssueAnMccd'
     CORONER_100A = 'ReferToCoronerFor100a'
@@ -39,6 +61,7 @@ class APIOutcomes:
     MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
     MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
     MCCD_FROM_QAP_AND_ME = 'MccdCauseOfDeathAgreedByQAPandME'
+    DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
 
 
 class APICauseOfDeathStatuses:
@@ -56,6 +79,7 @@ class APIDiscussionOutcomes:
     CONCERNS_CORONER = 'ConcernsCoronerInvestigation'
     CONCERNS_100A = 'ConcernsRequires100a'
     CONCERNS_ADDRESSED = 'ConcernsAddressedWithoutCoroner'
+    DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
 
 
 class APIPeopleStrings:
@@ -63,6 +87,13 @@ class APIPeopleStrings:
     BEREAVED_REP = 'bereaved-representative'
     OTHER = 'other'
     NOBODY = 'nobody'
+
+
+class APIRoles:
+    ME = 'MedicalExaminer'
+    MEO = 'MedicalExaminerOfficer'
+    SERVICE_ADMIN = 'ServiceAdministrator'
+    SERVICE_OWNER = 'ServiceOwner'
 
 
 class UserRoleTypes:
@@ -136,18 +167,22 @@ class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
+    route_of_admission = APIRouteOfAdmission()
     funeral_arrangements = APIFuneralArrangements()
     cod = APICircumstancesOfDeath()
     outcomes = APIOutcomes()
     discussion = APIDiscussionOutcomes()
     people = APIPeopleStrings()
     cod_status = APICauseOfDeathStatuses()
+    roles = APIRoles()
     role_types = UserRoleTypes()
     gp_notified_status = APIGPNotifiedStatus()
     examination_sections = ExaminationSections()
     timeline_event_keys = TimelineEventKeys()
     timeline_event_types = TimelineEventTypes()
     errors = SystemValidationErrors()
+    prescrutiny_status = APIPrescrutinyStatus()
+    qap_discussion_status = APIQapDiscussionStatus()
 
 
 enums = APIStrings()

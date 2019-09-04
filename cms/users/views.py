@@ -19,6 +19,8 @@ class ManageUserBaseView(View):
         if self.managed_user is None:
             return render_404(request, self.user, 'user')
 
+        self.managed_user.load_permissions(self.user.auth_token)
+
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -40,11 +42,15 @@ class CreateUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
             response = User.create(form.response_to_dict(), self.user.auth_token)
 
             if response.ok:
+                # 1. success
                 return redirect('/users/%s/add_permission' % response.json()['userId'])
             else:
+                # 2. api error
                 log_api_error('user creation', response.text)
+                form.register_response_errors(response)
                 status_code = response.status_code
         else:
+            # 3. front end error
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_create_user_context(form, True)
@@ -74,3 +80,18 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+
+class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
+    permission_required = 'can_get_users'
+    template = 'users/manage.html'
+
+    def get(self, request, user_id):
+        status_code = status.HTTP_200_OK
+        context = {
+            'session_user': self.user,
+            'managed_user': self.managed_user,
+        }
+
+        return render(request, self.template, context, status=status_code)
+

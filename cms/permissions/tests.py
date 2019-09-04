@@ -1,4 +1,5 @@
 from alerts import messages
+from medexCms.api import enums
 from medexCms.test.mocks import PermissionMocks
 from medexCms.test.utils import MedExTestCase
 
@@ -16,30 +17,25 @@ class PermissionModelsTests(MedExTestCase):
         self.assertEqual(permission.location_id, PermissionMocks.get_meo_permission_dict()['locationId'])
         self.assertEqual(permission.user_role, PermissionMocks.get_meo_permission_dict()['userRole'])
 
-    def test_role_type_returns_the_correct_value_from_the_enum(self):
-        permission = Permission(PermissionMocks.get_meo_permission_dict())
+    def test_correctly_sets_values_from_enum_role_values(self):
+        me_permission = Permission(PermissionMocks.get_me_permission_dict())
+        meo_permission = Permission(PermissionMocks.get_meo_permission_dict())
 
-        role_key = '0'
-        permission.user_role = role_key
-        self.assertEqual(permission.role_type, permission.ROLES[role_key])
+        self.assertEqual(me_permission.role_type, enums.roles.ME)
+        self.assertEqual(meo_permission.role_type, enums.roles.MEO)
 
-        role_key = '1'
-        permission.user_role = role_key
-        self.assertEqual(permission.role_type, permission.ROLES[role_key])
 
-        role_key = '2'
-        permission.user_role = role_key
-        self.assertEqual(permission.role_type, permission.ROLES[role_key])
+    def test_correctly_sets_values_from_legacy_values(self):
+        me_legacy = Permission(PermissionMocks.get_legacy_me_permission_dict())
+        meo_legacy = Permission(PermissionMocks.get_legacy_meo_permission_dict())
 
-        role_key = '3'
-        permission.user_role = role_key
-        self.assertEqual(permission.role_type, permission.ROLES[role_key])
+        self.assertEqual(me_legacy.role_type, enums.roles.ME)
+        self.assertEqual(meo_legacy.role_type, enums.roles.MEO)
 
 
 class PermissionsFormsTests(MedExTestCase):
 
     # PermissionBuilderForm tests
-
     def test_is_valid_returns_false_when_no_role_given(self):
         form_content = {
             'role': None,

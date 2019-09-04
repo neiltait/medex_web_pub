@@ -1,11 +1,11 @@
 @import '../typography';
-
+@import '../spacing';
 
 .settings-index {
-    margin-bottom: 192px;
+    margin-bottom: $medex-spacing-xl;
 
     .page-title {
-        margin-bottom: 24px;
+        margin-bottom: $medex-spacing-md;
     }
 
     .page-subheading {
@@ -13,10 +13,10 @@
     }
 
     .service-overview {
-        margin-bottom: 68px;
+        margin-bottom: $medex-spacing-xl;
 
         .trusts {
-            margin-right: 110px;
+            margin-right: $medex-spacing-xl;
         }
 
         .trusts-count, .users-count {
@@ -26,13 +26,13 @@
 
         .users-label, .trusts-label {
             @extend .l-heading-base;
-            margin-top: 36px;
+            margin-top: $medex-spacing-lg;
             font-weight: bold;
         }
     }
 
     .add-user-btn {
-        padding-left: 50px;
-        padding-right: 50px;
+        padding-left: $medex-spacing-xl;
+        padding-right: $medex-spacing-xl;
     }
 }

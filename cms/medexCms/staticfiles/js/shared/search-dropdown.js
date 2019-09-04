@@ -10,7 +10,7 @@
     setup: function() {
       this.isSingleSelection = this.container[0].attributes.class.value.indexOf('multiple') === -1 ? true : false;
       this.selectionField = this.container.find('.selection-field')[0];
-      this.searchField = $(this.container.find('input[name=searchField]'));
+      this.searchField = $(this.container.find('.search-field-input')[0]);
       this.optionList = $(this.container.find('.options-list'));
       this.placeholder = $(this.optionList.find('.placeholder'));
       console.info('Initialising search dropdown', this.container);

@@ -1,6 +1,10 @@
 @import '../variables';
 @import '../typography';
 
+body {
+    background-color: $white;
+}
+
 .user-index {
     .page-title {
         margin-bottom: 43px;
@@ -11,7 +15,7 @@
         border-left: 4px solid $nhs-light-grey;
         padding: 1.5rem 2rem;
         box-shadow: 0 5px $nhs-very-light-grey;
-        margin-bottom: 1rem;
+        margin: $medex-spacing-md;
 
         p {
             margin-bottom: 0;

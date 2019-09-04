@@ -4,7 +4,7 @@
     </div>
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <h3 class="nhsuk-heading-s">Consultants Information</h3>
+            <h3 class="nhsuk-heading-s">Doctors Information</h3>
         </div>
     </div>
 
@@ -15,9 +15,9 @@
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group--field-indicator {% if errors.consultant_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="consultant_name_1">
-                            Consultant responsible for care
+                            Doctor responsible for care
                         </label>
-                        {% if errors.consultant_1 %}<span class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_1 }}</span>{% endif %}
+                        {% if errors.consultant_1 %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_consultant_1_name">{{ errors.consultant_1 }}</span>{% endif %}
                         <input class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_1 %}nhsuk-input--error{% endif %}"
                                id="consultant_name_1" name="consultant_name_1" value="{{ form.consultant_1.name }}" type="text">
                         <div class="medex-field-indicator">
@@ -102,7 +102,7 @@
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.consultant_2 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_name_2">
-                                Second consultant responsible for care
+                                Second doctor responsible for care
                             </label>
                             {% if errors.consultant_2 %}
                             <span
@@ -182,7 +182,7 @@
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.consultant_3 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_name_3">
-                                Third consultant responsible for care
+                                Third doctor responsible for care
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_name_3" name="consultant_name_3"
                                    value="{{ form.consultant_3.name }}" type="text">
@@ -227,7 +227,7 @@
                 <div class="nhsuk-grid-column-one-half">
                     <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group">
-                            <label class="nhsuk-label" for="gmc-number-consultant-3">
+                            <label class="nhsuk-label" for="gmc_number_consultant_3">
                                 GMC number
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_3" name="gmc_number_consultant_3"
@@ -251,10 +251,10 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <button class="nhsuk-button add-panel-button expanded-margin" type="submit">
-                    Add another consultant
+                    Add another doctor
                 </button>
                 <button class="nhsuk-button nhsuk-button--secondary remove-panel-button medex-hidden" type="submit">
-                    Remove consultant above
+                    Remove doctor above
                 </button>
             </div>
         </div>

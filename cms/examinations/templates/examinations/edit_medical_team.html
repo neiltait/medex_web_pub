@@ -22,6 +22,8 @@
       action="{% url 'edit_examination' examination_id=examination_id %}/medical-team" method="post"
       data-error-count="{{ error_count }}">
 
+    <!-- ... -->
+
     {% csrf_token %}
 
     <div class="form-tab" id="medical-team-section">

@@ -17,6 +17,7 @@ body {
   margin: 0px;
   font-family: $primary-font;
   color: $primary-font-color;
+  background-color: $white;
 }
 
 input {
@@ -76,4 +77,12 @@ p {
 
 .inline {
   display: inline;
+}
+
+.mobile-hidden {
+  @media screen and (max-width: 641px) {
+
+    visibility: hidden;
+    display: none;
+  }
 }

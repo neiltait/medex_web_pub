@@ -44,14 +44,17 @@ class CaseEvent:
     def display_date(self):
         if self.created_date:
             date = parse_datetime(self.created_date)
-            if date.date() == datetime.today().date():
-                return 'Today at %s' % date.strftime(self.time_format)
-            elif date.date() == datetime.today().date() - timedelta(days=1):
-                return 'Yesterday at %s' % date.strftime(self.time_format)
+            if date:
+                if date.date() == datetime.today().date():
+                    return 'Today at %s' % date.strftime(self.time_format)
+                elif date.date() == datetime.today().date() - timedelta(days=1):
+                    return 'Yesterday at %s' % date.strftime(self.time_format)
+                else:
+                    time = date.strftime(self.time_format)
+                    date = date.strftime(self.date_format)
+                    return "%s at %s" % (date, time)
             else:
-                time = date.strftime(self.time_format)
-                date = date.strftime(self.date_format)
-                return "%s at %s" % (date, time)
+                return None
         else:
             return None
 
@@ -68,13 +71,12 @@ class CaseInitialEvent(CaseEvent):
     event_type = enums.timeline_event_types.INITIAL_EVENT_TYPE
     css_type = 'initial'
 
-    def __init__(self, obj_dict, patient_name, user_role):
+    def __init__(self, obj_dict, patient_name):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
         self.user_full_name = obj_dict.get('userFullName')
         self.user_role = obj_dict.get('usersRole')
-        self.user_role = user_role
         self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
@@ -111,7 +113,7 @@ class CaseClosedEvent(CaseEvent):
     event_type = enums.timeline_event_types.CASE_CLOSED_TYPE
     css_type = 'case-closed'
 
-    def __init__(self, obj_dict, patient_name, user_role):
+    def __init__(self, obj_dict, patient_name):
         self.number = None
         self.patient_name = patient_name
         self.user_id = obj_dict.get('userId')
@@ -367,6 +369,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
         self.admitted_time = obj_dict.get('admittedTime')
         self.admitted_time_unknown = obj_dict.get('admittedTimeUnknown')
         self.immediate_coroner_referral = obj_dict.get('immediateCoronerReferral')
+        self.route_of_admission = obj_dict.get('routeOfAdmission')
         self.published = obj_dict.get('isFinal')
         self.dod = dod
         self.is_latest = self.event_id == latest_id

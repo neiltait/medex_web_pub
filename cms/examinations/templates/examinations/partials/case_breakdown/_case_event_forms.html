@@ -5,7 +5,7 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
             <div class="form-picker">
-                <div class="nhsuk-heading-l" id="hidden-text">You are adding...</div>
+                <div class="add-event-header" id="hidden-text">You are adding...</div>
                 <select class="nhsuk-select" id="event-form-picker" name="select-an-event" aria-label="select-an-event">
                     <option value="" disabled hidden selected>Select an event</option>
                     {% for form in forms %}
@@ -40,9 +40,9 @@
 
     {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" with form=form_data.PreScrutinyEventForm %}
 
-    {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" with form=form_data.QapDiscussionEventForm %}
+    {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" with form=form_data.QapDiscussionEventForm case_status=pre_populated.qap %}
 
-    {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" with form=form_data.BereavedDiscussionEventForm %}
+    {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" with form=form_data.BereavedDiscussionEventForm case_status=pre_populated.bereaved %}
 
     {% include "examinations/partials/case_breakdown/_event_other_form.html" with form=form_data.OtherEventForm %}
 </div>

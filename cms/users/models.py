@@ -33,6 +33,7 @@ class User:
         self.index_overview = None
         self.examinations = []
         self.permissions = []
+        self.permission_objects = []
         if obj_dict:
             self.user_id = obj_dict.get('userId')
             self.first_name = obj_dict.get('firstName')
@@ -41,6 +42,9 @@ class User:
             self.roles = obj_dict.get('role')
             if type(obj_dict.get('permissions')) == list:
                 self.permissions = obj_dict.get('permissions')
+                for permission in self.permissions:
+                    permission_object = Permission(obj_dict=permission)
+                    self.permission_objects.append(permission_object)
             else:
                 self.permitted_actions = PermittedActions(obj_dict.get('permissions'))
 
@@ -114,14 +118,19 @@ class User:
     def add_permission(self, form, auth_token):
         return Permission.create(form.to_dict(self.user_id), self.user_id, auth_token)
 
-    def load_permissions(self):
-        response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
+    def update_permission(self, form, permission_id, auth_token):
+        return Permission.update(form.to_dict(self.user_id), self.user_id, permission_id, auth_token)
+
+    def load_permissions(self, auth_token):
+        response = permissions_request_handler.load_permissions_for_user(self.user_id, auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            for permission in response.json()['permissions']:
-                self.permissions.append(Permission(permission))
+            self.permissions = response.json()['permissions']
+            for permission in self.permissions:
+                permission_object = Permission(obj_dict=permission)
+                self.permission_objects.append(permission_object)
         else:
             log_api_error('permissions load', response.text)
 
@@ -182,6 +191,9 @@ class User:
 
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
+
+    def get_location_collection(self):
+        return Location.load_location_collection_for_user(self.auth_token)
 
     def default_filter_user(self):
         return self.user_id if self.is_me() and not self.is_meo() else None

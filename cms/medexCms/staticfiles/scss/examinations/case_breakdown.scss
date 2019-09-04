@@ -19,7 +19,13 @@
 
     font-size: $nhs-heading-l-size;
     line-height: $nhs-heading-l-line-height;
+    font-weight: bold;
   }
+}
+
+.cod-textarea {
+    font-weight: bold;
+    padding-left: $medex-spacing-xl;
 }
 
 .submit-btn {
@@ -44,7 +50,15 @@
 .inset-text-panel {
   padding-top: 0rem;
   padding-left: $medex-spacing-lg;
+  margin-left: 18.5px;
   border-left: $nhs-light-grey 3px solid;
+}
+
+.medex-hint {
+    color: $nhs-grey;
+    font-size: 19px;
+    margin-bottom: 16px;
+    line-height: 1.5;
 }
 
 #pre-scrutiny {
@@ -66,6 +80,10 @@
 
   .margin-bottom {
     margin-bottom: $medex-spacing-md;
+  }
+
+  .margin-top-lg {
+    padding-top: 2.75rem;
   }
 
   .margin-top {
@@ -114,5 +132,8 @@
     .margin-section {
         margin-top: $medex-spacing-xl;
     }
+}
 
+.margin-top-lg {
+  padding-top: 2.75rem;
 }

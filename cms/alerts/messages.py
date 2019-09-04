@@ -22,7 +22,7 @@ INVALID_DATE = 'Please enter a valid date'
 
 NAME_TOTAL_TOO_LONG = 'Please enter fewer than 250 characters in total'
 
-DEATH_IS_NOT_AFTER_BIRTH = 'Death date must be after birth date'
+DEATH_IS_NOT_AFTER_BIRTH = 'Birth date must be before death date'
 
 GENERAL_ERROR = 'There was an error whilst %s the %s'
 
@@ -38,6 +38,16 @@ NO_ROLES = 'You do not currently have roles assigned to your account, please con
            ' assignment'
 
 NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
+
+DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given'
+
+NO_GENDER = "Please choose a gender"
+
+DOB_IN_FUTURE = "Date of birth must be in the past"
+
+DOD_IN_FUTURE = "Date of death must be in the past"
+
+ME_OFFICE = "Please choose an ME office"
 
 
 def ErrorFieldRequiredMessage(field_name):
@@ -58,9 +68,17 @@ class NhsNumberErrors:
     DUPLICATE = "This NHS number already exists on another case"
     INVALID = "This NHS number is invalid"
     UNKNOWN = "There is a problem with this NHS number"
+    NO_NUMBER_AND_NO_UNKNOWN = "an NHS number"
+
+
+class DateOfBirthErrors:
+    DATE_OF_BIRTH_AFTER_DATE_OF_DEATH = "Date of birth is after date of death"
+    DOB_IN_FUTURE = "Date of birth must be in the past"
 
 
 class ApiErrorMessages:
     nhs_numbers = NhsNumberErrors()
+    date_of_birth = DateOfBirthErrors()
+
 
 api_error_messages = ApiErrorMessages()
