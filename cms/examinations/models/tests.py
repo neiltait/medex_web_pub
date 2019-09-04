@@ -9,8 +9,9 @@ from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent, CaseClosedEvent, CaseOtherEvent, CasePreScrutinyEvent, \
     CaseQapDiscussionEvent, CaseMeoSummaryEvent, CaseAdmissionNotesEvent, CaseBereavedDiscussionEvent, \
     CaseMedicalHistoryEvent
+from examinations.reports import CoronerDownloadReport
 from examinations.templatetags.examination_filters import case_card_presenter
-from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks
+from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks, ReportMocks
 from medexCms.test.utils import MedExTestCase
 from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT_4, key_not_empty
 
@@ -679,3 +680,31 @@ class ExaminationsTimelineEventsModelsTests(MedExTestCase):
         event = CaseInitialEvent(data, None)
 
         self.assertEquals(event.display_time(), CaseInitialEvent.UNKNOWN)
+
+
+class ExaminationsReportsTests(MedExTestCase):
+
+    @patch('examinations.request_handler.load_coroner_report',
+           return_value=ReportMocks.get_unsuccessful_coroner_report_response())
+    def test_load_coroner_report_by_id_returns_an_error_object_if_load_fails(self, mock_patient_details):
+        coroner_report, error = CoronerDownloadReport.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(coroner_report)
+        self.assertIsNotNone(error)
+        self.assertGreaterEqual(error['count'], 1)
+
+    @patch('examinations.request_handler.load_coroner_report',
+           return_value=ReportMocks.get_successful_coroner_report_response())
+    def test_load_coroner_report_by_id_returns_report_object_if_load_succeeds(self, mock_patient_details):
+        coroner_report, error = CoronerDownloadReport.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(coroner_report)
+        self.assertEqual(error['count'], 0)
+
+    @patch('examinations.request_handler.load_coroner_report',
+           return_value=ReportMocks.get_empty_coroner_report_response())
+    def test_load_coroner_report_by_id_still_returns_an_object_if_api_returns_missing_data(self, mock_patient_details):
+        coroner_report, error = CoronerDownloadReport.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(coroner_report)
+        self.assertEqual(error['count'], 0)

@@ -17,7 +17,8 @@ from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
-from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
+from examinations.reports import CoronerDownloadReport
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
@@ -521,3 +522,14 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
             'closed_list': True,
             'pagination_url': 'closed_examination_index',
         }
+
+
+class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_examination'
+    template = 'examinations/templates/reports/coroner-referral-form.odt'
+
+    @never_cache
+    def get(self, request, examination_id):
+        report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
+
+        return ReportGenerator.create_report(self.template, report, filename="report.odt")

@@ -1,49 +1,92 @@
 {% if case_outcome.show_coroner_referral %}
-<div class="refer-to-coroner">
-    <h2 class="page-subheading">
-        Coroner Referral
-    </h2>
+    <div class="refer-to-coroner">
+        <h2 class="page-subheading">
+            Coroner Referral
+        </h2>
 
-    <p>
-        Confirm that the relevant information has been sent to the coroner.
-    </p>
-
-    <form id="coroner-referral-form" class="form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
-          method="post">
-        <!-- Prevent implicit submission of the form -->
-        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
-
-        <!-- ... -->
-        {% csrf_token %}
-
-        <div class="nhsuk-checkboxes">
-            <div class="nhsuk-checkboxes__item">
-                <input id="coroner-referral-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
-                       {% if case_outcome.coroner_referral %} checked {% endif %}
-                       {% if not case_outcome.coroner_referral_enabled %} disabled {% endif %}/>
-                <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner-referral-confirmation">
-                    Referral has been sent
-                </label>
-            </div>
-        </div>
-
-        <div class="sticky-save">
-            <div class="container">
-                <input class="submit-btn" type="submit" name="{{case_outcome.CORONER_REFERRAL_FORM_TYPE}}" value="Save changes"/>
-            </div>
-        </div>
-    </form>
-
-    {% if case_outcome.coroner_referral %}
-    <div class="disclaimer-wrapper">
-        <div class="disclaimer-header">
-            Disclaimer
-        </div>
-
-        <p class="disclaimer-body">
-            {{ case_outcome.coroner_referral_disclaimer }}
+        <p>
+            Confirm that the relevant information has been sent to the coroner.
         </p>
+
+        <form id="coroner-referral-form" class="form"
+              action="{% url 'view_case_outcome' examination_id=examination_id %}"
+              method="post">
+            <!-- Prevent implicit submission of the form -->
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+            <!-- ... -->
+            {% csrf_token %}
+
+            <div class="case-outcome-report-download">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half document-download">
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-one-quarter">
+                                <div class="document-download-image {% if not case_outcome.coroner_referral_enabled %}document-download-image--disabled{% endif %}">
+                                </div>
+                            </div>
+                            <div class="nhsuk-grid-column-three-quarters">
+                                <a href="{% url 'download_coroner_report' examination_id=examination_id %}" class="nhsuk-u-font-size-24">{{ patient.full_name }} Coroner Referral</a>
+                                <p>ODT Document</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
+                        <div class="nhsuk-inset-text nhsuk-hint document-download-hint">
+                            This document contains the relevant information that has been provided during the lifespan
+                            of this case. It should be reviewed, with any missing information added, and then sent to
+                            the coroner.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if not case_outcome.coroner_referral_enabled %}
+                <details class="nhsuk-details helper-text-top-margin">
+                    <summary class="nhsuk-details__summary">
+                <span class="nhsuk-details__summary-text helper-text">
+                  Why can't I access this document?
+                </span>
+                    </summary>
+                    <div class="nhsuk-details__text helper-text">
+                        <p class="helper-text">In order to access and download the coroner referral document:</p>
+                        <ul class="helper-text">
+                            <li>The ME must have confirmed scrutiny</li>
+                            <li>You must have ME or MEO permission level</li>
+                        </ul>
+                    </div>
+                </details>
+            {% endif %}
+
+            <div class="nhsuk-checkboxes">
+                <div class="nhsuk-checkboxes__item">
+                    <input id="coroner-referral-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
+                            {% if case_outcome.coroner_referral %} checked {% endif %}
+                            {% if not case_outcome.coroner_referral_enabled %} disabled {% endif %}/>
+                    <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner-referral-confirmation">
+                        Referral has been sent
+                    </label>
+                </div>
+            </div>
+
+            <div class="sticky-save">
+                <div class="container">
+                    <input class="submit-btn" type="submit" name="{{ case_outcome.CORONER_REFERRAL_FORM_TYPE }}"
+                           value="Save changes"/>
+                </div>
+            </div>
+        </form>
+
+        {% if case_outcome.coroner_referral %}
+            <div class="disclaimer-wrapper">
+                <div class="disclaimer-header">
+                    Disclaimer
+                </div>
+
+                <p class="disclaimer-body">
+                    {{ case_outcome.coroner_referral_disclaimer }}
+                </p>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 {% endif %}
