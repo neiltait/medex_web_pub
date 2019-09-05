@@ -60,7 +60,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_return_to_create_examination_context(add_another, form, post_body)
-        return render(request, self.template, context, status=status_code)
+        response = render(request, self.template, context, status=status_code)
+        return response
 
     def __successful_post(self, response):
         examination_id = response.json()['examinationId']
