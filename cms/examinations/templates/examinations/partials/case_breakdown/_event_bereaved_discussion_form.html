@@ -249,11 +249,11 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-row align-bottom">
                     <div class="nhsuk-grid-column-one-half" id="date-time-column">
                         <div class="nhsuk-grid-row">
                             <div class="nhsuk-grid-column-full">
-                                <div class="nhsuk-date-input margin-top" id="date-of-conversation">
+                                <div class="nhsuk-date-input margin-top align-bottom" id="date-of-conversation">
                                     <div class="nhsuk-date-input__item">
                                         <div class="nhsuk-form-group">
                                             <label class="nhsuk-label nhsuk-date-input__label" for="doc-day">
@@ -290,24 +290,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="nhsuk-grid-row">
-                            <div class="nhsuk-grid-column-full">
-                                <div id="beravement-discussion-time">
-                                        <label class="nhsuk-label margin-top" for="doc-time">
-                                            Time
-                                        </label>
-                                        <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="doc-time"
-                                               name="bereaved_time_of_conversation"
-                                               type="time"
-                                               value="{{ form.time_of_conversation }}">
-                                    </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="nhsuk-grid-column-one-half" id="unable-column">
-                        <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half align-tick" id="unable-column">
+                            <div class="nhsuk-grid-row">
                             <div class="nhsuk-grid-column-full">
-                                <div class="nhsuk-form-group margin-top-lg">
+                                <div class="nhsuk-form-group">
                                     <div class="nhsuk-checkboxes">
                                         <div class="nhsuk-checkboxes__item">
                                             <input class="nhsuk-checkboxes__input" id="bereaved-discussion-could-not-happen"
@@ -324,15 +311,28 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            </div>
                     </div>
                 </div>
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full">
+                                <div id="beravement-discussion-time">
+                                        <label class="nhsuk-label margin-top" for="doc-time">
+                                            Time
+                                        </label>
+                                        <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="doc-time"
+                                               name="bereaved_time_of_conversation"
+                                               type="time"
+                                               value="{{ form.time_of_conversation }}">
+                                    </div>
+                            </div>
+                        </div>
             </fieldset>
         </div>
 
 
 <div class="margin-save-button">
-    {% include "examinations/partials/case_breakdown/_agreed_cause_of_death.html" with prefix="bereavement" %}
+    {% include "examinations/partials/case_breakdown/_bereaved_cause_of_death.html" %}
 </div>
 
 <div id="bereavement-discussion__details">
@@ -465,7 +465,7 @@
             </div>
         </div>
     </div>
-
+</div>
 </div>
 </div>
 </div>
