@@ -1,6 +1,5 @@
 from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
-from examinations.models.medical_team import MedicalTeam
 from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
@@ -30,43 +29,68 @@ class CaseBreakdown:
         case_status = None
 
         if response.ok:
-            medical_team, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
+            from examinations.models.medical_team import MedicalTeam
+            medical_team, case_status, medical_team_error = MedicalTeam.load_by_id(examination_id, auth_token)
             if medical_team_error:
                 error = medical_team_error
             else:
                 case_breakdown = CaseBreakdown(response.json(), medical_team)
-                case_status = CaseStatus(response.json())
         else:
             error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
         return case_breakdown, case_status, error
 
 
 class CaseStatus:
+    basic_details_entered = False
+    name_entered = False
+    dob_entered = False
+    dod_entered = False
+    nhs_number_entered = False
+    additional_details_entered = False
+    latest_admission_details_entered = False
+    doctor_in_charge_entered = False
+    qap_entered = False
+    bereaved_info_entered = False
+    me_assigned = False
+    is_scrutiny_completed = False
+    pre_scutiny_event_entered = False
+    qap_discussion_event_entered = False
+    bereaved_discussion_event_entered = False
+    is_case_items_completed = False
+    mccd_issued = False
+    cremation_form_info_entered = False
+    gp_notified = False
+    sent_to_coroner = False
+    case_closed = False
+    case_outcome = False
+    have_been_scrutinised_by_ME = False
+
     def __init__(self, obj_dict):
         header = obj_dict.get("header")
-        self.basic_details_entered = (header.get('"basicDetailsEntered"'))
-        self.name_entered = header.get("nameEntered")
-        self.dob_entered = header.get("dobEntered")
-        self.dod_entered = header.get("dodEntered")
-        self.nhs_number_entered = header.get("nhsNumberEntered")
-        self.additional_details_entered = header.get("additionalDetailsEntered")
-        self.latest_admission_details_entered = header.get("latestAdmissionDetailsEntered")
-        self.doctor_in_charge_entered = header.get("doctorInChargeEntered")
-        self.qap_entered = header.get("qapEntered")
-        self.bereaved_info_entered = header.get("bereavedInfoEntered")
-        self.me_assigned = header.get("meAssigned")
-        self.is_scrutiny_completed = header.get("isScrutinyCompleted")
-        self.pre_scutiny_event_entered = header.get("preScrutinyEventEntered")
-        self.qap_discussion_event_entered = header.get("qapDiscussionEventEntered")
-        self.bereaved_discussion_event_entered = header.get("bereavedDiscussionEventEntered")
-        self.is_case_items_completed = header.get("isCaseItemsCompleted")
-        self.mccd_issued = header.get("mccdIssued")
-        self.cremation_form_info_entered = header.get("cremationFormInfoEntered")
-        self.gp_notified = header.get("gpNotified")
-        self.sent_to_coroner = header.get("sentToCoroner")
-        self.case_closed = header.get("caseClosed")
-        self.case_outcome = header.get("caseOutcome")
-        self.have_been_scrutinised_by_ME = header.get("haveBeenScrutinisedByME")
+        if header:
+            self.basic_details_entered = header.get("basicDetailsEntered")
+            self.name_entered = header.get("nameEntered")
+            self.dob_entered = header.get("dobEntered")
+            self.dod_entered = header.get("dodEntered")
+            self.nhs_number_entered = header.get("nhsNumberEntered")
+            self.additional_details_entered = header.get("additionalDetailsEntered")
+            self.latest_admission_details_entered = header.get("latestAdmissionDetailsEntered")
+            self.doctor_in_charge_entered = header.get("doctorInChargeEntered")
+            self.qap_entered = header.get("qapEntered")
+            self.bereaved_info_entered = header.get("bereavedInfoEntered")
+            self.me_assigned = header.get("meAssigned")
+            self.is_scrutiny_completed = header.get("isScrutinyCompleted")
+            self.pre_scutiny_event_entered = header.get("preScrutinyEventEntered")
+            self.qap_discussion_event_entered = header.get("qapDiscussionEventEntered")
+            self.bereaved_discussion_event_entered = header.get("bereavedDiscussionEventEntered")
+            self.is_case_items_completed = header.get("isCaseItemsCompleted")
+            self.mccd_issued = header.get("mccdIssued")
+            self.cremation_form_info_entered = header.get("cremationFormInfoEntered")
+            self.gp_notified = header.get("gpNotified")
+            self.sent_to_coroner = header.get("sentToCoroner")
+            self.case_closed = header.get("caseClosed")
+            self.case_outcome = header.get("caseOutcome")
+            self.have_been_scrutinised_by_ME = header.get("haveBeenScrutinisedByME")
 
 
 class PrePopulatedItemList:
