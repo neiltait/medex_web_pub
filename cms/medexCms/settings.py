@@ -57,6 +57,7 @@ REQUIRE_HTTPS = os.environ.get('REQUIRE_HTTPS', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'localhost',
+    'medex-cms',
     'medical-examiners-cms-sandbox.azurewebsites.net',
     'medical-examiners-cms-staging.azurewebsites.net',
     'medex-web-pre.frontend.pre.medex.cloud',
