@@ -36,7 +36,7 @@ class IndexFilterForm:
 
         person_parameter = query_params.get('person')
         if person_parameter:
-            base_url = "%sperson=%s&" % (base_url, location_parameter)
+            base_url = "%sperson=%s&" % (base_url, person_parameter)
 
         return base_url
 
