@@ -65,11 +65,11 @@ class APIOutcomes:
 
 
 class APIFilters:
-    F01_HAS_BASIC_DETAILS = 'HaveUnknownBasicDetails'
+    F01_HAS_UNKNOWN_BASIC_DETAILS = 'HaveUnknownBasicDetails'
     F02_READY_FOR_SCRUTINY = 'ReadyForMEScrutiny'
     F03_UNASSIGNED = 'Unassigned'
     F04_HAVE_BEEN_SCRUTINISED = 'HaveBeenScrutinisedByME'
-    F05_PENDING_ADMISSION_DETAILS = 'PendingAdditionalDetails'
+    F05_PENDING_ADDITIONAL_DETAILS = 'PendingAdditionalDetails'
     F06_PENDING_QAP = 'PendingDiscussionWithQAP'
     F07_PENDING_BEREAVED = 'PendingDiscussionWithRepresentative'
     F08_OUTSTANDING_FINAL_OUTCOMES = "HaveFinalCaseOutstandingOutcomes"
