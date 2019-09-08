@@ -10,6 +10,7 @@ from django.views.generic.base import View
 from rest_framework import status
 
 from home.forms import IndexFilterForm
+from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
@@ -30,7 +31,8 @@ class DashboardView(LoginRequiredMixin, View):
         page_size = 25
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
-        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
+        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
+                                    form.get_case_status())
 
         context = self.set_context(form)
 
@@ -86,7 +88,6 @@ class LoginRefreshView(View):
 
             response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
                                 max_age=settings.REFRESH_PERIOD, secure=settings.REQUIRE_HTTPS)
-
 
             return response
 

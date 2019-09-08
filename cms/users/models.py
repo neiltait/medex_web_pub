@@ -134,11 +134,11 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, page_size, page_number, location, person):
+    def load_examinations(self, page_size, page_number, location, person, case_status):
         query_params = {
             "LocationId": location,
             "UserId": person,
-            "CaseStatus": '',
+            "CaseStatus": case_status,
             "OrderBy": "Urgency",
             "OpenCases": True,
             "PageSize": page_size,
