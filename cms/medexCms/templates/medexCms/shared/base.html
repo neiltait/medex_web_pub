@@ -34,9 +34,9 @@
 
 <body>
 {% include 'medexCms/shared/_header.html' %}
-{% include 'medexCms/shared/phaseBanner.html' %}
 
 <div class="nhsuk-width-container">
+    {% include 'medexCms/shared/phaseBanner.html' %}
     <main class="nhsuk-main-wrapper" id="maincontent">
         {% logout_period as logout_seconds %}
         {% refresh_period as refresh_tokens_seconds %}
