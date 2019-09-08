@@ -42,6 +42,7 @@ class DashboardView(LoginRequiredMixin, View):
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
+            'enums': enums
         }
 
 

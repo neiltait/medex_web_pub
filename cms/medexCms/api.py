@@ -193,6 +193,6 @@ class APIStrings:
     errors = SystemValidationErrors()
     prescrutiny_status = APIPrescrutinyStatus()
     qap_discussion_status = APIQapDiscussionStatus()
-
+    filters = APIFilters()
 
 enums = APIStrings()

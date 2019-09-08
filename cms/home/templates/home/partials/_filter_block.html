@@ -46,14 +46,14 @@
                 <span id="filter-by-place-person">Filter cases by status</span>
             </p>
             <div class="filter-list">
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=19 label="admission details have been entered" icon="patient" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=17 label="are ready for ME scrutiny" icon="ready" active=True %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=8 label="are unassigned" icon="unassigned" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=7 label="have been scrutinised by an ME" icon="complete" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=6 label="are pending hospital admission details" icon="waiting" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=5 label="are pending discussion with a QAP" icon="waiting" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=3 label="are pending discussion with a representative" icon="waiting" active=False %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=2 label="have final case outcomes outstanding" icon="waiting" active=False %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=19 label="admission details have been entered" icon="patient" active=False filter=enums.filters.F01_HAS_BASIC_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=17 label="are ready for ME scrutiny" icon="ready" active=True filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=8 label="are unassigned" icon="unassigned" active=False filter=enums.filters.F03_UNASSIGNED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=7 label="have been scrutinised by an ME" icon="complete" active=False filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=6 label="are pending hospital admission details" icon="waiting" active=False filter=enums.filters.F05_PENDING_ADMISSION_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=5 label="are pending discussion with a QAP" icon="waiting" active=False filter=enums.filters.F06_PENDING_QAP %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=3 label="are pending discussion with a representative" icon="waiting" active=False filter=enums.filters.F07_PENDING_BEREAVED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=2 label="have final case outcomes outstanding" icon="waiting" active=False filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
             </div>
         </form>
 </div>
