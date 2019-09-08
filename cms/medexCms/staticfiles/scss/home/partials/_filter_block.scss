@@ -1,0 +1,111 @@
+@import '../../variables';
+
+.filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(-1 * #{$medex-spacing-md});
+
+
+  @media screen and (max-width: $medex-tablet-width) {
+    margin-left: calc(-1 * #{$medex-spacing-xs});
+  }
+
+  @media screen and (max-width: $medex-desktop-width) {
+    margin-left: calc(-1 * #{$medex-spacing-sm});
+  }
+
+  &__item {
+    display: flex;
+    width: 25%;
+
+    @media screen and (max-width: $medex-tablet-width) {
+      visibility: hidden;
+      display: none;
+    }
+  }
+}
+
+.filters-status-item {
+  border: 1px solid $nhs-light-grey;
+  border-left: 4px solid $nhs-blue;
+  padding: $medex-spacing-md medex-spacing(4);
+  box-shadow: 0 5px $nhs-very-light-grey;
+  margin-left: $medex-spacing-md;
+  margin-bottom: $medex-spacing-md;
+  width: 100%;
+
+  &:hover, &:focus {
+    background-color: $white;
+  }
+
+  @media screen and (max-width: $medex-tablet-width) {
+    margin-left: $medex-spacing-xs;
+    padding: $medex-spacing-md;
+  }
+
+  @media screen and (max-width: $medex-desktop-width) {
+    margin-left: $medex-spacing-sm;
+    padding: $medex-spacing-md;
+  }
+
+
+  &--active {
+    color: $white;
+    background-color: $nhs-blue;
+
+    .filters-status-item__label {
+      color: $white
+    }
+
+    .filters-status-item__count {
+      color: $white
+    }
+
+    &:hover, &:focus {
+      background-color: $nhs-blue;
+    }
+  }
+
+
+  &__count {
+    margin-left: $medex-spacing-sm;
+    float: left;
+    font-size: $nhs-heading-xl-size;
+    line-height: $nhs-heading-xl-line-height;
+    color: $black;
+  }
+
+  &__label {
+    font-size: $nhs-body-s-size;
+    color: $nhs-grey;
+    margin: 0;
+  }
+
+  &__icon {
+    width: $medex-spacing-lg;
+    height: $medex-spacing-lg;
+    float: right;
+    color: $nhs-light-grey;
+
+    &--complete {
+      background: url("/static/images/filter/complete.svg") no-repeat;
+    }
+
+    &--patient {
+      background: url("/static/images/filter/patient.svg") no-repeat;
+    }
+
+    &--ready {
+      background: url("/static/images/filter/ready.svg") no-repeat;
+    }
+
+    &--unassigned {
+      background: url("/static/images/filter/unassigned.svg") no-repeat;
+    }
+
+    &--waiting {
+      background: url("/static/images/filter/waiting.svg") no-repeat;
+    }
+  }
+
+}

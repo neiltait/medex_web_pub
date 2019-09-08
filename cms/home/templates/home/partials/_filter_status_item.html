@@ -1,0 +1,14 @@
+{% load staticfiles %}
+
+<a href="/?filter={{ icon }}" class="filters-status-item {% if active %}filters-status-item--active{% endif %}">
+
+    <div class="nhsuk-grid-row">
+        <div class="filters-status-item__count">{{ count }}</div>
+        <div class="mobile-hidden filters-status-item__icon filters-status-item__icon--{{ icon }}"></div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="filters-status-item__label">{{ label }}</div>
+        </div>
+    </div>
+</a>
