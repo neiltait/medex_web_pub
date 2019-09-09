@@ -51,22 +51,6 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
-                    <div class="nhsuk-form-group {% if errors.consultant_phone_number_1 %}nhsuk-form-group--error{% endif %}">
-                        <label class="nhsuk-label" for="consultant_phone_number_1">
-                            Personal phone / bleep number
-                        </label>
-                        {% if errors.consultant_phone_number_1 %}
-                        <span
-                                class="nhsuk-error-message medex-font-default-override">{{ errors.consultant_phone_number_1 }}</span>{% endif %}
-                        <input
-                                class="nhsuk-input nhsuk-input--width-10 {% if errors.consultant_phone_number_1 %}nhsuk-input--error{% endif %}"
-                                id="consultant_phone_number_1" name="consultant_phone_number_1"
-                                value="{{ form.consultant_1.phone_number }}" type="text">
-                    </div>
-                </fieldset>
-            </div>
             <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
                 <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-form-group">

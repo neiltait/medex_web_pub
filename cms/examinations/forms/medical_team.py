@@ -23,21 +23,15 @@ class MedicalTeamMembersForm:
 
     def initialise_form_from_data(self, request):
         self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
-                                              role=request.get('consultant_role_1'),
                                               organisation=request.get('consultant_organisation_1'),
-                                              phone_number=request.get('consultant_phone_number_1'),
                                               notes=request.get('consultant_note_1'),
                                               gmc_number=request.get('gmc_number_consultant_1'))
         self.consultant_2 = MedicalTeamMember(name=request.get('consultant_name_2'),
-                                              role=request.get('consultant_role_2'),
                                               organisation=request.get('consultant_organisation_2'),
-                                              phone_number=request.get('consultant_phone_number_2'),
                                               notes=request.get('consultant_note_2'),
                                               gmc_number=request.get('gmc_number_consultant_2'))
         self.consultant_3 = MedicalTeamMember(name=request.get('consultant_name_3'),
-                                              role=request.get('consultant_role_3'),
                                               organisation=request.get('consultant_organisation_3'),
-                                              phone_number=request.get('consultant_phone_number_3'),
                                               notes=request.get('consultant_note_3'),
                                               gmc_number=request.get('gmc_number_consultant_3'))
         self.qap = MedicalTeamMember(name=request.get('qap_name'),
