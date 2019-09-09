@@ -90,6 +90,10 @@
     margin-top: $medex-spacing-md;
   }
 
+  .margin-top-lg {
+    margin-top: medex-spacing(7);
+  }
+
   .margin-save-button {
     margin-bottom: $medex-spacing-xl;
   }
@@ -97,7 +101,14 @@
   .margin-time {
     margin-bottom: $medex-spacing-lg;
   }
-}
+
+  .align-tick {
+    padding-top: 2.75rem;
+  }
+
+  }
+
+
 
 #bereavement-discussion__save-buttons {
   .add-event-btn {
