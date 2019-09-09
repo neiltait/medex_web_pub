@@ -41,7 +41,6 @@ class MedicalTeamMembersForm:
                                      notes=request.get('qap_note_1'),
                                      gmc_number=request.get('gmc_number_qap'))
         self.gp = MedicalTeamMember(name=request.get('gp_name'),
-                                    role=request.get('gp_role'),
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'),
                                     notes=request.get('gp_note_1'),
