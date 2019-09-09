@@ -24,21 +24,6 @@
         border-left: 4px solid $nhs-grey-2;
         background-color: $white;
 
-        .event-number-space {
-            flex-basis: 100px;
-            flex-shrink: 0;
-            flex-grow: 0;
-            border-right: 2px solid $nhs-pale-grey;
-
-            .event-number {
-                width: 100%;
-                text-align: center;
-                color: $nhs-grey-2;
-            }
-
-            font-size: $nhs-heading-xl-size;
-        }
-
         .event-content {
             padding: $medex-spacing-lg;
             width: 100%;
