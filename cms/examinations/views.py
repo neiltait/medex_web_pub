@@ -12,7 +12,7 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
-from examinations.models.case_breakdown import CaseBreakdown
+from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
@@ -280,6 +280,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
         if self.form.is_valid():
             response = self.examination.update(self.form.to_object(), self.user.auth_token)
+            self.case_status = CaseStatus(response.json())
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab

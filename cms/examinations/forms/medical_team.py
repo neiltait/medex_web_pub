@@ -1,4 +1,5 @@
 from alerts.messages import ErrorFieldTooLong, ErrorFieldRequiredMessage
+from examinations.models.case_breakdown import CaseStatus
 from examinations.models.medical_team import MedicalTeamMember
 from medexCms.utils import fallback_to, pop_if_falsey
 
@@ -40,6 +41,7 @@ class MedicalTeamMembersForm:
                                               phone_number=request.get('consultant_phone_number_3'),
                                               notes=request.get('consultant_note_3'),
                                               gmc_number=request.get('gmc_number_consultant_3'))
+        self.case_status = CaseStatus(request)
         self.qap = MedicalTeamMember(name=request.get('qap_name'),
                                      role=request.get('qap_role'),
                                      organisation=request.get('qap_organisation'),
