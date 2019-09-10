@@ -1,7 +1,10 @@
 {% load staticfiles %}
 
+{% include 'home/partials/_cookie_banner.html' %}
+
 {% if session_user %}
     <div class="header__nav" role="banner">
+
         <div class="container">
             <div class="flex-row vertical-center">
                 <div class="nhsuk-header__logo">
