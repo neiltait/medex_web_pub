@@ -189,6 +189,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             submission['id'] = examination_id
 
             response = self.examination.update(submission, self.user.auth_token)
+            self.case_status = CaseStatus(response.json())
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab
