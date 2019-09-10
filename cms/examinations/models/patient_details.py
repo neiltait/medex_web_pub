@@ -175,6 +175,7 @@ class PatientDetails:
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
         patient_details = None
         error = None
+        case_status = None
 
         if response.ok:
             case_status = CaseStatus(response.json())
