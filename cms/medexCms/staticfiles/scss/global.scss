@@ -52,6 +52,10 @@ p {
   }
 }
 
+.medex-content-page {
+  margin-bottom: medex-spacing(9);
+}
+
 .small-print {
   @extend .s-body-base;
 }
