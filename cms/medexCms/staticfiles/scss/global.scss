@@ -80,8 +80,7 @@ p {
 }
 
 .mobile-hidden {
-  @media screen and (max-width: 641px) {
-
+  @media screen and (max-width: $medex-tablet-width) {
     visibility: hidden;
     display: none;
   }

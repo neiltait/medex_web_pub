@@ -2,10 +2,10 @@
 
 
 .phase-banner {
-    padding-top: 2rem;
+    padding-top: $medex-spacing-md;
     padding-bottom: 10px;
     border-bottom: 1px solid #bfc1c3;
-    margin-left: 20px;
+    margin-left: $medex-spacing-md;
 
 
     &__content {

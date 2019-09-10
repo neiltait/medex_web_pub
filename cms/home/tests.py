@@ -45,7 +45,6 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/')
 
-
     # Login refresh tests
 
     @patch('home.request_handler.refresh_session', return_value=SessionMocks.get_successful_refresh_token_response())
@@ -54,7 +53,6 @@ class HomeViewsTests(MedExTestCase):
         response = self.client.post('/login-refresh')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
     @patch('home.request_handler.refresh_session', return_value=SessionMocks.get_successful_refresh_token_response())
     def test_login_refresh_without_cookies_returns_400(self, mock_token_generation):
@@ -99,6 +97,33 @@ class HomeViewsTests(MedExTestCase):
         context_form = self.get_context_value(response.context, 'form')
         self.assertEqual(context_form.location, '1')
         self.assertEqual(context_form.person, None)
+
+    def test_sending_location_and_person_filters_to_the_landing_page_builds_base_url_for_filter_buttons(self):
+        self.set_auth_cookies()
+
+        response = self.client.get('/')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?')
+
+        response = self.client.get('/?location=bar')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&')
+
+        response = self.client.get('/?person=1')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?person=1&')
+
+        response = self.client.get('/?person=1&location=bar')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
+
+    def test_page_filters_removed_when_landing_page_builds_base_url_for_filter_buttons(self):
+        self.set_auth_cookies()
+
+        response = self.client.get('/?person=1&location=bar&page_number=2')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
+
+    def test_case_status_removed_when_landing_page_builds_base_url_for_filter_buttons(self):
+        self.set_auth_cookies()
+
+        response = self.client.get('/?person=1&location=bar&page_number=2&case_status="Unassigned')
+        self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
 
     # Settings index tests
 
