@@ -176,6 +176,7 @@ class PatientDetails:
         patient_details = None
         error = None
         case_status = None
+
         if response.ok:
             case_status = CaseStatus(response.json())
             modes_of_disposal_response = request_handler.load_modes_of_disposal(auth_token)
