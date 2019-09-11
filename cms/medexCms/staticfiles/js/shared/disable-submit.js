@@ -7,9 +7,17 @@
 (function ($) {
 
     function disableSubmit() {
-        $('#examination__create--form').one('submit', function (event) {
-                event.preventDefault();
-                $('input[type="submit"]').submit();
+        $('#examination__create--form').on('submit', function (event) {
+            // 1. DEFAULT BEHAVIOUR = Submit form
+
+            // 2. Change the handler to this form
+            disableDefaultEvent();
+        });
+    }
+
+    function disableDefaultEvent() {
+        $('#examination__create--form').on('submit', function (event) {
+            event.preventDefault();
         });
     }
 
