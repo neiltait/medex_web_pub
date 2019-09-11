@@ -18,6 +18,7 @@ class CaseOutcome:
     CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
     MCCD_100A_KEY = 'IssueMCCDWith100a'
     MCCD_KEY = 'IssueMCCD'
+    PENDING = 'PENDING'
     REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, MCCD_100A_KEY]
 
     QAP_OUTCOMES = {
@@ -46,7 +47,8 @@ class CaseOutcome:
     OUTCOME_SUMMARIES = {
         CORONER_INVESTIGATION_KEY: {'heading': 'Refer to coroner', 'details': 'For investigation'},
         MCCD_100A_KEY: {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
-        MCCD_KEY: {'heading': 'MCCD to be issued'}
+        MCCD_KEY: {'heading': 'MCCD to be issued'},
+        PENDING: {'heading': 'OUTCOME PENDING'}
     }
 
     CORONER_DISCLAIMERS = {
@@ -154,7 +156,10 @@ class CaseOutcome:
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
 
     def display_outcome_summary(self):
-        return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+        if self.case_outcome_summary:
+            return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+        else:
+            return self.OUTCOME_SUMMARIES.get(self.PENDING)
 
     def display_pre_scrutiny_outcome(self):
         return self.PRE_SCRUTINY_OUTCOMES.get(self.case_pre_scrutiny_outcome)
