@@ -22,12 +22,18 @@
                     <div class="nhsuk-grid-column-one-half document-download">
                         <div class="nhsuk-grid-row">
                             <div class="nhsuk-grid-column-one-quarter">
-                                <div class="document-download-image {% if not case_outcome.coroner_referral_enabled %}document-download-image--disabled{% endif %}">
+                                <div class="document-download-image {% if not session_user.permitted_actions.can_get_coroner_referral_download or not case_outcome.coroner_referral_enabled %}document-download-image--disabled{% endif %}">
                                 </div>
                             </div>
                             <div class="nhsuk-grid-column-three-quarters">
-                                <a href="{% url 'download_coroner_report' examination_id=examination_id %}" class="nhsuk-u-font-size-24">{{ patient.full_name }} Coroner Referral</a>
-                                <p>ODT Document</p>
+                                {% if case_outcome.coroner_referral_enabled and session_user.permitted_actions.can_get_coroner_referral_download %}
+                                    <a href="{% url 'download_coroner_report' examination_id=examination_id %}"
+                                       class="nhsuk-u-font-size-24">{{ patient.full_name }} Coroner Referral</a>
+                                    <p>ODT Document</p>
+                                {% else %}
+                                    <span class="nhsuk-u-font-size-24">{{ patient.full_name }} Coroner Referral</span>
+                                    <p>ODT Document</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
