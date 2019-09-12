@@ -67,7 +67,7 @@ class Location:
 
     @classmethod
     def load_location_collection_for_user(cls, auth_token):
-        locations = request_handler.get_locations_list(auth_token, limit_to_me_offices=False)
+        locations = request_handler.get_permitted_locations_list(auth_token, limit_to_me_offices=False)
         return LocationCollection(locations)
 
 
