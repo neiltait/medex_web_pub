@@ -85,6 +85,7 @@ class PermittedActions:
         self.can_get_profile = obj_dict.get("GetProfile") if obj_dict else False
         self.can_update_profile = obj_dict.get("UpdateProfile") if obj_dict else False
         self.can_get_profile_permissions = obj_dict.get("GetProfilePermissions") if obj_dict else False
+        self.can_get_coroner_referral_download = obj_dict.get("GetCoronerReferralDownload") if obj_dict else False
         self.permitted_forms = PermittedForms(obj_dict)
 
     def can_access_settings_index(self):

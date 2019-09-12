@@ -47,8 +47,9 @@ def update_medical_team(examination_id, submission, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_medical_team_update_response()
     else:
-        return MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
+        response = MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
                                 submission)
+        return response
 
 
 def load_modes_of_disposal(auth_token):

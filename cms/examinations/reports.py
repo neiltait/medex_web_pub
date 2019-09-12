@@ -59,7 +59,7 @@ class CoronerDownloadReport:
                 'name': fallback_to(bereaved_data.get('participantFullName'), '') if bereaved_data else '',
                 'relationship': fallback_to(bereaved_data.get('participantRelationship'), '') if bereaved_data else '',
                 'phone': fallback_to(bereaved_data.get('participantPhoneNumber'), '') if bereaved_data else '',
-                "informed": fallback_to(bereaved_data.get('informedOfDeath'), '') if bereaved_data else '',
+                "informed": fallback_to(bereaved_data.get('informedAtDeath'), '') if bereaved_data else '',
                 "result": fallback_to(bereaved_data.get('bereavedDiscussionOutcome'), '') if bereaved_data else '',
             }
             if report.bereaved['result'] != enums.discussion.COD_ACCEPTED:

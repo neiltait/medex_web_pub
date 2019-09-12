@@ -1,5 +1,6 @@
 from errors.utils import log_api_error, handle_error
 from examinations import request_handler
+from examinations.models.case_breakdown import CaseStatus
 from examinations.presenters.core import PatientHeader
 from medexCms.utils import fallback_to, bool_to_string, is_empty_time, is_empty_date, parse_datetime
 from people.models import BereavedRepresentative
@@ -174,8 +175,10 @@ class PatientDetails:
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
         patient_details = None
         error = None
+        case_status = None
 
         if response.ok:
+            case_status = CaseStatus(response.json())
             modes_of_disposal_response = request_handler.load_modes_of_disposal(auth_token)
             if modes_of_disposal_response.ok:
                 patient_details = PatientDetails(response.json(), modes_of_disposal_response.json(), examination_id)
@@ -185,7 +188,7 @@ class PatientDetails:
         else:
             log_api_error('patient details load', response.text)
             error = handle_error(response, {"action": "loading", "type": "patient details"})
-        return patient_details, error
+        return patient_details, case_status, error
 
     def update(self, submission, auth_token):
         return request_handler.update_patient_details(self.id, submission, auth_token)
