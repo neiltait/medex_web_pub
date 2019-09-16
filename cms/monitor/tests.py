@@ -53,3 +53,30 @@ class TestMonitorTests(MedExTestCase):
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
         self.assertEqual(event['event_type'], MedexLoggerEvents.CREATED_CASE_UNSUCCESSFUL)
+
+
+
+    def test_logger_does_record_create_timeline_event(self):
+        self.set_auth_cookies()
+        log_stream = self.init_test_log_stream()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+
+        self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CREATED_TIMELINE_EVENT)
+
+
+    @patch('examinations.request_handler.create_pre_scrutiny_event',
+           return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
+    def test_posting_an_valid_form_that_fails_on_the_api_returns_the_api_response_code(self, mock_pre_scrutiny_create):
+        self.set_auth_cookies()
+        log_stream = self.init_test_log_stream()
+        form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
+
+        self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CREATED_TIMELINE_EVENT_UNSUCCESSFUL)

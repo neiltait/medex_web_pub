@@ -129,9 +129,11 @@ class EditExaminationSectionBaseView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'),
+                                                                                       self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'),
+                                                                                    self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -372,6 +374,10 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
+            self.log_timeline_create_event(examination_id,
+                                           self.patient_details.medical_examiner_office_responsible,
+                                           response)
+
             self.status_code = response.status_code
             self.form = None
         else:
@@ -382,6 +388,14 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         context = self._set_context(examination_id)
 
         return render(request, self.template, context, status=self.status_code)
+
+    def log_timeline_create_event(self, examination_id, location_id, response):
+        if response.ok:
+            monitor.log_create_timeline_event_successful(self.user, examination_id, location_id, self.form.__class__.__name__,
+                                                         response.json()['eventId'])
+        else:
+            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id, self.form.__class__.__name__,
+                                                           response.status_code)
 
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
