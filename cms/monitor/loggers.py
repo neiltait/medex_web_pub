@@ -1,5 +1,6 @@
 class MedexLoggerEvents:
-    CREATE_USER = 'create user'
+    CREATED_CASE = 'Created a case'
+    CREATED_CASE_UNSUCCESSFUL = 'Created a case failed'
 
 
 class MedexLogStream:
@@ -13,7 +14,9 @@ class ConsoleLogStream(MedexLogStream):
 
 
 class TestLogStream(MedexLogStream):
-    event_history = []
+
+    def __init__(self):
+        self.event_history = []
 
     def log(self, event_type, data):
         self.event_history.append({"event_type": event_type, "data": data})
@@ -37,6 +40,7 @@ class InsightsLogStream(MedexLogStream):
 
 
 class MedexMonitor:
+    log_stream = None
 
     def __init__(self, log_stream: MedexLogStream):
         self.log_stream = log_stream
@@ -46,6 +50,20 @@ class MedexMonitor:
 
     def log_custom_event(self, event_type, data):
         self.log_stream.log(event_type, data)
+
+    def log_case_create_event(self, user, examination_id, location_id):
+        self.log_stream.log(MedexLoggerEvents.CREATED_CASE, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id
+        })
+
+    def log_case_create_event_unsuccessful(self, user, location_id, error_code):
+        self.log_stream.log(MedexLoggerEvents.CREATED_CASE_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'location_id': location_id,
+            'error': error_code
+        })
 
 
 monitor = MedexMonitor(log_stream=ConsoleLogStream())

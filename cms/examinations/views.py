@@ -24,6 +24,7 @@ from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from medexCms.utils import fallback_to
+from monitor.loggers import monitor
 
 
 class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -46,6 +47,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             response = Examination.create(form.to_object(), self.user.auth_token)
             if response.ok:
+                monitor.log_case_create_event(self.user, response.json()['examinationId'], form.me_office)
+
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
                     # scenario 1 - success
                     return self.__successful_post(response)
@@ -54,6 +57,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
                 # scenario 2 - api error
+                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, response.status_code)
+
                 status_code = self.__process_api_error(form, response)
         else:
             # scenario 3 - cms validation error
