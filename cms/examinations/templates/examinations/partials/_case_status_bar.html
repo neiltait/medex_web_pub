@@ -16,7 +16,15 @@
                                     <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
                                 </div>
 
-                                {% else %}
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.UNKNOWN %}
+
+                                  <div>
+                                    <img class="nhsuk-icon case-status-icon case-status-icon--unknown" automation-id='status-bar__basic-details' src="{% static 'images/Unknown.svg' %}" alt="">Basic
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.INCOMPLETE %}
 
                                 <div>
                                     <svg class="nhsuk-icon case-status-icon case-status-icon--cross" automation-id='status-bar__basic-details' fill="#da291c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" aria-hidden="true">
@@ -43,7 +51,15 @@
                                     <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
                                 </div>
 
-                                {% else %}
+                                 {% elif case_status.basic_details_entered == enums.case_status_bar_result.UNKNOWN %}
+
+                                  <div>
+                                    <img class="nhsuk-icon case-status-icon case-status-icon--unknown" automation-id='status-bar__basic-details' src="{% static 'images/Unknown.svg' %}" alt="">Additional
+                                    details
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.INCOMPLETE %}
 
                                 <div>
                                      <svg class="nhsuk-icon case-status-icon case-status-icon--cross" automation-id='status-bar__additional-details' fill="#da291c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" aria-hidden="true">
@@ -69,7 +85,14 @@
                                     <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
                                 </div>
 
-                                {% else %}
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.UNKNOWN %}
+
+                                  <div>
+                                    <img class="nhsuk-icon case-status-icon case-status-icon--unknown" automation-id='status-bar__basic-details' src="{% static 'images/Unknown.svg' %}" alt="">Scrutiny
+                                    <img class="nhsuk-icon nhsuk-icon__arrow-right vertical-align float-right" src="{% static 'images/icon-arrow-right.svg' %}" alt="">
+                                </div>
+
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.INCOMPLETE %}
 
                                 <div>
                                      <svg class="nhsuk-icon case-status-icon case-status-icon--cross" automation-id='status-bar__scrutiny-complete' fill="#da291c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" aria-hidden="true">
@@ -93,7 +116,14 @@
                                     <img class="nhsuk-icon case-status-icon case-status-icon--tick" src="{% static 'images/icon-tick.svg' %}" alt="" automation-id='status-bar__case-items-complete'>Final actions
                                 </div>
 
-                                {% else %}
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.UNKNOWN %}
+
+                                  <div>
+                                    <img class="nhsuk-icon case-status-icon case-status-icon--unknown" automation-id='status-bar__final-actions' src="{% static 'images/Unknown.svg' %}" alt="">Final actions
+                                </div>
+
+                                {% elif case_status.basic_details_entered == enums.case_status_bar_result.INCOMPLETE %}
+
 
                                 <div>
                                      <svg class="nhsuk-icon case-status-icon case-status-icon--cross" automation-id='status-bar__case-items-complete' fill="#da291c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" aria-hidden="true">
