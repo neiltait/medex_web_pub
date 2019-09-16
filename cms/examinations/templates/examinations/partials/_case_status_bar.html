@@ -8,7 +8,7 @@
 
                             <div class="nhsuk-grid-column-one-quarter small-font">
 
-                                {% if case_status.basic_details_entered %}
+                                {% if case_status.basic_details_entered == enums.case_status_bar_result.COMPLETE %}
 
                                 <div>
                                     <img class="nhsuk-icon case-status-icon case-status-icon--tick" automation-id='status-bar__basic-details' src="{% static 'images/icon-tick.svg' %}" alt="">Basic
@@ -35,7 +35,7 @@
                             <div class="nhsuk-grid-column-one-quarter small-font">
 
 
-                                {% if case_status.additional_details_entered %}
+                                {% if case_status.additional_details_entered == enums.case_status_bar_result.COMPLETE %}
 
                                 <div>
                                     <img class="nhsuk-icon case-status-icon case-status-icon--tick" automation-id='status-bar__additional-details' src="{% static 'images/icon-tick.svg' %}" alt="">Additional
@@ -62,7 +62,7 @@
 
                             <div class="nhsuk-grid-column-one-quarter small-font">
 
-                                {% if case_status.is_scrutiny_completed %}
+                                {% if case_status.is_scrutiny_completed == enums.case_status_bar_result.COMPLETE %}
 
                                 <div>
                                     <img class="nhsuk-icon case-status-icon case-status-icon--tick" automation-id='status-bar__scrutiny-complete' src="{% static 'images/icon-tick.svg' %}" alt="">Scrutiny
@@ -87,7 +87,7 @@
 
                     <div class="nhsuk-grid-column-one-quarter small-font">
 
-                                {% if case_status.is_case_items_completed %}
+                                {% if case_status.is_case_items_completed == enums.case_status_bar_result.COMPLETE %}
 
                                 <div>
                                     <img class="nhsuk-icon case-status-icon case-status-icon--tick" src="{% static 'images/icon-tick.svg' %}" alt="" automation-id='status-bar__case-items-complete'>Final actions

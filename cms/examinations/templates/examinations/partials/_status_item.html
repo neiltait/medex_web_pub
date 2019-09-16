@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-{% if status %}
+{% if status == enums.case_status_bar_result.COMPLETE %}
 
 <div>
    <img class="nhsuk-icon case-status-icon case-status-icon--tick" src="{% static 'images/icon-tick.svg' %}" alt="" automation-id="{{ automation_id }}"> {{ label }}
