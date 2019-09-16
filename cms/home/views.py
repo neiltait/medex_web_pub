@@ -152,3 +152,11 @@ class AccessibilityPolicyView(View):
     @never_cache
     def get(self, request):
         return render(request, self.template, {}, status=status.HTTP_200_OK)
+
+
+class PrivacyPolicyView(View):
+    template = 'home/privacy.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)
