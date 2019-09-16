@@ -2,50 +2,50 @@ class MedexLoggerEvents:
     CREATE_USER = 'create user'
 
 
-class MedexLogger:
+class MedexLogStream:
     def log(self, event_type, data):
         pass
 
 
-class ConsoleLogger(MedexLogger):
+class ConsoleLogStream(MedexLogStream):
     def log(self, event_type, data):
         print(event_type, data)
 
 
-class TestLogger(MedexLogger):
+class TestLogStream(MedexLogStream):
     event_history = []
 
     def log(self, event_type, data):
         self.event_history.append({"event_type": event_type, "data": data})
 
-    def get_count(self):
+    def event_count(self):
         return len(self.event_history)
 
-    def get_item(self, index):
+    def event(self, index):
         return self.event_history[index]
 
-    def get_last(self, index):
-        return self.event_history[self.get_count() - 1]
+    def last(self, index):
+        return self.event_history[self.event_count() - 1]
 
     def clear(self):
         self.event_history = []
 
 
-class InsightsLogger(MedexLogger):
+class InsightsLogStream(MedexLogStream):
     def log(self, event_type, data):
         print('INSIGHTS', event_type, data)
 
 
-class Monitor:
+class MedexMonitor:
 
-    def __init__(self, logger: MedexLogger):
-        self.logger = logger
+    def __init__(self, log_stream: MedexLogStream):
+        self.log_stream = log_stream
 
-    def change_logger(self, logger: MedexLogger):
-        self.logger = logger
+    def change_log_stream(self, log_stream: MedexLogStream):
+        self.log_stream = log_stream
 
     def log_custom_event(self, event_type, data):
-        self.logger.log(event_type, data)
+        self.log_stream.log(event_type, data)
 
 
-monitor = Monitor(logger=ConsoleLogger())
+monitor = MedexMonitor(log_stream=ConsoleLogStream())
