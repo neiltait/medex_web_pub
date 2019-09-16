@@ -137,7 +137,7 @@
                     {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.have_been_scrutinised_by_ME automation_id="status-bar__me-ror-complete" %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered automation_id="status-bar__qap-discussion-complete" %}
                     {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered automation_id="status-bar__bereaved-discussion-complete" %}
-
+                    {% include 'examinations/partials/_status_item.html' with label="ME confirmation of scrutiny" status=case_status.have_been_scrutinised_by_ME automation_id="status-bar__have-been-scrutinised-by-ME" %}
 
                 </div>
 
@@ -147,7 +147,6 @@
                     {% include 'examinations/partials/_status_item.html' with label="Cremation form info" status=case_status.cremation_form_info_entered automation_id="status-bar__cremation-form" %}
                     {% include 'examinations/partials/_status_item.html' with label="GP notified" status=case_status.gp_notified automation_id="status-bar__gp-notified" %}
                     {% include 'examinations/partials/_status_item.html' with label="Sent to coroner" status=case_status.sent_to_coroner automation_id="status-bar__sent-to-coroner" %}
-
 
                 </div>
 
