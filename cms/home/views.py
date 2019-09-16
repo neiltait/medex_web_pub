@@ -144,3 +144,11 @@ class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+
+class AccessibilityPolicyView(View):
+    template = 'home/accessibility.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)
