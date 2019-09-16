@@ -6,19 +6,19 @@
    <img class="nhsuk-icon case-status-icon case-status-icon--tick" src="{% static 'images/icon-tick.svg' %}" alt="" automation-id="{{ automation_id }}"> {{ label }}
 </div>
 
-{% elif status == enums.case_status_bar_result.INCOMPLETE  %}
+{% elif status == enums.case_status_bar_result.INCOMPLETE %}
 
 <div>
 <img class="nhsuk-icon case-status-icon case-status-icon--cross" src="{% static 'images/icon-cross.svg' %}" alt="" automation-id="{{ automation_id }}"> {{ label }}
 </div>
 
-{% elif status == enums.case_status_bar_result.NOT_APPLICAPLE  %}
+{% elif status == enums.case_status_bar_result.NOT_APPLICABLE  %}
 
 <div>
 <img class="nhsuk-icon case-status-icon case-status-icon--dash" src="{% static 'images/minus.svg' %}" alt="" automation-id="{{ automation_id }}"> {{ label }}
 </div>
 
-{% else %}
+{% elif status == enums.case_status_bar_result.UNKNOWN  %}
 
 <div>
 <img class="nhsuk-icon case-status-icon case-status-icon--unknown" src="{% static 'images/Unknown.svg' %}" alt="" automation-id="{{ automation_id }}"> {{ label }}
