@@ -1,8 +1,21 @@
+form_event_names = {
+    'PreScrutinyEventForm': 'me review of records',
+    'MeoSummaryEventForm': 'meo summary',
+    'AdmissionNotesEventForm': 'latest admission details',
+    'QapDiscussionEventForm': 'qap discussion',
+    'BereavedDiscussionEventForm': 'bereaved discussion',
+    'MedicalHistoryEventForm': 'medical and social history notes',
+    'OtherEventForm': 'other',
+}
+
+
 class MedexLoggerEvents:
     CREATED_CASE = 'Created a case'
     CREATED_CASE_UNSUCCESSFUL = 'Created a case failed'
     CREATED_TIMELINE_EVENT = 'Posted a timeline event'
     CREATED_TIMELINE_EVENT_UNSUCCESSFUL = 'Posted a timeline event failed'
+    SAVED_TIMELINE_EVENT = 'Saved a timeline event to draft'
+    SAVED_TIMELINE_EVENT_UNSUCCESSFUL = 'Saved a timeline event to draft failed'
 
 
 class MedexLogStream:
@@ -72,7 +85,7 @@ class MedexMonitor:
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
-            'timeline_event_type': str(timeline_event_type),
+            'timeline_event_type': form_event_names.get(str(timeline_event_type)),
             'event_id': event_id
         })
 
@@ -82,7 +95,26 @@ class MedexMonitor:
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
-            'timeline_event_type': str(timeline_event_type),
+            'timeline_event_type': form_event_names.get(str(timeline_event_type)),
+            'error': error_code
+        })
+
+    def log_save_draft_timeline_event_successful(self, user, examination_id, location_id, timeline_event_type, event_id):
+        self.log_stream.log(MedexLoggerEvents.SAVED_TIMELINE_EVENT, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id,
+            'timeline_event_type': form_event_names.get(str(timeline_event_type)),
+            'event_id': event_id
+        })
+
+    def log_save_draft_timeline_event_unsuccessful(self, user, examination_id, location_id, timeline_event_type,
+                                               error_code):
+        self.log_stream.log(MedexLoggerEvents.SAVED_TIMELINE_EVENT_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id,
+            'timeline_event_type': form_event_names.get(str(timeline_event_type)),
             'error': error_code
         })
 

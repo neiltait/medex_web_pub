@@ -376,7 +376,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
             self.log_timeline_create_event(examination_id,
                                            self.patient_details.medical_examiner_office_responsible,
-                                           response)
+                                           response,
+                                           self.form.is_final)
 
             self.status_code = response.status_code
             self.form = None
@@ -389,13 +390,25 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
-    def log_timeline_create_event(self, examination_id, location_id, response):
+    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
         if response.ok:
-            monitor.log_create_timeline_event_successful(self.user, examination_id, location_id, self.form.__class__.__name__,
-                                                         response.json()['eventId'])
+            if is_final:
+                monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
+                                                             self.form.__class__.__name__,
+                                                             response.json()['eventId'])
+            else:
+                monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
+                                                                 self.form.__class__.__name__,
+                                                                 response.json()['eventId'])
         else:
-            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id, self.form.__class__.__name__,
-                                                           response.status_code)
+            if is_final:
+                monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                               self.form.__class__.__name__,
+                                                               response.status_code)
+            else:
+                monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                               self.form.__class__.__name__,
+                                                               response.status_code)
 
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
