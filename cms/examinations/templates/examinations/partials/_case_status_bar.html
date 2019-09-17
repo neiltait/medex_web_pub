@@ -167,6 +167,7 @@
                     {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.have_been_scrutinised_by_ME automation_id="status-bar__me-ror-complete" %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered automation_id="status-bar__qap-discussion-complete" %}
                     {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered automation_id="status-bar__bereaved-discussion-complete" %}
+                    {% include 'examinations/partials/_status_item.html' with label="Scrutiny confirmed" status=case_status.me_scrutiny_confirmed automation_id="status-bar__scrutiny-confirmed-complete" %}
 
                 </div>
 
