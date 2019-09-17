@@ -150,3 +150,52 @@ class TestMonitorTests(MedExTestCase):
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
         self.assertEqual(event['event_type'], MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL)
+
+    def test_logger_does_record_outstanding_items_submission(self):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_case_outcome_outstanding_items_form_data()
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.SAVED_OUTSTANDING_ITEM)
+
+    @patch('examinations.request_handler.update_outcomes_outstanding_items',
+           return_value=ExaminationMocks.get_unsuccessful_outstanding_items_response())
+    def test_logger_does_record_outstanding_items_submission_unsuccessful(self, mock_completion_response):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_case_outcome_outstanding_items_form_data()
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.SAVED_OUTSTANDING_ITEM_UNSUCCESSFUL)
+
+    def test_logger_does_record_close_case(self):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_case_outcome_close_case_form_data()
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CLOSED_CASE)
+
+    @patch('examinations.request_handler.close_case',
+           return_value=ExaminationMocks.get_unsuccessful_case_close_response())
+    def test_logger_does_record_close_case_unsuccessful(self, mock_completion_response):
+        self.set_auth_cookies()
+        form_data = ExaminationMocks.get_case_outcome_close_case_form_data()
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CLOSED_CASE_UNSUCCESSFUL)
+

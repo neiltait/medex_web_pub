@@ -1128,6 +1128,21 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_case_outcome_outstanding_items_form_data(cls):
+        return {
+            'mccd_issued': 'true',
+            'cremation_form': 'Unknown',
+            'gp_notified': 'GPNotified',
+            'outstanding-items': 'Save changes'
+        }
+
+    @classmethod
+    def get_case_outcome_close_case_form_data(cls):
+        return {
+            'close-case': 'Close this case'
+        }
+
+    @classmethod
     def get_case_breakdown_response_content(cls):
         return {
             "header": {

@@ -20,6 +20,10 @@ class MedexLoggerEvents:
     COMPLETED_SCRUTINY_UNSUCCESSFUL = 'Completed scrutiny failed'
     CONFIRMED_CORONER_REFERRAL = 'Confirmed referral to coroner'
     CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL = 'Confirmed referral to coroner failed'
+    CLOSED_CASE = 'Closed case'
+    CLOSED_CASE_UNSUCCESSFUL = 'Closed case failed'
+    SAVED_OUTSTANDING_ITEM = 'Saved outstanding items'
+    SAVED_OUTSTANDING_ITEM_UNSUCCESSFUL = 'Saved outstanding items failed'
 
 
 class MedexLogStream:
@@ -154,6 +158,22 @@ class MedexMonitor:
 
     def log_coroner_referral_unsuccessful(self, user, examination_id, location_id):
         self.log_outcome_item_unsuccessful(MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL,
+                                           user, examination_id, location_id)
+
+    def log_outstanding_items_submission(self, user, examination_id, location_id, outcome):
+        self.log_outcome_item_success(MedexLoggerEvents.SAVED_OUTSTANDING_ITEM, user, examination_id, location_id,
+                                      outcome)
+
+    def log_outstanding_items_submission_unsuccessful(self, user, examination_id, location_id):
+        self.log_outcome_item_unsuccessful(MedexLoggerEvents.SAVED_OUTSTANDING_ITEM_UNSUCCESSFUL,
+                                           user, examination_id, location_id)
+
+    def log_case_closed(self, user, examination_id, location_id, outcome):
+        self.log_outcome_item_success(MedexLoggerEvents.CLOSED_CASE, user, examination_id, location_id,
+                                      outcome)
+
+    def log_case_closed_unsuccessful(self, user, examination_id, location_id):
+        self.log_outcome_item_unsuccessful(MedexLoggerEvents.CLOSED_CASE_UNSUCCESSFUL,
                                            user, examination_id, location_id)
 
 

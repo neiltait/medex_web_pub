@@ -549,9 +549,12 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
                                          'not available', self.case_outcome)
 
         elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
-            pass
+            monitor.log_outstanding_items_submission(self.user, self.case_outcome.examination_id,
+                                                     'not available', self.case_outcome)
+
         elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
-            pass
+            monitor.log_case_closed(self.user, self.case_outcome.examination_id,
+                                    'not available', self.case_outcome)
 
     def _log_case_outcome_unsuccessful(self, post_body, examination_id):
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
@@ -561,9 +564,10 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
             monitor.log_coroner_referral_unsuccessful(self.user, examination_id, 'not available')
 
         elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
-            
+            monitor.log_outstanding_items_submission_unsuccessful(self.user, examination_id, 'not available')
+
         elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
-            pass
+            monitor.log_case_closed_unsuccessful(self.user, examination_id, 'not available')
 
 
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
