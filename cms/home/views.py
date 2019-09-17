@@ -19,6 +19,14 @@ from django.views.decorators.cache import never_cache
 from users.models import User
 
 
+class CookiesPolicyView(View):
+    template = 'home/cookies.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)
+
+
 class DashboardView(LoginRequiredMixin, View):
     template = 'home/index.html'
 
