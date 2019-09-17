@@ -16,6 +16,8 @@ class MedexLoggerEvents:
     CREATED_TIMELINE_EVENT_UNSUCCESSFUL = 'Posted a timeline event failed'
     SAVED_TIMELINE_EVENT = 'Saved a timeline event to draft'
     SAVED_TIMELINE_EVENT_UNSUCCESSFUL = 'Saved a timeline event to draft failed'
+    COMPLETED_SCRUTINY = 'Completed scrutiny'
+    COMPLETED_SCRUTINY_UNSUCCESSFUL = 'Completed scrutiny failed'
 
 
 class MedexLogStream:
@@ -99,7 +101,8 @@ class MedexMonitor:
             'error': error_code
         })
 
-    def log_save_draft_timeline_event_successful(self, user, examination_id, location_id, timeline_event_type, event_id):
+    def log_save_draft_timeline_event_successful(self, user, examination_id, location_id, timeline_event_type,
+                                                 event_id):
         self.log_stream.log(MedexLoggerEvents.SAVED_TIMELINE_EVENT, {
             'user_id': user.user_id,
             'examination_id': examination_id,
@@ -109,13 +112,31 @@ class MedexMonitor:
         })
 
     def log_save_draft_timeline_event_unsuccessful(self, user, examination_id, location_id, timeline_event_type,
-                                               error_code):
+                                                   error_code):
         self.log_stream.log(MedexLoggerEvents.SAVED_TIMELINE_EVENT_UNSUCCESSFUL, {
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
             'timeline_event_type': form_event_names.get(str(timeline_event_type)),
             'error': error_code
+        })
+
+    def log_confirm_scrutiny(self, user, examination_id, location_id, outcome):
+        self.log_stream.log(MedexLoggerEvents.COMPLETED_SCRUTINY, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id,
+            'outcome_summary': outcome.case_outcome_summary,
+            'outcome_review_of_records': outcome.case_pre_scrutiny_outcome,
+            'outcome_qap': outcome.case_qap_outcome,
+            'outcome_representative': outcome.case_representative_outcome,
+        })
+
+    def log_confirm_scrutiny_unsuccessful(self, user, examination_id, location_id):
+        self.log_stream.log(MedexLoggerEvents.COMPLETED_SCRUTINY_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id,
         })
 
 

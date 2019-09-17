@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from examinations.models.case_outcomes import CaseOutcome
 from medexCms.test.mocks import ExaminationMocks
 from monitor.loggers import monitor, TestLogStream, MedexLoggerEvents
 from medexCms.test.utils import MedExTestCase
@@ -101,3 +102,27 @@ class TestMonitorTests(MedExTestCase):
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
         self.assertEqual(event['event_type'], MedexLoggerEvents.SAVED_TIMELINE_EVENT_UNSUCCESSFUL)
+
+    def test_logger_does_record_complete_scrutiny_event(self):
+        self.set_auth_cookies()
+        form_data = {CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE: True}
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.COMPLETED_SCRUTINY)
+
+    @patch('examinations.request_handler.complete_case_scrutiny',
+           return_value=ExaminationMocks.get_unsuccessful_scrutiny_complete_response())
+    def test_logger_does_record_complete_scrutiny_unsuccessful_event(self, mock):
+        self.set_auth_cookies()
+        form_data = {CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE: True}
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.COMPLETED_SCRUTINY_UNSUCCESSFUL)
