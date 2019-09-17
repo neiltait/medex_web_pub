@@ -126,3 +126,27 @@ class TestMonitorTests(MedExTestCase):
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
         self.assertEqual(event['event_type'], MedexLoggerEvents.COMPLETED_SCRUTINY_UNSUCCESSFUL)
+
+    def test_logger_does_record_coroner_referral(self):
+        self.set_auth_cookies()
+        form_data = {CaseOutcome.CORONER_REFERRAL_FORM_TYPE: True}
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL)
+
+    @patch('examinations.request_handler.confirm_coroner_referral',
+           return_value=ExaminationMocks.get_unsuccessful_coroner_referral_response())
+    def test_logger_does_record_coroner_referral_unsuccessful(self, mock_completion_response):
+        self.set_auth_cookies()
+        form_data = {CaseOutcome.CORONER_REFERRAL_FORM_TYPE: True}
+        log_stream = self.init_test_log_stream()
+
+        self.client.post('/cases/%s/case-outcome' % ExaminationMocks.EXAMINATION_ID, form_data)
+
+        self.assertEqual(log_stream.event_count(), 1)
+        event = log_stream.event(0)
+        self.assertEqual(event['event_type'], MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL)

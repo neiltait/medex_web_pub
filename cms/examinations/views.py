@@ -541,12 +541,13 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def _log_case_outcome(self, post_body):
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
-            monitor.log_confirm_scrutiny(self.user,
-                                         self.case_outcome.examination_id,
-                                         'not available',
-                                         self.case_outcome)
+            monitor.log_confirm_scrutiny(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
-            pass
+            monitor.log_coroner_referral(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
         elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
             pass
         elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
@@ -554,13 +555,13 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def _log_case_outcome_unsuccessful(self, post_body, examination_id):
         if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
-            monitor.log_confirm_scrutiny_unsuccessful(self.user,
-                                                      examination_id,
-                                                      'not available')
+            monitor.log_confirm_scrutiny_unsuccessful(self.user, examination_id, 'not available')
+
         elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
-            pass
+            monitor.log_coroner_referral_unsuccessful(self.user, examination_id, 'not available')
+
         elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
-            pass
+            
         elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
             pass
 

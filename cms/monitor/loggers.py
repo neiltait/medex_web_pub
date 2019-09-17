@@ -18,6 +18,8 @@ class MedexLoggerEvents:
     SAVED_TIMELINE_EVENT_UNSUCCESSFUL = 'Saved a timeline event to draft failed'
     COMPLETED_SCRUTINY = 'Completed scrutiny'
     COMPLETED_SCRUTINY_UNSUCCESSFUL = 'Completed scrutiny failed'
+    CONFIRMED_CORONER_REFERRAL = 'Confirmed referral to coroner'
+    CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL = 'Confirmed referral to coroner failed'
 
 
 class MedexLogStream:
@@ -121,8 +123,8 @@ class MedexMonitor:
             'error': error_code
         })
 
-    def log_confirm_scrutiny(self, user, examination_id, location_id, outcome):
-        self.log_stream.log(MedexLoggerEvents.COMPLETED_SCRUTINY, {
+    def log_outcome_item_success(self, event, user, examination_id, location_id, outcome):
+        self.log_stream.log(event, {
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
@@ -132,12 +134,27 @@ class MedexMonitor:
             'outcome_representative': outcome.case_representative_outcome,
         })
 
-    def log_confirm_scrutiny_unsuccessful(self, user, examination_id, location_id):
-        self.log_stream.log(MedexLoggerEvents.COMPLETED_SCRUTINY_UNSUCCESSFUL, {
+    def log_outcome_item_unsuccessful(self, event, user, examination_id, location_id):
+        self.log_stream.log(event, {
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
         })
+
+    def log_confirm_scrutiny(self, user, examination_id, location_id, outcome):
+        self.log_outcome_item_success(MedexLoggerEvents.COMPLETED_SCRUTINY, user, examination_id, location_id, outcome)
+
+    def log_confirm_scrutiny_unsuccessful(self, user, examination_id, location_id):
+        self.log_outcome_item_unsuccessful(MedexLoggerEvents.COMPLETED_SCRUTINY_UNSUCCESSFUL,
+                                           user, examination_id, location_id)
+
+    def log_coroner_referral(self, user, examination_id, location_id, outcome):
+        self.log_outcome_item_success(MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL, user, examination_id, location_id,
+                                      outcome)
+
+    def log_coroner_referral_unsuccessful(self, user, examination_id, location_id):
+        self.log_outcome_item_unsuccessful(MedexLoggerEvents.CONFIRMED_CORONER_REFERRAL_UNSUCCESSFUL,
+                                           user, examination_id, location_id)
 
 
 monitor = MedexMonitor(log_stream=ConsoleLogStream())
