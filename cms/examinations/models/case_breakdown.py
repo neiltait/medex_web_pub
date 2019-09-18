@@ -64,6 +64,7 @@ class CaseStatus:
     case_closed = False
     case_outcome = False
     have_been_scrutinised_by_ME = False
+    me_scrutiny_confirmed = False
 
     def __init__(self, obj_dict):
         header = obj_dict.get("header")
@@ -91,6 +92,7 @@ class CaseStatus:
             self.case_closed = header.get("caseClosed")
             self.case_outcome = header.get("caseOutcome")
             self.have_been_scrutinised_by_ME = header.get("haveBeenScrutinisedByME")
+            self.me_scrutiny_confirmed = header.get("meScrutinyConfirmed")
 
 
 class PrePopulatedItemList:
