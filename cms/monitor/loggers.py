@@ -58,8 +58,16 @@ class TestLogStream(MedexLogStream):
 
 
 class InsightsLogStream(MedexLogStream):
+    # InsightsLogStream sources code from
+    # https://microsoft.github.io/ApplicationInsights-Python/
+
+    def __init__(self, key):
+        from applicationinsights import TelemetryClient
+        self.tc = TelemetryClient(key)
+
     def log(self, event_type, data):
-        print('INSIGHTS', event_type, data)
+        self.tc.track_event(event_type, data)
+        self.tc.flush()
 
 
 class MedexMonitor:
