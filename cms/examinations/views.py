@@ -329,6 +329,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
             'errors': self.form.errors,
             'tab_modal': self.modal_config,
             'saved': saved,
+            'enums': enums
         }
 
 
