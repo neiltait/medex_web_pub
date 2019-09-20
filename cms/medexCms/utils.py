@@ -26,7 +26,7 @@ def validate_date(year, month, day, hour='00', min='00'):
         build_date(year, month, day, hour, min)
         return True
     except (ValueError, TypeError, AttributeError) as ex:
-        log_internal_error('validate_date', ex)
+        # log_internal_error('validate_date', ex)
         return False
 
 

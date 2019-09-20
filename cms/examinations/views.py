@@ -24,6 +24,7 @@ from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from medexCms.utils import fallback_to
+from monitor.loggers import monitor
 
 
 class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -46,6 +47,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             response = Examination.create(form.to_object(), self.user.auth_token)
             if response.ok:
+                monitor.log_case_create_event(self.user, response.json()['examinationId'], form.me_office)
+
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
                     # scenario 1 - success
                     return self.__successful_post(response)
@@ -54,6 +57,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
                 # scenario 2 - api error
+                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, response.status_code)
+
                 status_code = self.__process_api_error(form, response)
         else:
             # scenario 3 - cms validation error
@@ -124,9 +129,11 @@ class EditExaminationSectionBaseView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'),
+                                                                                       self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'),
+                                                                                    self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -368,6 +375,11 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
+            self.log_timeline_create_event(examination_id,
+                                           self.patient_details.medical_examiner_office_responsible,
+                                           response,
+                                           self.form.is_final)
+
             self.status_code = response.status_code
             self.form = None
         else:
@@ -378,6 +390,26 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         context = self._set_context(examination_id)
 
         return render(request, self.template, context, status=self.status_code)
+
+    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
+        if response.ok:
+            if is_final:
+                monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
+                                                             self.form.__class__.__name__,
+                                                             response.json()['eventId'])
+            else:
+                monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
+                                                                 self.form.__class__.__name__,
+                                                                 response.json()['eventId'])
+        else:
+            if is_final:
+                monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                               self.form.__class__.__name__,
+                                                               response.status_code)
+            else:
+                monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                                   self.form.__class__.__name__,
+                                                                   response.status_code)
 
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
@@ -485,25 +517,58 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         if result and not result == status.HTTP_200_OK:
             log_api_error('case outcome update', result.get_message())
+            self._log_case_outcome_unsuccessful(post_body, examination_id)
             return render_error(request, self.user, result)
 
         self._load_case_outcome(examination_id)
         context = self._set_context()
 
+        self._log_case_outcome(post_body)
+
         return render(request, self.template, context, status=self.status_code)
 
     def _load_case_outcome(self, examination_id):
-        self.examination, self.case_status, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
+        self.case_outcome, self.case_status, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
 
     def _set_context(self):
         return {
             'session_user': self.user,
-            'examination_id': self.examination.examination_id,
-            'case_outcome': self.examination,
+            'examination_id': self.case_outcome.examination_id,
+            'case_outcome': self.case_outcome,
             'case_status': self.case_status,
-            'patient': self.examination.case_header,
+            'patient': self.case_outcome.case_header,
             'enums': enums,
         }
+
+    def _log_case_outcome(self, post_body):
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
+            monitor.log_confirm_scrutiny(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
+            monitor.log_coroner_referral(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
+            monitor.log_outstanding_items_submission(self.user, self.case_outcome.examination_id,
+                                                     'not available', self.case_outcome)
+
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
+            monitor.log_case_closed(self.user, self.case_outcome.examination_id,
+                                    'not available', self.case_outcome)
+
+    def _log_case_outcome_unsuccessful(self, post_body, examination_id):
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
+            monitor.log_confirm_scrutiny_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
+            monitor.log_coroner_referral_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
+            monitor.log_outstanding_items_submission_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
+            monitor.log_case_closed_unsuccessful(self.user, examination_id, 'not available')
 
 
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
