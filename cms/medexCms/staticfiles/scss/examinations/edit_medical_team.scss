@@ -17,6 +17,14 @@
   margin-bottom: 0 !important;
 }
 
+.small-margin {
+    margin-bottom: $medex-spacing-sm;
+}
+
+.medium-margin {
+    margin-bottom: $medex-spacing-md;
+}
+
 .expanded-margin {
     margin-right: medex-spacing(4);
 }
