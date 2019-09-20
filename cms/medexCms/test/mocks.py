@@ -1075,6 +1075,21 @@ class ExaminationMocks:
         }
 
     @classmethod
+    def get_pre_scrutiny_draft_event_data(cls):
+        return {
+            'me-thoughts': "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman.",
+            'cod': 'Expected',
+            'possible-cod-1a': 'Cause of death',
+            'possible-cod-1b': '',
+            'possible-cod-1c': '',
+            'possible-cod-2': '',
+            'ops': 'IssueAnMccd',
+            'gr': 'Yes',
+            'grt': 'Palliative care were called too late.',
+            'save-as-draft': 'pre-scrutiny'
+        }
+
+    @classmethod
     def get_case_outcome_response_data(cls):
         return {
             "caseHeader": {
@@ -1110,6 +1125,21 @@ class ExaminationMocks:
             "mccdIssed": False,
             "cremationFormStatus": "",
             "gpNotifedStatus": ""
+        }
+
+    @classmethod
+    def get_case_outcome_outstanding_items_form_data(cls):
+        return {
+            'mccd_issued': 'true',
+            'cremation_form': 'Unknown',
+            'gp_notified': 'GPNotified',
+            'outstanding-items': 'Save changes'
+        }
+
+    @classmethod
+    def get_case_outcome_close_case_form_data(cls):
+        return {
+            'close-case': 'Close this case'
         }
 
     @classmethod

@@ -93,6 +93,13 @@ class APIDiscussionOutcomes:
     DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
 
 
+class APIStatusBarResult:
+    COMPLETE = 'Complete'
+    INCOMPLETE = 'Incomplete'
+    NOT_APPLICABLE = 'NotApplicable'
+    UNKNOWN = 'Unknown'
+
+
 class APIPeopleStrings:
     QAP = 'qap'
     BEREAVED_REP = 'bereaved-representative'
@@ -195,5 +202,8 @@ class APIStrings:
     prescrutiny_status = APIPrescrutinyStatus()
     qap_discussion_status = APIQapDiscussionStatus()
     filters = APIFilters()
+    case_status_bar_result = APIStatusBarResult()
 
 enums = APIStrings()
+
+

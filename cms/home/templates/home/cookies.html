@@ -1,0 +1,88 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+  <link href="{% sass_src 'scss/home/cookies.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block page %}
+    <div class="medex-content-page">
+        <h1 class="nhsuk-heading-l">Cookies</h1>
+        <p class="nhsuk-body">We take your privacy very seriously. We fully appreciate and respect the importance of data privacy and security on the Internet. This website uses cookies and similar technologies for various purposes, including to distinguish you from other users of the website.</p>
+        <p class="nhsuk-body">These are the main types of cookies that we use and why we use them:</p>
+
+        <ul class="nhsuk-list nhsuk-list--bullet">
+            <li class="list-font">Strictly necessary cookies – these cookies are required for the operation of our website. They will, for example, allow you to navigate the site.</li>
+            <li class="list-font">Customer preference – to improve your experience. For example, we may use cookies to store your language or country so you don‘t have to set them up every time you visit our website.</li>
+        </ul>
+
+        <p class="nhsuk-body">The cookies described above may be either “session cookies”, which means they are temporary and are automatically deleted from your computer or device when you close your browser.</p>
+        <p class="nhsuk-body">They may be “persistent cookies”, which last until their expiry date or until you or your browser delete them. </p>
+        <p class="nhsuk-body">By law, we are required to ask your permission before storing non-essential cookies on your computer. If you choose to block or delete cookies or similar technologies used on our website, it may prevent the website from functioning properly or at all.</p>
+        <p class="nhsuk-body">You may refuse to accept cookies by altering the settings on your internet browser. Generally, this can be done by visiting the “Settings” menu in your browser. You can also visit the EU-based Your Online Choices website, which will show you the cookies and similar technologies currently in use on your browser and allow you to opt-out of these.</p>
+
+
+        <p class="nhsuk-body">
+        By continuing to use our site and our cookies policy, you agree to the cookies outlined being placed on your device.</p>
+
+        <p class="nhsuk-body">
+            This is a list of the main cookies set by the Medical Examiners product, and what each is used for:
+        </p>
+
+        <div class="nhsuk-table-responsive">
+  <table class="nhsuk-table">
+    <caption class="nhsuk-table__caption">Cookies and their descriptions</caption>
+    <thead class="nhsuk-table__head">
+      <tr class="nhsuk-table__row">
+        <th class="nhsuk-table__header" scope="col">Cookies</th>
+        <th class="nhsuk-table__header" scope="col">Type</th>
+          <th class="nhsuk-table__header" scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+      <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">_RequestVerificationToken</td>
+        <td class="nhsuk-table__cell list-font">Session</td>
+          <td class="nhsuk-table__cell list-font">This is an anti-forgery token that helps us to prevent cross-site request forgery attacks. This cookie contains no personal information and will only be stored for the duration of your browser session.</td>
+      </tr>
+      <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">ASP.NET_SessionId</td>
+        <td class="nhsuk-table__cell list-font">Session</td>
+          <td class="nhsuk-table__cell list-font">This is a standard Microsoft ASP.NET cookie to track your session with our website. Without thissite function would be limited. This cookie contains no personal information and will only be stored for the duration of your browser session.</td>
+      </tr>
+      <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">ge_allowCookies</td>
+        <td class="nhsuk-table__cell list-font">Persistent</td>
+          <td class="nhsuk-table__cell list-font">This cookie is used to prevent our site from alerting you to our cookie policy after you have dismissed the message for the first time. This cookie contains no personal information and will be stored for 1 year.</td>
+      </tr>
+    <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">_gid</td>
+        <td class="nhsuk-table__cell list-font">Persistent</td>
+          <td class="nhsuk-table__cell list-font">This is used by Google Analytics, which allows us to monitor how our site is being used, to distinguish individual users. _gid is used to distinguish users and has an expiration of 24-hours.</td>
+      </tr>
+    <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">_gat</td>
+        <td class="nhsuk-table__cell list-font">Persistent</td>
+          <td class="nhsuk-table__cell list-font">This is also used by Google Analytics to limit the number of requests that have to be made. _gat is used to throttle requests and has an expiration of 10-minutes.</td>
+      </tr>
+    <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">_dc_gtm_UAXXXXXX</td>
+        <td class="nhsuk-table__cell list-font">Persistent</td>
+          <td class="nhsuk-table__cell list-font">This is used by Google Tag Manager, it is used to help identify the visitors by either age, gender, or interests by DoubleClick - Google Tag Manager. This cookie contains no personal information and will be stored for 10 minutes.</td>
+      </tr>
+     <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">ARRAffinity</td>
+        <td class="nhsuk-table__cell list-font">Session</td>
+          <td class="nhsuk-table__cell list-font">This cookie is used by our hosting provider to balance the load across the web servers and help ensure optimal performance for our users. This cookie contains no personal information and will only be stored for the duration of your browser session.</td>
+      </tr>
+    <tr class="nhsuk-table__row">
+        <td class="nhsuk-table__cell list-font">_hjIncludedInSample</td>
+        <td class="nhsuk-table__cell list-font">Session</td>
+          <td class="nhsuk-table__cell list-font">This cookie is used by our partner service Okta.com which allows us to monitor how our site is being used, and to make improvements based on customer behaviour and needs. This cookie contains no personal information and will only be stored for the duration of your browser session.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+    </div>
+{% endblock %}
