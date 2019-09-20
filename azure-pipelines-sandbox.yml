@@ -10,6 +10,7 @@ pool:
 
 variables:
   imageName: 'medex-cms:$(Build.BuildId)'
+  latestName: 'medex-cms:$(Build.SourceBranchName)-latest'
   dockerId: medexCmsSandbox
 
 steps:
@@ -63,6 +64,9 @@ steps:
     docker build -f Dockerfile -t $(dockerId).azurecr.io/$(imageName) .
     docker login -u $(dockerId) -p $pswd $(dockerId).azurecr.io
     docker push $(dockerId).azurecr.io/$(imageName)
+    docker build -f Dockerfile -t $(dockerId).azurecr.io/$(latestName) .
+    docker login -u $(dockerId) -p $pswd $(dockerId).azurecr.io
+    docker push $(dockerId).azurecr.io/$(latestName)
   env:
     pswd: $(dockerPassword)
   displayName: 'Build and push Docker image to Sandbox'
