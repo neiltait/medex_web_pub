@@ -2,21 +2,21 @@
     {% if form.event_id %}<input name="pre_scrutiny_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.me_thoughts %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-label nhsuk-u-font-weight-bold" for="me-thoughts">
-            Review of patient records by the Medical Examiner assigned to this case
+        <label class="nhsuk-heading-s medex-heading-s" for="me-thoughts">
+            Draft notes on the possible cause of death
         </label>
         {% if form.errors.me_thoughts %}
             <span class="nhsuk-error-message medex-font-default-override"
                   automation-id="ve_me_review_details">{{ form.errors.me_thoughts }}</span>{% endif %}
 
-        <span class="medex-hint" id="more-scrutiny-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
+        <span class="nhsuk-hint" id="more-scrutiny-detail-hint">Initial draft notes from the medical examiner on possible causes of death</span>
         <textarea class="nhsuk-textarea margin-bottom more-detail" id="me-thoughts" name="me-thoughts" rows="5"
                   aria-describedby="more-scrutiny-detail-hint">{{ form.me_thoughts }}</textarea>
     </div>
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.circumstances_of_death %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
-            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="circumstances-of-death">
+            <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" for="circumstances-of-death">
                 Overall circumstances of death
             </legend>
             {% if form.errors.circumstances_of_death %}
@@ -24,7 +24,7 @@
                       automation-id="ve_death_circumstances">{{ form.errors.circumstances_of_death }}</span>
             {% endif %}
 
-            <span class="medex-hint"
+            <span class="nhsuk-hint"
                   id="circumstances-of-death">Based on the information scrutinised, the death was:</span>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
@@ -74,8 +74,8 @@
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.possible_cod %}nhsuk-form-group--error{% endif %}">
 
-        <label class="nhsuk-label nhsuk-u-font-weight-bold">
-            Possible cause of death established during the review of records by Medical Examiner
+        <label class="nhsuk-heading-s medex-heading-s">
+            Possible cause of death established by Medical Examiner
         </label>
         {% if form.errors.possible_cod %}
             <span class="nhsuk-error-message medex-font-default-override"
@@ -110,14 +110,14 @@
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.overall_outcome %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
-            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="outcome-of-pre-scrutiny"
+            <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" for="outcome-of-pre-scrutiny"
                     id="outcome-of-pre-scrutiny">
-                Overall outcome after ME review of records
+                Overall outcome of review
             </legend>
             {% if form.errors.overall_outcome %}
                 <span class="nhsuk-error-message medex-font-default-override"
                       automation-id="ve_me_review_outcome">{{ form.errors.overall_outcome }}</span>{% endif %}
-            <span class="medex-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
+            <span class="nhsuk-hint">Based on the information assessed so far, what do you believe is the likely outcome of this case?</span>
             <div class="nhsuk-radios nhsuk-radios--inline">
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="outcome-of-pre-scrutiny-1" name="ops"
@@ -181,7 +181,7 @@
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.governance_review %}nhsuk-form-group--error{% endif %}">
         <fieldset class="nhsuk-fieldset">
-            <legend class="nhsuk-label nhsuk-u-font-weight-bold" for="governance-review"
+            <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" for="governance-review"
                     id="governance-review">
                 Clinical governance review or learning opportunity
             </legend>
@@ -189,7 +189,7 @@
                 <span class="nhsuk-error-message medex-font-default-override"
                       automation-id="ve_clinical_governance">{{ form.errors.governance_review }}</span>{% endif %}
 
-            <span class="medex-hint"
+            <span class="nhsuk-hint"
                   id="governance-hint">Is there any reason why this case should be referred for a review?</span>
             <div class="nhsuk-radios nhsuk-radios--inline">
                 <div class="nhsuk-radios__item">
@@ -223,7 +223,7 @@
                 </div>
             </div>
         </fieldset>
-        <textarea class="nhsuk-textarea"
+        <textarea class="nhsuk-textarea text-area-margin"
                   id="governance-review-text"
                   name="grt" rows="2" aria-label="governance-review-text">{{ form.governance_review_text }}</textarea>
     </div>

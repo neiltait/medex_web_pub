@@ -21,6 +21,11 @@
     line-height: $nhs-heading-l-line-height;
     font-weight: bold;
   }
+
+  .medex-heading-s {
+    margin-bottom: $medex-spacing-sm;
+    font-weight: $nhs-font-weight-bold;
+  }
 }
 
 .cod-textarea {
@@ -69,10 +74,16 @@
 
   .text-area-margin {
     margin-top: $medex-spacing-md;
+    margin-bottom: $medex-spacing-xl;
   }
 
   .disclaimer-margin {
     margin-bottom: $medex-spacing-xl;
+  }
+
+  .no-padding-inline {
+    padding-inline-start: 0px !important;
+    padding-inline-end: 0px !important;
   }
 }
 
