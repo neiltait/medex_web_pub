@@ -26,6 +26,15 @@
     margin-bottom: $medex-spacing-sm;
     font-weight: $nhs-font-weight-bold;
   }
+
+  .margin-top-lg {
+    padding-top: 2.75rem;
+  }
+
+   .no-padding-inline {
+    padding-inline-start: 0px !important;
+    padding-inline-end: 0px !important;
+  }
 }
 
 .cod-textarea {
@@ -79,11 +88,6 @@
 
   .disclaimer-margin {
     margin-bottom: $medex-spacing-xl;
-  }
-
-  .no-padding-inline {
-    padding-inline-start: 0px !important;
-    padding-inline-end: 0px !important;
   }
 }
 

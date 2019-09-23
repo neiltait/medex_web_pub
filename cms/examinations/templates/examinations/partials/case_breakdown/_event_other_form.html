@@ -2,7 +2,7 @@
     {% if form.event_id %}<input name="other_notes_id" value="{{form.event_id}}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.more_detail %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-u-font-weight-bold nhsuk-heading-s" for="more_detail">
+        <label class="nhsuk-heading-s medex-heading-s" for="more_detail">
             Other relevant information
         </label>
         {% if form.errors.more_detail %}

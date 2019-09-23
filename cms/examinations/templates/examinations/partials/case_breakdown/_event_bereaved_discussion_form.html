@@ -3,7 +3,7 @@
     <div class="nhs-form-group">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
-                <label class="nhsuk-heading-m nhsuk-u-font-weight-bold">
+                <label class="nhsuk-heading-s medex-heading-s">
                     Who is the discussion with?
                 </label>
             </div>
@@ -241,7 +241,7 @@
             <fieldset class="nhsuk-fieldset" aria-describedby="date-of-conversation" role="group">
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full">
-                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                        <legend class="nhsuk-fieldset__legend">
                             Date of conversation
                         </legend>
                         {% if form.errors.bereaved_time_of_conversation %}
@@ -339,7 +339,7 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_discussion_details %}nhsuk-form-group--error{% endif %}">
-                <label class="nhsuk-heading-s nhsuk-u-font-weight-bold" for="bereavement-discussion-details">
+                <label class="nhsuk-heading-s medex-heading-s" for="bereavement-discussion-details">
                     Details of the discussion?
                 </label>
                 {% if form.errors.bereaved_discussion_details %}
@@ -361,7 +361,7 @@
                 <div class="nhsuk-form-group  {% if form.errors.bereaved_discussion_outcome %}nhsuk-form-group--error{% endif %}">
 
                     <fieldset class="nhsuk-fieldset">
-                        <legend class="nhsuk-heading-s nhsuk-u-font-weight-bold">
+                        <legend class="nhsuk-heading-s medex-heading-s no-padding-inline">
                             Outcome
                         </legend>
                         {% if form.errors.bereaved_discussion_outcome %}
@@ -453,7 +453,7 @@
 
         <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
             <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-grid-column-full margin-top-lg">
                     <button class="nhsuk-button add-event-btn" type="submit" value="bereaved-discussion"
                             name="add-event-to-timeline">Add event to timeline
                     </button>
