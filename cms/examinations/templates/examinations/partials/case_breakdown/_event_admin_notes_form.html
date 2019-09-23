@@ -3,7 +3,7 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <label class="nhsuk-label nhsuk-u-font-weight-bold">
+            <label class="nhsuk-heading-s nhsuk-u-font-weight-bold">
                 Latest hospital admission details
             </label>
             <span class="medex-hint">When was the patient admitted to hospital?</span>
@@ -112,10 +112,10 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="admission_notes">
+            <label class="nhsuk-heading-s nhsuk-u-font-weight-bold" for="admission_notes">
                 Notes about the latest admission to hospital
             </label>
-            <span class="medex-hint">Why were they admitted? What were the circumstances for admission?</span>
+            <span class="nhsuk-hint">Why were they admitted? What were the circumstances for admission?</span>
             <textarea id="admission_notes" class="nhsuk-textarea more-detail" name="latest_admission_notes"
                       rows="6">{{ form.admission_notes }}</textarea>
         </div>
@@ -125,13 +125,13 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.latest_admission_immediate_referral %}nhsuk-form-group--error{% endif %}">
                 <fieldset class="nhsuk-fieldset">
-                    <legend class="nhsuk-label nhsuk-u-font-weight-bold">
+                    <legend class="nhsuk-heading-s nhsuk-u-font-weight-bold">
                         Do you suspect this case may need immediate coroner referral?
                     </legend>
                     {% if form.errors.latest_admission_immediate_referral %}
                     <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_immediate_referral">{{ form.errors.latest_admission_immediate_referral }}</span>
                     {% endif %}
-                    <span class="medex-hint">This will fast track the case to ME review of records where they will be able to confirm the referral.</span>
+                    <span class="nhsuk-hint">This will fast track the case to ME review of records where they will be able to confirm the referral.</span>
 
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
@@ -162,7 +162,7 @@
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.route_of_admission %}nhsuk-form-group--error{% endif %}">
                     <fieldset class="nhsuk-fieldset">
-                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                        <legend class="nhsuk-heading-s nhsuk-u-font-weight-bold">
                             Route of hospital admission
                         </legend>
                         {% if form.errors.route_of_admission %}
