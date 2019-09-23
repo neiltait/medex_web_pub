@@ -24,7 +24,6 @@ class PermissionModelsTests(MedExTestCase):
         self.assertEqual(me_permission.role_type, enums.roles.ME)
         self.assertEqual(meo_permission.role_type, enums.roles.MEO)
 
-
     def test_correctly_sets_values_from_legacy_values(self):
         me_legacy = Permission(PermissionMocks.get_legacy_me_permission_dict())
         meo_legacy = Permission(PermissionMocks.get_legacy_meo_permission_dict())
@@ -256,3 +255,23 @@ class PermissionsFormsTests(MedExTestCase):
         self.assertIsNone(form.region)
         self.assertIsNone(form.trust)
         self.assertIsNone(form.location_id())
+
+    def test_permission_level_uses_permission_level_if_multiple_values_present_and_regional_level_specified(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'regional',
+            'region': 'region_id',
+            'trust': 'trust_id'
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.location_id(), 'region_id')
+
+    def test_permission_level_uses_permission_level_if_multiple_values_present_and_trust_level_specified(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'trust',
+            'region': 'region_id',
+            'trust': 'trust_id'
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.location_id(), 'trust_id')

@@ -67,9 +67,9 @@ class PermissionBuilderForm:
         return self.region is not None and self.region != '' and self.region != 'None'
 
     def location_id(self):
-        if self.region_present():
+        if self.permission_level == 'regional':
             return self.region
-        elif self.trust_present():
+        elif self.permission_level == 'trust':
             return self.trust
         else:
             return self.national
