@@ -53,7 +53,7 @@ class CaseStatus:
     bereaved_info_entered = False
     me_assigned = False
     is_scrutiny_completed = False
-    pre_scutiny_event_entered = False
+    pre_scrutiny_event_entered = False
     qap_discussion_event_entered = False
     bereaved_discussion_event_entered = False
     is_case_items_completed = False
@@ -81,7 +81,7 @@ class CaseStatus:
             self.bereaved_info_entered = header.get("bereavedInfoEntered")
             self.me_assigned = header.get("meAssigned")
             self.is_scrutiny_completed = header.get("isScrutinyCompleted")
-            self.pre_scutiny_event_entered = header.get("preScrutinyEventEntered")
+            self.pre_scrutiny_event_entered = header.get("preScrutinyEventEntered")
             self.qap_discussion_event_entered = header.get("qapDiscussionEventEntered")
             self.bereaved_discussion_event_entered = header.get("bereavedDiscussionEventEntered")
             self.is_case_items_completed = header.get("isCaseItemsCompleted")
