@@ -9,11 +9,11 @@
                 Outcome of ME review of records
             </p>
             {% if case_outcome.display_pre_scrutiny_outcome == None %}
-            <p class="outcome-description">
+            <p class="nnhsuk-heading-m nhsuk-font-weight-bold">
                 Pending
             </p>
             {% else %}
-            <p class="outcome-description">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold">
                 {{case_outcome.display_pre_scrutiny_outcome}}
             </p>
             {% endif %}
@@ -31,11 +31,11 @@
                 Outcome of QAP/ME discussion
             </p>
             {% if case_outcome.display_qap_outcome == None %}
-            <p class="outcome-description">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold"">
                 Pending
             </p>
             {% else %}
-            <p class="outcome-description">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold"">
                 {{case_outcome.display_qap_outcome}}
             </p>
             {% endif %}
@@ -54,11 +54,11 @@
                 Outcome of representative discussion
             </p>
             {% if case_outcome.display_representative_outcome == None %}
-            <p class="outcome-description">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold"">
                 Pending
             </p>
             {% else %}
-            <p class="outcome-description">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold"">
                 {{case_outcome.display_representative_outcome}}
             </p>
             {% endif %}
