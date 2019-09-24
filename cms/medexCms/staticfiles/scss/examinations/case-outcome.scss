@@ -8,6 +8,11 @@
         margin-bottom: $medex-spacing-md;
     }
 
+    .no-padding {
+        padding-inline-start: 0px;
+        padding-inline-end: 0px;
+    }
+
     .case-summary {
         border: 6px solid $nhs-aqua-green;
         color: $nhs-grey;
