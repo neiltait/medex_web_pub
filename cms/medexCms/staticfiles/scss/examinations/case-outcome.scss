@@ -26,14 +26,8 @@
             .outcome {
                 margin-bottom: $medex-spacing-md;
 
-                p {
-                    margin-bottom: 0;
-                    font-size: 19px;
-                }
-
-                .outcome-description {
-                    color: $black;
-                    font-size: $nhs-heading-m-size;
+                .no-margin {
+                    margin-bottom: 0px !important;
                 }
 
                 a {
