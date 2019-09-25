@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import sys
 
+from monitor.loggers import monitor, InsightsLogStream
+
 with open('./version.txt') as v_file:
     VERSION = v_file.read()
 
@@ -39,7 +41,8 @@ OP_ID = os.environ.get('OP_ID')
 OP_SECRET = os.environ.get('OP_SECRET')
 
 APP_INSIGHTS_KEY = os.environ.get('APP_INSIGHTS_KEY', '')
-
+if APP_INSIGHTS_KEY:
+    monitor.change_log_stream(InsightsLogStream(APP_INSIGHTS_KEY))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -51,8 +54,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '***REMOVED***')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 LOCAL = os.environ.get('LOCAL', False)
 
+# REQUIRE_HTTPS should be set to False when running locally
+REQUIRE_HTTPS = os.environ.get('REQUIRE_HTTPS', 'True').lower() == 'true'
+
+
 ALLOWED_HOSTS = [
     'localhost',
+    'medex-cms',
     'medical-examiners-cms-sandbox.azurewebsites.net',
     'medical-examiners-cms-staging.azurewebsites.net',
     'medex-web-pre.frontend.pre.medex.cloud',

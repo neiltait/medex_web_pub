@@ -1,5 +1,7 @@
 import json
 
+from rest_framework import status
+
 from examinations.constants import get_display_short_user_role, get_display_user_role
 from medexCms.utils import fallback_to
 from permissions import request_handler
@@ -46,8 +48,12 @@ class Permission:
     @classmethod
     def load_by_id(cls, user_id, permission_id, auth_token):
         response = request_handler.load_single_permission_for_user(user_id, permission_id, auth_token)
-        return Permission(obj_dict=response.json())
 
+        success = response.status_code == status.HTTP_200_OK
+        if success:
+            return Permission(obj_dict=response.json())
+        else:
+            return None
 
 class PermittedActions:
 
@@ -79,6 +85,7 @@ class PermittedActions:
         self.can_get_profile = obj_dict.get("GetProfile") if obj_dict else False
         self.can_update_profile = obj_dict.get("UpdateProfile") if obj_dict else False
         self.can_get_profile_permissions = obj_dict.get("GetProfilePermissions") if obj_dict else False
+        self.can_get_coroner_referral_download = obj_dict.get("GetCoronerReferralDownload") if obj_dict else False
         self.permitted_forms = PermittedForms(obj_dict)
 
     def can_access_settings_index(self):

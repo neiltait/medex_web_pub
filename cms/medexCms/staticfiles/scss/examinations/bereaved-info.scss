@@ -4,12 +4,15 @@
   .bereaved {
     display: none;
     border-top: 1px solid $nhs-grey;
-    padding-top: $medex-spacing-lg;
 
     &:first-of-type {
       border-top: none;
     }
   }
+
+  .medium-top-margin {
+    margin-top: $medex-spacing-md;
+}
 
   #add-another-btn {
     margin-right: $medex-spacing-lg;

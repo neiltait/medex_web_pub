@@ -1,5 +1,5 @@
 from alerts import messages
-from examinations.models.core import CauseOfDeathProposal
+from examinations.models.core import CauseOfDeath
 from medexCms.api import enums
 from medexCms.utils import fallback_to, validate_date_time_field, API_DATE_FORMAT, pop_if_falsey, build_date, \
     validate_date, date_is_valid_or_empty, validate_is_not_blank
@@ -244,7 +244,7 @@ class QapDiscussionEventForm:
         self.qap_discussion_organisation = fallback_to(form_data.get('qap-other__organisation'), '')
         self.qap_discussion_phone_number = fallback_to(form_data.get('qap-other__phone-number'), '')
 
-        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death = CauseOfDeath()
         self.cause_of_death.section_1a = fallback_to(form_data.get('qap_discussion_revised_1a'), '')
         self.cause_of_death.section_1b = fallback_to(form_data.get('qap_discussion_revised_1b'), '')
         self.cause_of_death.section_1c = fallback_to(form_data.get('qap_discussion_revised_1c'), '')
@@ -294,7 +294,7 @@ class QapDiscussionEventForm:
         return self
 
     def __fill_cause_of_death_from_draft(self, draft):
-        self.cause_of_death = CauseOfDeathProposal()
+        self.cause_of_death = CauseOfDeath()
         self.cause_of_death.section_1a = draft.cause_of_death_1a
         self.cause_of_death.section_1b = draft.cause_of_death_1b
         self.cause_of_death.section_1c = draft.cause_of_death_1c
@@ -495,6 +495,7 @@ class AdmissionNotesEventForm:
             form_data.get('time_of_last_admission_not_known') == enums.true_false.TRUE else False
         self.admission_notes = fallback_to(form_data.get('latest_admission_notes'), '')
         self.coroner_referral = fallback_to(form_data.get('latest_admission_immediate_referral'), '')
+        self.route_of_admission = fallback_to(form_data.get('latest_admission_route'), '')
         self.is_final = True if form_data.get('add-event-to-timeline') else False
         self.errors = {'count': 0}
 
@@ -524,6 +525,10 @@ class AdmissionNotesEventForm:
             self.errors['count'] += 1
             self.errors['latest_admission_immediate_referral'] = messages.ErrorSelectionRequiredMessage(
                 'immediate referral')
+
+        if self.route_of_admission == '':
+            self.errors['count'] += 1
+            self.errors['route_of_admission'] = messages.ErrorFieldRequiredMessage('admission route')
 
     def check_valid_draft(self):
         if date_is_valid_or_empty(self.admission_year, self.admission_month, self.admission_day) is False:
@@ -566,6 +571,7 @@ class AdmissionNotesEventForm:
             "admittedDateUnknown": True if self.admission_date_unknown else None,
             "admittedTime": self.admission_time if self.admission_time else None,
             "admittedTimeUnknown": True if self.admission_time_unknown else None,
+            "routeOfAdmission": self.route_of_admission,
             "immediateCoronerReferral": self.get_immediate_coroner_referral()
         }
 
@@ -578,6 +584,7 @@ class AdmissionNotesEventForm:
         self.admission_time = draft.admitted_time
         self.admission_time_unknown = draft.admitted_time_unknown
         self.admission_notes = draft.body
+        self.route_of_admission = draft.route_of_admission
         self.coroner_referral = self.set_immediate_coroner_referral(draft.immediate_coroner_referral)
         return self
 
@@ -596,11 +603,16 @@ class BereavedDiscussionEventForm:
     REQUEST_OUTCOME_CORONER = "ConcernsCoronerInvestigation"
     REQUEST_OUTCOME_100A = "ConcernsRequires100a"
     REQUEST_OUTCOME_ADDRESSED = "ConcernsAddressedWithoutCoroner"
+    REQUEST_OUTCOME_COULD_NOT_HAPPEN = "DiscussionUnableToHappen"
 
     # properties
     active = False
     event_id = ''
+
     use_existing_bereaved = False
+    use_custom_bereaved = True
+    use_no_bereaved = False
+
     discussion_representative_type = ''
     existing_representative = None
     alternate_representative = None
@@ -637,6 +649,7 @@ class BereavedDiscussionEventForm:
         self.existing_representative = representatives[0]
         self.discussion_representative_type = enums.people.BEREAVED_REP
         self.use_existing_bereaved = True
+        self.use_custom_bereaved = False
 
     def __init_representatives_from_draft(self, form_data):
         self.__init_existing_representative(form_data)
@@ -650,12 +663,24 @@ class BereavedDiscussionEventForm:
     def __set_use_existing_bereaved(self):
         if self.discussion_representative_type == enums.people.BEREAVED_REP:
             self.use_existing_bereaved = True
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = False
         elif self.discussion_representative_type == enums.people.OTHER:
             self.use_existing_bereaved = False
+            self.use_custom_bereaved = True
+            self.use_no_bereaved = False
+        elif self.discussion_representative_type == enums.people.NOBODY:
+            self.use_existing_bereaved = False
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = True
         elif self.existing_representative:
             self.use_existing_bereaved = True
+            self.use_custom_bereaved = False
+            self.use_no_bereaved = False
         else:
             self.use_existing_bereaved = False
+            self.use_custom_bereaved = True
+            self.use_no_bereaved = False
 
     def __init_alternate_representative(self, form_data):
         alternate_bereaved_data = {
@@ -793,7 +818,7 @@ class BereavedDiscussionEventForm:
             if self.existing_representative is not None:
                 self.discussion_representative_type = enums.people.BEREAVED_REP
             else:
-                self.discussion_representative_type = enums.people.OTHER
+                self.discussion_representative_type = enums.people.NOBODY
         else:
             if draft_participant.equals(self.existing_representative):
                 self.discussion_representative_type = enums.people.BEREAVED_REP

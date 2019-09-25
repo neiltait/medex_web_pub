@@ -7,11 +7,16 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-third">
             <form id="case-close-form" class="form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
-                      method="post">
+                  method="post">
+                <!-- Prevent implicit submission of the form -->
+                <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+                <!-- ... -->
+
                 {% csrf_token %}
 
                 <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case"
-                        {% if not case_outcome.can_close %}disabled{% endif %} />
+                       {% if not case_outcome.can_close %}disabled{% endif %}/>
             </form>
         </div>
 

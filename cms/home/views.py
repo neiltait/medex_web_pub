@@ -10,12 +10,21 @@ from django.views.generic.base import View
 from rest_framework import status
 
 from home.forms import IndexFilterForm
+from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
 from .utils import redirect_to_landing, redirect_to_login
 from django.views.decorators.cache import never_cache
 
 from users.models import User
+
+
+class CookiesPolicyView(View):
+    template = 'home/cookies.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)
 
 
 class DashboardView(LoginRequiredMixin, View):
@@ -30,7 +39,8 @@ class DashboardView(LoginRequiredMixin, View):
         page_size = 25
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
-        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
+        self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
+                                    form.get_case_status())
 
         context = self.set_context(form)
 
@@ -42,6 +52,7 @@ class DashboardView(LoginRequiredMixin, View):
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
+            'enums': enums
         }
 
 
@@ -54,11 +65,12 @@ class LoginCallbackView(View):
         id_token = token_response.json().get('id_token')
         auth_token = token_response.json().get('access_token')
         refresh_token = token_response.json().get('refresh_token')
-        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-        response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+        response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token, secure=settings.REQUIRE_HTTPS)
+        response.set_cookie(settings.ID_TOKEN_NAME, id_token, secure=settings.REQUIRE_HTTPS)
+        response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token, secure=settings.REQUIRE_HTTPS)
+
         response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
-                            max_age=settings.REFRESH_PERIOD)
+                            max_age=settings.REFRESH_PERIOD, secure=settings.REQUIRE_HTTPS)
 
         return response
 
@@ -78,11 +90,12 @@ class LoginRefreshView(View):
             id_token = token_response.json().get('id_token')
             auth_token = token_response.json().get('access_token')
             refresh_token = token_response.json().get('refresh_token')
-            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token)
-            response.set_cookie(settings.ID_TOKEN_NAME, id_token)
-            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token)
+            response.set_cookie(settings.AUTH_TOKEN_NAME, auth_token, secure=settings.REQUIRE_HTTPS)
+            response.set_cookie(settings.ID_TOKEN_NAME, id_token, secure=settings.REQUIRE_HTTPS)
+            response.set_cookie(settings.REFRESH_TOKEN_NAME, refresh_token, secure=settings.REQUIRE_HTTPS)
+
             response.set_cookie(settings.DO_NOT_REFRESH_COOKIE, value="OKTA token is current",
-                                max_age=settings.REFRESH_PERIOD)
+                                max_age=settings.REFRESH_PERIOD, secure=settings.REQUIRE_HTTPS)
 
             return response
 
@@ -139,3 +152,19 @@ class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+
+class AccessibilityPolicyView(View):
+    template = 'home/accessibility.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)
+
+
+class PrivacyPolicyView(View):
+    template = 'home/privacy.html'
+
+    @never_cache
+    def get(self, request):
+        return render(request, self.template, {}, status=status.HTTP_200_OK)

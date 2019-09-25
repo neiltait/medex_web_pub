@@ -40,9 +40,9 @@
 
     {% include "examinations/partials/case_breakdown/_event_pre_scrutiny_form.html" with form=form_data.PreScrutinyEventForm %}
 
-    {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" with form=form_data.QapDiscussionEventForm %}
+    {% include "examinations/partials/case_breakdown/_event_qap_discussion_form.html" with form=form_data.QapDiscussionEventForm case_status=pre_populated.qap %}
 
-    {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" with form=form_data.BereavedDiscussionEventForm %}
+    {% include "examinations/partials/case_breakdown/_event_bereaved_discussion_form.html" with form=form_data.BereavedDiscussionEventForm case_status=pre_populated.bereaved %}
 
     {% include "examinations/partials/case_breakdown/_event_other_form.html" with form=form_data.OtherEventForm %}
 </div>

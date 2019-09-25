@@ -20,7 +20,7 @@ class PatientDetailsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(request={'data': 'test'})
         result = form.is_valid()
         self.assertIsFalse(result)
-        self.assertEqual(form.errors["first_name"], messages.ErrorFieldRequiredMessage('first name'))
+        self.assertEqual(form.errors["first_name"], messages.ErrorFieldRequiredMessage('a given name'))
 
     def test_given_create_examination_with_first_name_submitted_does_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt'})
@@ -31,7 +31,7 @@ class PatientDetailsFormsTests(MedExTestCase):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
         result = form.is_valid()
         self.assertIsFalse(result)
-        self.assertEqual(form.errors["last_name"], messages.ErrorFieldRequiredMessage('last name'))
+        self.assertEqual(form.errors["last_name"], messages.ErrorFieldRequiredMessage('a surname'))
 
     def test_given_create_examination_with_name_greater_than_250_characters_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'first_name': 'matt' * 40,
@@ -58,7 +58,7 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_given_create_examination_without_gender_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'test': 'data'})
         form.is_valid()
-        self.assertEqual(form.errors["gender"], messages.ErrorFieldRequiredMessage('gender'))
+        self.assertEqual(form.errors["gender"], messages.NO_GENDER)
 
     def test_given_create_examination_with_gender_other_but_no_detail_when_submitted_does_not_validate(self):
         form = PrimaryExaminationInformationForm(request={'gender': 'Other'})
@@ -141,7 +141,7 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_nhs_number_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'nhs_number': ''})
         form.is_valid()
-        self.assertEqual(form.errors["nhs_number"], messages.ErrorFieldRequiredMessage('NHS number'))
+        self.assertEqual(form.errors["nhs_number"], messages.ErrorFieldRequiredMessage('an NHS number'))
 
     def test_time_of_death_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm({'time_of_death': '', 'time_of_death_not_known': True})
@@ -156,7 +156,7 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_time_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'time_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["time_of_death"], messages.ErrorFieldRequiredMessage('time of death'))
+        self.assertEqual(form.errors["time_of_death"], messages.ErrorFieldRequiredMessage('a time of death'))
 
     def test_date_of_birth_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm(
@@ -179,16 +179,16 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_date_of_birth_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('date of birth'))
+        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('a date of birth'))
 
     def test_date_of_birth_group_does_not_validate_if_partial_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_birth': '26', 'month_of_birth': '', 'year_of_birth': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('date of birth'))
+        self.assertEqual(form.errors["date_of_birth"], messages.ErrorFieldRequiredMessage('a date of birth'))
 
-    def test_date_of_death_group_does_validate_if_checkbox_ticked(self):
+    def test_date_of_death_group_does_validate_if_checkbox_ticked_and_time_of_death_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm(
-            {'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True})
+            {'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True, 'time_of_death_not_known': True})
         form.is_valid()
         self.assertIsFalse("date_of_death" in form.errors)
 
@@ -207,17 +207,24 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_date_of_death_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('date of death'))
+        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('a date of death'))
 
     def test_date_of_death_group_does_not_validate_if_partial_information_entered(self):
         form = PrimaryExaminationInformationForm({'day_of_death': '26', 'month_of_death': '', 'year_of_death': ''})
         form.is_valid()
-        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('date of death'))
+        self.assertEqual(form.errors["date_of_death"], messages.ErrorFieldRequiredMessage('a date of death'))
+
+    def test_date_and_time_of_death_do_not_validate_if_unknown_but_time_is_known(self):
+        form = PrimaryExaminationInformationForm({'day_of_death': '', 'month_of_death': '', 'year_of_death': '', 'date_of_death_not_known': True,
+                                                  'time_of_death': '10:10'})
+        form.is_valid()
+        self.assertEqual(form.errors["date_of_death"], messages.DEATH_DATE_MISSING_WHEN_TIME_GIVEN)
+        self.assertEqual(form.errors["time_of_death"], messages.DEATH_DATE_MISSING_WHEN_TIME_GIVEN)
 
     def test_place_of_death_does_not_validate_if_missing(self):
         form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
-        self.assertEqual(form.errors["place_of_death"], messages.ErrorFieldRequiredMessage('place of death'))
+        self.assertEqual(form.errors["place_of_death"], messages.ErrorFieldRequiredMessage('a place of death'))
 
     def test_place_of_death_does_validate_if_present(self):
         form = PrimaryExaminationInformationForm({'place_of_death': "London"})
@@ -227,7 +234,7 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_me_office_does_not_validate_if_missing(self):
         form = PrimaryExaminationInformationForm({'test': 'data'})
         form.is_valid()
-        self.assertEqual(form.errors["me_office"], messages.ErrorFieldRequiredMessage('ME office'))
+        self.assertEqual(form.errors["me_office"], messages.ME_OFFICE)
 
     def test_me_office_does_validate_if_present(self):
         form = PrimaryExaminationInformationForm({'me_office': 1})
@@ -519,6 +526,7 @@ class TimelineEventFormsTests(MedExTestCase):
         admission_time_unknown = False
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
         coroner_referral = 'no'
+        route_of_admission = 'ae'
         add_event_to_timeline = 'admission-notes'
 
         form_data = {
@@ -529,6 +537,7 @@ class TimelineEventFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
+            'latest_admission_route': route_of_admission,
             'latest_admission_immediate_referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }
@@ -539,6 +548,7 @@ class TimelineEventFormsTests(MedExTestCase):
         self.assertEqual(result.get("notes"), admission_notes)
         self.assertEqual(result.get("admittedDate"), form.admission_date())
         self.assertEqual(result.get("admittedTime"), admission_time)
+        self.assertEqual(result.get('routeOfAdmission'), route_of_admission)
         self.assertEqual(result.get("immediateCoronerReferral"), False)
         self.assertEqual(result.get("isFinal"), True)
 
@@ -550,6 +560,7 @@ class TimelineEventFormsTests(MedExTestCase):
         admission_time = '10:00'
         admission_time_unknown = enums.true_false.FALSE
         admission_notes = "Gentrify franzen heirloom raw denim gastropub activated charcoal listicle shaman."
+        route_of_admission = 'ae'
         coroner_referral = 'no'
         add_event_to_timeline = 'admission-notes'
 
@@ -561,6 +572,7 @@ class TimelineEventFormsTests(MedExTestCase):
             'time_of_last_admission': admission_time,
             'time_of_last_admission_not_known': admission_time_unknown,
             'latest_admission_notes': admission_notes,
+            'latest_admission_route': route_of_admission,
             'latest-admission-suspect-referral': coroner_referral,
             'add-event-to-timeline': add_event_to_timeline
         }

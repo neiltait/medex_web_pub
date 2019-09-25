@@ -16,6 +16,16 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIRouteOfAdmission:
+    AE = "AccidentAndEmergency"
+    WARD = "DirectToWard"
+    GP = "GPReferral"
+    TRANSFER = "TransferFromAnotherHospital"
+    PARAMEDIC = "ParamedicToSpecialistCenter"
+    OUTPATIENT = "FromOutpatientClinic"
+    UNKNOWN = "Unknown"
+
+
 class APIFuneralArrangements:
     CREMATION = "Cremation"
     BURIAL = "Burial"
@@ -31,6 +41,18 @@ class APICircumstancesOfDeath:
     END_OF_LIFE_CARE_PLAN = 'PartOfAnIndividualisedEndOfLifeCarePlan'
 
 
+class APIPrescrutinyStatus:
+    HAPPENED = "PrescrutinyHappened"
+    NOT_HAPPENED = "PrescrutinyNotHappened"
+
+
+class APIQapDiscussionStatus:
+    HAPPENED_NO_REVISION = 'HappenedNoRevision'
+    HAPPENED_WITH_REVISIONs = 'HappenedWithRevisions'
+    COULD_NOT_HAPPEN = 'CouldNotHappen'
+    NO_RECORD = 'NoRecord'
+
+
 class APIOutcomes:
     MCCD = 'IssueAnMccd'
     CORONER_100A = 'ReferToCoronerFor100a'
@@ -39,6 +61,18 @@ class APIOutcomes:
     MCCD_FROM_ME = 'MccdCauseOfDeathProvidedByME'
     MCCD_FROM_QAP = 'MccdCauseOfDeathProvidedByQAP'
     MCCD_FROM_QAP_AND_ME = 'MccdCauseOfDeathAgreedByQAPandME'
+    DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
+
+
+class APIFilters:
+    F01_HAS_UNKNOWN_BASIC_DETAILS = 'HaveUnknownBasicDetails'
+    F02_READY_FOR_SCRUTINY = 'ReadyForMEScrutiny'
+    F03_UNASSIGNED = 'Unassigned'
+    F04_HAVE_BEEN_SCRUTINISED = 'HaveBeenScrutinisedByME'
+    F05_PENDING_ADDITIONAL_DETAILS = 'PendingAdditionalDetails'
+    F06_PENDING_QAP = 'PendingDiscussionWithQAP'
+    F07_PENDING_BEREAVED = 'PendingDiscussionWithRepresentative'
+    F08_OUTSTANDING_FINAL_OUTCOMES = "HaveFinalCaseOutstandingOutcomes"
 
 
 class APICauseOfDeathStatuses:
@@ -56,12 +90,21 @@ class APIDiscussionOutcomes:
     CONCERNS_CORONER = 'ConcernsCoronerInvestigation'
     CONCERNS_100A = 'ConcernsRequires100a'
     CONCERNS_ADDRESSED = 'ConcernsAddressedWithoutCoroner'
+    DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
+
+
+class APIStatusBarResult:
+    COMPLETE = 'Complete'
+    INCOMPLETE = 'Incomplete'
+    NOT_APPLICABLE = 'NotApplicable'
+    UNKNOWN = 'Unknown'
 
 
 class APIPeopleStrings:
     QAP = 'qap'
     BEREAVED_REP = 'bereaved-representative'
     OTHER = 'other'
+    NOBODY = 'nobody'
 
 
 class APIRoles:
@@ -142,6 +185,7 @@ class APIStrings:
     true_false = APITrueFalseStrings()
     yes_no = APIYesNoStrings()
     gender = APIGenderStrings()
+    route_of_admission = APIRouteOfAdmission()
     funeral_arrangements = APIFuneralArrangements()
     cod = APICircumstancesOfDeath()
     outcomes = APIOutcomes()
@@ -155,6 +199,11 @@ class APIStrings:
     timeline_event_keys = TimelineEventKeys()
     timeline_event_types = TimelineEventTypes()
     errors = SystemValidationErrors()
-
+    prescrutiny_status = APIPrescrutinyStatus()
+    qap_discussion_status = APIQapDiscussionStatus()
+    filters = APIFilters()
+    case_status_bar_result = APIStatusBarResult()
 
 enums = APIStrings()
+
+

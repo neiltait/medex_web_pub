@@ -8,13 +8,20 @@
             <p>
                 Outcome of ME review of records
             </p>
-
+            {% if case_outcome.display_pre_scrutiny_outcome == None %}
+            <p class="outcome-description">
+                Pending
+            </p>
+            {% else %}
             <p class="outcome-description">
                 {{case_outcome.display_pre_scrutiny_outcome}}
             </p>
+            {% endif %}
+
             {% if session_user.permitted_actions.permitted_forms.preScrutinyEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=PreScrutiny">Not correct?</a>
+                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=PreScrutiny">Not
+                    correct?</a>
             </p>
             {% endif %}
         </div>
@@ -23,13 +30,21 @@
             <p>
                 Outcome of QAP/ME discussion
             </p>
-
+            {% if case_outcome.display_qap_outcome == None %}
+            <p class="outcome-description">
+                Pending
+            </p>
+            {% else %}
             <p class="outcome-description">
                 {{case_outcome.display_qap_outcome}}
             </p>
+            {% endif %}
+
+
             {% if session_user.permitted_actions.permitted_forms.qapDiscussionEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=QapDiscussion">Not correct?</a>
+                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=QapDiscussion">Not
+                    correct?</a>
             </p>
             {% endif %}
         </div>
@@ -38,13 +53,20 @@
             <p>
                 Outcome of representative discussion
             </p>
-
+            {% if case_outcome.display_representative_outcome == None %}
+            <p class="outcome-description">
+                Pending
+            </p>
+            {% else %}
             <p class="outcome-description">
                 {{case_outcome.display_representative_outcome}}
             </p>
+            {% endif %}
+
             {% if session_user.permitted_actions.permitted_forms.bereavedDiscussionEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=BereavedDiscussion">Not correct?</a>
+                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=BereavedDiscussion">Not
+                    correct?</a>
             </p>
             {% endif %}
         </div>
@@ -52,9 +74,16 @@
 
     <div class="overall-outcomes">
         <div class="outcome">
+
+            {% if case_outcome.display_representative_outcome == None or case_outcome.display_qap_outcome == None or case_outcome.display_pre_scrutiny_outcome == None %}
+            <p class="outcome-description-heading">
+                OUTCOME PENDING
+            </p>
+            {% else %}
             <p class="outcome-description-heading">
                 {{case_outcome.display_outcome_summary.heading}}
             </p>
+            {% endif %}
 
             <p class="outcome-description-details">
                 {{case_outcome.display_outcome_summary.details}}

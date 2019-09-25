@@ -26,7 +26,7 @@ def validate_date(year, month, day, hour='00', min='00'):
         build_date(year, month, day, hour, min)
         return True
     except (ValueError, TypeError, AttributeError) as ex:
-        log_internal_error('validate_date', ex)
+        # log_internal_error('validate_date', ex)
         return False
 
 
@@ -105,6 +105,14 @@ def parse_datetime(datetime_string):
         return None
 
 
+def reformat_datetime(datetime_string, new_format, default_value=''):
+    if datetime_string:
+        full_date_time = parse_datetime(datetime_string)
+        return full_date_time.strftime(new_format) if full_date_time else default_value
+    else:
+        return default_value
+
+
 def fallback_to(value, default_value):
     return value if value is not None else default_value
 
@@ -119,6 +127,10 @@ def is_empty_time(time_string):
 
 def bool_to_string(bool_value):
     return 'true' if bool_value else 'false'
+
+
+def key_not_empty(key, obj_dict):
+    return key in obj_dict and obj_dict[key]
 
 
 def get_code_version():

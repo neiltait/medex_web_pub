@@ -2,7 +2,8 @@ from rest_framework import status
 
 from errors.utils import log_api_error, handle_error
 from examinations import request_handler
-from examinations.models.core import PatientHeader
+from examinations.models.case_breakdown import CaseStatus
+from examinations.presenters.core import PatientHeader
 from medexCms.api import enums
 from medexCms.utils import parse_datetime
 
@@ -17,6 +18,7 @@ class CaseOutcome:
     CORONER_INVESTIGATION_KEY = 'ReferToCoroner'
     MCCD_100A_KEY = 'IssueMCCDWith100a'
     MCCD_KEY = 'IssueMCCD'
+    PENDING = 'PENDING'
     REFER_TO_CORONER_KEYS = [CORONER_INVESTIGATION_KEY, MCCD_100A_KEY]
 
     QAP_OUTCOMES = {
@@ -24,7 +26,8 @@ class CaseOutcome:
         enums.outcomes.MCCD_FROM_ME: 'MCCD to be issued, COD provided by ME',
         enums.outcomes.MCCD_FROM_QAP_AND_ME: 'MCCD to be issued, new COD reached',
         enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
-        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a'
+        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue MCCD with 100a',
+        enums.outcomes.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen'
     }
 
     REPRESENTATIVE_OUTCOMES = {
@@ -32,6 +35,7 @@ class CaseOutcome:
         enums.discussion.CONCERNS_CORONER: 'Refer to coroner for investigation, concerns raised',
         enums.discussion.CONCERNS_100A: 'Refer to coroner for 100a, concerns raised',
         enums.discussion.CONCERNS_ADDRESSED: 'MCCD to be issued, concerns addressed without coroner',
+        enums.discussion.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
@@ -43,7 +47,8 @@ class CaseOutcome:
     OUTCOME_SUMMARIES = {
         CORONER_INVESTIGATION_KEY: {'heading': 'Refer to coroner', 'details': 'For investigation'},
         MCCD_100A_KEY: {'heading': 'Refer to coroner', 'details': 'For permission to issue MCCD with 100A'},
-        MCCD_KEY: {'heading': 'MCCD to be issued'}
+        MCCD_KEY: {'heading': 'MCCD to be issued'},
+        PENDING: {'heading': 'OUTCOME PENDING'}
     }
 
     CORONER_DISCLAIMERS = {
@@ -72,10 +77,10 @@ class CaseOutcome:
         response = request_handler.load_case_outcome(auth_token, examination_id)
 
         if response.status_code == status.HTTP_200_OK:
-            return CaseOutcome(response.json(), examination_id), None
+            return CaseOutcome(response.json(), examination_id), CaseStatus(response.json()), None
         else:
             log_api_error('case outcome load', response.text if response.content != 'null' else '')
-            return None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
+            return None, None, handle_error(response, {'type': 'case outcome', 'action': 'loading'})
 
     @classmethod
     def complete_scrutiny(cls, auth_token, examination_id):
@@ -151,7 +156,10 @@ class CaseOutcome:
         return self.CORONER_DISCLAIMERS.get(self.case_outcome_summary)
 
     def display_outcome_summary(self):
-        return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+        if self.case_outcome_summary:
+            return self.OUTCOME_SUMMARIES.get(self.case_outcome_summary)
+        else:
+            return self.OUTCOME_SUMMARIES.get(self.PENDING)
 
     def display_pre_scrutiny_outcome(self):
         return self.PRE_SCRUTINY_OUTCOMES.get(self.case_pre_scrutiny_outcome)

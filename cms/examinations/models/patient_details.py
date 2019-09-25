@@ -1,7 +1,7 @@
-from rest_framework import status
-
-from errors.utils import log_api_error
+from errors.utils import log_api_error, handle_error
 from examinations import request_handler
+from examinations.models.case_breakdown import CaseStatus
+from examinations.presenters.core import PatientHeader
 from medexCms.utils import fallback_to, bool_to_string, is_empty_time, is_empty_date, parse_datetime
 from people.models import BereavedRepresentative
 
@@ -9,7 +9,6 @@ from people.models import BereavedRepresentative
 class PatientDetails:
 
     def __init__(self, obj_dict={}, modes_of_disposal={}, examination_id=None):
-        from examinations.models.core import PatientHeader
 
         self.modes_of_disposal = modes_of_disposal
 
@@ -174,19 +173,25 @@ class PatientDetails:
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
         response = request_handler.load_patient_details_by_id(examination_id, auth_token)
+        patient_details = None
+        error = None
+        case_status = None
 
-        authenticated = response.status_code == status.HTTP_200_OK
-
-        if authenticated:
-            modes_of_disposal = request_handler.load_modes_of_disposal(auth_token)
-            return PatientDetails(response.json(), modes_of_disposal, examination_id)
+        if response.ok:
+            case_status = CaseStatus(response.json())
+            modes_of_disposal_response = request_handler.load_modes_of_disposal(auth_token)
+            if modes_of_disposal_response.ok:
+                patient_details = PatientDetails(response.json(), modes_of_disposal_response.json(), examination_id)
+            else:
+                log_api_error('modes of disposal load', '')
+                error = handle_error(modes_of_disposal_response, {"action": "loading", "type": "modes of disposal"})
         else:
             log_api_error('patient details load', response.text)
-            return None
+            error = handle_error(response, {"action": "loading", "type": "patient details"})
+        return patient_details, case_status, error
 
-    @classmethod
-    def update(cls, examination_id, submission, auth_token):
-        return request_handler.update_patient_details(examination_id, submission, auth_token)
+    def update(self, submission, auth_token):
+        return request_handler.update_patient_details(self.id, submission, auth_token)
 
     def full_name(self):
         return "%s %s" % (self.given_names, self.surname)

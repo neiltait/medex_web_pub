@@ -1,0 +1,13 @@
+{% load staticfiles %}
+
+<a href="{{ base_url }}status={{ filter }}" type="submit" name="{{ filter }}" class="filters-status-item {% if active_filter == filter %}filters-status-item--active{% endif %}" automation-id="filter-{{ filter }}">
+    <div class="nhsuk-grid-row">
+        <div class="filters-status-item__count">{{ count }}</div>
+        <div class="mobile-hidden filters-status-item__icon filters-status-item__icon--{{ icon }}"></div>
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="filters-status-item__label">{{ label }}</div>
+        </div>
+    </div>
+</a>

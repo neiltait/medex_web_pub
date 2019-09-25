@@ -1,5 +1,6 @@
 from alerts.messages import ErrorFieldTooLong, ErrorFieldRequiredMessage
 from examinations.models.medical_team import MedicalTeamMember
+from medexCms.utils import fallback_to, pop_if_falsey
 
 
 class MedicalTeamMembersForm:
@@ -22,21 +23,15 @@ class MedicalTeamMembersForm:
 
     def initialise_form_from_data(self, request):
         self.consultant_1 = MedicalTeamMember(name=request.get('consultant_name_1'),
-                                              role=request.get('consultant_role_1'),
                                               organisation=request.get('consultant_organisation_1'),
-                                              phone_number=request.get('consultant_phone_number_1'),
                                               notes=request.get('consultant_note_1'),
                                               gmc_number=request.get('gmc_number_consultant_1'))
         self.consultant_2 = MedicalTeamMember(name=request.get('consultant_name_2'),
-                                              role=request.get('consultant_role_2'),
                                               organisation=request.get('consultant_organisation_2'),
-                                              phone_number=request.get('consultant_phone_number_2'),
                                               notes=request.get('consultant_note_2'),
                                               gmc_number=request.get('gmc_number_consultant_2'))
         self.consultant_3 = MedicalTeamMember(name=request.get('consultant_name_3'),
-                                              role=request.get('consultant_role_3'),
                                               organisation=request.get('consultant_organisation_3'),
-                                              phone_number=request.get('consultant_phone_number_3'),
                                               notes=request.get('consultant_note_3'),
                                               gmc_number=request.get('gmc_number_consultant_3'))
         self.qap = MedicalTeamMember(name=request.get('qap_name'),
@@ -46,7 +41,6 @@ class MedicalTeamMembersForm:
                                      notes=request.get('qap_note_1'),
                                      gmc_number=request.get('gmc_number_qap'))
         self.gp = MedicalTeamMember(name=request.get('gp_name'),
-                                    role=request.get('gp_role'),
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'),
                                     notes=request.get('gp_note_1'),
@@ -140,10 +134,13 @@ class MedicalTeamMembersForm:
         obj = {
             "consultantResponsible": self.consultant_1.to_object(),
             "consultantsOther": consultants_other,
-            "nursingTeamInformation": self.nursing_team_information,
+            "nursingTeamInformation": fallback_to(self.nursing_team_information, ''),
             "medicalExaminerUserId": self.medical_examiner,
             "medicalExaminerOfficerUserId": self.medical_examiners_officer,
         }
+
+        pop_if_falsey("medicalExaminerUserId", obj)
+        pop_if_falsey("medicalExaminerOfficerUserId", obj)
 
         if self.qap.has_name():
             obj['qap'] = self.qap.to_object()
@@ -152,3 +149,18 @@ class MedicalTeamMembersForm:
             obj['generalPractitioner'] = self.gp.to_object()
 
         return obj
+
+    def register_known_api_errors(self, api_errors):
+        # register errors for known fields with standard messages
+        known_errors = []
+        return known_errors
+
+    def register_unknown_api_errors(self, api_errors):
+        # register errors for unknown fields with standard messages
+        return []
+
+    def register_form_errors(self, api_errors):
+        if 'message' in api_errors:
+            self.errors['count'] += 1
+            self.errors['form'] = api_errors['message']
+        return [{'field': 'MedicalTeamForm', 'error_code': 500}]

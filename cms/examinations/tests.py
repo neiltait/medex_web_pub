@@ -5,6 +5,7 @@ from unittest.mock import patch
 from alerts.messages import ApiErrorMessages
 from examinations.forms.timeline_events import PreScrutinyEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, \
     OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
+from examinations.models.case_breakdown import CaseBreakdown
 
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.utils import event_form_parser
@@ -62,7 +63,6 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTemplateUsed(response, 'examinations/create.html')
 
-
     @patch('examinations.request_handler.post_new_examination',
            return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_duplicate())
     def test_create_case_endpoint_raises_nhs_duplicate_error_if_raised_by_api(self, mock_case_create):
@@ -103,7 +103,6 @@ class ExaminationsViewsTests(MedExTestCase):
         self.assertEqual(form.errors["count"], 1)
         self.assertEqual(form.errors["nhs_number"], ApiErrorMessages().nhs_numbers.INVALID)
 
-
     @patch('examinations.request_handler.post_new_examination',
            return_value=ExaminationMocks.get_unsuccessful_case_creation_response_nhs_any_other_error())
     def test_create_case_endpoint_raises_nhs_unknown_error_if_raised_by_api(self, mock_case_create):
@@ -133,7 +132,8 @@ class ExaminationsViewsTests(MedExTestCase):
 
     @patch('examinations.request_handler.load_patient_details_by_id',
            return_value=ExaminationMocks.get_unsuccessful_patient_details_load_response())
-    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(self, mock_case_load):
+    def test_landing_on_edit_patient_details_page_when_the_case_cant_be_found_loads_the_error_template_with_correct_code(
+            self, mock_case_load):
         self.set_auth_cookies()
         response = self.client.get('/cases/%s/patient-details' % ExaminationMocks.EXAMINATION_ID)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -508,6 +508,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': '',
             'add-event-to-timeline': False
         }
 
@@ -527,6 +528,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -546,6 +548,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': '',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': False
         }
 
@@ -565,6 +568,7 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
             'time_of_last_admission_not_known': '',
             'latest_admission_notes': '',
             'latest_admission_immediate_referral': 'no',
+            'latest_admission_route': 'ae',
             'add-event-to-timeline': True
         }
 
@@ -671,6 +675,25 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+    def test_latest_admission_form_valid_when_admission_route_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = 'ae'
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 0)
+
+    def test_latest_admission_form_not_valid_when_admission_route_not_selected(self):
+        form_data = self.valid_last_admission_final_data()
+        form_data['latest_admission_route'] = ''
+
+        form = AdmissionNotesEventForm(form_data=form_data)
+        form.is_valid()
+
+        self.assertEqual(form.errors['count'], 1)
+
 
     """
     PRE-SCRUTINY
@@ -1073,3 +1096,51 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
         form.is_valid()
 
         self.assertEquals(form.errors['count'], 0)
+
+
+class CaseBreakdownTests(MedExTestCase):
+
+    def test_case_breakdown_object_does_generate_from_mock_data(self):
+        mock_data = ExaminationMocks.get_case_breakdown_response_content()
+
+        case_breakdown = CaseBreakdown(obj_dict=mock_data, medical_team=None)
+
+        self.assertIsNotNone(case_breakdown)
+
+    def test_case_breakdown_object_does_get_cause_of_death_from_prescrutiny_stage(self):
+        mock_data = ExaminationMocks.get_case_breakdown_response_content()
+
+        case_breakdown = CaseBreakdown(obj_dict=mock_data, medical_team=None)
+
+        self.assertIsNotNone(case_breakdown.prepopulated_items)
+        self.assertIsNotNone(case_breakdown.prepopulated_items.qap)
+
+    def test_case_breakdown_object_does_add_essential_fields_to_cause_of_death_from_prescrutiny_stage(self):
+        mock_data = ExaminationMocks.get_case_breakdown_response_content()
+
+        case_breakdown = CaseBreakdown(obj_dict=mock_data, medical_team=None)
+
+        essential_fields = ["section_1a", "section_1b", "section_1c", "section_2", "pre_scrutiny_status",
+                            "medical_examiner", "date_of_latest_pre_scrutiny", "user_for_latest_pre_scrutiny"]
+        for field in essential_fields:
+            self.assertTrue(case_breakdown.prepopulated_items.qap.keys().__contains__(field))
+
+    def test_case_breakdown_object_does_get_cause_of_death_from_qap_stage(self):
+        mock_data = ExaminationMocks.get_case_breakdown_response_content()
+
+        case_breakdown = CaseBreakdown(obj_dict=mock_data, medical_team=None)
+
+        self.assertIsNotNone(case_breakdown.prepopulated_items)
+        self.assertIsNotNone(case_breakdown.prepopulated_items.bereaved)
+
+    def test_case_breakdown_object_does_add_essential_fields_to_cause_of_death_from_qap_stage(self):
+        mock_data = ExaminationMocks.get_case_breakdown_response_content()
+
+        case_breakdown = CaseBreakdown(obj_dict=mock_data, medical_team=None)
+
+        essential_fields = ["section_1a", "section_1b", "section_1c", "section_2", "pre_scrutiny_status",
+                            "medical_examiner", "date_of_latest_pre_scrutiny", "user_for_latest_pre_scrutiny",
+                            "qap_discussion_status", "qap_name_for_latest_qap_discussion",
+                            "date_of_latest_qap_discussion", "user_for_latest_qap_discussion"]
+        for field in essential_fields:
+            self.assertTrue(case_breakdown.prepopulated_items.bereaved.keys().__contains__(field))

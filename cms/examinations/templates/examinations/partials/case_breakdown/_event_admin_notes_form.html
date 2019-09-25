@@ -157,6 +157,113 @@
             </div>
         </div>
     </div>
+    <div id="latest-route-of-admission" class="more-detail">
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.route_of_admission %}nhsuk-form-group--error{% endif %}">
+                    <fieldset class="nhsuk-fieldset">
+                        <legend class="nhsuk-fieldset__legend nhsuk-u-font-weight-bold">
+                            Route of hospital admission
+                        </legend>
+                        {% if form.errors.route_of_admission %}
+                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.route_of_admission }}</span>
+                    {% endif %}
+                        <span class="nhsuk-hint" id="example-hint">
+                              How was the patient admitted?
+                        </span>
+                        <div class="nhsuk-radios">
+                            <div class="nhsuk-grid-row">
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-ae"
+                                               automation-id="latest-admission-ae"
+                                               name="latest_admission_route"
+                                               type="radio" value="{{ enums.route_of_admission.AE }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.AE %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-ae">
+                                            A&E
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-transfer"
+                                               automation-id="latest-admission-transfer"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.TRANSFER }}"
+                                               {% if form.route_of_admission == enums.route_of_admission.TRANSFER %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-transfer">
+                                            Transfer from another hospital
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-unknown"
+                                               automation-id="latest-admission-unknown"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.UNKNOWN }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.UNKNOWN %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-paramedic">
+                                            Unknown
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-ward"
+                                               automation-id="latest-admission-ward"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.WARD }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.WARD %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-ward">
+                                            Direct to the ward
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-paramedic"
+                                               automation-id="latest-admission-paramedic"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.PARAMEDIC }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.PARAMEDIC %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-paramedic">
+                                            Paramedic to specialist center
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="nhsuk-grid-column-one-third">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-gp"
+                                               automation-id="latest-admission-gp"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.GP }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.GP %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-gp">
+                                            GP referral
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input"
+                                               id="latest-admission-outpatient"
+                                               automation-id="latest-admission-outpatient"
+                                               name="latest_admission_route" type="radio" value="{{ enums.route_of_admission.OUTPATIENT }}"
+                                        {% if form.route_of_admission == enums.route_of_admission.OUTPATIENT %}checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="latest-admission-outpatient">
+                                            From outpatient clinic
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="latest-admission__save-buttons" class="nhsuk-form-group more-detail">
         <div class="nhsuk-grid-row">

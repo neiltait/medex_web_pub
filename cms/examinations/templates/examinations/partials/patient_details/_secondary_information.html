@@ -2,6 +2,7 @@
     <!-- Address -->
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-one-half">
+            <p class="nhsuk-heading-xs">Residential address of the deceased</p>
             <fieldset class="nhsuk-fieldset">
                 <div class="nhsuk-form-group {% if errors.address_line_1 %}nhsuk-form-group--error{% endif %}">
                     <label class="nhsuk-label" for="address_line_1">Building and street</label>
@@ -94,7 +95,7 @@
         <div class="nhsuk-grid-column-full">
             <fieldset class="nhsuk-fieldset">
                 <div class="nhsuk-form-group {% if errors.care_organisation %}nhsuk-form-group--error{% endif %}">
-                    <label class="nhsuk-label" for="care_organisation">Organisation responsible for care prior to
+                    <label class="nhsuk-label" for="care_organisation">Organisation responsible for care immediately prior to
                         death</label>
 
                     {% if errors.care_organisation %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_care_organisation">{{ errors.care_organisation }}</span>{% endif %}

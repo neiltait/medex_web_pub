@@ -2,20 +2,26 @@
 {% load medex_tags %}
 
 <div class="footer" role="contentinfo">
-  <div class="container">
-    <div class="flex-row vertical-center footer--row">
-      <div class="footer--item">
-        <img class="banner" src="{% static 'images/nhs_logo.png' %}" alt="">
-      </div>
+    <div class="container">
+        <div class="flex-row vertical-center footer--row">
+            <div class="footer--item">
+                <img class="banner" src="{% static 'images/nhs_logo.png' %}" alt="">
+            </div>
+            <div class="footer--item">
+                <a href="{% url 'privacy' %}">Privacy</a>
+            </div>
+            <div class="footer--item">
+                <a href="{% url 'accessibility' %}">Accessibility</a>
+            </div>
 
-      <div class="footer--item">
-        © Crown copyright
-      </div>
+            <div class="footer--item">
+                © Crown copyright
+            </div>
+        </div>
     </div>
-  </div>
 
-  <p class="version">
-    {% code_version as current_version %}
-    Version: {{current_version}}
-  </p>
+    <p class="version">
+        {% code_version as current_version %}
+        Version: {{ current_version }}
+    </p>
 </div>

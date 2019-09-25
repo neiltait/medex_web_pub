@@ -13,9 +13,24 @@
   }
 }
 
+.small-margin {
+    margin-bottom: $medex-spacing-sm !important;
+}
+
+.medium-margin {
+    margin-bottom: $medex-spacing-lg !important;
+}
+
 .medex-tab-header {
-  margin-top: $medex-spacing-md;
   margin-bottom: 0 !important;
+}
+
+.small-margin {
+    margin-bottom: $medex-spacing-sm;
+}
+
+.medium-margin {
+    margin-bottom: $medex-spacing-md;
 }
 
 .expanded-margin {

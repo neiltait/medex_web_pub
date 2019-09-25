@@ -19,30 +19,54 @@
             <h2 class="nhsuk-error-summary__title" id="error-summary-title">
                 There is a problem
             </h2>
-            <div class="nhsuk-error-summary__body">
-                <p>
-                    Please correct the errors in this form
-                </p>
+            <div class="nhsuk-error-summary__list">
+                <div><a href="#first_name_label" class="nhsuk-error-message">
+                    {{ errors.first_name }}</a>
+                </div>
+                <div><a href="#last_name_label" class="nhsuk-error-message">
+                    {{ errors.last_name }}
+                </a></div>
+                <div><a href="#gender_label" class="nhsuk-error-message">
+                    {{ errors.gender }}</a>
+                </div>
+                <div><a href="#nhs_number_label" class="nhsuk-error-message">
+                    {{ errors.nhs_number }}</a>
+                </div>
+                <div><a href="#date_of_birth_label" class="nhsuk-error-message">
+                    {{ errors.date_of_birth }}</a>
+                </div>
+                <div><a href="#date_of_death_label" class="nhsuk-error-message">
+                    {{ errors.date_of_death }}</a>
+                </div>
+                <div><a href="#date_of_death_label" class="nhsuk-error-message">
+                    {{ errors.time_of_death }}</a>
+                </div>
+                <div><a href="#place_of_death_label" class="nhsuk-error-message">
+                    {{ errors.place_of_death }}</a>
+                </div>
+                <div><a href="#me_office_label" class="nhsuk-error-message">
+                    {{ errors.me_office }}</a>
+                </div>
             </div>
         </div>
+    </div>
+</div>
         {% endif %}
 
         {% if errors.count == 0 and add_another %}
-
-        <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
-             role="alert"
-             tabindex="-1">
-            <ul class="nhsuk-list nhsuk-list--tick">
-                <li>
-                    <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                         fill="none" aria-hidden="true">
-                        <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
-                    </svg>
-                    {{ full_name }} has been added to the system.
-                </li>
-            </ul>
-        </div>
-
+            <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
+                 role="alert"
+                 tabindex="-1">
+                <ul class="nhsuk-list nhsuk-list--tick">
+                    <li>
+                        <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             fill="none" aria-hidden="true">
+                            <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
+                        </svg>
+                        {{ full_name }} has been added to the system.
+                    </li>
+                </ul>
+            </div>
         {% endif %}
 
         <h1 class="nhs-heading-xl">
@@ -53,9 +77,14 @@
             {{ sub_heading }}
         </h2>
 
-        <form id="examination__create--form" class="form{% if invalid %} error{% endif %}"
+        <form id="examination__create--form" class="form disabling-form {% if invalid %} error{% endif %}"
               action="{% url 'create_examination' %}" method="post" autocomplete='off'>
-             <input type="text" style="display:none">
+            <input type="text" style="display:none">
+
+            <!-- Prevent implicit submission of the form
+            <button type="submit" disabled style="display: none" aria-hidden="true"></button>-->
+
+            <!-- ... -->
             {% csrf_token %}
 
             {% include 'examinations/partials/patient_details/_primary_information.html' %}

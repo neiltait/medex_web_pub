@@ -3,18 +3,15 @@ import json
 from django.conf import settings
 
 from medexCms.models import MedexRequest
-from medexCms.test.mocks import ExaminationMocks, DatatypeMocks
-
-
-def get_coroner_statuses_list():
-    return [{'status': 'blocked'}]
+from medexCms.test.mocks import ExaminationMocks, DatatypeMocks, ReportMocks
 
 
 def post_new_examination(examination_object, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_creation_response()
     else:
-        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
+        response = MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
+        return response
 
 
 def load_examinations_index(params, auth_token):
@@ -50,15 +47,16 @@ def update_medical_team(examination_id, submission, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_medical_team_update_response()
     else:
-        return MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
+        response = MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
                                 submission)
+        return response
 
 
 def load_modes_of_disposal(auth_token):
     if settings.LOCAL:
-        return DatatypeMocks.get_modes_of_disposal_list()
+        return DatatypeMocks.get_successful_modes_of_disposal_list_response()
     else:
-        return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL).json()
+        return MedexRequest.get(auth_token, '%s/data_types/mode_of_disposal' % settings.API_URL)
 
 
 def load_case_breakdown_by_id(examination_id, auth_token):
@@ -160,3 +158,10 @@ def close_case(auth_token, examination_id):
         return ExaminationMocks.get_successful_case_close_response()
     else:
         return MedexRequest.put(auth_token, '%s/examinations/%s/close_case' % (settings.API_URL, examination_id))
+
+
+def load_coroner_report(auth_token, examination_id):
+    if settings.LOCAL:
+        return ReportMocks.get_successful_coroner_report_response()
+    else:
+        return MedexRequest.get(auth_token, '%s/report/%s/coronal_referral_download' % (settings.API_URL, examination_id))

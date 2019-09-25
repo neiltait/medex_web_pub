@@ -12,13 +12,20 @@ This respository contains the source code for the Medical Examiners Service CMS,
   * [Running Local Development](#running-local-development)
     * [Environment Variables](#environment-variables)
     * [Starting the server](#starting-the-server)
+    * [Useful Commands](#useful-commands)
   * [Testing](#testing)
-    * [Startegy](#strategy)
-    * [Commands](#commands)
-  * [Feature development](#feature-development)
+    * [Strategy](#strategy)
+    * [Testing Commands](#testing-commands)
+  * [Branching](#branching)
+    * [Naming Conventions](#naming-conventions)
+        * [Features](#features)
+        * [Bugs](#bugs)
+        * [Refactoring](#refactoring)
 * [Continuous Integration and Deployment Pipeline](#continuous-integration-and-deployment-pipeline)
   * [Continuous Integration](#continuous-integration)
   * [Continuous Deployment](#continuous-deployment)
+  * [Creating A Release](#creating-a-release)
+  * [Finishing A Release](#finishing-a-release)
 
 ## Project Status
 
@@ -30,7 +37,7 @@ This respository contains the source code for the Medical Examiners Service CMS,
 
 [![Build Status](https://dev.azure.com/DougMills/medical_examiner_front_end/_apis/build/status/methodsanalytics.medex-cms-staging?branchName=development)](https://dev.azure.com/DougMills/medical_examiner_front_end/_build/latest?definitionId=13&branchName=development)
 
-### Production/UAT
+### Production
 
 _Environment and pipeline still to be set up_
 
@@ -45,7 +52,7 @@ This project uses the following technologies:
 - SASS
 - Docker/Compose
 
-### Running local development 
+### Running Local Development 
 
 #### Environment Variables
 
@@ -57,6 +64,9 @@ Running the project locally requires the following environment variables to be s
 - OP_ISSUER - the method and the auth service being used to authenticate (Defaults to '/oauth/default')
 - OP_ID - the client ID provide by OKTA
 - OP_SECRET - the client secret provided by OKTA
+- REFRESH_PERIOD - the amount of time between retrieving a refresh token from OKTA (in seconds)
+- LOGOUT_IF_IDLE_PERIOD - the amount of time before a forced logout
+- REQUIRE_HTTPS - set to False for local development
 
 An additional optional environment variable can be set, LOCAL. This variable can be set to True or False (default), setting it to True will cause the CMS to use its on internal mock API for all requests. 
 
@@ -75,7 +85,7 @@ To run directly  on local machine:
 python manage.py runserver 0.0.0.0:8000
 ```
 
-#### Commands
+#### Useful Commands
 
 There are commands setup in the bin directory of the project, that allow easy use of common commands inside the docker container.
 
@@ -96,7 +106,7 @@ The target coverage level for the project is:
 
 We are also developing to the PyFlakes and pycodestyle coding standards which are been checked using the Python flake8 package.
 
-#### Commands
+#### Testing Commands
 _These commands can be used when you are running the code using the docker container_ 
 
 The unit tests can be run with the 'test' command in the bin directory, or can be run with a coverage report using the 'coverage' command in the bin directory. The generated coverage report can then be viewed by opening the 'index.html' file in the 'htmlcov' directory.
@@ -152,7 +162,7 @@ _Defined in 'azure-pipelines-staging.yml'_
 
 This pipeline should run on every push to Github from a release branch. This pipeline runs the tests and, if they pass, builds a docker container and pushes it to the staging container registry.
 
-#### Production/UAT
+#### Production
 
 _Defined in 'azure-pipelines-new-azure-subscription.yml'_
 
@@ -171,7 +181,7 @@ The pipeline runs when the sandbox CI pipeline passes, it pulls the container ge
 
 The pipeline runs when the a new container is pushed to the staging container registry, it pulls the container on to the WebApp server and starts the container.
 
-#### Production/UAT
+#### Production
 
 The pipeline runs when the a new container is pushed to the production/UAT container registry, it pulls the container on to the WebApp server and starts the container.
 

@@ -12,17 +12,19 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
-from examinations.models.case_breakdown import CaseBreakdown
+from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
-from examinations.models.core import Examination, PatientHeader
+from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
-from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config
+from examinations.reports import CoronerDownloadReport
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
 from home.forms import IndexFilterForm
-from home.utils import render_404, redirect_to_examination, render_error
+from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from medexCms.utils import fallback_to
+from monitor.loggers import monitor
 
 
 class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -40,11 +42,13 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         add_another = False
         post_body = request.POST
         form = PrimaryExaminationInformationForm(post_body)
+        patient_name = None
 
         if form.is_valid():
             response = Examination.create(form.to_object(), self.user.auth_token)
-
             if response.ok:
+                monitor.log_case_create_event(self.user, response.json()['examinationId'], form.me_office)
+
                 if form.CREATE_AND_CONTINUE_FLAG in post_body:
                     # scenario 1 - success
                     return self.__successful_post(response)
@@ -53,13 +57,16 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
                 # scenario 2 - api error
+                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, response.status_code)
+
                 status_code = self.__process_api_error(form, response)
         else:
             # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_return_to_create_examination_context(add_another, form, post_body)
-        return render(request, self.template, context, status=status_code)
+        response = render(request, self.template, context, status=status_code)
+        return response
 
     def __successful_post(self, response):
         examination_id = response.json()['examinationId']
@@ -78,9 +85,10 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return context
 
     def __process_api_error(self, form, response):
+        form_errors = form.register_form_errors(response.json())
         known_errors = form.register_known_api_errors(response.json())
         unknown_errors = form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for error in all_errors:
@@ -102,7 +110,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "form": form,
             "enums": enums,
             "errors": form.errors,
-            "add_another": add_another,
+            "add_another": add_another
         }
 
 
@@ -114,11 +122,18 @@ class EditExaminationView(View):
 
 class EditExaminationSectionBaseView(View):
 
+    def __init__(self):
+        self.examination = None
+        self.error = None
+        super().__init__()
+
     def dispatch(self, request, *args, **kwargs):
         if self.examination_section == enums.examination_sections.PATIENT_DETAILS:
-            self.examination = PatientDetails.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = PatientDetails.load_by_id(kwargs.get('examination_id'),
+                                                                                       self.user.auth_token)
         elif self.examination_section == enums.examination_sections.MEDICAL_TEAM:
-            self.examination = MedicalTeam.load_by_id(kwargs.get('examination_id'), self.user.auth_token)
+            self.examination, self.case_status, self.error = MedicalTeam.load_by_id(kwargs.get('examination_id'),
+                                                                                    self.user.auth_token)
         elif self.examination_section == enums.examination_sections.CASE_BREAKDOWN:
             print('not implemented yet')
         elif self.examination_section == enums.examination_sections.CASE_OUTCOMES:
@@ -126,8 +141,8 @@ class EditExaminationSectionBaseView(View):
         else:
             log_internal_error('EditExaminationSectionBaseView section load', 'Unknown examination section requested')
 
-        if self.examination is None:
-            return render_404(request, self.user, self.examination_section)
+        if self.error is not None:
+            return render_error(request, self.user, self.error)
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -143,6 +158,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         self.secondary_form = None
         self.bereaved_form = None
         self.urgency_form = None
+        super().__init__()
 
     @never_cache
     def get(self, request, examination_id):
@@ -180,7 +196,8 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             submission.update(self.urgency_form.for_request())
             submission['id'] = examination_id
 
-            response = PatientDetails.update(examination_id, submission, self.user.auth_token)
+            response = self.examination.update(submission, self.user.auth_token)
+            self.case_status = CaseStatus(response.json())
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab
@@ -191,9 +208,8 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
                 status_code = self.__process_api_error(self.primary_form, response)
 
             else:
-                # scenario 1 - success
+                # scenario 1a - success
                 saved = True
-                self.examination.case_header = PatientHeader(response.json().get("header"))
         else:
             # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
@@ -203,9 +219,10 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return render(request, self.template, context, status=status_code)
 
     def __process_api_error(self, primary_form, response):
+        form_errors = primary_form.register_form_errors(response.json())
         known_errors = primary_form.register_known_api_errors(response.json())
         unknown_errors = primary_form.register_unknown_api_errors(response.json())
-        all_errors = known_errors + unknown_errors
+        all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
             for all_errors in all_errors:
@@ -223,6 +240,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return {
             'session_user': self.user,
+            'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
             'primary_info_form': self.primary_form,
@@ -247,13 +265,17 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     examination_section = enums.examination_sections.MEDICAL_TEAM
     modal_config = get_tab_change_modal_config()
 
+    def __init__(self):
+        self.form = None
+        super().__init__()
+
     @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
 
-        form = MedicalTeamMembersForm(medical_team=self.examination)
+        self.form = MedicalTeamMembersForm(medical_team=self.examination)
 
-        context = self._set_context(form, False)
+        context = self._set_context(False)
 
         return render(request, self.template, context, status=status_code)
 
@@ -261,38 +283,60 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def post(self, request, examination_id):
         post_body = request.POST
         get_body = request.GET
+        status_code = status.HTTP_200_OK
         saved = False
-        form = MedicalTeamMembersForm(request=post_body)
+        self.form = MedicalTeamMembersForm(request=post_body)
 
-        if form.is_valid():
-            response = self.examination.update(form.to_object(), self.user.auth_token)
+        if self.form.is_valid():
+            response = self.examination.update(self.form.to_object(), self.user.auth_token)
+            self.case_status = CaseStatus(response.json())
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
+                # scenario 1b - success and change tab
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
+
             elif response.status_code != status.HTTP_200_OK:
-                log_api_error('patient details update', response.text)
-                status_code = response.status_code
+                # scenario 2 - api error
+                status_code = self.__process_api_error(self.form, response)
+
             else:
+                # scenario 1a - success
                 saved = True
-                status_code = response.status_code
         else:
             status_code = status.HTTP_400_BAD_REQUEST
 
-        context = self._set_context(form, saved)
+        context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
 
-    def _set_context(self, form, saved):
+    def __process_api_error(self, medical_team_form, response):
+        form_errors = medical_team_form.register_form_errors(response.json())
+        known_errors = medical_team_form.register_known_api_errors(response.json())
+        unknown_errors = medical_team_form.register_unknown_api_errors(response.json())
+        all_errors = form_errors + known_errors + unknown_errors
+
+        if len(all_errors) > 0:
+            for all_errors in all_errors:
+                log_api_error('medical team', all_errors)
+            status_code = response.status_code
+        else:
+            log_api_error('medical team', response.text)
+            status_code = response.status_code
+        return status_code
+
+    def _set_context(self, saved):
         return {
             'session_user': self.user,
             'examination_id': self.examination.examination_id,
+            'case_status': self.case_status,
             'patient': self.examination.case_header,
-            'form': form,
+            'form': self.form,
             'medical_examiners': self.examination.medical_examiner_lookup,
             'medical_examiners_officers': self.examination.medical_examiner_officer_lookup,
-            'error_count': form.error_count,
-            'errors': form.errors,
+            'error_count': self.form.error_count,
+            'errors': self.form.errors,
             'tab_modal': self.modal_config,
             'saved': saved,
+            'enums': enums
         }
 
 
@@ -307,6 +351,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = None
         self.medical_team = None
         self.patient_details = None
+        self.case_status = None
+        super().__init__()
 
     @never_cache
     def get(self, request, examination_id):
@@ -314,8 +360,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if self.error:
             return render_error(request, self.user, self.error)
 
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, self.case_status, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
         context = self._set_context(examination_id)
@@ -324,11 +370,16 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     @never_cache
     def post(self, request, examination_id):
-        self.medical_team = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
-        self.patient_details = PatientDetails.load_by_id(examination_id, self.user.auth_token)
+        self.medical_team, self.case_status, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
+        self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
+            self.log_timeline_create_event(examination_id,
+                                           self.patient_details.medical_examiner_office_responsible,
+                                           response,
+                                           self.form.is_final)
+
             self.status_code = response.status_code
             self.form = None
         else:
@@ -340,6 +391,26 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
+    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
+        if response.ok:
+            if is_final:
+                monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
+                                                             self.form.__class__.__name__,
+                                                             response.json()['eventId'])
+            else:
+                monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
+                                                                 self.form.__class__.__name__,
+                                                                 response.json()['eventId'])
+        else:
+            if is_final:
+                monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                               self.form.__class__.__name__,
+                                                               response.status_code)
+            else:
+                monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                                   self.form.__class__.__name__,
+                                                                   response.status_code)
+
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
         form_data = self._prepare_forms(self.examination.event_list, self.medical_team, self.patient_details, self.form,
@@ -350,17 +421,16 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
-            'proposed_cause_of_death': self.examination.event_list.get_latest_me_scrutiny_cause_of_death(),
-            'agreed_cause_of_death': self.examination.event_list.get_latest_agreed_cause_of_death(),
+            'pre_populated': self.examination.prepopulated_items,
             'case_breakdown': self.examination,
-            'bereaved_form': {"use_default_bereaved": True},
             'patient': self.examination.case_header,
             'form_data': form_data,
-            'enums': enums,
+            'case_status': self.case_status,
+            'enums': enums
         }
 
     def _load_breakdown(self, examination_id):
-        self.examination, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
+        self.examination, self.case_status, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
 
     def _prepare_forms(self, event_list, medical_team, patient_details, form, amend_type):
         pre_scrutiny_form = PreScrutinyEventForm()
@@ -447,24 +517,58 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         if result and not result == status.HTTP_200_OK:
             log_api_error('case outcome update', result.get_message())
+            self._log_case_outcome_unsuccessful(post_body, examination_id)
             return render_error(request, self.user, result)
 
         self._load_case_outcome(examination_id)
         context = self._set_context()
 
+        self._log_case_outcome(post_body)
+
         return render(request, self.template, context, status=self.status_code)
 
     def _load_case_outcome(self, examination_id):
-        self.examination, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
+        self.case_outcome, self.case_status, self.error = CaseOutcome.load_by_id(examination_id, self.user.auth_token)
 
     def _set_context(self):
         return {
             'session_user': self.user,
-            'examination_id': self.examination.examination_id,
-            'case_outcome': self.examination,
-            'patient': self.examination.case_header,
+            'examination_id': self.case_outcome.examination_id,
+            'case_outcome': self.case_outcome,
+            'case_status': self.case_status,
+            'patient': self.case_outcome.case_header,
             'enums': enums,
         }
+
+    def _log_case_outcome(self, post_body):
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
+            monitor.log_confirm_scrutiny(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
+            monitor.log_coroner_referral(self.user, self.case_outcome.examination_id,
+                                         'not available', self.case_outcome)
+
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
+            monitor.log_outstanding_items_submission(self.user, self.case_outcome.examination_id,
+                                                     'not available', self.case_outcome)
+
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
+            monitor.log_case_closed(self.user, self.case_outcome.examination_id,
+                                    'not available', self.case_outcome)
+
+    def _log_case_outcome_unsuccessful(self, post_body, examination_id):
+        if CaseOutcome.SCRUTINY_CONFIRMATION_FORM_TYPE in post_body:
+            monitor.log_confirm_scrutiny_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.CORONER_REFERRAL_FORM_TYPE in post_body:
+            monitor.log_coroner_referral_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.OUTSTANDING_ITEMS_FORM_TYPE in post_body:
+            monitor.log_outstanding_items_submission_unsuccessful(self.user, examination_id, 'not available')
+
+        elif CaseOutcome.CLOSE_CASE_FORM_TYPE in post_body:
+            monitor.log_case_closed_unsuccessful(self.user, examination_id, 'not available')
 
 
 class ClosedExaminationIndexView(LoginRequiredMixin, View):
@@ -493,3 +597,14 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
             'closed_list': True,
             'pagination_url': 'closed_examination_index',
         }
+
+
+class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'can_get_examination'
+    template = 'examinations/templates/reports/coroner-referral-form.odt'
+
+    @never_cache
+    def get(self, request, examination_id):
+        report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
+
+        return ReportGenerator.create_report(self.template, report, filename="report.odt")

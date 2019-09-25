@@ -10,6 +10,11 @@
 
     <form id="outstanding-items-form" class="form" action="{% url 'view_case_outcome' examination_id=examination_id %}"
           method="post">
+
+        <!-- Prevent implicit submission of the form -->
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+        <!-- ... -->
         {% csrf_token %}
         <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
 
@@ -37,7 +42,7 @@
         </fieldset>
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset"  {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
+            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
                 <legend class="nhsuk-fieldset__legend">
                     Cremation form
                 </legend>

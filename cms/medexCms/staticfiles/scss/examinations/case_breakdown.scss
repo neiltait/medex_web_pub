@@ -23,6 +23,11 @@
   }
 }
 
+.cod-textarea {
+    font-weight: bold;
+    padding-left: $medex-spacing-xl;
+}
+
 .submit-btn {
   margin-right: $medex-spacing-md;
   width: 15.79rem;
@@ -45,6 +50,7 @@
 .inset-text-panel {
   padding-top: 0rem;
   padding-left: $medex-spacing-lg;
+  margin-left: 18.5px;
   border-left: $nhs-light-grey 3px solid;
 }
 
@@ -76,8 +82,16 @@
     margin-bottom: $medex-spacing-md;
   }
 
+  .margin-top-lg {
+    padding-top: 2.75rem;
+  }
+
   .margin-top {
     margin-top: $medex-spacing-md;
+  }
+
+  .margin-top-lg {
+    margin-top: medex-spacing(7);
   }
 
   .margin-save-button {
@@ -87,7 +101,14 @@
   .margin-time {
     margin-bottom: $medex-spacing-lg;
   }
-}
+
+  .align-tick {
+    padding-top: 2.75rem;
+  }
+
+  }
+
+
 
 #bereavement-discussion__save-buttons {
   .add-event-btn {
@@ -115,5 +136,8 @@
     .margin-section {
         margin-top: $medex-spacing-xl;
     }
+}
 
+.margin-top-lg {
+  padding-top: 2.75rem;
 }

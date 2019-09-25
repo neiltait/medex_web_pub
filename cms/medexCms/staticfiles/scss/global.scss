@@ -2,6 +2,7 @@
 @import 'partials/footer';
 @import 'partials/notifications';
 @import 'partials/buttons';
+@import 'partials/cookies';
 @import 'partials/forms';
 @import 'partials/modals';
 @import 'partials/pagination';
@@ -17,6 +18,7 @@ body {
   margin: 0px;
   font-family: $primary-font;
   color: $primary-font-color;
+  background-color: $white;
 }
 
 input {
@@ -50,6 +52,10 @@ p {
   }
 }
 
+.medex-content-page {
+  margin-bottom: medex-spacing(9);
+}
+
 .small-print {
   @extend .s-body-base;
 }
@@ -76,4 +82,11 @@ p {
 
 .inline {
   display: inline;
+}
+
+.mobile-hidden {
+  @media screen and (max-width: $medex-tablet-width) {
+    visibility: hidden;
+    display: none;
+  }
 }

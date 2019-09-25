@@ -121,22 +121,24 @@ class User:
     def update_permission(self, form, permission_id, auth_token):
         return Permission.update(form.to_dict(self.user_id), self.user_id, permission_id, auth_token)
 
-    def load_permissions(self):
-        response = permissions_request_handler.load_permissions_for_user(self.user_id, self.auth_token)
+    def load_permissions(self, auth_token):
+        response = permissions_request_handler.load_permissions_for_user(self.user_id, auth_token)
 
         success = response.status_code == status.HTTP_200_OK
 
         if success:
-            for permission in response.json()['permissions']:
-                self.permissions.append(Permission(permission))
+            self.permissions = response.json()['permissions']
+            for permission in self.permissions:
+                permission_object = Permission(obj_dict=permission)
+                self.permission_objects.append(permission_object)
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, page_size, page_number, location, person):
+    def load_examinations(self, page_size, page_number, location, person, case_status):
         query_params = {
             "LocationId": location,
             "UserId": person,
-            "CaseStatus": '',
+            "CaseStatus": case_status,
             "OrderBy": "Urgency",
             "OpenCases": True,
             "PageSize": page_size,
