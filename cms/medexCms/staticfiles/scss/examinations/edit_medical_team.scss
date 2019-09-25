@@ -22,8 +22,15 @@
 }
 
 .medex-tab-header {
-  margin-top: $medex-spacing-md;
-  margin-bottom: $medex-spacing-md !important;
+  margin-bottom: 0 !important;
+}
+
+.small-margin {
+    margin-bottom: $medex-spacing-sm;
+}
+
+.medium-margin {
+    margin-bottom: $medex-spacing-md;
 }
 
 .expanded-margin {
