@@ -44,7 +44,7 @@
 
             {% if not exclude_filter_buttons %}
                 <p>
-                    <span id="filter-by-place-person">Filter cases by status</span>
+                    <span id="filter-by-status">Filter cases by status</span>
                 </p>
                 <div class="filter-list">
                     <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
