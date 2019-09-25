@@ -596,6 +596,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
             'form': form,
             'closed_list': True,
             'pagination_url': 'closed_examination_index',
+            'exclude_filter_buttons': True
         }
 
 
