@@ -44,6 +44,8 @@ steps:
 - script: |
     pushd '$(projectRoot)'
     python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
+  env:
+      SECRET_KEY: 'secret key here ....'
   condition: succeededOrFailed()
   displayName: 'Run tests'
 
