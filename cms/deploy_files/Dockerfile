@@ -1,6 +1,7 @@
 FROM python:3
+ARG SECRET_KEY
 ENV PYTHONUNBUFFERED 1
-ENV SECRET_KEY 'secret key ... '
+ENV SECRET_KEY=$SECRET_KEY
 RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
