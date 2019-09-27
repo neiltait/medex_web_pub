@@ -109,7 +109,6 @@ class LoginView(LoggedInMixin, View):
 
     @never_cache
     def get(self, request):
-        from medexCms.settings import SECRET_KEY
 
         status_code = status.HTTP_200_OK
         context = {
@@ -118,7 +117,6 @@ class LoginView(LoggedInMixin, View):
             'client_id': settings.OP_ID,
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
-            'key': SECRET_KEY[0:4],
         }
 
         return render(request, self.template, context, status=status_code)
