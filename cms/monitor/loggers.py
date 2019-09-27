@@ -26,6 +26,10 @@ class MedexLoggerEvents:
     CLOSED_CASE_UNSUCCESSFUL = 'Closed case failed'
     SAVED_OUTSTANDING_ITEM = 'Saved outstanding items'
     SAVED_OUTSTANDING_ITEM_UNSUCCESSFUL = 'Saved outstanding items failed'
+    SAVED_PATIENT_DETAILS = 'Saved patient details'
+    SAVED_PATIENT_DETAILS_UNSUCCESSFUL = 'Saved patient details failed'
+    SAVED_MEDICAL_TEAM = 'Saved medical team'
+    SAVED_MEDICAL_TEAM_UNSUCCESSFUL = 'Saved medical team failed'
 
 
 class MedexLogStream:
@@ -94,6 +98,36 @@ class MedexMonitor:
     def log_case_create_event_unsuccessful(self, user, location_id, error_dict):
         self.log_stream.log(MedexLoggerEvents.CREATED_CASE_UNSUCCESSFUL, {
             'user_id': user.user_id,
+            'location_id': location_id,
+            'errors': json.dumps(error_dict)
+        })
+
+    def log_patient_details_save(self, user, examination_id, location_id):
+        self.log_stream.log(MedexLoggerEvents.SAVED_PATIENT_DETAILS, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id
+        })
+
+    def log_patient_details_save_unsuccessful(self, user, examination_id, location_id, error_dict):
+        self.log_stream.log(MedexLoggerEvents.SAVED_PATIENT_DETAILS_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id,
+            'errors': json.dumps(error_dict)
+        })
+
+    def log_medical_team_save(self, user, examination_id, location_id):
+        self.log_stream.log(MedexLoggerEvents.SAVED_MEDICAL_TEAM, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
+            'location_id': location_id
+        })
+
+    def log_medical_team_save_unsuccessful(self, user, examination_id, location_id, error_dict):
+        self.log_stream.log(MedexLoggerEvents.SAVED_MEDICAL_TEAM_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'examination_id': examination_id,
             'location_id': location_id,
             'errors': json.dumps(error_dict)
         })
