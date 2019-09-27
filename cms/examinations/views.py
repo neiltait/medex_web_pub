@@ -377,14 +377,20 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.form = event_form_parser(request.POST)
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
-            self.log_timeline_create_event(examination_id,
-                                           self.patient_details.medical_examiner_office_responsible,
-                                           response,
-                                           self.form.is_final)
+            if response.ok:
+                # scenario 1 - success
+                self._log_successful_post(examination_id, self.form.is_final,
+                                          self.patient_details.medical_examiner_office_responsible, response)
+                return redirect('/cases/%s/case-breakdown' % examination_id)
+            else:
+                # scenario 2 - api failure
+                self._log_unsuccessful_api_response(examination_id, self.form.is_final,
+                                                    self.patient_details.medical_examiner_office_responsible, response)
 
             self.status_code = response.status_code
             self.form = None
         else:
+            # scenario 3 - validation error
             self._log_unsuccessful_invalid_form(examination_id, self.form.is_final,
                                                 self.patient_details.medical_examiner_office_responsible, self.form)
             self.status_code = status.HTTP_400_BAD_REQUEST
