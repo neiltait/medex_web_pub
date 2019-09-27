@@ -57,7 +57,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
                 # scenario 2 - api error
-                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, response.status_code)
+                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, {"api error": response.status_code})
 
                 status_code = self.__process_api_error(form, response)
         else:
@@ -405,11 +405,11 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             if is_final:
                 monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
                                                                self.form.__class__.__name__,
-                                                               response.status_code)
+                                                               {"api error": response.status_code})
             else:
                 monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
                                                                    self.form.__class__.__name__,
-                                                                   response.status_code)
+                                                                   {"api error": response.status_code})
 
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
