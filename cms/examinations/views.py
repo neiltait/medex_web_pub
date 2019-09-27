@@ -58,7 +58,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
             else:
                 # scenario 2 - api error
                 status_code = self.__process_api_error(form, response)
-                
+
                 monitor.log_case_create_event_unsuccessful(self.user, form.me_office, form.errors)
         else:
             # scenario 3 - cms validation error
@@ -385,6 +385,8 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             self.status_code = response.status_code
             self.form = None
         else:
+            self._log_unsuccessful_invalid_form(examination_id, self.form.is_final,
+                                                self.patient_details.medical_examiner_office_responsible, self.form)
             self.status_code = status.HTTP_400_BAD_REQUEST
 
         self._load_breakdown(examination_id)
@@ -395,23 +397,37 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def log_timeline_create_event(self, examination_id, location_id, response, is_final):
         if response.ok:
-            if is_final:
-                monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
-                                                             self.form.__class__.__name__,
-                                                             response.json()['eventId'])
-            else:
-                monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
-                                                                 self.form.__class__.__name__,
-                                                                 response.json()['eventId'])
+            self._log_successful_post(examination_id, is_final, location_id, response)
         else:
-            if is_final:
-                monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+            self._log_unsuccessful_api_response(examination_id, is_final, location_id, response)
+
+    def _log_unsuccessful_api_response(self, examination_id, is_final, location_id, response):
+        if is_final:
+            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                           self.form.__class__.__name__,
+                                                           {"api error": response.status_code})
+        else:
+            monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
                                                                self.form.__class__.__name__,
                                                                {"api error": response.status_code})
-            else:
-                monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
-                                                                   self.form.__class__.__name__,
-                                                                   {"api error": response.status_code})
+
+    def _log_successful_post(self, examination_id, is_final, location_id, response):
+        if is_final:
+            monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
+                                                         self.form.__class__.__name__,
+                                                         response.json()['eventId'])
+        else:
+            monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
+                                                             self.form.__class__.__name__,
+                                                             response.json()['eventId'])
+
+    def _log_unsuccessful_invalid_form(self, examination_id, is_final, location_id, form):
+        if is_final:
+            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                           self.form.__class__.__name__, form.errors)
+        else:
+            monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
+                                                               self.form.__class__.__name__, form.errors)
 
     def _set_context(self, examination_id):
         forms = self.user.get_forms_for_role(self.examination)
