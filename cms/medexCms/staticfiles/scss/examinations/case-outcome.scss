@@ -8,6 +8,11 @@
         margin-bottom: $medex-spacing-md;
     }
 
+    .no-padding {
+        padding-inline-start: 0px;
+        padding-inline-end: 0px;
+    }
+
     .case-summary {
         border: 6px solid $nhs-aqua-green;
         color: $nhs-grey;
@@ -21,18 +26,13 @@
             .outcome {
                 margin-bottom: $medex-spacing-md;
 
-                p {
-                    margin-bottom: 0;
-                }
-
-                .outcome-description {
-                    color: $black;
-                    font-size: $nhs-heading-m-size;
+                .no-margin {
+                    margin-bottom: 0px !important;
                 }
 
                 a {
                     color: $nhs-grey;
-                    font-size: $nhs-body-s-size;
+                    font-size: $link-size;
                 }
             }
         }
@@ -85,7 +85,7 @@
         }
 
         .helper-text {
-            font-size: $nhs-body-s-size !important;
+            font-size: 19px;
         }
 
         #confirm-scrutiny-button {

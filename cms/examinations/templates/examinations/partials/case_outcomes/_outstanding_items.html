@@ -1,10 +1,10 @@
 {% if case_outcome.show_outstanding_items %}
 <div class="outstanding-items">
     <h2 class="page-subheading">
-        Outstanding Case items
+        Outstanding case items
     </h2>
 
-    <p>
+    <p class="nhsuk-body-m">
         Following completion of scrutiny, the below should be actioned before a case can be closed.
     </p>
 
@@ -19,11 +19,11 @@
         <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
 
 
-            <legend class="nhsuk-fieldset__legend">
+            <legend class="nhsuk-heading-m no-padding">
                 MCCD
             </legend>
 
-            <p>
+            <p class="nhsuk-body-m">
                 Please select if an MCCD has been written and issued to the patient's representative.
             </p>
 
@@ -43,11 +43,11 @@
 
         <div class="outstanding-item">
             <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
-                <legend class="nhsuk-fieldset__legend">
+                <legend class="nhsuk-heading-m no-padding">
                     Cremation form
                 </legend>
 
-                <p>
+                <p class="nhsuk-body-m">
                     Has a cremation form been completed for this death?
                 </p>
                 <div class="nhsuk-radios nhsuk-radios--inline">
@@ -79,11 +79,11 @@
 
         <div class="outstanding-item">
             <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
-                <legend class="nhsuk-fieldset__legend">
+                <legend class="nhsuk-heading-m no-padding">
                     GP notification
                 </legend>
 
-                <p>
+                <p class="nhsuk-body-m">
                     Has the patient's GP been notified of the cause of death?
                 </p>
                 <div class="nhsuk-radios nhsuk-radios--inline">
