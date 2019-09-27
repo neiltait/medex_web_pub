@@ -18,7 +18,6 @@ from django.views.decorators.cache import never_cache
 
 from users.models import User
 
-
 class CookiesPolicyView(View):
     template = 'home/cookies.html'
 
@@ -47,14 +46,17 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
     def set_context(self, form):
+
+        from medexCms.settings import SECRET_KEY
+
         return {
             'page_header': '%s Dashboard' % self.user.display_role(),
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
-            'enums': enums
+            'enums': enums,
+            'key': SECRET_KEY[0:4]
         }
-
 
 class LoginCallbackView(View):
 
