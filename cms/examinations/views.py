@@ -57,11 +57,13 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
                     add_another, form, status_code = self.__reset_form_to_add_another(add_another, form)
             else:
                 # scenario 2 - api error
-                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, {"api error": response.status_code})
-
                 status_code = self.__process_api_error(form, response)
+                
+                monitor.log_case_create_event_unsuccessful(self.user, form.me_office, form.errors)
         else:
             # scenario 3 - cms validation error
+            monitor.log_case_create_event_unsuccessful(self.user, form.me_office, form.errors)
+
             status_code = status.HTTP_400_BAD_REQUEST
 
         context = self.__set_return_to_create_examination_context(add_another, form, post_body)
