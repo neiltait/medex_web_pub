@@ -1,3 +1,5 @@
+import json
+
 form_event_names = {
     'PreScrutinyEventForm': 'me review of records',
     'MeoSummaryEventForm': 'meo summary',
@@ -93,7 +95,7 @@ class MedexMonitor:
         self.log_stream.log(MedexLoggerEvents.CREATED_CASE_UNSUCCESSFUL, {
             'user_id': user.user_id,
             'location_id': location_id,
-            'errors': error_dict
+            'errors': json.dumps(error_dict)
         })
 
     def log_create_timeline_event_successful(self, user, examination_id, location_id, timeline_event_type, event_id):
@@ -112,7 +114,7 @@ class MedexMonitor:
             'examination_id': examination_id,
             'location_id': location_id,
             'timeline_event_type': form_event_names.get(str(timeline_event_type)),
-            'errors': error_dict
+            'errors': json.dumps(error_dict)
         })
 
     def log_save_draft_timeline_event_successful(self, user, examination_id, location_id, timeline_event_type,
@@ -132,7 +134,7 @@ class MedexMonitor:
             'examination_id': examination_id,
             'location_id': location_id,
             'timeline_event_type': form_event_names.get(str(timeline_event_type)),
-            'errors': error_dict
+            'errors': json.dumps(error_dict)
         })
 
     def log_outcome_item_success(self, event, user, examination_id, location_id, outcome):
