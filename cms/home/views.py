@@ -47,15 +47,12 @@ class DashboardView(LoginRequiredMixin, View):
 
     def set_context(self, form):
 
-        from medexCms.settings import SECRET_KEY
-
         return {
             'page_header': '%s Dashboard' % self.user.display_role(),
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
             'enums': enums,
-            'key': SECRET_KEY[0:4]
         }
 
 class LoginCallbackView(View):
@@ -108,8 +105,12 @@ class LoginRefreshView(View):
 class LoginView(LoggedInMixin, View):
     template = 'home/login.html'
 
+
+
     @never_cache
     def get(self, request):
+        from medexCms.settings import SECRET_KEY
+
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',
@@ -117,6 +118,7 @@ class LoginView(LoggedInMixin, View):
             'client_id': settings.OP_ID,
             'cms_url': settings.CMS_URL,
             'issuer': settings.OP_ISSUER,
+            'key': SECRET_KEY[0:4],
         }
 
         return render(request, self.template, context, status=status_code)
