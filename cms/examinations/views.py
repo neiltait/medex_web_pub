@@ -203,27 +203,32 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab
+                monitor.log_patient_details_save(self.user, examination_id, self.primary_form.me_office)
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
 
             elif response.status_code != status.HTTP_200_OK:
                 # scenario 2 - api error
-                status_code = self.__process_api_error(self.primary_form, response)
-
+                status_code = self.__process_api_errors(response)
+                monitor.log_patient_details_save_unsuccessful(self.user, examination_id, self.primary_form.me_office,
+                                                              self.__combined_form_errors())
             else:
                 # scenario 1a - success
+                monitor.log_patient_details_save(self.user, examination_id, self.primary_form.me_office)
                 saved = True
         else:
             # scenario 3 - cms validation error
             status_code = status.HTTP_400_BAD_REQUEST
+            monitor.log_patient_details_save_unsuccessful(self.user, examination_id, self.primary_form.me_office,
+                                                          self._combined_form_errors())
 
         context = self._set_patient_details_context(saved)
 
         return render(request, self.template, context, status=status_code)
 
-    def __process_api_error(self, primary_form, response):
-        form_errors = primary_form.register_form_errors(response.json())
-        known_errors = primary_form.register_known_api_errors(response.json())
-        unknown_errors = primary_form.register_unknown_api_errors(response.json())
+    def __process_api_errors(self, response):
+        form_errors = self.primary_form.register_form_errors(response.json())
+        known_errors = self.primary_form.register_known_api_errors(response.json())
+        unknown_errors = self.primary_form.register_unknown_api_errors(response.json())
         all_errors = known_errors + unknown_errors + form_errors
 
         if len(all_errors) > 0:
@@ -235,10 +240,18 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             status_code = response.status_code
         return status_code
 
+    def _combined_form_errors(self):
+        combined_error_dict = {**self.primary_form.errors, **self.secondary_form.errors, **self.bereaved_form.errors,
+                               **self.urgency_form.errors}
+        combined_error_dict['count'] = self._get_total_error_count()
+        return combined_error_dict
+
+    def _get_total_error_count(self):
+        return self.primary_form.error_count + self.secondary_form.error_count + self.bereaved_form.error_count + self.urgency_form.error_count
+
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
-        error_count = self.primary_form.error_count + self.secondary_form.error_count + \
-                      self.bereaved_form.error_count + self.urgency_form.error_count
+        error_count = self._get_total_error_count()
 
         return {
             'session_user': self.user,
