@@ -308,17 +308,22 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
 
             if response.status_code == status.HTTP_200_OK and get_body.get('nextTab'):
                 # scenario 1b - success and change tab
+                monitor.log_medical_team_save(self.user, examination_id, 'not available')
                 return redirect('/cases/%s/%s' % (examination_id, get_body.get('nextTab')))
 
             elif response.status_code != status.HTTP_200_OK:
                 # scenario 2 - api error
                 status_code = self.__process_api_error(self.form, response)
-
+                monitor.log_medical_team_save_unsuccessful(self.user, examination_id, 'not available',
+                                                              self.form.errors)
             else:
                 # scenario 1a - success
+                monitor.log_medical_team_save(self.user, examination_id, 'not available')
                 saved = True
         else:
             status_code = status.HTTP_400_BAD_REQUEST
+            monitor.log_medical_team_save_unsuccessful(self.user, examination_id, 'not available',
+                                                          self.form.errors)
 
         context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
