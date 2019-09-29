@@ -210,7 +210,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
                 # scenario 2 - api error
                 status_code = self.__process_api_errors(response)
                 monitor.log_patient_details_save_unsuccessful(self.user, examination_id, self.primary_form.me_office,
-                                                              self.__combined_form_errors())
+                                                              self._combined_form_errors())
             else:
                 # scenario 1a - success
                 monitor.log_patient_details_save(self.user, examination_id, self.primary_form.me_office)
