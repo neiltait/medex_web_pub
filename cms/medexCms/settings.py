@@ -28,8 +28,8 @@ REFRESH_TOKEN_NAME = 'medex_refresh_token'
 DO_NOT_REFRESH_COOKIE = 'medex_do_not_refresh'
 
 # All period times should be in seconds
-REFRESH_PERIOD = int(os.environ.get('REFRESH_PERIOD', 10*60)) # refresh tokens every ** seconds (default 10 minutes)
-LOGOUT_IF_IDLE_PERIOD = int(os.environ.get('LOGOUT_IF_IDLE_PERIOD', 60*60)) # logout user if idle (default 1 hr)
+REFRESH_PERIOD = int(os.environ.get('REFRESH_PERIOD', 10 * 60))  # refresh tokens every ** seconds (default 10 minutes)
+LOGOUT_IF_IDLE_PERIOD = int(os.environ.get('LOGOUT_IF_IDLE_PERIOD', 60 * 60))  # logout user if idle (default 1 hr)
 
 # Note - docker url is API_URL=http://api:8000
 API_URL = os.environ.get('API_URL', 'http://localhost:9000')
@@ -57,7 +57,6 @@ LOCAL = os.environ.get('LOCAL', False)
 # REQUIRE_HTTPS should be set to False when running locally
 REQUIRE_HTTPS = os.environ.get('REQUIRE_HTTPS', 'True').lower() == 'true'
 
-
 ALLOWED_HOSTS = [
     'localhost',
     'medex-cms',
@@ -69,7 +68,6 @@ ALLOWED_HOSTS = [
     'medex.methods.co.uk',
     'medex-web-pre-ukw.frontend.pre.medex.cloud',
 ]
-
 
 # Application definition
 
@@ -150,7 +148,6 @@ DATABASES = {
     # }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -169,7 +166,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -182,7 +178,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

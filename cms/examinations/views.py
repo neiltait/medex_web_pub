@@ -42,7 +42,6 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         add_another = False
         post_body = request.POST
         form = PrimaryExaminationInformationForm(post_body)
-        patient_name = None
 
         if form.is_valid():
             response = Examination.create(form.to_object(), self.user.auth_token)
@@ -80,8 +79,8 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def __set_return_to_create_examination_context(self, add_another, form, post_body):
         context = self.__set_create_examination_context(form, add_another)
-        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " \
-                               + fallback_to(post_body.get("last_name"), "")
+        context['full_name'] = fallback_to(post_body.get("first_name"), "") + " " + fallback_to(
+            post_body.get("last_name"), "")
         return context
 
     def __process_api_error(self, form, response):
@@ -236,7 +235,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
         error_count = self.primary_form.error_count + self.secondary_form.error_count + \
-                      self.bereaved_form.error_count + self.urgency_form.error_count
+            self.bereaved_form.error_count + self.urgency_form.error_count
 
         return {
             'session_user': self.user,

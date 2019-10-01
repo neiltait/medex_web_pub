@@ -2,7 +2,7 @@ import json
 
 from rest_framework import status
 
-from examinations.constants import get_display_short_user_role, get_display_user_role
+from examinations.constants import get_display_user_role
 from medexCms.utils import fallback_to
 from permissions import request_handler
 
@@ -54,6 +54,7 @@ class Permission:
             return Permission(obj_dict=response.json())
         else:
             return None
+
 
 class PermittedActions:
 
