@@ -152,6 +152,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     template = 'examinations/edit_patient_details.html'
     examination_section = enums.examination_sections.PATIENT_DETAILS
     modal_config = get_tab_change_modal_config()
+    title = "Patient details"
 
     def __init__(self):
         self.primary_form = None
