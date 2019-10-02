@@ -10,8 +10,7 @@ def post_new_examination(examination_object, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_creation_response()
     else:
-        response = MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
-        return response
+        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
 
 
 def load_examinations_index(params, auth_token):
@@ -47,9 +46,8 @@ def update_medical_team(examination_id, submission, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_medical_team_update_response()
     else:
-        response = MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
+        return MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
                                 submission)
-        return response
 
 
 def load_modes_of_disposal(auth_token):
