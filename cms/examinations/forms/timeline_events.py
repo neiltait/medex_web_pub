@@ -686,9 +686,7 @@ class BereavedDiscussionEventForm:
         alternate_bereaved_data = {
             'fullName': fallback_to(form_data.get('bereaved_alternate_rep_name'), ''),
             'relationship': fallback_to(form_data.get('bereaved_alternate_rep_relationship'), ''),
-            'phoneNumber': fallback_to(form_data.get('bereaved_alternate_rep_phone_number'), ''),
-            'presentAtDeath': fallback_to(form_data.get('bereaved_alternate_rep_present_at_death'), ''),
-            'informed': fallback_to(form_data.get('bereaved_alternate_rep_informed'), '')
+            'phoneNumber': fallback_to(form_data.get('bereaved_alternate_rep_phone_number'), '')
         }
         self.alternate_representative = BereavedRepresentative(obj_dict=alternate_bereaved_data)
 
@@ -699,9 +697,7 @@ class BereavedDiscussionEventForm:
             existing_bereaved_data = {
                 'fullName': bereaved_existing_name,
                 'relationship': fallback_to(form_data.get('bereaved_existing_rep_relationship'), ''),
-                'phoneNumber': fallback_to(form_data.get('bereaved_existing_rep_phone_number'), ''),
-                'presentAtDeath': fallback_to(form_data.get('bereaved_existing_rep_present_at_death'), ''),
-                'informed': fallback_to(form_data.get('bereaved_existing_rep_informed'), '')
+                'phoneNumber': fallback_to(form_data.get('bereaved_existing_rep_phone_number'), '')
             }
             self.existing_representative = BereavedRepresentative(obj_dict=existing_bereaved_data)
 
@@ -811,8 +807,6 @@ class BereavedDiscussionEventForm:
                 "fullName": draft.participant_full_name,
                 "relationship": draft.participant_relationship,
                 'phoneNumber': draft.participant_phone_number,
-                'presentAtDeath': draft.present_at_death,
-                'informed': draft.informed_at_death,
             })
         if draft_participant is None:
             if self.existing_representative is not None:
@@ -853,15 +847,11 @@ class BereavedDiscussionEventForm:
             "participantFullName": participant.full_name if participant else "",
             "participantRelationship": participant.relationship if participant else "",
             "participantPhoneNumber": participant.phone_number if participant else "",
-            "presentAtDeath": participant.present_at_death if participant else "",
-            "informedAtDeath": participant.informed if participant else "",
             "dateOfConversation": date_of_conversation.strftime(API_DATE_FORMAT) if date_of_conversation else '',
             "discussionUnableHappen": self.discussion_could_not_happen,
             "discussionDetails": self.discussion_details,
             "bereavedDiscussionOutcome": self.__calculate_combined_outcome()
         }
-        pop_if_falsey("presentAtDeath", request)
-        pop_if_falsey("informedAtDeath", request)
         pop_if_falsey("bereavedDiscussionOutcome", request)
         return request
 

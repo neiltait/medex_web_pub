@@ -136,9 +136,7 @@ class PatientDetails:
         representative1 = {
             'bereaved_name': form.bereaved_name_1,
             'relationship': form.relationship_1,
-            'present_death': form.present_death_1,
             'phone_number': form.phone_number_1,
-            'informed': form.informed_1,
             'day_of_appointment': form.day_of_appointment_1,
             'month_of_appointment': form.month_of_appointment_1,
             'year_of_appointment': form.year_of_appointment_1,
@@ -148,9 +146,7 @@ class PatientDetails:
         representative2 = {
             'bereaved_name': form.bereaved_name_2,
             'relationship': form.relationship_2,
-            'present_death': form.present_death_2,
             'phone_number': form.phone_number_2,
-            'informed': form.informed_2,
             'day_of_appointment': form.day_of_appointment_2,
             'month_of_appointment': form.month_of_appointment_2,
             'year_of_appointment': form.year_of_appointment_2,

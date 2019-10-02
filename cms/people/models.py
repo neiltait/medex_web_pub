@@ -8,8 +8,6 @@ class BereavedRepresentative:
         self.full_name = fallback_to(obj_dict.get("fullName"), '')
         self.relationship = fallback_to(obj_dict.get("relationship"), '')
         self.phone_number = fallback_to(obj_dict.get("phoneNumber"), '')
-        self.present_at_death = obj_dict.get("presentAtDeath") if obj_dict.get("presentAtDeath") else None
-        self.informed = obj_dict.get("informed") if obj_dict.get("informed") else None
         self.appointment_time = obj_dict.get("appointmentTime")
         self.appointment_notes = fallback_to(obj_dict.get("notes"), '')
 
@@ -28,8 +26,6 @@ class BereavedRepresentative:
         self.full_name = obj_dict.get('bereaved_name')
         self.relationship = obj_dict.get('relationship')
         self.phone_number = obj_dict.get('phone_number')
-        self.present_at_death = obj_dict.get('present_death')
-        self.informed = obj_dict.get('informed')
         self.appointment_time = obj_dict.get("time_of_appointment")
         self.appointment_day = obj_dict.get('day_of_appointment')
         self.appointment_month = obj_dict.get('month_of_appointment')

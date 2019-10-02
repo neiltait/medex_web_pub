@@ -23,7 +23,7 @@ class CreateUserForm:
 
     def check_is_nhs_email(self):
         return '@nhs.uk' in self.email_address or '@nhs.net' in self.email_address\
-               or '@methods.co.uk' in self.email_address
+               or '@methods.co.uk' in self.email_address or '@zimoaccessibility.co.uk' in self.email_address
 
     def response_to_dict(self):
         return {

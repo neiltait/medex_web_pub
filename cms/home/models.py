@@ -10,6 +10,7 @@ class IndexOverview:
         self.location_name = None
         self.location_id = location
         self.total_cases = response.get('countOfTotalCases')
+        self.filtered_cases = response.get('countOfFilteredCases')
         self.urgent_cases = response.get('countOfUrgentCases')
         self.count_have_unknown_basic_details = response.get('countOfCasesHaveUnknownBasicDetails')
         self.count_scrutiny_ready = response.get('countOfCasesReadyForMEScrutiny')
@@ -23,7 +24,7 @@ class IndexOverview:
         self.filter_people = self.process_filter_people(response.get('lookups').get('UserFilterLookup'))
         self.set_location_display_name()
         self.page_size = page_size
-        self.page_count = math.ceil(self.total_cases / page_size)
+        self.page_count = math.ceil(self.filtered_cases / page_size)
         self.page_range = range(self.page_count)
         self.page_number = page_number
         self.next_page = self.page_number + 1

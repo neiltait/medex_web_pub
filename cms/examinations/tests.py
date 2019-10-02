@@ -259,13 +259,12 @@ class ExaminationsViewsTests(MedExTestCase):
                          ExaminationMocks.get_unsuccessful_timeline_event_create_response().status_code)
         self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
 
-    def test_posting_an_valid_form_that_succeeds_on_the_api_returns_the_api_response_code(self):
+    def test_posting_an_valid_form_that_succeeds_on_the_api_redirects_to_case_breakdown(self):
         self.set_auth_cookies()
         form_data = ExaminationMocks.get_pre_scrutiny_create_event_data()
         response = self.client.post('/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID, form_data)
-        self.assertEqual(response.status_code,
-                         ExaminationMocks.get_successful_timeline_event_create_response().status_code)
-        self.assertTemplateUsed(response, 'examinations/edit_case_breakdown.html')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/cases/%s/case-breakdown' % ExaminationMocks.EXAMINATION_ID)
 
     @patch('users.request_handler.validate_session',
            return_value=SessionMocks.get_unsuccessful_validate_session_response())
