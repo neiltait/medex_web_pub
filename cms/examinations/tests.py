@@ -694,7 +694,6 @@ class ExaminationsBreakdownValidationTests(MedExTestCase):
 
         self.assertEqual(form.errors['count'], 1)
 
-
     """
     PRE-SCRUTINY
 

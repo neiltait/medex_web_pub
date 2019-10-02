@@ -255,7 +255,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
     def _validate_patient_details_forms(self):
         return self.primary_form.is_valid() and self.secondary_form.is_valid() \
-               and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
+            and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
 class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminationSectionBaseView):

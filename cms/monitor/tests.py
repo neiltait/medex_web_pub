@@ -198,4 +198,3 @@ class TestMonitorTests(MedExTestCase):
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
         self.assertEqual(event['event_type'], MedexLoggerEvents.CLOSED_CASE_UNSUCCESSFUL)
-

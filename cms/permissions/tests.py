@@ -24,7 +24,6 @@ class PermissionModelsTests(MedExTestCase):
         self.assertEqual(me_permission.role_type, enums.roles.ME)
         self.assertEqual(meo_permission.role_type, enums.roles.MEO)
 
-
     def test_correctly_sets_values_from_legacy_values(self):
         me_legacy = Permission(PermissionMocks.get_legacy_me_permission_dict())
         meo_legacy = Permission(PermissionMocks.get_legacy_meo_permission_dict())
