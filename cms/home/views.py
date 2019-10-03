@@ -34,8 +34,9 @@ class DashboardView(LoginRequiredMixin, View):
         status_code = status.HTTP_200_OK
         query_params = request.GET
 
-        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-        page_size = 25
+        page_number, page_size, page_error = self.calc_pagination(query_params)
+        if page_error:
+            return redirect_to_landing()
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
@@ -44,6 +45,14 @@ class DashboardView(LoginRequiredMixin, View):
         context = self.set_context(form)
 
         return render(request, self.template, context, status=status_code)
+
+
+    def calc_pagination(self, query_params):
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 25
+        page_error = page_number < 1
+
+        return page_number, page_size, page_error
 
     def set_context(self, form):
 

@@ -98,6 +98,12 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(context_form.location, '1')
         self.assertEqual(context_form.person, None)
 
+    def test_sending_negative_page_number_to_the_landing_page_redirects_to_landing_root(self):
+        self.set_auth_cookies()
+        response = self.client.get('/?page_number=-1')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/')
+
     def test_sending_location_and_person_filters_to_the_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
 
