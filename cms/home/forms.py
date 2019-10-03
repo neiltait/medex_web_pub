@@ -10,7 +10,6 @@ class IndexFilterForm:
         self.case_status = query_params.get('status') if query_params.get('status') else None
         self.base_url = IndexFilterForm.get_base_url_without_status(query_params)
 
-
     def get_location_value(self):
         if self.location == 'all':
             return None

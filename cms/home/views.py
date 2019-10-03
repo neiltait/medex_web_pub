@@ -13,10 +13,11 @@ from home.forms import IndexFilterForm
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
-from .utils import redirect_to_landing, redirect_to_login
+from .utils import redirect_to_landing, redirect_to_login, redirect_to_landing_with_filters
 from django.views.decorators.cache import never_cache
 
 from users.models import User
+
 
 class CookiesPolicyView(View):
     template = 'home/cookies.html'
@@ -42,10 +43,16 @@ class DashboardView(LoginRequiredMixin, View):
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
                                     form.get_case_status())
 
+        if page_number > self.user.index_overview.page_count:
+            return redirect_to_landing_with_filters(location=form.get_location_value(), person=form.get_person_value(),
+                                                    status=form.get_case_status())
+
         context = self.set_context(form)
 
         return render(request, self.template, context, status=status_code)
 
+    def page_number_exceeds_total_pages(self, page_number):
+        return len(self.user.examinations) == 0 and page_number != 1
 
     def calc_pagination(self, query_params):
         page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
@@ -63,6 +70,7 @@ class DashboardView(LoginRequiredMixin, View):
             'pagination_url': 'index',
             'enums': enums,
         }
+
 
 class LoginCallbackView(View):
 
@@ -114,11 +122,8 @@ class LoginRefreshView(View):
 class LoginView(LoggedInMixin, View):
     template = 'home/login.html'
 
-
-
     @never_cache
     def get(self, request):
-
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',
