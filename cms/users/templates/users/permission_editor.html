@@ -136,7 +136,10 @@
             </div>
         </div>
 
-        <input name="national" value="{{national}}" hidden/>
+        {% if locations.national %}
+            <input name="national" value="{{locations.national.location_id}}" type="hidden"/>
+        {% endif %}
+
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">

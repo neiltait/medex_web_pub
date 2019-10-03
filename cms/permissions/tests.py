@@ -255,3 +255,23 @@ class PermissionsFormsTests(MedExTestCase):
         self.assertIsNone(form.region)
         self.assertIsNone(form.trust)
         self.assertIsNone(form.location_id())
+
+    def test_permission_level_uses_permission_level_if_multiple_values_present_and_regional_level_specified(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'regional',
+            'region': 'region_id',
+            'trust': 'trust_id'
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.location_id(), 'region_id')
+
+    def test_permission_level_uses_permission_level_if_multiple_values_present_and_trust_level_specified(self):
+        form_content = {
+            'role': 'meo',
+            'permission_level': 'trust',
+            'region': 'region_id',
+            'trust': 'trust_id'
+        }
+        form = PermissionBuilderForm(form_content)
+        self.assertEqual(form.location_id(), 'trust_id')
