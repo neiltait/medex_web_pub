@@ -18,6 +18,7 @@ from django.views.decorators.cache import never_cache
 
 from users.models import User
 
+
 class CookiesPolicyView(View):
     template = 'home/cookies.html'
 
@@ -46,7 +47,6 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
     def set_context(self, form):
-
         return {
             'page_header': '%s Dashboard' % self.user.display_role(),
             'session_user': self.user,
@@ -54,6 +54,7 @@ class DashboardView(LoginRequiredMixin, View):
             'pagination_url': 'index',
             'enums': enums,
         }
+
 
 class LoginCallbackView(View):
 
@@ -105,11 +106,8 @@ class LoginRefreshView(View):
 class LoginView(LoggedInMixin, View):
     template = 'home/login.html'
 
-
-
     @never_cache
     def get(self, request):
-
         status_code = status.HTTP_200_OK
         context = {
             'page_heading': 'Welcome to the Medical Examiners Service',

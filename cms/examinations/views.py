@@ -240,13 +240,14 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         return status_code
 
     def _combined_form_errors(self):
-        combined_error_dict = {**self.primary_form.errors, **self.secondary_form.errors, **self.bereaved_form.errors,
-                               **self.urgency_form.errors}
+        combined_error_dict = {**self.primary_form.errors, **self.secondary_form.errors,
+                               **self.bereaved_form.errors, **self.urgency_form.errors}
         combined_error_dict['count'] = self._get_total_error_count()
         return combined_error_dict
 
     def _get_total_error_count(self):
-        return self.primary_form.error_count + self.secondary_form.error_count + self.bereaved_form.error_count + self.urgency_form.error_count
+        return self.primary_form.error_count + self.secondary_form.error_count + \
+            self.bereaved_form.error_count + self.urgency_form.error_count
 
     def _set_patient_details_context(self, saved):
         me_offices = self.user.get_permitted_me_offices()
@@ -315,7 +316,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
                 # scenario 2 - api error
                 status_code = self.__process_api_error(self.form, response)
                 monitor.log_medical_team_save_unsuccessful(self.user, examination_id, 'not available',
-                                                              self.form.errors)
+                                                           self.form.errors)
             else:
                 # scenario 1a - success
                 monitor.log_medical_team_save(self.user, examination_id, 'not available')
@@ -323,7 +324,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
         else:
             status_code = status.HTTP_400_BAD_REQUEST
             monitor.log_medical_team_save_unsuccessful(self.user, examination_id, 'not available',
-                                                          self.form.errors)
+                                                       self.form.errors)
 
         context = self._set_context(saved)
         return render(request, self.template, context, status=status_code)
