@@ -420,6 +420,14 @@ class PatientDetailsFormsTests(MedExTestCase):
 
 class MedicalTeamFormsTests(MedExTestCase):
     # Medical Team Form tests
+
+    def test_medical_team_member_initialised_with_blank_nursing_team_information(self):
+        mock_data = ExaminationMocks.get_medical_team_tab_form_data()
+        form = MedicalTeamMembersForm(mock_data)
+        nursing_team_information = form.nursing_team_information
+
+        self.assertEquals(nursing_team_information, '')
+
     def test_medical_team_member_initialised_with_valid_medical_team_contains_lookups(self):
         medical_team = MedicalTeam(ExaminationMocks.get_medical_team_content(), ExaminationMocks.EXAMINATION_ID)
 

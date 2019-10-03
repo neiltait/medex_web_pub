@@ -605,6 +605,7 @@ class ExaminationMocks:
             'gp_role': '',
             'gp_organisation': '',
             'gp_phone_number': '',
+            'nursing_team_information': "None"
 
         }
 
@@ -776,7 +777,7 @@ class ExaminationMocks:
                     "phone": "12345",
                     "notes": ""
                 },
-                "nursingTeamInformation": "",
+                "nursingTeamInformation": "None",
                 "medicalExaminerUserId": "",
                 "medicalExaminerOfficerUserId": "",
                 "errors": {
