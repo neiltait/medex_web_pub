@@ -204,6 +204,5 @@ class APIStrings:
     filters = APIFilters()
     case_status_bar_result = APIStatusBarResult()
 
+
 enums = APIStrings()
-
-

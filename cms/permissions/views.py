@@ -4,7 +4,6 @@ from rest_framework import status
 from django.shortcuts import render, redirect
 
 from errors.utils import log_api_error
-from locations.models import Location, LocationCollection
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from permissions.forms import PermissionBuilderForm
 from permissions.models import Permission
@@ -44,6 +43,7 @@ class AddPermissionView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserB
                 status_code = response.status_code
 
         else:
+
             invalid = True
             status_code = status.HTTP_400_BAD_REQUEST
 

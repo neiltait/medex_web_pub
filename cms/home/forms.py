@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import reverse
 
 
@@ -9,7 +8,6 @@ class IndexFilterForm:
         self.person = query_params.get('person') if query_params.get('person') else defaults.get('person')
         self.case_status = query_params.get('status') if query_params.get('status') else None
         self.base_url = IndexFilterForm.get_base_url_without_status(query_params)
-
 
     def get_location_value(self):
         if self.location == 'all':
@@ -39,4 +37,3 @@ class IndexFilterForm:
             base_url = "%sperson=%s&" % (base_url, person_parameter)
 
         return base_url
-

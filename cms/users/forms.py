@@ -22,8 +22,8 @@ class CreateUserForm:
         return False if self.email_error else True
 
     def check_is_nhs_email(self):
-        return '@nhs.uk' in self.email_address or '@nhs.net' in self.email_address\
-               or '@methods.co.uk' in self.email_address or '@zimoaccessibility.co.uk' in self.email_address
+        return '@nhs.uk' in self.email_address or '@nhs.net' in self.email_address \
+               or '@methods.co.uk' in self.email_address
 
     def response_to_dict(self):
         return {
@@ -31,7 +31,7 @@ class CreateUserForm:
         }
 
     def register_response_errors(self, response):
-        if response.ok == False:
+        if response.ok is False:
             errors = response.json()
             if errors and 'Email' in errors.keys():
                 self.email_error = errors['Email'][0]

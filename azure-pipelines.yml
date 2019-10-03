@@ -43,6 +43,11 @@ steps:
   condition: succeededOrFailed()
   displayName: 'Run tests'
 
+- script: |
+    python -m pip install flake8
+    flake8 .
+  displayName: 'Run lint tests'
+
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:

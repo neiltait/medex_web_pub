@@ -1,5 +1,6 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, DOD_IN_FUTURE, ME_OFFICE
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, \
+    DOD_IN_FUTURE, ME_OFFICE
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 from datetime import datetime
@@ -262,7 +263,7 @@ class PrimaryExaminationInformationForm:
         nhs_number_errors = self.__get_nhs_number_errors(api_errors)
         if nhs_number_errors:
             for error in nhs_number_errors:
-                if not error in KNOWN_API_ERROR_LIST:
+                if error not in KNOWN_API_ERROR_LIST:
                     self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
                     self.errors["count"] += 1
                     return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]

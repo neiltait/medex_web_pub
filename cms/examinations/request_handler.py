@@ -48,7 +48,7 @@ def update_medical_team(examination_id, submission, auth_token):
         return ExaminationMocks.get_successful_medical_team_update_response()
     else:
         response = MedexRequest.put(auth_token, '%s/examinations/%s/medical_team' % (settings.API_URL, examination_id),
-                                submission)
+                                    submission)
         return response
 
 
@@ -164,4 +164,5 @@ def load_coroner_report(auth_token, examination_id):
     if settings.LOCAL:
         return ReportMocks.get_successful_coroner_report_response()
     else:
-        return MedexRequest.get(auth_token, '%s/report/%s/coronal_referral_download' % (settings.API_URL, examination_id))
+        return MedexRequest.get(auth_token,
+                                '%s/report/%s/coronal_referral_download' % (settings.API_URL, examination_id))

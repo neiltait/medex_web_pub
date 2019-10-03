@@ -101,8 +101,12 @@ class CoronerDownloadReport:
             latest_admission_data = data.get('latestAdmissionDetails')
             if latest_admission_data:
                 report.latest_admission = {
-                    'date': 'Unknown' if fallback_to(latest_admission_data.get('admittedDateUnknown'), False) else reformat_datetime(latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
-                    'time': 'Unknown' if fallback_to(latest_admission_data.get('admittedTimeUnknown'), False) else fallback_to(latest_admission_data.get('admittedTime'), ''),
+                    'date': 'Unknown' if fallback_to(latest_admission_data.get('admittedDateUnknown'),
+                                                     False) else reformat_datetime(
+                        latest_admission_data.get('admittedDate'), '%d-%m-%Y'),
+                    'time': 'Unknown' if fallback_to(latest_admission_data.get('admittedTimeUnknown'),
+                                                     False) else fallback_to(latest_admission_data.get('admittedTime'),
+                                                                             ''),
                     'location': '',
                     'notes': fallback_to(latest_admission_data.get('notes'), '')
                 }

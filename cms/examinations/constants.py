@@ -9,6 +9,7 @@ def get_display_short_user_role(role, default=''):
     }
     return __get_dictionary_value(role, short_user_roles, default)
 
+
 def get_display_user_role(role, default=''):
     user_roles = {
         'MedicalExaminerOfficer': 'Medical Examiner Officer',
@@ -17,7 +18,6 @@ def get_display_user_role(role, default=''):
         'ServiceAdministrator': 'Service Administrator'
     }
     return __get_dictionary_value(role, user_roles, default)
-
 
 
 def get_display_bereaved_outcome(outcome):
