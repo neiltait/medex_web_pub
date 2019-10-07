@@ -24,11 +24,35 @@
         <h2 class="nhsuk-error-summary__title" id="error-summary-title">
             There is a problem
         </h2>
-        <div class="nhsuk-error-summary__body">
-            <p>
-                Please correct the errors in this form
-            </p>
-        </div>
+        <div class="nhsuk-error-summary__list">
+                <div><a href="#first_name_label" class="nhsuk-error-message">
+                    {{ errors.first_name }}</a>
+                </div>
+                <div><a href="#last_name_label" class="nhsuk-error-message">
+                    {{ errors.last_name }}
+                </a></div>
+                <div><a href="#gender_label" class="nhsuk-error-message">
+                    {{ errors.gender }}</a>
+                </div>
+                <div><a href="#nhs_number_label" class="nhsuk-error-message">
+                    {{ errors.nhs_number }}</a>
+                </div>
+                <div><a href="#date_of_birth_label" class="nhsuk-error-message">
+                    {{ errors.date_of_birth }}</a>
+                </div>
+                <div><a href="#date_of_death_label" class="nhsuk-error-message">
+                    {{ errors.date_of_death }}</a>
+                </div>
+                <div><a href="#date_of_death_label" class="nhsuk-error-message">
+                    {{ errors.time_of_death }}</a>
+                </div>
+                <div><a href="#place_of_death_label" class="nhsuk-error-message">
+                    {{ errors.place_of_death }}</a>
+                </div>
+                <div><a href="#me_office_label" class="nhsuk-error-message">
+                    {{ errors.me_office }}</a>
+                </div>
+            </div>
     </div>
     {% endif %}
     {% if error_count == 0 and saved %}
