@@ -268,6 +268,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             "me_offices": me_offices,
             "enums": enums,
             "saved": saved,
+            "errors": self._combined_form_errors
         }
 
     def _validate_patient_details_forms(self):
