@@ -420,12 +420,6 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=self.status_code)
 
-    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
-        if response.ok:
-            self._log_successful_post(examination_id, is_final, location_id, response)
-        else:
-            self._log_unsuccessful_api_response(examination_id, is_final, location_id, response)
-
     def _log_unsuccessful_api_response(self, examination_id, is_final, location_id, response):
         if is_final:
             monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
