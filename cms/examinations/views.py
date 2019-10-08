@@ -386,7 +386,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.amend_type = request.GET.get('amendType')
 
-        context = self._set_context(examination_id)
+        context = self._set_context(examination_id, False)
 
         return render(request, self.template, context, status=self.status_code)
 
@@ -395,13 +395,14 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         self.medical_team, self.case_status, error = MedicalTeam.load_by_id(examination_id, self.user.auth_token)
         self.patient_details, self.case_status, error = PatientDetails.load_by_id(examination_id, self.user.auth_token)
         self.form = event_form_parser(request.POST)
+        saved = False
         if self.form.is_valid():
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
             if response.ok:
                 # scenario 1 - success
                 self._log_successful_post(examination_id, self.form.is_final,
                                           self.patient_details.medical_examiner_office_responsible, response)
-                return redirect('/cases/%s/case-breakdown' % examination_id)
+                saved = True
             else:
                 # scenario 2 - api failure
                 self._log_unsuccessful_api_response(examination_id, self.form.is_final,
@@ -417,7 +418,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         self._load_breakdown(examination_id)
 
-        context = self._set_context(examination_id)
+        context = self._set_context(examination_id, saved)
 
         return render(request, self.template, context, status=self.status_code)
 
@@ -455,7 +456,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
                                                                self.form.__class__.__name__, form.errors)
 
-    def _set_context(self, examination_id):
+    def _set_context(self, examination_id, saved):
         forms = self.user.get_forms_for_role(self.examination)
         form_data = self._prepare_forms(self.examination.event_list, self.medical_team, self.patient_details, self.form,
                                         self.amend_type)
@@ -470,7 +471,10 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'patient': self.examination.case_header,
             'form_data': form_data,
             'case_status': self.case_status,
-            'enums': enums
+            'enums': enums,
+            'error_count': self.form.errors['count'] if self.form else 0,
+            'errors': self.form.errors if self.form else {'count': 0},
+            'saved': saved
         }
 
     def _load_breakdown(self, examination_id):

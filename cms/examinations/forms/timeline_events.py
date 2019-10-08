@@ -572,7 +572,7 @@ class AdmissionNotesEventForm:
             "admittedTime": self.admission_time if self.admission_time else None,
             "admittedTimeUnknown": True if self.admission_time_unknown else None,
             "routeOfAdmission": self.route_of_admission,
-            "immediateCoronerReferral": self.get_immediate_coroner_referral()
+            "immediateCoronerReferral": self.get_immediate_coroner_referral(),
         }
 
     def fill_from_draft(self, draft):
