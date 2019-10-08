@@ -1,10 +1,10 @@
 {% load staticfiles %}
 
-    {% for key, value in errors.items %}
-        {% if key != 'count' %}
-            <div>
-                <a href="#{{ key }}_label" class="nhsuk-error-message">{{ value }}</a>
-            </div>
-        {% endif %}
-    {% endfor %}
+{% for key, value in errors.items %}
+    {% if key != 'count' %}
+        <div>
+            <a href="#{{ key }}_label" class="nhsuk-error-message">{{ value }}</a>
+        </div>
+    {% endif %}
+{% endfor %}
 
