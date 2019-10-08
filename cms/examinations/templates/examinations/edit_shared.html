@@ -25,7 +25,10 @@
             There is a problem
         </h2>
         <div class="nhsuk-error-summary__list">
-                <div><a href="#first_name_label" class="nhsuk-error-message">
+
+            {% include 'examinations/partials/error_summary.html' with errors=errors %}
+
+                <!--<div><a href="#first_name_label" class="nhsuk-error-message">
                     {{ errors.first_name }}</a>
                 </div>
                 <div><a href="#last_name_label" class="nhsuk-error-message">
@@ -55,6 +58,9 @@
                 <div><a href="#consultant_name_1_label" class="nhsuk-error-message">
                     {{ errors.consultant_1 }}</a>
                 </div>
+                <div><a href="#consultant_name_1_label" class="nhsuk-error-message">
+                    {{ errors.consultant_2 }}</a>
+                </div>-->
             </div>
     </div>
     {% endif %}
