@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from errors.models import NotFoundError
 from examinations.models.case_breakdown import CaseBreakdown, ExaminationEventList, CaseStatus
-from examinations.models.core import ExaminationOverview, CauseOfDeath
+from examinations.models.core import ExaminationOverview
 from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent, CaseClosedEvent, CaseOtherEvent, CasePreScrutinyEvent, \
@@ -13,7 +13,7 @@ from examinations.reports import CoronerDownloadReport
 from examinations.templatetags.examination_filters import case_card_presenter
 from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks, ReportMocks
 from medexCms.test.utils import MedExTestCase
-from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, API_DATE_FORMAT_4, key_not_empty
+from medexCms.utils import NONE_DATE, parse_datetime, NONE_TIME, key_not_empty
 
 
 class ExaminationsCoreModelsTests(MedExTestCase):
@@ -615,7 +615,7 @@ class ExaminationsCaseBreakdownModelsTests(MedExTestCase):
             event_list.parse_events(event_data, patient_name)
             # if the test reaches here the function completed without blowing up
             self.assertIsTrue(True)
-        except:
+        except:  # noqa: E722
             # function should not have thrown an error
             self.assertIsTrue(False)
 

@@ -222,8 +222,6 @@ class CaseBereavedDiscussionEvent(CaseEvent):
         self.participant_full_name = fallback_to(obj_dict.get('participantFullName'), '')
         self.participant_relationship = fallback_to(obj_dict.get('participantRelationship'), '')
         self.participant_phone_number = fallback_to(obj_dict.get('participantPhoneNumber'), '')
-        self.present_at_death = obj_dict.get('presentAtDeath')
-        self.informed_at_death = obj_dict.get('informedAtDeath')
         self.date_of_conversation = parse_datetime(obj_dict.get('dateOfConversation'))
         self.discussion_unable_happen = enums.true_false.TRUE if obj_dict.get(
             'discussionUnableHappen') else enums.true_false.FALSE

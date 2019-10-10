@@ -42,18 +42,20 @@
                 </div>
             </div>
 
-            <p>
-                <span id="filter-by-place-person">Filter cases by status</span>
-            </p>
-            <div class="filter-list">
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned label="are unassigned" icon="unassigned" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F03_UNASSIGNED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete label="have been scrutinised by an ME" icon="complete" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending label="are pending additional details" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending label="are pending discussion with a QAP" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F06_PENDING_QAP %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
-            </div>
+            {% if not exclude_filter_buttons %}
+                <p>
+                    <span id="filter-by-status">Filter cases by status</span>
+                </p>
+                <div class="filter-list">
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned label="are unassigned" icon="unassigned" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F03_UNASSIGNED %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete label="have been scrutinised by an ME" icon="complete" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending label="are pending additional details" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending label="are pending discussion with a QAP" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F06_PENDING_QAP %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
+                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
+                </div>
+            {% endif %}
         </form>
 </div>

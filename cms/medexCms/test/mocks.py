@@ -980,6 +980,7 @@ class ExaminationMocks:
     def get_case_index_response_content(cls):
         return {
             "countOfTotalCases": 3,
+            "countOfFilteredCases": 3,
             "countOfUrgentCases": 0,
             "countOfCasesAdmissionNotesHaveBeenAdded": 0,
             "countOfCasesReadyForMEScrutiny": 1,

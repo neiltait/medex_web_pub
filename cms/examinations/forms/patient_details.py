@@ -1,5 +1,6 @@
 from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, DOD_IN_FUTURE, ME_OFFICE
+    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, \
+    DOD_IN_FUTURE, ME_OFFICE
 from medexCms.api import enums
 from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
 from datetime import datetime
@@ -262,7 +263,7 @@ class PrimaryExaminationInformationForm:
         nhs_number_errors = self.__get_nhs_number_errors(api_errors)
         if nhs_number_errors:
             for error in nhs_number_errors:
-                if not error in KNOWN_API_ERROR_LIST:
+                if error not in KNOWN_API_ERROR_LIST:
                     self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
                     self.errors["count"] += 1
                     return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
@@ -448,9 +449,7 @@ class BereavedInformationForm:
         if request:
             self.bereaved_name_1 = request.get('bereaved_name_1')
             self.relationship_1 = request.get('relationship_1')
-            self.present_death_1 = request.get('present_death_1')
             self.phone_number_1 = request.get('phone_number_1')
-            self.informed_1 = request.get('informed_1')
             self.day_of_appointment_1 = request.get('day_of_appointment_1')
             self.month_of_appointment_1 = request.get('month_of_appointment_1')
             self.year_of_appointment_1 = request.get('year_of_appointment_1')
@@ -458,9 +457,7 @@ class BereavedInformationForm:
             self.appointment_additional_details_1 = request.get('appointment_additional_details_1')
             self.bereaved_name_2 = request.get('bereaved_name_2')
             self.relationship_2 = request.get('relationship_2')
-            self.present_death_2 = request.get('present_death_2')
             self.phone_number_2 = request.get('phone_number_2')
-            self.informed_2 = request.get('informed_2')
             self.day_of_appointment_2 = request.get('day_of_appointment_2')
             self.month_of_appointment_2 = request.get('month_of_appointment_2')
             self.year_of_appointment_2 = request.get('year_of_appointment_2')
@@ -469,9 +466,7 @@ class BereavedInformationForm:
         else:
             self.bereaved_name_1 = ''
             self.relationship_1 = ''
-            self.present_death_1 = enums.yes_no.UNKNOWN
             self.phone_number_1 = ''
-            self.informed_1 = enums.yes_no.UNKNOWN
             self.day_of_appointment_1 = ''
             self.month_of_appointment_1 = ''
             self.year_of_appointment_1 = ''
@@ -479,9 +474,7 @@ class BereavedInformationForm:
             self.appointment_additional_details_1 = ''
             self.bereaved_name_2 = ''
             self.relationship_2 = ''
-            self.present_death_2 = enums.yes_no.UNKNOWN
             self.phone_number_2 = ''
-            self.informed_2 = enums.yes_no.UNKNOWN
             self.day_of_appointment_2 = ''
             self.month_of_appointment_2 = ''
             self.year_of_appointment_2 = ''
@@ -494,8 +487,6 @@ class BereavedInformationForm:
             setattr(self, 'bereaved_name_%s' % count, representative.full_name)
             setattr(self, 'relationship_%s' % count, representative.relationship)
             setattr(self, 'phone_number_%s' % count, representative.phone_number)
-            setattr(self, 'present_death_%s' % count, representative.present_at_death)
-            setattr(self, 'informed_%s' % count, representative.informed)
             setattr(self, 'day_of_appointment_%s' % count, representative.appointment_day)
             setattr(self, 'month_of_appointment_%s' % count, representative.appointment_month)
             setattr(self, 'year_of_appointment_%s' % count, representative.appointment_year)
@@ -528,8 +519,6 @@ class BereavedInformationForm:
                 "fullName": self.bereaved_name_1,
                 "relationship": self.relationship_1,
                 "phoneNumber": self.phone_number_1,
-                "presentAtDeath": self.present_death_1,
-                "informed": self.informed_1,
                 "appointmentDate": appointment_1_date,
                 "appointmentTime": self.time_of_appointment_1,
                 "notes": self.appointment_additional_details_1
@@ -543,8 +532,6 @@ class BereavedInformationForm:
                 "fullName": self.bereaved_name_2,
                 "relationship": self.relationship_2,
                 "phoneNumber": self.phone_number_2,
-                "presentAtDeath": self.present_death_2,
-                "informed": self.informed_2,
                 "appointmentDate": appointment_2_date,
                 "appointmentTime": self.time_of_appointment_2,
                 "notes": self.appointment_additional_details_2

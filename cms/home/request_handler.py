@@ -28,7 +28,7 @@ def refresh_session(refresh_token):
     data = {
         'grant_type': 'refresh_token',
         'redirect_uri': '%s/refresh-callback' % settings.CMS_URL,
-        'scope':'offline_access openid',
+        'scope': 'offline_access openid',
         'refresh_token': refresh_token
     }
     return requests.post('%s%s/v1/token' % (settings.OP_DOMAIN, settings.OP_ISSUER),
