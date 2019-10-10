@@ -34,7 +34,7 @@ class PreScrutinyEventForm:
         if self.is_final:
             if self.me_thoughts.strip() == '':
                 self.errors['count'] += 1
-                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('pre-scrutiny thoughts')
+                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('notes')
 
             if self.circumstances_of_death == '' or self.circumstances_of_death is None:
                 self.errors['count'] += 1
