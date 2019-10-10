@@ -472,7 +472,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'form_data': form_data,
             'case_status': self.case_status,
             'enums': enums,
-            'error_count': self.form.errors['count'] if self.form else 0,
+            'details_error_count': self.form.errors['count'] if self.form else 0,
             'errors': self.form.errors if self.form else {'count': 0},
             'saved': saved
         }
