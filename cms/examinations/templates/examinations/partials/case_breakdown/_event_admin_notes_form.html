@@ -3,7 +3,7 @@
 
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <label class="nhsuk-heading-s medex-heading-s">
+            <label class="nhsuk-heading-s medex-heading-s" id="date_of_last_admission_label">
                 Latest hospital admission details
             </label>
             <span class="nhsuk-hint">When was the patient admitted to hospital?</span>
@@ -78,7 +78,7 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group medex-text-checkbox-group {% if form.errors.time_of_last_admission %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox" id="time_of_last_admission_group">
-                    <label class="nhsuk-label" for="time_of_last_admission">
+                    <label class="nhsuk-label" for="time_of_last_admission" id="time_of_last_admission_label">
                         Time
                     </label>
                     {% if form.errors.time_of_last_admission %}
@@ -125,7 +125,7 @@
         <div class="nhsuk-grid-column-full">
             <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.latest_admission_immediate_referral %}nhsuk-form-group--error{% endif %}">
                 <fieldset class="nhsuk-fieldset">
-                    <legend class="nhsuk-heading-s medex-heading-s no-padding-inline">
+                    <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" id="latest_admission_immediate_referral_label">
                         Do you suspect this case may need immediate coroner referral?
                     </legend>
                     {% if form.errors.latest_admission_immediate_referral %}
@@ -162,7 +162,7 @@
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.route_of_admission %}nhsuk-form-group--error{% endif %}">
                     <fieldset class="nhsuk-fieldset">
-                        <legend class="nhsuk-heading-s medex-heading-s no-padding-inline">
+                        <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" id="route_of_admission_label">
                             Route of hospital admission
                         </legend>
                         {% if form.errors.route_of_admission %}
