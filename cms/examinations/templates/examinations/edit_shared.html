@@ -24,14 +24,14 @@
         <h2 class="nhsuk-error-summary__title" id="error-summary-title">
             There is a problem
         </h2>
-        <div class="nhsuk-error-summary__body">
-            <p>
-                Please correct the errors in this form
-            </p>
-        </div>
+        <div class="nhsuk-error-summary__list">
+
+            {% include 'examinations/partials/_error_summary.html' with errors=errors %}
+
+            </div>
     </div>
     {% endif %}
-    {% if error_count == 0 and saved %}
+    {% if saved and error_count == 0 or details_error_count == 0 and saved %}
     <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
          role="alert"
          tabindex="-1">

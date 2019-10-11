@@ -2,7 +2,7 @@
     {% if form.event_id %}<input name="medical_history_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.medical_history_details %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-heading-s medex-heading-s" for="medical-history-details">
+        <label class="nhsuk-heading-s medex-heading-s" for="medical-history-details" id="medical_history_details_label">
             Medical and social history
         </label>
 

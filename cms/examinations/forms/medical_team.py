@@ -82,7 +82,7 @@ class MedicalTeamMembersForm:
             self.errors["count"] += 1
 
         if not self.consultant_1.has_name():
-            self.errors["consultant_1"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_1"] = ErrorFieldRequiredMessage("consultant name")
             self.errors["count"] += 1
 
         if not self.consultant_2.has_valid_name():
@@ -90,7 +90,7 @@ class MedicalTeamMembersForm:
             self.errors["count"] += 1
 
         if not self.consultant_2.has_name_if_needed():
-            self.errors["consultant_2"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_2"] = ErrorFieldRequiredMessage("consultant name")
             self.errors["count"] += 1
 
         if not self.consultant_3.has_valid_name():
@@ -98,7 +98,7 @@ class MedicalTeamMembersForm:
             self.errors["count"] += 1
 
         if not self.consultant_3.has_name_if_needed():
-            self.errors["consultant_3"] = ErrorFieldRequiredMessage("name")
+            self.errors["consultant_3"] = ErrorFieldRequiredMessage("consultant name")
             self.errors["count"] += 1
 
         if not self.qap.has_valid_name():
