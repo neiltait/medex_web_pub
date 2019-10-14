@@ -114,6 +114,13 @@ class APIRoles:
     SERVICE_OWNER = 'ServiceOwner'
 
 
+class APIResultsSorting:
+    SORTING_OPTIONS = {
+        "Urgency": "Urgency",
+        "Oldest": "CaseCreated",
+    }
+
+
 class UserRoleTypes:
     ME = 'Medical Examiner'
     MEO = 'Medical Examiner Officer'
@@ -203,6 +210,7 @@ class APIStrings:
     qap_discussion_status = APIQapDiscussionStatus()
     filters = APIFilters()
     case_status_bar_result = APIStatusBarResult()
+    results_sorting = APIResultsSorting()
 
 
 enums = APIStrings()
