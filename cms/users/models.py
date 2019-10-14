@@ -192,6 +192,9 @@ class User:
     def get_permitted_me_offices(self):
         return Location.load_me_offices(self.auth_token)
 
+    def get_create_examination_permitted_me_offices(self):
+        return Location.load_create_examination_me_offices(self.auth_token)
+
     def get_location_collection(self):
         return Location.load_location_collection_for_user(self.auth_token)
 
