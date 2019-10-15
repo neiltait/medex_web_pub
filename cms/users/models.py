@@ -140,7 +140,7 @@ class User:
             "LocationId": location,
             "UserId": person,
             "CaseStatus": case_status,
-            "OrderBy": "Urgency",
+            "OrderBy": sorting_order,
             "OpenCases": True,
             "PageSize": page_size,
             "PageNumber": page_number
