@@ -37,7 +37,7 @@ NO_ROLES_HEADER = 'No Roles Assigned'
 NO_ROLES = 'You do not currently have roles assigned to your account, please contact your service lead to request' \
            ' assignment'
 
-NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
+NHS_NUMBER_ERROR = 'Please enter a valid 10 digit NHS number'
 
 DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given'
 
