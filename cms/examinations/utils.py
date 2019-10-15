@@ -1,6 +1,7 @@
 from . import request_handler
 from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventForm, AdmissionNotesEventForm,\
     MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, MedicalHistoryEventForm
+from monitor.loggers import monitor
 
 PRE_SCRUTINY_FORM = 'pre-scrutiny'
 MEO_SUMMARY_FORM = 'meo-summary'
@@ -48,6 +49,28 @@ def event_form_submitter(auth_token, examination_id, form):
         return request_handler.create_medical_history_event(auth_token, examination_id, form.for_request())
 
 
+def log_successful_timeline_post(form, examination_id, user, location_id, response):
+    if form.is_final:
+        monitor.log_create_timeline_event_successful(user, examination_id, location_id,
+                                                     form.__class__.__name__,
+                                                     response.json()['eventId'])
+    else:
+        monitor.log_save_draft_timeline_event_successful(user, examination_id, location_id,
+                                                         form.__class__.__name__,
+                                                         response.json()['eventId'])
+
+
+def log_unsuccessful_timeline_post(form, examination_id, user, location_id, response):
+    if form.is_final:
+        monitor.log_create_timeline_event_unsuccessful(user, examination_id, location_id,
+                                                       form.__class__.__name__,
+                                                       {"api error": response.status_code})
+    else:
+        monitor.log_save_draft_timeline_event_unsuccessful(user, examination_id, location_id,
+                                                           form.__class__.__name__,
+                                                           {"api error": response.status_code})
+
+
 def get_tab_change_modal_config():
     return {
         'id': 'tab-change-modal',
@@ -67,7 +90,7 @@ def text_field_is_not_null(field):
     return True if field and len(field.strip()) > 0 else False
 
 
-class ReportGenerator():
+class ReportGenerator:
     """ Class ReportGenerator """
 
     @staticmethod

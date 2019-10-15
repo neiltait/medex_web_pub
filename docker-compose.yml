@@ -13,6 +13,7 @@ services:
       LOGOUT_IF_IDLE_PERIOD: ${LOGOUT_IF_IDLE_PERIOD}
       REQUIRE_HTTPS: ${REQUIRE_HTTPS}
       LOCAL: ${LOCAL}
+      SECRET_KEY: ${SECRET_KEY}
     build: ./cms
     command: python manage.py runserver 0.0.0.0:8000
     volumes:

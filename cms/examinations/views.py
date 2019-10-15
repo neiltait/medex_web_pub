@@ -18,7 +18,8 @@ from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.reports import CoronerDownloadReport
-from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator, \
+    log_successful_timeline_post, log_unsuccessful_timeline_post
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
@@ -400,13 +401,13 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
             if response.ok:
                 # scenario 1 - success
-                self._log_successful_post(examination_id, self.form.is_final,
-                                          self.patient_details.medical_examiner_office_responsible, response)
+                log_successful_timeline_post(self.form, examination_id, self.user,
+                                             self.patient_details.medical_examiner_office_responsible, response)
                 saved = True
             else:
                 # scenario 2 - api failure
-                self._log_unsuccessful_api_response(examination_id, self.form.is_final,
-                                                    self.patient_details.medical_examiner_office_responsible, response)
+                log_unsuccessful_timeline_post(self.form, examination_id, self.user,
+                                               self.patient_details.medical_examiner_office_responsible, response)
 
             self.status_code = response.status_code
             self.form = None
@@ -421,32 +422,6 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         context = self._set_context(examination_id, saved)
 
         return render(request, self.template, context, status=self.status_code)
-
-    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
-        if response.ok:
-            self._log_successful_post(examination_id, is_final, location_id, response)
-        else:
-            self._log_unsuccessful_api_response(examination_id, is_final, location_id, response)
-
-    def _log_unsuccessful_api_response(self, examination_id, is_final, location_id, response):
-        if is_final:
-            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
-                                                           self.form.__class__.__name__,
-                                                           {"api error": response.status_code})
-        else:
-            monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
-                                                               self.form.__class__.__name__,
-                                                               {"api error": response.status_code})
-
-    def _log_successful_post(self, examination_id, is_final, location_id, response):
-        if is_final:
-            monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
-                                                         self.form.__class__.__name__,
-                                                         response.json()['eventId'])
-        else:
-            monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
-                                                             self.form.__class__.__name__,
-                                                             response.json()['eventId'])
 
     def _log_unsuccessful_invalid_form(self, examination_id, is_final, location_id, form):
         if is_final:
