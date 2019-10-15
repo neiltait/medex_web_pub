@@ -34,7 +34,7 @@ class PreScrutinyEventForm:
         if self.is_final:
             if self.me_thoughts.strip() == '':
                 self.errors['count'] += 1
-                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('pre-scrutiny thoughts')
+                self.errors['me_thoughts'] = messages.ErrorFieldRequiredMessage('notes')
 
             if self.circumstances_of_death == '' or self.circumstances_of_death is None:
                 self.errors['count'] += 1
@@ -572,7 +572,7 @@ class AdmissionNotesEventForm:
             "admittedTime": self.admission_time if self.admission_time else None,
             "admittedTimeUnknown": True if self.admission_time_unknown else None,
             "routeOfAdmission": self.route_of_admission,
-            "immediateCoronerReferral": self.get_immediate_coroner_referral()
+            "immediateCoronerReferral": self.get_immediate_coroner_referral(),
         }
 
     def fill_from_draft(self, draft):
