@@ -603,7 +603,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
         query_params = request.GET
 
         page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-        page_size = 20
+        page_size = 25
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_closed_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
