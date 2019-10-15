@@ -115,10 +115,10 @@ class APIRoles:
 
 
 class APIResultsSorting:
-    SORTING_OPTIONS = {
-        "Urgency": "Urgency",
-        "Oldest": "CaseCreated",
-    }
+    SORTING_ORDERS_DEFAULT_FIRST = (
+        ("Urgency", "Urgency"),
+        ("Oldest", "CaseCreated"),
+    )
 
 
 class UserRoleTypes:

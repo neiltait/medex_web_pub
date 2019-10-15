@@ -8,6 +8,7 @@ class IndexFilterForm:
         self.person = query_params.get('person') if query_params.get('person') else defaults.get('person')
         self.case_status = query_params.get('status') if query_params.get('status') else None
         self.base_url = IndexFilterForm.get_base_url_without_status(query_params)
+        self.sorting_order = query_params.get('sorting_order') or defaults['sorting_order']
 
     def get_location_value(self):
         if self.location == 'all':
