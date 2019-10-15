@@ -69,6 +69,14 @@ ALLOWED_HOSTS = [
     'medex-web-pre-ukw.frontend.pre.medex.cloud',
 ]
 
+EMAIL_WHITELIST = [
+    '@nhs.uk',
+    '@nhs.net',
+    '.nhs.uk',
+    '.nhs.net',
+    '@methods.co.uk',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
