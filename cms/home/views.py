@@ -40,7 +40,7 @@ class DashboardView(LoginRequiredMixin, View):
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
-                                    form.get_case_status())
+                                    form.get_case_status(), form.sorting_order)
 
         context = self.set_context(form)
 

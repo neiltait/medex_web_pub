@@ -55,19 +55,19 @@
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
             </div>
-        {% endif %}
 
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-one-third">
-                <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}" aria-label="filter-location">
-                    <option value="" disabled selected>Sort by</option>
-                    {% for sorting_option in enums.results_sorting.SORTING_OPTIONS %}
-                        <option value={{ enums.results_sorting.SORTING_OPTIONS.sorting_option }}>
-                            {{ sorting_option }}
-                        </option>
-                    {% endfor %}
-                </select>
+            <div class="nhsuk-grid-row sort-row">
+                <div class="nhsuk-grid-column-one-quarter">
+                    <select class="nhsuk-select" id="sorting_order" name="sorting_order">
+                        <option value={{ enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST.0.1 }} selected>Sort by</option>
+                        {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
+                            <option value={{ sorting_order.1 }}>
+                                {{ sorting_order.0 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </form>
 </div>
