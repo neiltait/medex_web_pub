@@ -61,7 +61,7 @@
                     <label for="sorting_order">Sort by</label>
                     <select class="nhsuk-select" id="sorting_order" name="sorting_order">
                         {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
-                            <option value={{ sorting_order.1 }}>
+                            <option value={{ sorting_order.1 }} {% if sorting_order.1 == form.sorting_order %}selected{% endif %}>
                                 {{ sorting_order.0 }}
                             </option>
                         {% endfor %}
