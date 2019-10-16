@@ -73,7 +73,7 @@ An additional optional environment variable can be set, LOCAL. This variable can
 
 #### Browser Cookies
 
-To access the projects front-end when running the server locally, you need to
+To access the projects front-end when running the server with LOCAL=True, you need to
 add the following (blank) cookie files to the browser you will be using:
 
 `medex_id_token`
