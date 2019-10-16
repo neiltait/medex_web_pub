@@ -41,7 +41,7 @@ class PrimaryExaminationInformationForm:
         self.first_name = request.get("first_name")
         self.gender = request.get("gender")
         self.gender_details = request.get("gender_details")
-        self.nhs_number = request.get("nhs_number")
+        self.nhs_number = request.get("nhs_number").replace(' ', '')
         self.nhs_number_not_known = True if "nhs_number_not_known" in request else False
 
         self.set_hospital_numbers(request)
