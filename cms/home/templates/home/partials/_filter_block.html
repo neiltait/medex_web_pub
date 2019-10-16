@@ -42,9 +42,9 @@
         </div>
 
         {% if not exclude_filter_buttons %}
-            <p>
-                <span id="filter-by-status">Filter cases by status</span>
-            </p>
+            <br>
+            <p><span id="filter-by-status">Filter cases by status</span></p>
+
             <div class="filter-list">
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
@@ -58,8 +58,8 @@
 
             <div class="nhsuk-grid-row sort-row">
                 <div class="nhsuk-grid-column-one-quarter">
+                    <label for="sorting_order">Sort by</label>
                     <select class="nhsuk-select" id="sorting_order" name="sorting_order">
-                        <option value={{ enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST.0.1 }} selected>Sort by</option>
                         {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
                             <option value={{ sorting_order.1 }}>
                                 {{ sorting_order.0 }}
