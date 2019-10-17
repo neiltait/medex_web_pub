@@ -22,7 +22,7 @@ class PatientDetails:
         self.surname = obj_dict.get("surname")
         self.gender = obj_dict.get("gender")
         self.gender_details = obj_dict.get("genderDetails")
-        self.nhs_number = self.remove_whitespace(obj_dict.get("nhsNumber"))
+        self.nhs_number = obj_dict.get("nhsNumber")
         self.hospital_number_1 = obj_dict.get("hospitalNumber_1")
         self.hospital_number_2 = obj_dict.get("hospitalNumber_2")
         self.hospital_number_3 = obj_dict.get("hospitalNumber_3")
@@ -100,7 +100,7 @@ class PatientDetails:
         self.surname = form.last_name
         self.gender = form.gender
         self.gender_details = form.gender_details
-        self.nhs_number = self.remove_whitespace(form.nhs_number)
+        self.nhs_number = form.nhs_number
         self.hospital_number_1 = form.hospital_number_1
         self.hospital_number_2 = form.hospital_number_2
         self.hospital_number_3 = form.hospital_number_3
@@ -113,10 +113,6 @@ class PatientDetails:
         self.time_of_death = form.time_of_death
         self.death_occurred_location_id = form.place_of_death
         return self
-
-    @staticmethod
-    def remove_whitespace(string):
-        return string.replace(' ', '')
 
     def set_secondary_info_values(self, form):
         self.house_name_number = form.address_line_1
