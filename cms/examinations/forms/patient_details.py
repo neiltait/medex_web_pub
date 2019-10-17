@@ -228,21 +228,11 @@ class PrimaryExaminationInformationForm:
         nhs_number_errors = self.__get_nhs_number_errors(api_errors)
 
         if "NhsNumber" in api_errors:
-            if enums.errors.CONTAINS_WHITESPACE in nhs_number_errors:
-                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_WHITESPACE
-                self.errors["count"] += 1
-                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_WHITESPACE}]
-
             if enums.errors.CONTAINS_INVALID_CHARACTERS in nhs_number_errors:
                 self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_INVALID_CHARACTERS
                 self.errors["count"] += 1
                 known_errors = known_errors + [
                     {'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_INVALID_CHARACTERS}]
-
-            if enums.errors.INVALID in nhs_number_errors:
-                self.errors["nhs_number"] = api_error_messages.nhs_numbers.INVALID
-                self.errors["count"] += 1
-                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.INVALID}]
 
             if enums.errors.DUPLICATE in nhs_number_errors:
                 self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
