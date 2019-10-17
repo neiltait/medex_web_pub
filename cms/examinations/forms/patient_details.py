@@ -41,7 +41,7 @@ class PrimaryExaminationInformationForm:
         self.first_name = request.get("first_name")
         self.gender = request.get("gender")
         self.gender_details = request.get("gender_details")
-        self.nhs_number = request.get("nhs_number")
+        self.nhs_number = self.assert_valid_nhs_number(request.get("nhs_number"))
         self.nhs_number_not_known = True if "nhs_number_not_known" in request else False
 
         self.set_hospital_numbers(request)
@@ -64,6 +64,15 @@ class PrimaryExaminationInformationForm:
         )
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
+
+    @staticmethod
+    def assert_valid_nhs_number(nhs_number):
+        """
+        Return correctly formatted nhs number:
+            - no whitespace
+            - extend as needed! (length etc)
+        """
+        return nhs_number.replace(' ', '')
 
     def set_values_from_instance(self, examination):
         self.first_name = examination.given_names
