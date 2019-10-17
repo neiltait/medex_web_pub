@@ -4,18 +4,19 @@
 {% if closed_list %}
     <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
         <!-- Prevent implicit submission of the form -->
-        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
         <!-- ... -->
 {% else %}
     <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
         <!-- Prevent implicit submission of the form -->
-        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
 
         <!-- ... -->
         {% endif %}
-        <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden/>
-
-        <p><span id="filter-by-place-person">Filter cases by place and person</span></p>
+        <input class="nhsuk-u-visually-hidden" value="{{session_user.index_overview.page_number}}" name="page_number"/>
+        <div class="filter__label">
+            <p class="filter-label"><span id="filter-by-place-person">Filter cases by place and person</span></p>
+        </div>
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
@@ -42,8 +43,9 @@
         </div>
 
         {% if not exclude_filter_buttons %}
-            <br>
-            <p><span id="filter-by-status">Filter cases by status</span></p>
+            <div class="filter__label">
+                <p><span id="filter-by-status">Filter cases by status</span></p>
+            </div>
 
             <div class="filter-list">
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>

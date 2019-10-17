@@ -112,7 +112,12 @@
 
 .sort-row {
 
-    .nhsuk-grid-column-one-quarter {
-        float: right;
-    }
+  .nhsuk-grid-column-one-quarter {
+    float: right;
+  }
+}
+
+.filter__label {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
