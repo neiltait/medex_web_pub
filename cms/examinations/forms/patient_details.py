@@ -165,14 +165,12 @@ class PrimaryExaminationInformationForm:
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
-            self.errors["nhs_number"] = ErrorFieldRequiredMessage("an NHS number")
+            self.errors["nhs_number"] = NHS_NUMBER_ERROR
             self.errors["count"] += 1
 
         elif not self.nhs_number_not_known:
             # case - nhs number is entered
-            if self.nhs_number and self.NHS_MIN_LENGTH <= len(self.nhs_number) <= self.NHS_MAX_LENGTH:
-                pass
-            else:
+            if not (self.nhs_number and self.NHS_MIN_LENGTH <= len(self.nhs_number) <= self.NHS_MAX_LENGTH):
                 self.errors["nhs_number"] = NHS_NUMBER_ERROR
                 self.errors["count"] += 1
 
