@@ -72,6 +72,9 @@ class PrimaryExaminationInformationForm:
             - no whitespace
             - extend as needed! (length etc)
         """
+        if not nhs_number:
+            return nhs_number
+
         return nhs_number.replace(' ', '')
 
     def set_values_from_instance(self, examination):
