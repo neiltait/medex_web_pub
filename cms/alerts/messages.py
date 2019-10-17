@@ -64,10 +64,7 @@ def ErrorFieldTooLong(character_max):
 
 class NhsNumberErrors:
     CONTAINS_INVALID_CHARACTERS = "This NHS number includes invalid characters"
-    CONTAINS_WHITESPACE = "This NHS number includes spaces"
     DUPLICATE = "This NHS number already exists on another case"
-    INVALID = "This NHS number is invalid"
-    UNKNOWN = "There is a problem with this NHS number"
     NO_NUMBER_AND_NO_UNKNOWN = "an NHS number"
 
 
