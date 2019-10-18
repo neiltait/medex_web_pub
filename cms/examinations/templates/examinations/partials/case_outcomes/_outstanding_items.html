@@ -88,7 +88,7 @@
                         </p>
                         <div class="nhsuk-checkboxes__item">
                             <input id="waive_fee" name="waive_fee" type="checkbox" class="nhsuk-checkboxes__input" aria-labelledby="waive_fee"
-                                {% if case_outcome.waive_fee %}checked{% endif %}/>
+                                value="true" {% if case_outcome.waive_fee %}checked{% endif %}/>
                             <label class="nhsuk-label nhsuk-checkboxes__label" for="waive_fee">
                                 Waive cremation fee
                             </label>
