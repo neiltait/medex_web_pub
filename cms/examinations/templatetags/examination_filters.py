@@ -39,6 +39,7 @@ def case_card_presenter(case):
         'urgent': case.urgent(),
         'nhs_number': display(case.nhs_number, fallback='Unknown'),
         'appointment_date': display_date(case.appointment_date, fallback='-'),
+        'case_created_date': display_date(case.case_created_date, fallback='Unknown'),
         'appointment_time': case.appointment_time if
         case.appointment_time and case.appointment_time != '00:00:00' else '-'
     }
