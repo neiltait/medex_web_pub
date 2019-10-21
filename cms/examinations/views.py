@@ -560,6 +560,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def _set_context(self):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.case_outcome.examination_id,
             'case_outcome': self.case_outcome,
             'case_status': self.case_status,
