@@ -64,6 +64,13 @@
                                     </div>
                                 </a>
                             {% endif %}
+                            {% if session_user.permitted_actions.can_access_financial_report_index %}
+                                <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/cases/financial-reports">
+                                    <div class="nav-dropdown--item">
+                                        Financial Report
+                                    </div>
+                                </a>
+                            {% endif %}
 
                             <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/logout">
                                 <div class="nav-dropdown--item">
