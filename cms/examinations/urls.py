@@ -1,11 +1,13 @@
 from django.conf.urls import url
 
 from examinations.views import CreateExaminationView, ClosedExaminationIndexView, EditExaminationView, \
-    PatientDetailsView, MedicalTeamView, CaseBreakdownView, CaseOutcomeView, CoronerReportDownloadView
+    PatientDetailsView, MedicalTeamView, CaseBreakdownView, CaseOutcomeView, CoronerReportDownloadView, \
+    FinancialReportsView
 
 urlpatterns = [
     url('create', CreateExaminationView.as_view(), name='create_examination'),
     url('closed', ClosedExaminationIndexView.as_view(), name='closed_examination_index'),
+    url('financial-reports', FinancialReportsView.as_view(), name='financial_reports'),
     url(r'(?P<examination_id>[\w\-]+)/patient-details', PatientDetailsView.as_view(), name='edit_patient_details'),
     url(r'(?P<examination_id>[\w\-]+)/medical-team', MedicalTeamView.as_view(), name='edit_medical_team'),
     url(r'(?P<examination_id>[\w\-]+)/case-breakdown', CaseBreakdownView.as_view(), name='edit_case_breakdown'),
