@@ -135,3 +135,36 @@ def yes_no_unknown(value):
         return "Unknown"
     else:
         return 'Y' if value else 'N'
+
+
+class FinancialReport:
+
+    def __init__(self):
+        self.data = None
+
+    @classmethod
+    def load_by_query(cls, params, auth_token):
+
+        query_params = {
+            "LocationId": params["me_office"],
+            "ExaminationsCreatedFrom": params["date_from"],
+            "ExaminationsCreatedTo": params["date_to"],
+        }
+
+        response = request_handler.load_financial_report(query_params, auth_token)
+        report = None
+        errors = {'count': 0}
+
+        if response.ok:
+            response = response.json()
+            report = FinancialReport()
+            report.data = response["data"]
+
+        else:
+            errors['count'] += 1
+            errors['form'] = "Could not download report"
+
+        return report, errors
+
+    def to_object(self):
+        return self
