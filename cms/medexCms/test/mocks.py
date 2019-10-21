@@ -2239,3 +2239,27 @@ class ReportMocks:
             },
             "detailsAboutMedicalHistory": "string"
         }
+
+    @classmethod
+    def get_successful_financial_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_financial_report_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_financial_report_data(cls):
+        return {
+            "data" : [
+                {
+                    "field1" : "value1",
+                    "field2" : "value2",
+                    "field3" : "value3",
+                },
+                {
+                    "field1" : "value4",
+                    "field2" : "value5",
+                    "field3" : "value6",
+                }
+            ]
+        }
