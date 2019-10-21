@@ -98,6 +98,24 @@ class HomeViewsTests(MedExTestCase):
         self.assertEqual(context_form.location, '1')
         self.assertEqual(context_form.person, None)
 
+    def test_sending_negative_page_number_to_the_landing_page_redirects_to_landing_root(self):
+        self.set_auth_cookies()
+        response = self.client.get('/?page_number=-1')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/')
+
+    def test_sending_too_large_page_number_to_the_landing_page_redirects_to_landing_root(self):
+        self.set_auth_cookies()
+        response = self.client.get('/?page_number=10000')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/')
+
+    def test_sending_too_large_page_number_to_the_landing_page_redirects_to_landing_root_with_filters(self):
+        self.set_auth_cookies()
+        response = self.client.get('/?page_number=10000&status=Unknown')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, '/?status=Unknown')
+        
     def test_sending_location_and_person_filters_to_the_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
 
@@ -116,13 +134,13 @@ class HomeViewsTests(MedExTestCase):
     def test_page_filters_removed_when_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
 
-        response = self.client.get('/?person=1&location=bar&page_number=2')
+        response = self.client.get('/?person=1&location=bar&page_number=1')
         self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
 
     def test_case_status_removed_when_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
 
-        response = self.client.get('/?person=1&location=bar&page_number=2&case_status="Unassigned')
+        response = self.client.get('/?person=1&location=bar&page_number=1&case_status="Unassigned')
         self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
 
     # Settings index tests

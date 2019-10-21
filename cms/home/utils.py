@@ -16,6 +16,20 @@ def redirect_to_login():
     return redirect('/login')
 
 
+def redirect_to_landing_with_filters(location, person, status):
+    url = '/?'
+    if location:
+        url = "%slocation=%s&" % (url, location)
+
+    if person:
+        url = "%sperson=%s&" % (url, person)
+
+    if status:
+        url = "%sstatus=%s&" % (url, status)
+
+    return redirect(url[:-1])
+
+
 def render_error(request, user, error):
     context = {
         'session_user': user,
