@@ -85,6 +85,7 @@ class ExaminationOverview:
         self.appointment_time = obj_dict.get("appointmentTime")
         self.last_admission = parse_datetime(obj_dict.get("lastAdmission"))
         self.case_created_date = parse_datetime(obj_dict.get("caseCreatedDate"))
+        self.case_closed_date = parse_datetime(obj_dict.get("dateCaseClosed"))
         self.case_outcome = obj_dict.get("caseOutcome")
         self.open = obj_dict.get('open')
 
