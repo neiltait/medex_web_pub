@@ -85,3 +85,24 @@ class ReportGenerator():
             response = FileResponse(open(output.name, 'rb'), as_attachment=True, filename=filename)
 
         return response
+
+    @staticmethod
+    def create_csv_report(report, filename="report.csv"):
+        import csv
+        from django.http import HttpResponse
+
+        result = report.data
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+
+        if len(result) > 0:
+            keys = result[0].keys()
+            writer = csv.writer(response)
+            writer = csv.DictWriter(response, keys)
+            writer.writeheader()
+            writer.writerows(result)
+        else:
+            writer = csv.writer(response)
+
+        return response
