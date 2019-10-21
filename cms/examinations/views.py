@@ -258,6 +258,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
