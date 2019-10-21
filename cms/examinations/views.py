@@ -351,6 +351,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def _set_context(self, saved):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.examination.examination_id,
             'case_status': self.case_status,
             'patient': self.examination.case_header,
