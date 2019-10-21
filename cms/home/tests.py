@@ -141,7 +141,6 @@ class HomeViewsTests(MedExTestCase):
 
     def test_page_filters_removed_when_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
-
         response = self.client.get('/?person=1&location=bar&page_number=1')
         self.assertEqual(self.get_context_value(response.context, 'base_url'), '/?location=bar&person=1&')
 
