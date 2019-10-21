@@ -441,6 +441,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
