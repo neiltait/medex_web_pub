@@ -45,7 +45,7 @@ class MedicalTeamMembersForm:
                                     phone_number=request.get('gp_phone_number'),
                                     notes=request.get('gp_note_1'),
                                     gmc_number=request.get('gmc_number_gp'))
-        nursing_team_information = request.get('nursingTeamInformation', '')
+        nursing_team_information = request.get('nursing_team_information', '')
         self.nursing_team_information = '' if nursing_team_information in ["None", None, 'none'] else \
             nursing_team_information
         self.medical_examiner = request.get('medical_examiner') if request.get('medical_examiner') else ''
