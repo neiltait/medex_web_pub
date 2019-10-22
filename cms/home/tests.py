@@ -75,6 +75,14 @@ class HomeViewsTests(MedExTestCase):
         count = len(ExaminationMocks.get_case_index_response_content().get('examinations'))
         self.assertEqual(len(context_user.examinations), count)
 
+    @patch('examinations.request_handler.load_examinations_index',
+           return_value=ExaminationMocks.get_successful_minimal_case_index_response())
+    def test_landing_on_the_landing_page_renders_page_when_no_examinations_present(self, mock_response):
+        self.set_auth_cookies()
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTemplateUsed(response, 'home/index.html')
+
     @patch('users.request_handler.validate_session',
            return_value=SessionMocks.get_unsuccessful_validate_session_response())
     def test_landing_on_the_landing_page_redirects_to_login_if_the_user_not_logged_in(self, mock_auth_validation):
