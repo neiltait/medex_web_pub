@@ -9,7 +9,7 @@ from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseInitialEvent, CaseClosedEvent, CaseOtherEvent, CasePreScrutinyEvent, \
     CaseQapDiscussionEvent, CaseMeoSummaryEvent, CaseAdmissionNotesEvent, CaseBereavedDiscussionEvent, \
     CaseMedicalHistoryEvent
-from examinations.reports import CoronerDownloadReport
+from examinations.reports import CoronerDownloadReport, FinancialReport
 from examinations.templatetags.examination_filters import case_card_presenter
 from medexCms.test.mocks import ExaminationMocks, PeopleMocks, DatatypeMocks, SessionMocks, ReportMocks
 from medexCms.test.utils import MedExTestCase
@@ -720,4 +720,31 @@ class ExaminationsReportsTests(MedExTestCase):
         coroner_report, error = CoronerDownloadReport.load_by_id(ExaminationMocks.EXAMINATION_ID,
                                                                  SessionMocks.ACCESS_TOKEN)
         self.assertIsNotNone(coroner_report)
+        self.assertEqual(error['count'], 0)
+
+
+
+    @patch('examinations.request_handler.load_financial_report',
+           return_value=ReportMocks.get_unsuccessful_financial_report_response())
+    def test_load_financial_report_by_query_returns_an_error_object_if_load_fails(self, mock_patient_details):
+        financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNone(financial_report)
+        self.assertIsNotNone(error)
+        self.assertGreaterEqual(error['count'], 1)
+
+    @patch('examinations.request_handler.load_financial_report',
+           return_value=ReportMocks.get_successful_financial_report_response())
+    def test_load_financial_report_by_query_returns_report_object_if_load_succeeds(self, mock_patient_details):
+        financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(financial_report)
+        self.assertEqual(error['count'], 0)
+
+    @patch('examinations.request_handler.load_financial_report',
+           return_value=ReportMocks.get_empty_financial_report_response())
+    def test_load_financial_report_by_query_still_returns_an_object_if_api_returns_missing_data(self, mock_patient_details):
+        financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
+                                                                 SessionMocks.ACCESS_TOKEN)
+        self.assertIsNotNone(financial_report)
         self.assertEqual(error['count'], 0)

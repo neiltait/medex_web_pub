@@ -156,9 +156,9 @@ class FinancialReport:
         errors = {'count': 0}
 
         if response.ok:
-            response = response.json()
+            data = response.json()
             report = FinancialReport()
-            report.data = response["data"]
+            report.data = fallback_to(data.get("data"), [])
 
         else:
             errors['count'] += 1
