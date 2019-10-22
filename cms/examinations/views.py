@@ -275,7 +275,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         }
 
     def _validate_patient_details_forms(self):
-        return self.primary_form.is_valid() and self.secondary_form.is_valid() \
+        return self.primary_form.is_valid() and self.secondary_form.is_valid()\
             and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
@@ -635,6 +635,7 @@ class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, Vie
 
         return ReportGenerator.create_report(self.template, report, filename="report.odt")
 
+
 class FinancialReportsView(LoginRequiredMixin, PermissionRequiredMixin, View):
     # @TODO Implement required permission once API implements it.
     permission_required = 'can_get_users'
@@ -655,7 +656,7 @@ class FinancialReportsView(LoginRequiredMixin, PermissionRequiredMixin, View):
         if form.is_valid():
             report, errors = FinancialReport.load_by_query(form.to_object(), self.user.auth_token)
 
-            if errors['count'] > 0 :
+            if errors['count'] > 0:
                 status_code = status.HTTP_400_BAD_REQUEST
                 form.errors = errors
 

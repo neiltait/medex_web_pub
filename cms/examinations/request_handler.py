@@ -166,6 +166,7 @@ def load_coroner_report(auth_token, examination_id):
         return MedexRequest.get(auth_token,
                                 '%s/report/%s/coronal_referral_download' % (settings.API_URL, examination_id))
 
+
 def load_financial_report(params, auth_token):
     if settings.LOCAL:
         return ReportMocks.get_successful_financial_report_response()

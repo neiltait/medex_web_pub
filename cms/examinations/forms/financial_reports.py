@@ -1,9 +1,5 @@
-from alerts.messages import ErrorFieldRequiredMessage, ErrorFieldTooLong, NHS_NUMBER_ERROR, INVALID_DATE, \
-    DEATH_IS_NOT_AFTER_BIRTH, api_error_messages, DEATH_DATE_MISSING_WHEN_TIME_GIVEN, NO_GENDER, DOB_IN_FUTURE, \
-    DOD_IN_FUTURE, ME_OFFICE
-from medexCms.api import enums
-from medexCms.utils import NONE_DATE, build_date, validate_date, API_DATE_FORMAT, fallback_to, validate_date_time_field
-from datetime import datetime
+from alerts.messages import ErrorFieldRequiredMessage, INVALID_DATE
+from medexCms.utils import build_date, validate_date, API_DATE_FORMAT
 
 
 class FinancialReportsForm:
@@ -30,11 +26,11 @@ class FinancialReportsForm:
         self.day_from = request.get("day_from")
         self.month_from = request.get("month_from")
         self.year_from = request.get("year_from")
- 
+
         self.day_to = request.get("day_to")
         self.month_to = request.get("month_to")
         self.year_to = request.get("year_to")
- 
+
     def filter_to_not_blank_values(self, a_list):
         not_empty = []
         for item in a_list:
@@ -57,12 +53,12 @@ class FinancialReportsForm:
             self.errors["count"] += 1
 
         if not self.text_group_contains_valid_date(self.day_from, self.month_from,
-                                                               self.year_from):
+                                                   self.year_from):
             self.errors["date_from"] = INVALID_DATE
             self.errors["count"] += 1
 
         if not self.text_group_contains_valid_date(self.day_to, self.month_to,
-                                                               self.year_to):
+                                                   self.year_to):
             self.errors["date_to"] = INVALID_DATE
             self.errors["count"] += 1
 

@@ -2264,16 +2264,16 @@ class ReportMocks:
     @classmethod
     def get_financial_report_data(cls):
         return {
-            "data" : [
+            "data": [
                 {
-                    "field1" : "value1",
-                    "field2" : "value2",
-                    "field3" : "value3",
+                    "field1": "value1",
+                    "field2": "value2",
+                    "field3": "value3",
                 },
                 {
-                    "field1" : "value4",
-                    "field2" : "value5",
-                    "field3" : "value6",
+                    "field1": "value4",
+                    "field2": "value5",
+                    "field3": "value6",
                 }
             ]
         }
@@ -2281,7 +2281,7 @@ class ReportMocks:
     @classmethod
     def get_params(cls):
         return {
-            "me_office" : "location_id",
-            "date_from" : "01/01/2017",
-            "date_to" : "01/01/2020"
+            "me_office": "location_id",
+            "date_from": "01/01/2017",
+            "date_to": "01/01/2020"
         }

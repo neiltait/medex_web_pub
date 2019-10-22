@@ -296,7 +296,8 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     # MedicalTeam tests
 
     def test_medical_team_load_by_id_returns_a_medical_team_object_if_successful(self):
-        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                  SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(error)
         self.assertIsNotNone(medical_team)
         self.assertIsNotNone(case_status)
@@ -305,7 +306,8 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     @patch('examinations.request_handler.load_medical_team_by_id',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_load_response())
     def test_medical_team_load_by_id_returns_an_error_object_if_load_fails(self, mock_load):
-        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                  SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(medical_team)
         self.assertIsNone(case_status)
         self.assertIsNotNone(error)
@@ -314,7 +316,8 @@ class ExaminationsMedicalTeamModelsTests(MedExTestCase):
     @patch('examinations.request_handler.update_medical_team',
            return_value=ExaminationMocks.get_unsuccessful_medical_team_update_response())
     def test_medical_team_update_returns_error_if_update_fails(self, mock_update):
-        medical_team, case_status, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID, SessionMocks.ACCESS_TOKEN)
+        medical_team, case_status, load_error = MedicalTeam.load_by_id(ExaminationMocks.EXAMINATION_ID,
+                                                                       SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(load_error)
         self.assertIsNotNone(case_status)
         self.assertIsNotNone(medical_team)
@@ -722,13 +725,11 @@ class ExaminationsReportsTests(MedExTestCase):
         self.assertIsNotNone(coroner_report)
         self.assertEqual(error['count'], 0)
 
-
-
     @patch('examinations.request_handler.load_financial_report',
            return_value=ReportMocks.get_unsuccessful_financial_report_response())
     def test_load_financial_report_by_query_returns_an_error_object_if_load_fails(self, mock_patient_details):
         financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
-                                                                 SessionMocks.ACCESS_TOKEN)
+                                                                SessionMocks.ACCESS_TOKEN)
         self.assertIsNone(financial_report)
         self.assertIsNotNone(error)
         self.assertGreaterEqual(error['count'], 1)
@@ -737,14 +738,15 @@ class ExaminationsReportsTests(MedExTestCase):
            return_value=ReportMocks.get_successful_financial_report_response())
     def test_load_financial_report_by_query_returns_report_object_if_load_succeeds(self, mock_patient_details):
         financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
-                                                                 SessionMocks.ACCESS_TOKEN)
+                                                                SessionMocks.ACCESS_TOKEN)
         self.assertIsNotNone(financial_report)
         self.assertEqual(error['count'], 0)
 
     @patch('examinations.request_handler.load_financial_report',
            return_value=ReportMocks.get_empty_financial_report_response())
-    def test_load_financial_report_by_query_still_returns_an_object_if_api_returns_missing_data(self, mock_patient_details):
+    def test_load_financial_report_by_query_still_returns_an_object_if_api_returns_missing_data(self,
+                                                                                                mock_patient_details):
         financial_report, error = FinancialReport.load_by_query(ReportMocks.get_params(),
-                                                                 SessionMocks.ACCESS_TOKEN)
+                                                                SessionMocks.ACCESS_TOKEN)
         self.assertIsNotNone(financial_report)
         self.assertEqual(error['count'], 0)
