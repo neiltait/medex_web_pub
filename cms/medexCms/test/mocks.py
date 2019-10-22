@@ -1845,7 +1845,6 @@ class ExaminationMocks:
         response._content = json.dumps(cls.get_case_index_response_content()).encode('utf-8')
         return response
 
-
     @classmethod
     def get_successful_minimal_case_index_response(cls):
         response = Response()
