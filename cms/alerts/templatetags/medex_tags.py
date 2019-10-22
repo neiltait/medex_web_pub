@@ -29,3 +29,8 @@ def logout_period():
 @register.simple_tag
 def refresh_period():
     return settings.REFRESH_PERIOD
+
+
+@register.simple_tag
+def stage():
+    return settings.STAGE

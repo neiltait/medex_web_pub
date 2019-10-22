@@ -111,4 +111,7 @@ venv.bak/
 # Jetbrains stuff
 .idea
 
+# vscode stuff
+.vscode/
+
 *.orig
