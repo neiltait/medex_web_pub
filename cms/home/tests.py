@@ -115,7 +115,7 @@ class HomeViewsTests(MedExTestCase):
         response = self.client.get('/?page_number=10000&status=Unknown')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/?status=Unknown')
-        
+
     def test_sending_location_and_person_filters_to_the_landing_page_builds_base_url_for_filter_buttons(self):
         self.set_auth_cookies()
 
