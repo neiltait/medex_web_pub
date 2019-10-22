@@ -681,4 +681,3 @@ class FinancialReportsView(LoginRequiredMixin, PermissionRequiredMixin, View):
             "enums": enums,
             "errors": form.errors
         }
-
