@@ -72,7 +72,8 @@ class PermittedActions:
         self.can_update_user_permission = obj_dict.get("UpdateUserPermission") if obj_dict else False
         self.can_delete_user_permission = obj_dict.get("DeleteUserPermission") if obj_dict else False
         self.can_get_locations = obj_dict.get("GetLocations") if obj_dict else False
-        self.can_get_location = obj_dict.get("GetLocation") if obj_dict else False
+        self.can_get_location = obj_dict.get("GetLocation") if obj_dict else False 
+        self.can_update_location = obj_dict.get("UpdateLocation") if obj_dict else False
         self.can_get_examinations = obj_dict.get("GetExaminations") if obj_dict else False
         self.can_get_examination = obj_dict.get("GetExamination") if obj_dict else False
         self.can_create_examination = obj_dict.get("CreateExamination") if obj_dict else False
