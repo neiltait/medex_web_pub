@@ -1,0 +1,105 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block page %}
+<div class="locations-editor-page">
+    {% if location %}
+    {% if invalid %}
+    <div class="nhsuk-error-summary " id="error_alert" aria-labelledby="error-summary-title" role="alert"
+         tabindex="-1">
+        <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+            There is a problem
+        </h2>
+        <div class="nhsuk-error-summary__body">
+            <p>
+                Please correct the errors in this form
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="page-title">
+        {{ location.name }}
+    </h1>
+
+    <h2 class="page-subheading">
+        {{ sub_heading}}
+    </h2>
+
+    {% if location.type == 'Site' %}
+    <form id="permission-builder-form" class="form{% if invalid %} error{% endif %}" action="{% url submit_path location_id=location.locationId %}" method="post">
+        <!-- Prevent implicit submission of the form -->
+        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+
+        <!-- ... -->
+        {% csrf_token %}
+
+        <div class="nhsuk-table-responsive">
+            <table class="nhsuk-table">
+                <tbody class="nhsuk-table__body">
+                    <tr class="nhsuk-table__row">
+                        <td class="nhsuk-table__cell">Name</td>
+                        <td class="nhsuk-table__cell "> {{ location.name }}</td>
+                    </tr>
+                    <tr class="nhsuk-table__row">
+                        <td class="nhsuk-table__cell">Code</td>
+                        <td class="nhsuk-table__cell "> {{ location.code }}</td>
+                    </tr>
+                    <tr class="nhsuk-table__row">
+                        <td class="nhsuk-table__cell">Type</td>
+                        <td class="nhsuk-table__cell "> {{ location.type }}</td>
+                    </tr>
+                    <tr class="nhsuk-table__row">
+                        <td class="nhsuk-table__cell">Is Medical Examiner Office</td>
+                        <td class="nhsuk-table__cell ">
+                            {{ location.isMeOffice }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Update Location</h2>
+
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-two-thirds">
+
+                <div class="nhsuk-form-group {% if form.is_me_office_error %}nhsuk-form-group--error{% endif %}">
+                    <fieldset class="nhsuk-fieldset">
+                        <div class="nhsuk-checkboxes">
+                            <div class="nhsuk-checkboxes__item">
+                                <input class="nhsuk-checkboxes__input" id="is_me_office" name="is_me_office" type="checkbox" value="True" {% if form.is_me_office %}checked{% endif %}>
+                                <label class="nhsuk-label nhsuk-checkboxes__label" for="is_me_office">
+                                    Is Medical Examiner Office
+                                </label>
+                            </div>
+                        </div>
+                        {% if form.is_me_office_error %}
+                        <span class="nhsuk-error-message medex-font-default-override">{{ form.is_me_office_error }}</span>
+                        {% endif %}
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-full">
+                <input id="submit-btn" class="nhsuk-button button-margin" type="submit" value="{{form.submit_btn_text}}"/>
+                <a id="cancel-btn" class="nhsuk-button nhsuk-button--secondary" href="{% url 'location_list' location_id=location.locationId %}">Cancel</a>
+            </div>
+        </div>
+
+    </form>
+    {% endif %}
+    {% if location.type != 'Site' %}
+    <p>Can only edit Sites.</p>
+    {% endif %}
+
+    {% else %}
+    {% for alert in alerts %}
+    {% include 'alerts/partials/_alert.html' %}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
