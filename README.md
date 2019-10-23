@@ -67,6 +67,7 @@ Running the project locally requires the following environment variables to be s
 - REFRESH_PERIOD - the amount of time between retrieving a refresh token from OKTA (in seconds)
 - LOGOUT_IF_IDLE_PERIOD - the amount of time before a forced logout
 - REQUIRE_HTTPS - set to False for local development
+- STAGE - set to LOCAL/STAGING/TESTING/... to populate stage banner
 
 An additional optional environment variable can be set, LOCAL. This variable can be set to True or False (default), setting it to True will cause the CMS to use its on internal mock API for all requests. 
 
