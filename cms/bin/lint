@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
-container=${1-'medex-cms_web_1'}
+# USE:
+# - to run with default container, simply execute script
+# - to run with a non-default container, execute the script with -c { name of container here }.
+#   The script will assume that the argument immediately after the -c directive is the name of the container you wish
+#   to run.
 
+container='medex-cms_web_1'
+
+case $1 in
+    '-c')
+        shift
+        container=$1
+        shift
+        ;;
+esac
 docker exec -ti "$container" bash -c "flake8 /code/"
