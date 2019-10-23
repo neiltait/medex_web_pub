@@ -1,61 +1,75 @@
 {% load staticfiles %}
 
 <div id="filter-block" class="filters-block">
-    {% if closed_list %}
+{% if closed_list %}
     <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
         <!-- Prevent implicit submission of the form -->
-        <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
+        <!-- ... -->
+{% else %}
+    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
+        <!-- Prevent implicit submission of the form -->
+        <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
 
         <!-- ... -->
-        {% else %}
-        <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
-            <!-- Prevent implicit submission of the form -->
-            <button type="submit" disabled style="display: none" aria-hidden="true"></button>
+        {% endif %}
+        <input class="nhsuk-u-visually-hidden" value="{{session_user.index_overview.page_number}}" name="page_number"/>
+        <div class="filter__label">
+            <p class="filter-label"><span id="filter-by-place-person">Filter cases by place and person</span></p>
+        </div>
 
-            <!-- ... -->
-            {% endif %}
-            <input value="{{session_user.index_overview.page_number}}" name="page_number" hidden/>
+        <div class="nhsuk-grid-row">
+            <div class="nhsuk-grid-column-one-half">
+                <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}" aria-label="filter-location">
+                    <option value="all">All</option>
+                    {% for location in session_user.index_overview.filter_locations %}
+                    <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
+                        {{ location.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <p><span id="filter-by-place-person">Filter cases by place and person</span></p>
+            <div class="nhsuk-grid-column-one-half">
+                <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}" aria-label="filter-person">
+                    <option value="all">All</option>
+                    {% for person in session_user.index_overview.filter_people %}
+                    <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
+                        {{ person.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}" aria-label="filter-location">
-                        <option value="all">All</option>
-                        {% for location in session_user.index_overview.filter_locations %}
-                        <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
-                            {{ location.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+        {% if not exclude_filter_buttons %}
+            <div class="filter__label">
+                <p><span id="filter-by-status">Filter cases by status</span></p>
+            </div>
 
-                <div class="nhsuk-grid-column-one-half">
-                    <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}" aria-label="filter-person">
-                        <option value="all">All</option>
-                        {% for person in session_user.index_overview.filter_people %}
-                        <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
-                            {{ person.name }}
-                        </option>
+            <div class="filter-list">
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned label="are unassigned" icon="unassigned" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F03_UNASSIGNED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete label="have been scrutinised by an ME" icon="complete" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending label="are pending additional details" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending label="are pending discussion with a QAP" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F06_PENDING_QAP %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
+            </div>
+
+            <div class="nhsuk-grid-row sort-row">
+                <div class="nhsuk-grid-column-one-quarter">
+                    <label for="sorting_order">Sort by</label>
+                    <select class="nhsuk-select" id="sorting_order" name="sorting_order">
+                        {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
+                            <option value={{ sorting_order.1 }} {% if sorting_order.1 == form.sorting_order %}selected{% endif %}>
+                                {{ sorting_order.0 }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
-
-            {% if not exclude_filter_buttons %}
-                <p>
-                    <span id="filter-by-status">Filter cases by status</span>
-                </p>
-                <div class="filter-list">
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned label="are unassigned" icon="unassigned" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F03_UNASSIGNED %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete label="have been scrutinised by an ME" icon="complete" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending label="are pending additional details" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending label="are pending discussion with a QAP" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F06_PENDING_QAP %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
-                    <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
-                </div>
-            {% endif %}
-        </form>
+        {% endif %}
+    </form>
 </div>

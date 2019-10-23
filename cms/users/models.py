@@ -134,12 +134,13 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_examinations(self, page_size, page_number, location, person, case_status):
+    def load_examinations(self, page_size, page_number, location, person,
+                          case_status, sorting_order=None):
         query_params = {
             "LocationId": location,
             "UserId": person,
             "CaseStatus": case_status,
-            "OrderBy": "Urgency",
+            "OrderBy": sorting_order or enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST[0][1],
             "OpenCases": True,
             "PageSize": page_size,
             "PageNumber": page_number
@@ -157,7 +158,8 @@ class User:
         else:
             log_api_error('permissions load', response.text)
 
-    def load_closed_examinations(self, page_size, page_number, location, person):
+    def load_closed_examinations(self, page_size, page_number, location,
+                                 person):
         query_params = {
             "LocationId": location,
             "UserId": person,
@@ -201,7 +203,8 @@ class User:
     def default_filter_options(self):
         return {
             'location': None,
-            'person': self.default_filter_user()
+            'person': self.default_filter_user(),
+            'sorting_order': enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST[0][1]
         }
 
     def is_me(self):
