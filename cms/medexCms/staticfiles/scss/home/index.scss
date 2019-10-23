@@ -10,6 +10,10 @@ body {
   .index-overview {
     margin-top: $medex-spacing-lg;
 
+    .border-right-none {
+        border-right: none !important;
+    }
+
     .overview-block {
       border-right: 1px solid $nhs-grey;
       padding: $medex-spacing-xs $medex-spacing-lg;
