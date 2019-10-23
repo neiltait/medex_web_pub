@@ -1,4 +1,5 @@
 from alerts import messages
+from medexCms.settings import EMAIL_WHITELIST
 
 
 class CreateUserForm:
@@ -22,8 +23,10 @@ class CreateUserForm:
         return False if self.email_error else True
 
     def check_is_nhs_email(self):
-        return '@nhs.uk' in self.email_address or '@nhs.net' in self.email_address \
-               or '@methods.co.uk' in self.email_address
+        for email_option in EMAIL_WHITELIST:
+            if email_option in self.email_address:
+                return True
+        return False
 
     def response_to_dict(self):
         return {

@@ -2,6 +2,8 @@
 {% load sass_tags %}
 {% load staticfiles %}
 
+{% block title %}Case outcomes{% endblock %}
+
 {% block tab_css %}
     <link href="{% sass_src 'scss/examinations/case-outcome.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
@@ -30,4 +32,3 @@
         {% include 'examinations/partials/case_outcomes/_close_case.html' %}
     </div>
 {% endblock %}
-

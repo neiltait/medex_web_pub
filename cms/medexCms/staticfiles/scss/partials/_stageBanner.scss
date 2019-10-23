@@ -1,0 +1,16 @@
+.stage-banner {
+    display: block;
+    height: 2.5rem;
+    padding: 0.5rem 2rem;
+    background-color: $nhs-green;
+    
+    &__text {
+        text-align: center;
+        color: $nhs-very-light-grey;
+
+        &--strong {
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+    }
+}
