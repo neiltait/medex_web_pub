@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-docker exec -ti medex-cms_web_1 bash -c "coverage run manage.py test" >/dev/null
+container=${1-'medex-cms_web_1'}
 
-docker exec -ti medex-cms_web_1 bash -c "coverage report"
+docker exec -ti "$container" bash -c "coverage run manage.py test" >/dev/null
 
-docker exec -ti medex-cms_web_1 bash -c "coverage html"
+docker exec -ti "$container" bash -c "coverage report"
 
-docker cp medex-cms_web_1:code/htmlcov .
+docker exec -ti "$container" bash -c "coverage html"
+
+docker cp "$container":code/htmlcov .

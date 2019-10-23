@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-docker exec -ti medex-cms_web_1 bash -c "python manage.py shell"
+
+
+container=${1-'medex-cms_web_1'}
+
+docker exec -ti "$container" bash -c "python manage.py shell"

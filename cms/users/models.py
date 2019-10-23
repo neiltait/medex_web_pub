@@ -135,12 +135,12 @@ class User:
             log_api_error('permissions load', response.text)
 
     def load_examinations(self, page_size, page_number, location, person,
-                         case_status, sorting_order):
+                          case_status, sorting_order=None):
         query_params = {
             "LocationId": location,
             "UserId": person,
             "CaseStatus": case_status,
-            "OrderBy": sorting_order,
+            "OrderBy": sorting_order or enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST[0][1],
             "OpenCases": True,
             "PageSize": page_size,
             "PageNumber": page_number
@@ -159,7 +159,7 @@ class User:
             log_api_error('permissions load', response.text)
 
     def load_closed_examinations(self, page_size, page_number, location,
-                                person):
+                                 person):
         query_params = {
             "LocationId": location,
             "UserId": person,
