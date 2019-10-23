@@ -26,9 +26,17 @@ class Location:
         return self
 
     @classmethod
+    def load_by_id(cls, location_id, auth_token):
+        return request_handler.load_by_id(auth_token, location_id)
+      
+    @classmethod
     def get_locations_list(cls, auth_token):
         return request_handler.get_locations_list(auth_token)
 
+    @classmethod
+    def get_child_locations_list(cls, parent_id, auth_token):
+          return request_handler.get_child_locations_list(auth_token, parent_id)
+      
     @classmethod
     def get_permitted_locations_for_user(cls, auth_token):
         locations_data = request_handler.get_permitted_locations_list(auth_token)
@@ -69,6 +77,12 @@ class Location:
     def load_location_collection_for_user(cls, auth_token):
         locations = request_handler.get_permitted_locations_list(auth_token, limit_to_me_offices=False)
         return LocationCollection(locations)
+
+    @classmethod
+    def update_location_me_office(cls, location, location_id, auth_token):
+        print('update_location_me_office')
+        print(location)
+        return request_handler.update_location_me_office(location['isMeOffice'], location_id, auth_token)
 
 
 class LocationCollection:
