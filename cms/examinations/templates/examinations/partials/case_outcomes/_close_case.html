@@ -16,7 +16,7 @@
                 {% csrf_token %}
 
                 <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.CLOSE_CASE_FORM_TYPE}}" value="Close this case"
-                       {% if not case_outcome.can_close %}disabled{% endif %}/>
+                       {% if not case_outcome.can_close or disabled %}disabled{% endif %}/>
             </form>
         </div>
 

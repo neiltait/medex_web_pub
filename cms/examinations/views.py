@@ -258,6 +258,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
@@ -350,6 +351,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def _set_context(self, saved):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.examination.examination_id,
             'case_status': self.case_status,
             'patient': self.examination.case_header,
@@ -439,6 +441,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
@@ -557,6 +560,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def _set_context(self):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.case_outcome.examination_id,
             'case_outcome': self.case_outcome,
             'case_status': self.case_status,
