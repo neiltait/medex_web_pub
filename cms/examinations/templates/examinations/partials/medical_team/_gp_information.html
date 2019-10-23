@@ -5,7 +5,7 @@
 
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.gp %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="gp_name">
                                 Full name
@@ -21,7 +21,7 @@
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gp_phone_number">
                                 Surgery phone number
@@ -34,7 +34,7 @@
             </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gp_organisation">
                                 Surgery name
@@ -45,7 +45,7 @@
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_gp">
                                 GMC number

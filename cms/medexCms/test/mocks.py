@@ -605,6 +605,7 @@ class ExaminationMocks:
             'gp_role': '',
             'gp_organisation': '',
             'gp_phone_number': '',
+            'nursing_team_information': "None"
 
         }
 
@@ -776,7 +777,7 @@ class ExaminationMocks:
                     "phone": "12345",
                     "notes": ""
                 },
-                "nursingTeamInformation": "",
+                "nursingTeamInformation": "None",
                 "medicalExaminerUserId": "",
                 "medicalExaminerOfficerUserId": "",
                 "errors": {
@@ -1042,6 +1043,39 @@ class ExaminationMocks:
                     "lastAdmissionDaysAgo": "2"
                 }
             ],
+            "errors": {
+                "additionalProp1": [
+                    "string"
+                ],
+                "additionalProp2": [
+                    "string"
+                ],
+                "additionalProp3": [
+                    "string"
+                ]
+            },
+            "lookups": {
+                "LocationFilterLookup": LocationsMocks.get_trust_location_list(),
+                "UserFilterLookup": PeopleMocks.get_filter_user_list()
+            },
+            "success": True
+        }
+
+    @classmethod
+    def get_minimal_case_index_response_content(cls):
+        return {
+            "countOfTotalCases": 0,
+            "countOfFilteredCases": 0,
+            "countOfUrgentCases": 0,
+            "countOfCasesAdmissionNotesHaveBeenAdded": 0,
+            "countOfCasesReadyForMEScrutiny": 0,
+            "countOfCasesUnassigned": 0,
+            "countOfCasesHaveBeenScrutinisedByME": 0,
+            "countOfCasesPendingAdmissionNotes": 0,
+            "countOfCasesPendingDiscussionWithQAP": 0,
+            "countOfCasesPendingDiscussionWithRepresentative": 0,
+            "countOfCasesHaveFinalCaseOutstandingOutcomes": 0,
+            "examinations": [],
             "errors": {
                 "additionalProp1": [
                     "string"
@@ -1809,6 +1843,13 @@ class ExaminationMocks:
         response = Response()
         response.status_code = status.HTTP_200_OK
         response._content = json.dumps(cls.get_case_index_response_content()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_successful_minimal_case_index_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_minimal_case_index_response_content()).encode('utf-8')
         return response
 
     @classmethod

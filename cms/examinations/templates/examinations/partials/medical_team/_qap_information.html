@@ -5,7 +5,7 @@
             <p class="nhsuk-body-m">Enter the details of the Qualified Attending Practitioner (attending doctor) writing the MCCD</p>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.qap %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="qap_name">
                                 Full name
@@ -21,7 +21,7 @@
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="qap_role">
                                 Role
@@ -34,7 +34,7 @@
             </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.qap_organisation %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="qap_organisation">
                                 Organisation
@@ -46,7 +46,7 @@
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="qap_phone_number">
                                 Personal phone / bleep number
@@ -57,7 +57,7 @@
                     </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_qap">
                                 GMC number

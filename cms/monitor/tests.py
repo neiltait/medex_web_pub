@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from examinations.forms.timeline_events import PreScrutinyEventForm
 from examinations.models.case_outcomes import CaseOutcome
 from medexCms.test.mocks import ExaminationMocks
 from monitor.loggers import monitor, TestLogStream, MedexLoggerEvents
@@ -64,7 +65,8 @@ class TestMonitorTests(MedExTestCase):
 
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
-        self.assertEqual(event['event_type'], MedexLoggerEvents.CREATED_TIMELINE_EVENT)
+        self.assertEqual(event['event_type'],
+                         MedexLoggerEvents.CREATED_TIMELINE_EVENT % PreScrutinyEventForm().__class__.__name__)
 
     @patch('examinations.request_handler.create_pre_scrutiny_event',
            return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
@@ -77,7 +79,8 @@ class TestMonitorTests(MedExTestCase):
 
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
-        self.assertEqual(event['event_type'], MedexLoggerEvents.CREATED_TIMELINE_EVENT_UNSUCCESSFUL)
+        self.assertEqual(event['event_type'],
+                         MedexLoggerEvents.CREATED_TIMELINE_EVENT_UNSUCCESSFUL % PreScrutinyEventForm().__class__.__name__)
 
     def test_logger_does_record_create_draft_timeline_event(self):
         self.set_auth_cookies()
@@ -88,7 +91,8 @@ class TestMonitorTests(MedExTestCase):
 
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
-        self.assertEqual(event['event_type'], MedexLoggerEvents.SAVED_TIMELINE_EVENT)
+        self.assertEqual(event['event_type'],
+                         MedexLoggerEvents.SAVED_TIMELINE_EVENT % PreScrutinyEventForm().__class__.__name__)
 
     @patch('examinations.request_handler.create_pre_scrutiny_event',
            return_value=ExaminationMocks.get_unsuccessful_timeline_event_create_response())
@@ -101,7 +105,8 @@ class TestMonitorTests(MedExTestCase):
 
         self.assertEqual(log_stream.event_count(), 1)
         event = log_stream.event(0)
-        self.assertEqual(event['event_type'], MedexLoggerEvents.SAVED_TIMELINE_EVENT_UNSUCCESSFUL)
+        self.assertEqual(event['event_type'],
+                         MedexLoggerEvents.SAVED_TIMELINE_EVENT_UNSUCCESSFUL % PreScrutinyEventForm().__class__.__name__)
 
     def test_logger_does_record_complete_scrutiny_event(self):
         self.set_auth_cookies()

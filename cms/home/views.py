@@ -13,7 +13,7 @@ from home.forms import IndexFilterForm
 from medexCms.api import enums
 from medexCms.mixins import LoginRequiredMixin, LoggedInMixin, PermissionRequiredMixin
 from . import request_handler
-from .utils import redirect_to_landing, redirect_to_login
+from .utils import redirect_to_landing, redirect_to_login, redirect_to_landing_with_filters
 from django.views.decorators.cache import never_cache
 
 from users.models import User
@@ -35,16 +35,31 @@ class DashboardView(LoginRequiredMixin, View):
         status_code = status.HTTP_200_OK
         query_params = request.GET
 
-        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-        page_size = 25
+        page_number, page_size, page_error = self.calc_pagination(query_params)
+        if page_error:
+            return redirect_to_landing()
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
                                     form.get_case_status(), form.sorting_order)
 
+        if self.page_number_exceeds_total_pages(page_number):
+            return redirect_to_landing_with_filters(location=form.get_location_value(), person=form.get_person_value(),
+                                                    status=form.get_case_status())
+
         context = self.set_context(form)
 
         return render(request, self.template, context, status=status_code)
+
+    def page_number_exceeds_total_pages(self, page_number):
+        return page_number > self.user.index_overview.page_count and page_number != 1
+
+    def calc_pagination(self, query_params):
+        page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
+        page_size = 25
+        page_error = page_number < 1
+
+        return page_number, page_size, page_error
 
     def set_context(self, form):
         return {

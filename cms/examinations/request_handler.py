@@ -10,8 +10,7 @@ def post_new_examination(examination_object, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_creation_response()
     else:
-        response = MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
-        return response
+        return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
 
 
 def load_examinations_index(params, auth_token):

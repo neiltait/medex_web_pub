@@ -2,7 +2,7 @@
     {% if form.event_id %}<input name="meo_summary_id" value="{{ form.event_id }}" hidden>{% endif %}
 
     <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.meo_summary_notes %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-heading-s medex-heading-s" for="meo_summary_notes">
+        <label class="nhsuk-heading-s medex-heading-s" for="meo_summary_notes" id="meo_summary_notes_label">
             MEO Summary
         </label>
         {% if form.errors.meo_summary_notes %}
