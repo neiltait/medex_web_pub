@@ -615,7 +615,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
 
     def set_context(self, form):
         return {
-            'page_header': 'Closed Case Dashboard',
+            'page_header': 'Closed cases',
             'session_user': self.user,
             'form': form,
             'closed_list': True,
