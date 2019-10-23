@@ -109,6 +109,13 @@ There are commands setup in the bin directory of the project, that allow easy us
 - manage - can be passed arguments to run standard django manage.py commands.
 - shell - takes you on to the python shell command line for the project.
 
+NB - the commands assume that the project is running in a container called 'medex-cms_web_1'. If your container is not
+called this, you will need to provide the name of the container as an argument to these commands. To do this, execute 
+the command as {command} -c { name of container here }, The command will assume that the argument immediately after the 
+-c directive is the name of the container you wish to use. Any arguments subesquent to the first argument after -c will
+be passed to the process that the command calls (i.e., to use manage on a non-default container, with args, use 
+manage -c {name of container} {other args}).
+
 ### Testing
 
 #### Strategy
@@ -128,6 +135,14 @@ _These commands can be used when you are running the code using the docker conta
 The unit tests can be run with the 'test' command in the bin directory, or can be run with a coverage report using the 'coverage' command in the bin directory. The generated coverage report can then be viewed by opening the 'index.html' file in the 'htmlcov' directory.
 
 The linter  can be run  with the 'lint' command in the bin directory.
+
+NB - as above, the commands assume that the project is running in a container called 'medex-cms_web_1'. If your 
+container is not called this, you will need to provide the name of the container as an argument to these commands. To 
+do this, execute the command as {command} -c { name of container here }, The command will assume that the argument 
+immediately after the -c directive is the name of the container you wish to use. Any arguments subesquent to the first 
+argument after -c will be passed to the process that the command calls (i.e., to use test on a non-default container, 
+with args, use test -c {name of container} {other args}).
+
 
 ### Branching
 
