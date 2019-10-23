@@ -54,6 +54,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 LOCAL = os.environ.get('LOCAL', False)
 
+# Define the stage ('staging', etc), NB: LEAVE STAGE ENV VAR UNSET FOR PRODUCTION!
+STAGE = os.environ.get('STAGE', None)
+
 # REQUIRE_HTTPS should be set to False when running locally
 REQUIRE_HTTPS = os.environ.get('REQUIRE_HTTPS', 'True').lower() == 'true'
 
@@ -67,6 +70,14 @@ ALLOWED_HOSTS = [
     'medex-uat.methods.co.uk',
     'medex.methods.co.uk',
     'medex-web-pre-ukw.frontend.pre.medex.cloud',
+]
+
+EMAIL_WHITELIST = [
+    '@nhs.uk',
+    '@nhs.net',
+    '.nhs.uk',
+    '.nhs.net',
+    '@methods.co.uk',
 ]
 
 # Application definition

@@ -8,7 +8,7 @@
         </div>
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.bereaved_name_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label medium-top-margin" for="bereaved_name_1">Full name</label>
 
@@ -26,7 +26,7 @@
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.relationship_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="relationship_1">Relationship</label>
 
@@ -43,7 +43,7 @@
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.phone_number_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="phone_number_1">Phone number</label>
 
@@ -60,7 +60,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group {% if errors.date_of_appointment_1 %}nhsuk-form-group--error{% endif %}">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_1" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_1" role="group"  {% if disabled %}disabled{% endif %}>
                         <legend class="nhsuk-fieldset__legend">
                             Appointment date
                         </legend>
@@ -121,7 +121,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_1 %}nhsuk-form-group--error{% endif %}">
                             <label class="medex-hint" for="appointment_additional_details_1">Enter any additional
                                 details or
@@ -146,7 +146,7 @@
         <!-- Representative -->
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.bereaved_name_2 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="bereaved_name_2">Full name</label>
 
@@ -163,7 +163,7 @@
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.relationship_2 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="relationship_2">Relationship</label>
 
@@ -180,7 +180,7 @@
 
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset">
+                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group {% if errors.phone_number_2 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="phone_number_2">Phone number</label>
 
@@ -197,7 +197,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group {% if errors.date_of_appointment_2 %}nhsuk-form-group--error{% endif %}">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_2" role="group">
+                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_appointment_2" role="group" {% if disabled %}disabled{% endif %}>
                         <legend class="nhsuk-fieldset__legend">
                             Appointment date
                         </legend>
@@ -259,7 +259,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
                 <div class="nhsuk-form-group">
-                    <fieldset class="nhsuk-fieldset">
+                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.appointment_additional_details_2 %}nhsuk-form-group--error{% endif %}">
                             <label class="medex-hint" for="appointment_additional_details_2">Enter any additional
                                 details or
@@ -281,11 +281,11 @@
     </div>
 
     <div class="flex-row">
-        <div id="add-another-btn" class="nhsuk-button">
+        <div id="add-another-btn" class="nhsuk-button" {% if disabled %}disabled{% endif %}>
             Add another
         </div>
 
-        <div id="remove-btn" class="nhsuk-button nhsuk-button--secondary">
+        <div id="remove-btn" class="nhsuk-button nhsuk-button--secondary" {% if disabled %}disabled{% endif %}>
             Remove
         </div>
     </div>

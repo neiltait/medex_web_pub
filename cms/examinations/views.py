@@ -18,7 +18,8 @@ from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
 from examinations.reports import CoronerDownloadReport
-from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator
+from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator, \
+    log_successful_timeline_post, log_unsuccessful_timeline_post
 from home.forms import IndexFilterForm
 from home.utils import redirect_to_examination, render_error
 from medexCms.api import enums
@@ -153,6 +154,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
     template = 'examinations/edit_patient_details.html'
     examination_section = enums.examination_sections.PATIENT_DETAILS
     modal_config = get_tab_change_modal_config()
+    title = "Patient details"
 
     def __init__(self):
         self.primary_form = None
@@ -256,6 +258,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
@@ -348,6 +351,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def _set_context(self, saved):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.examination.examination_id,
             'case_status': self.case_status,
             'patient': self.examination.case_header,
@@ -400,13 +404,13 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
             response = event_form_submitter(self.user.auth_token, examination_id, self.form)
             if response.ok:
                 # scenario 1 - success
-                self._log_successful_post(examination_id, self.form.is_final,
-                                          self.patient_details.medical_examiner_office_responsible, response)
+                log_successful_timeline_post(self.form, examination_id, self.user,
+                                             self.patient_details.medical_examiner_office_responsible, response)
                 saved = True
             else:
                 # scenario 2 - api failure
-                self._log_unsuccessful_api_response(examination_id, self.form.is_final,
-                                                    self.patient_details.medical_examiner_office_responsible, response)
+                log_unsuccessful_timeline_post(self.form, examination_id, self.user,
+                                               self.patient_details.medical_examiner_office_responsible, response)
 
             self.status_code = response.status_code
             self.form = None
@@ -421,32 +425,6 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         context = self._set_context(examination_id, saved)
 
         return render(request, self.template, context, status=self.status_code)
-
-    def log_timeline_create_event(self, examination_id, location_id, response, is_final):
-        if response.ok:
-            self._log_successful_post(examination_id, is_final, location_id, response)
-        else:
-            self._log_unsuccessful_api_response(examination_id, is_final, location_id, response)
-
-    def _log_unsuccessful_api_response(self, examination_id, is_final, location_id, response):
-        if is_final:
-            monitor.log_create_timeline_event_unsuccessful(self.user, examination_id, location_id,
-                                                           self.form.__class__.__name__,
-                                                           {"api error": response.status_code})
-        else:
-            monitor.log_save_draft_timeline_event_unsuccessful(self.user, examination_id, location_id,
-                                                               self.form.__class__.__name__,
-                                                               {"api error": response.status_code})
-
-    def _log_successful_post(self, examination_id, is_final, location_id, response):
-        if is_final:
-            monitor.log_create_timeline_event_successful(self.user, examination_id, location_id,
-                                                         self.form.__class__.__name__,
-                                                         response.json()['eventId'])
-        else:
-            monitor.log_save_draft_timeline_event_successful(self.user, examination_id, location_id,
-                                                             self.form.__class__.__name__,
-                                                             response.json()['eventId'])
 
     def _log_unsuccessful_invalid_form(self, examination_id, is_final, location_id, form):
         if is_final:
@@ -463,6 +441,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
@@ -581,6 +560,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def _set_context(self):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.case_outcome.examination_id,
             'case_outcome': self.case_outcome,
             'case_status': self.case_status,
@@ -628,7 +608,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
         query_params = request.GET
 
         page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1
-        page_size = 20
+        page_size = 25
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_closed_examinations(page_size, page_number, form.get_location_value(), form.get_person_value())
@@ -639,7 +619,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
 
     def set_context(self, form):
         return {
-            'page_header': 'Closed Case Dashboard',
+            'page_header': 'Closed cases',
             'session_user': self.user,
             'form': form,
             'closed_list': True,
