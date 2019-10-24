@@ -102,7 +102,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return status_code
 
     def __set_create_examination_context(self, form, add_another):
-        me_offices = self.user.get_permitted_me_offices()
+        me_offices = self.user.get_create_examination_permitted_me_offices()
 
         return {
             "session_user": self.user,
@@ -252,7 +252,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             self.bereaved_form.error_count + self.urgency_form.error_count
 
     def _set_patient_details_context(self, saved):
-        me_offices = self.user.get_permitted_me_offices()
+        me_offices = self.user.get_create_examination_permitted_me_offices()
 
         error_count = self._get_total_error_count()
 
