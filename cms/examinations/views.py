@@ -12,12 +12,13 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     AdmissionNotesEventForm, MeoSummaryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm, \
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
+from examinations.forms.financial_reports import FinancialReportsForm
 from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
 from examinations.models.medical_team import MedicalTeam
 from examinations.models.patient_details import PatientDetails
-from examinations.reports import CoronerDownloadReport
+from examinations.reports import CoronerDownloadReport, FinancialReport
 from examinations.utils import event_form_parser, event_form_submitter, get_tab_change_modal_config, ReportGenerator, \
     log_successful_timeline_post, log_unsuccessful_timeline_post
 from home.forms import IndexFilterForm
@@ -275,7 +276,7 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
         }
 
     def _validate_patient_details_forms(self):
-        return self.primary_form.is_valid() and self.secondary_form.is_valid() \
+        return self.primary_form.is_valid() and self.secondary_form.is_valid()\
             and self.bereaved_form.is_valid() and self.urgency_form.is_valid()
 
 
@@ -637,3 +638,51 @@ class CoronerReportDownloadView(LoginRequiredMixin, PermissionRequiredMixin, Vie
         report, errors = CoronerDownloadReport.load_by_id(examination_id, self.user.auth_token)
 
         return ReportGenerator.create_report(self.template, report, filename="report.odt")
+
+
+class FinancialReportsView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    # @TODO Implement required permission once API implements it.
+    permission_required = 'can_get_users'
+    template = "examinations/financial_reports.html"
+    csv_template = "examinations/templates/reports/financial_report.csv"
+
+    @never_cache
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        context = self.__set_query_financial_reports_context(FinancialReportsForm(), False)
+        return render(request, self.template, context, status=status_code)
+
+    @never_cache
+    def post(self, request):
+        post_body = request.POST
+        form = FinancialReportsForm(post_body)
+
+        if form.is_valid():
+            report, errors = FinancialReport.load_by_query(form.to_object(), self.user.auth_token)
+
+            if errors['count'] > 0:
+                status_code = status.HTTP_400_BAD_REQUEST
+                form.errors = errors
+
+            else:
+                return ReportGenerator.create_csv_report(report, filename="report.csv")
+
+        else:
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        context = self.__set_query_financial_reports_context(form, False)
+        response = render(request, self.template, context, status=status_code)
+        return response
+
+    def __set_query_financial_reports_context(self, form, add_another):
+        me_offices = self.user.get_permitted_me_offices()
+
+        return {
+            "session_user": self.user,
+            "page_heading": "Reports",
+            "sub_heading": "Financial Report",
+            "me_offices": me_offices,
+            "form": form,
+            "enums": enums,
+            "errors": form.errors
+        }
