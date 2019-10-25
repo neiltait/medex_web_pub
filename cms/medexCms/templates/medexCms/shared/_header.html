@@ -1,10 +1,14 @@
 {% load staticfiles %}
+{% load medex_tags %}
 
 {% include 'home/partials/_cookie_banner.html' %}
+{% stage as non_production_runtime %}
+{% if non_production_runtime %}
+    {% include 'home/partials/_stage_banner.html'%}
+{% endif %}
 
 {% if session_user %}
     <div class="header__nav" role="banner">
-
         <div class="container">
             <div class="flex-row vertical-center">
                 <div class="nhsuk-header__logo">
@@ -19,7 +23,7 @@
                     </a>
                 </div>
                 <div class="title" id="title">
-                    Medical Examiners Service
+                    Medical Examiner Service
                 </div>
             </div>
 
@@ -36,14 +40,14 @@
                     {% if session_user.permitted_actions.can_create_examination %}
                         <div class="nav-list--item">
                             <a class="nhsuk-header__navigation-link" href="/cases/create">
-                                New Case
+                                New case
                             </a>
                         </div>
                     {% endif %}
 
                     <div class="nav-list--item">
                         <a class="nhsuk-header__navigation-link" href="/cases/closed">
-                            Closed Cases
+                            Closed cases
                         </a>
                     </div>
                 </div>
@@ -100,7 +104,7 @@
                     </a>
                 </div>
                 <div class="title">
-                    Medical Examiners Service
+                    Medical Examiner Service
                 </div>
             </div>
         </div>

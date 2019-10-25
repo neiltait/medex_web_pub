@@ -1,3 +1,20 @@
 #!/usr/bin/env bash
 
-docker exec -ti medex-cms_web_1 bash -c "python manage.py ${*}"
+# USE:
+# - to run with default container, simply execute script, any arguments will be assumed to be for the python management
+#   suite that this script calls.
+# - to run with a non-default container, execute the script with -c { name of container here } { args for test suite }.
+#   The script will assume that the argument immediately after the -c directive is the name of the container you wish
+#   to run, and all subsequent arguments are to be passed onto the management suite.
+
+container='medex-cms_web_1'
+
+case $1 in
+    '-c')
+        shift
+        container=$1
+        shift
+        ;;
+esac
+
+docker exec -ti "$container" bash -c "python manage.py ${*}"

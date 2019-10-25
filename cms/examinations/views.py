@@ -103,7 +103,7 @@ class CreateExaminationView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return status_code
 
     def __set_create_examination_context(self, form, add_another):
-        me_offices = self.user.get_permitted_me_offices()
+        me_offices = self.user.get_create_examination_permitted_me_offices()
 
         return {
             "session_user": self.user,
@@ -253,12 +253,13 @@ class PatientDetailsView(LoginRequiredMixin, PermissionRequiredMixin, EditExamin
             self.bereaved_form.error_count + self.urgency_form.error_count
 
     def _set_patient_details_context(self, saved):
-        me_offices = self.user.get_permitted_me_offices()
+        me_offices = self.user.get_create_examination_permitted_me_offices()
 
         error_count = self._get_total_error_count()
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'case_status': self.case_status,
             'examination_id': self.examination.id,
             'patient': self.examination.case_header,
@@ -351,6 +352,7 @@ class MedicalTeamView(LoginRequiredMixin, PermissionRequiredMixin, EditExaminati
     def _set_context(self, saved):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.examination.examination_id,
             'case_status': self.case_status,
             'patient': self.examination.case_header,
@@ -440,6 +442,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': examination_id,
             'forms': forms,
             'qap': self.medical_team.qap,
@@ -558,6 +561,7 @@ class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     def _set_context(self):
         return {
             'session_user': self.user,
+            'disabled': not self.user.permitted_actions.can_update_examination,
             'examination_id': self.case_outcome.examination_id,
             'case_outcome': self.case_outcome,
             'case_status': self.case_status,
@@ -616,7 +620,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
 
     def set_context(self, form):
         return {
-            'page_header': 'Closed Case Dashboard',
+            'page_header': 'Closed cases',
             'session_user': self.user,
             'form': form,
             'closed_list': True,

@@ -41,9 +41,9 @@ class DashboardView(LoginRequiredMixin, View):
 
         form = IndexFilterForm(query_params, self.user.default_filter_options())
         self.user.load_examinations(page_size, page_number, form.get_location_value(), form.get_person_value(),
-                                    form.get_case_status())
+                                    form.get_case_status(), form.sorting_order)
 
-        if page_number > self.user.index_overview.page_count:
+        if self.page_number_exceeds_total_pages(page_number):
             return redirect_to_landing_with_filters(location=form.get_location_value(), person=form.get_person_value(),
                                                     status=form.get_case_status())
 
@@ -52,7 +52,7 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
     def page_number_exceeds_total_pages(self, page_number):
-        return len(self.user.examinations) == 0 and page_number != 1
+        return page_number > self.user.index_overview.page_count and page_number != 1
 
     def calc_pagination(self, query_params):
         page_number = int(query_params.get('page_number')) if query_params.get('page_number') else 1

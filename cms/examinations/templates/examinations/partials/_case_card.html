@@ -42,7 +42,7 @@
             <div class="nhsuk-grid-column-two-thirds">
                 <div class="nhsuk-grid-row">
                     <div class="nhsuk-grid-column-full block-header">
-                        <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Patient Information</p>
+                        <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Patient information</p>
                     </div>
                 </div>
                 <div class="nhsuk-grid-row">
@@ -70,7 +70,7 @@
                 <div class="nhsuk-grid-column-one-third">
                     <div class="nhsuk-grid-row">
                         <div class="nhsuk-grid-column-full block-header">
-                            <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Case Information</p>
+                            <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Case information</p>
                         </div>
                     </div>
                     <div class="nhsuk-grid-row">
@@ -85,6 +85,26 @@
                         </div>
                     </div>
                 </div>
+            {% else %}
+                <div class="nhsuk-grid-column-one-third">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full block-header">
+                            <p class="nhsuk-body {% if card.urgent %}urgent{% endif %}">Case information</p>
+                        </div>
+                    </div>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full block-with-border">
+                            <div class="info-line">Case created <span
+                                    class="heavy-text">{{ card.case_created_date }}</span></div>
+                            <div class="info-line">Case outcome <span
+                                    class="heavy-text">{{ card.case_outcome }}</span></div>
+                            <div class="info-line">Case closed <span
+                                    class="heavy-text">{{ card.case_closed_date }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             {% endif %}
         </div>
     </div>

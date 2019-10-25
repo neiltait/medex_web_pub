@@ -52,7 +52,7 @@ This project uses the following technologies:
 - SASS
 - Docker/Compose
 
-### Running Local Development 
+### Running Local Development
 
 #### Environment Variables
 
@@ -67,8 +67,24 @@ Running the project locally requires the following environment variables to be s
 - REFRESH_PERIOD - the amount of time between retrieving a refresh token from OKTA (in seconds)
 - LOGOUT_IF_IDLE_PERIOD - the amount of time before a forced logout
 - REQUIRE_HTTPS - set to False for local development
+- SECRET_KEY - set this to an arbitrary string
+- STAGE - set to LOCAL/STAGING/TESTING/... to populate stage banner
 
-An additional optional environment variable can be set, LOCAL. This variable can be set to True or False (default), setting it to True will cause the CMS to use its on internal mock API for all requests. 
+An additional optional environment variable can be set, LOCAL. This variable can be set to True or False (default), setting it to True will cause the CMS to use its on internal mock API for all requests.
+
+#### Browser Cookies
+
+To access the projects front-end when running the server with LOCAL=True, you need to
+add the following (blank) cookie files to the browser you will be using:
+
+`medex_id_token`
+`medex_auth_token`
+
+One way these can be easily added to your browser (if you are using chrome),
+is to use the ['cookie inspector' extension](https://chrome.google.com/webstore/detail/cookie-inspector/jgbbilmfbammlbbhmmgaagdkbkepnijn?hl=en).
+This will add an extra tab to the chrome developer console ('Cookies'), which
+lets you view, delete or add cookies. To add the blank cookies listed above,
+simply right-click anywhere in the cookie list and select 'Add New Cookie'.
 
 #### Starting the server
 
@@ -93,6 +109,13 @@ There are commands setup in the bin directory of the project, that allow easy us
 - manage - can be passed arguments to run standard django manage.py commands.
 - shell - takes you on to the python shell command line for the project.
 
+NB - the commands assume that the project is running in a container called 'medex-cms_web_1'. If your container is not
+called this, you will need to provide the name of the container as an argument to these commands. To do this, execute 
+the command as {command} -c { name of container here }, The command will assume that the argument immediately after the 
+-c directive is the name of the container you wish to use. Any arguments subesquent to the first argument after -c will
+be passed to the process that the command calls (i.e., to use manage on a non-default container, with args, use 
+manage -c {name of container} {other args}).
+
 ### Testing
 
 #### Strategy
@@ -107,11 +130,19 @@ The target coverage level for the project is:
 We are also developing to the PyFlakes and pycodestyle coding standards which are been checked using the Python flake8 package.
 
 #### Testing Commands
-_These commands can be used when you are running the code using the docker container_ 
+_These commands can be used when you are running the code using the docker container_
 
 The unit tests can be run with the 'test' command in the bin directory, or can be run with a coverage report using the 'coverage' command in the bin directory. The generated coverage report can then be viewed by opening the 'index.html' file in the 'htmlcov' directory.
 
-The linter  can be run  with the 'lint' command in the bin directory. 
+The linter  can be run  with the 'lint' command in the bin directory.
+
+NB - as above, the commands assume that the project is running in a container called 'medex-cms_web_1'. If your 
+container is not called this, you will need to provide the name of the container as an argument to these commands. To 
+do this, execute the command as {command} -c { name of container here }, The command will assume that the argument 
+immediately after the -c directive is the name of the container you wish to use. Any arguments subesquent to the first 
+argument after -c will be passed to the process that the command calls (i.e., to use test on a non-default container, 
+with args, use test -c {name of container} {other args}).
+
 
 ### Branching
 

@@ -68,7 +68,7 @@
                 <div class="nhsuk-checkboxes__item">
                     <input id="coroner-referral-confirmation" type="checkbox" class="nhsuk-checkboxes__input"
                             {% if case_outcome.coroner_referral %} checked {% endif %}
-                            {% if not case_outcome.coroner_referral_enabled %} disabled {% endif %}/>
+                            {% if not case_outcome.coroner_referral_enabled or disabled %} disabled {% endif %}/>
                     <label class="nhsuk-label nhsuk-checkboxes__label" for="coroner-referral-confirmation">
                         Referral has been sent
                     </label>
