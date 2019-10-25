@@ -143,6 +143,10 @@ class FinancialReport:
         self.data = None
 
     @classmethod
+    def get_locations(cls, auth_token):
+        return request_handler.load_financial_report_locations(auth_token)
+
+    @classmethod
     def load_by_query(cls, params, auth_token):
 
         query_params = {

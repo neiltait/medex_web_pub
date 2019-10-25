@@ -671,7 +671,7 @@ class FinancialReportsView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return response
 
     def __set_query_financial_reports_context(self, form, add_another):
-        me_offices = self.user.get_permitted_me_offices()
+        me_offices = FinancialReport.get_locations(self.user.auth_token)
 
         return {
             "session_user": self.user,
