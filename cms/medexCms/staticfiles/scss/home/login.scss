@@ -37,6 +37,12 @@
                     .button-primary {
                         @extend .submit-btn;
                         background: $nhs-green;
+                        padding: 0 1rem;
+
+                        &:hover, &:focus {
+                            outline: $focus-width solid $focus-color;
+                            outline-offset: -2px;
+                        }
                     }
 
                     .link, label {
