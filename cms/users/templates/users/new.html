@@ -2,7 +2,7 @@
 {% load sass_tags %}
 {% load staticfiles %}
 
-{% block title %}Add user{% endblock %}
+{% block title %}{{ page_heading }}{% endblock %}
 
 {% block extra_css %}
   <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css" >
