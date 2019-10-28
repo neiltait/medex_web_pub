@@ -48,9 +48,19 @@
                     .link, label {
                         color: $black;
                     }
+
+                    .custom-checkbox {
+                        padding: 0 1rem;
+
+                        & .focus {
+                            outline-offset: 4px;
+                        }
+                    }
                 }
 
-                & :focus {
+                & :focus,
+                & :active,
+                & .focus {
                     outline: $focus-width solid $focus-color;
                 }
             }
