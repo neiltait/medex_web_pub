@@ -5,40 +5,49 @@
     width: 60%;
 
     #sign-in-widget {
-        #okta-sign-in.auth-container.main-container {
-            margin: 0;
-            margin-bottom: 140px;
-            border: none;
-            box-shadow: none;
-            background-color: transparent;
 
-            .okta-sign-in-header.auth-header {
+        #okta-sign-in.auth-container {
+        
+            &.main-container {
+                margin: 0;
+                margin-bottom: 140px;
                 border: none;
+                box-shadow: none;
+                background-color: transparent;
+
+                .okta-sign-in-header.auth-header {
+                    border: none;
+                }
+
+                .auth-content {
+                    padding: 0;
+
+                    .o-form-head {
+                        display: none;
+                    }
+
+                    .link.js-help-link {
+                        display: none;
+                    }
+
+                    .o-form-button-bar .button {
+                        width: auto;
+                    }
+
+                    .button-primary {
+                        @extend .submit-btn;
+                        background: $nhs-green;
+                    }
+
+                    .link, label {
+                        color: $black;
+                    }
+                }
             }
 
-            .auth-content {
-                padding: 0;
-
-                .o-form-head {
-                    display: none;
-                }
-
-                .link.js-help-link {
-                    display: none;
-                }
-
-                .o-form-button-bar .button {
-                    width: auto;
-                }
-
-                .button-primary {
-                    @extend .submit-btn;
-                    background: $nhs-green;
-                }
-
-                .link, label {
-                    color: $black;
-                }
+            & .okta-form-input-field,
+            ::placeholder {
+                color: $nhs-grey;
             }
         }
     }
