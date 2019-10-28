@@ -49,11 +49,21 @@
                         color: $black;
                     }
                 }
+
+                & :focus {
+                    outline: $focus-width solid $focus-color;
+                }
             }
 
             & .okta-form-input-field,
             ::placeholder {
                 color: $nhs-grey;
+            }
+
+            & .input-tooltip,
+            .icon,
+            .form-help-16 {
+                display: none;
             }
         }
     }
