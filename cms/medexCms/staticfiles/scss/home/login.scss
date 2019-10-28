@@ -19,6 +19,17 @@
                     border: none;
                 }
 
+                a {
+                    padding: .5em;
+                    display: inline-block;
+
+                    &:hover {
+                        background-color: $focus-color;
+                        box-shadow: none;
+                        text-decoration: none;
+                    }
+                }
+
                 .auth-content {
                     padding: 0;
 
@@ -26,10 +37,11 @@
                         display: none;
                     }
 
-                    .link.js-help-link {
+                    .link.js-help-link,
+                    .js-help {
                         display: none;
                     }
-
+                    
                     .o-form-button-bar .button {
                         width: auto;
                     }
@@ -39,7 +51,8 @@
                         background: $nhs-green;
                         padding: 0 1rem;
 
-                        &:hover, &:focus {
+                        &:hover,
+                        &:focus {
                             outline: $focus-width solid $focus-color;
                             outline-offset: -2px;
                         }
@@ -52,16 +65,30 @@
                     .custom-checkbox {
                         padding: 0 1rem;
 
+                        & :hover,
                         & .focus {
+                            outline: $focus-width solid $focus-color;
                             outline-offset: 4px;
                         }
                     }
-                }
 
-                & :focus,
-                & :active,
-                & .focus {
-                    outline: $focus-width solid $focus-color;
+                    .auth-footer
+                    .js-help-links {
+                        display: contents !important;
+
+                        li {
+                            margin: 0;
+                        }
+                    }
+
+                    input {
+
+                        &:hover,
+                        &:focus {
+                            outline: $focus-width solid $focus-color;
+                            outline-offset: -1px
+                        }
+                    }   
                 }
             }
 
