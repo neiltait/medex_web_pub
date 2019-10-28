@@ -24,8 +24,7 @@ class MedicalTeam:
         else:
             self.consultants_other = []
 
-        self.nursing_team_information = obj_dict[
-            'nursingTeamInformation'] if 'nursingTeamInformation' in obj_dict else ''
+        self.nursing_team_information = fallback_to(obj_dict['nursingTeamInformation'], '')
 
         self.medical_examiner_id = obj_dict['medicalExaminerUserId'] if 'medicalExaminerUserId' in obj_dict else ''
         self.medical_examiners_officer_id = obj_dict[
