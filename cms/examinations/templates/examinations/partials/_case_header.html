@@ -10,8 +10,8 @@
                 NHS No. {{patient.nhs_number}}
             </h2>
         </div>
-        <div class="nhsuk-grid-column-one-half">
-            <p><a href="{% if 'case-breakdown' in request.path %}Case settings{% endif %}">Case settings
+            <div class="nhsuk-grid-column-one-half">
+            <p class="case-settings-link"><a href="{% if 'case-breakdown' in request.path %}Case settings{% endif %}">Case settings
             </a></p>
         </div>
     </div>
