@@ -14,9 +14,16 @@
             }
 
             & .okta-form-subtitle,
-            & .okta-form-input-field,
-            ::placeholder {
+            & .infobox-error {
                 color: $nhs-grey;
+            }
+
+            & .okta-form-input-field {
+
+                input,
+                ::placeholder {
+                    color: $nhs-grey;
+                }
             }
 
             &.main-container {
