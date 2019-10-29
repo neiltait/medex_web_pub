@@ -177,4 +177,4 @@ def load_financial_report_locations(auth_token):
     if settings.LOCAL:
         return ReportMocks.get_successful_financial_report_locations_response()
     else:
-        return MedexRequest.get(auth_token, '%s/report/finance_download_locations' % settings.API_URL, params)
+        return MedexRequest.get(auth_token, '%s/report/finance_download_locations' % settings.API_URL)
