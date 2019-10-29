@@ -169,6 +169,24 @@ class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
 
+class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    template = 'home/case_settings.html'
+    permission_required = 'can_get_users'
+
+    @never_cache
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        users = User.get_all(self.user.auth_token)
+
+        context = {
+            'session_user': self.user,
+            'page_heading': 'Case settings',
+            'sub_heading': 'Void a duplicate case'
+        }
+
+        return render(request, self.template, context, status=status_code)
+
+
 class AccessibilityPolicyView(View):
     template = 'home/accessibility.html'
 
