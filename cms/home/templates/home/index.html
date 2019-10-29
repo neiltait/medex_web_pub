@@ -3,6 +3,8 @@
 {% load sass_tags %}
 {% load medex_tags %}
 
+{% block title %}{{ page_header }}{% endblock %}
+
 {% block extra_css %}
   <link href="{% sass_src 'scss/home/index.scss' %}" rel="stylesheet" type="text/css" >
 {% endblock %}

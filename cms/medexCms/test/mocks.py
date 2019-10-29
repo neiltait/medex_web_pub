@@ -2279,3 +2279,49 @@ class ReportMocks:
             },
             "detailsAboutMedicalHistory": "string"
         }
+
+    @classmethod
+    def get_successful_financial_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_financial_report_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_empty_financial_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({}).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_unsuccessful_financial_report_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_404_NOT_FOUND
+        response._content = json.dumps(None)
+        return response
+
+    @classmethod
+    def get_financial_report_data(cls):
+        return {
+            "data": [
+                {
+                    "field1": "value1",
+                    "field2": "value2",
+                    "field3": "value3",
+                },
+                {
+                    "field1": "value4",
+                    "field2": "value5",
+                    "field3": "value6",
+                }
+            ]
+        }
+
+    @classmethod
+    def get_params(cls):
+        return {
+            "me_office": "location_id",
+            "date_from": "01/01/2017",
+            "date_to": "01/01/2020"
+        }
