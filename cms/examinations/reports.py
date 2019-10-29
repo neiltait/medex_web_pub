@@ -3,6 +3,7 @@ from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
 from locations.models import Location
 
+
 class CoronerDownloadReport:
 
     def __init__(self):
