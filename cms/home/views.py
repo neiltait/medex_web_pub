@@ -170,13 +170,12 @@ class SettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    template = 'home/case_settings.html'
+    template = 'home/case-settings.html'
     permission_required = 'can_get_users'
 
     @never_cache
     def get(self, request):
         status_code = status.HTTP_200_OK
-        users = User.get_all(self.user.auth_token)
 
         context = {
             'session_user': self.user,

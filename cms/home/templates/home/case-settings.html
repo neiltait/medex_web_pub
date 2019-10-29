@@ -1,0 +1,45 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+
+{% block title %}{{ page_heading }}{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block page %}
+  <div class="settings-index">
+    <h1 class="page-title">
+      {{ page_heading }}
+    </h1>
+
+    <h2 class="page-subheading">
+      {{ sub_heading }}
+    </h2>
+
+    <div class="flex-row service-overview">
+      <div class="trusts">
+        <a class="trusts-count" href="#">
+          2
+        </a>
+
+        <p class="trusts-label">
+          NHS Trusts in the ME Network
+        </p>
+      </div>
+
+      <div class="users">
+        <a class='users-count' href="/users">
+          {{ user_count }}
+        </a>
+
+        <p class="users-label">
+          Users
+        </p>
+      </div>
+    </div>
+
+    <a class="nhsuk-button add-user-btn" href="/users/new">
+      Void this case
+    </a>
+  </div>
+{% endblock %}
