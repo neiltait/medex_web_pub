@@ -1,5 +1,6 @@
 @import '../partials/_buttons.scss';
 @import '../variables';
+@import '../helpers';
 
 .login-page {
     width: 60%;
@@ -7,7 +8,19 @@
     #sign-in-widget {
 
         #okta-sign-in.auth-container {
-        
+
+            & .input-tooltip,
+            .icon,
+            .form-help-16 {
+                display: none;
+            }
+
+            & .okta-form-subtitle,
+            & .okta-form-input-field,
+            ::placeholder {
+                color: $nhs-grey;
+            }
+
             &.main-container {
                 margin: 0;
                 margin-bottom: 140px;
@@ -15,23 +28,42 @@
                 box-shadow: none;
                 background-color: transparent;
 
-                .okta-sign-in-header.auth-header {
-                    border: none;
-                }
-
                 a {
                     padding: .5em;
                     display: inline-block;
 
-                    &:hover {
+                    &:hover,
+                    &:focus {
                         background-color: $focus-color;
                         box-shadow: none;
                         text-decoration: none;
                     }
                 }
 
+                input {
+
+                    &:hover,
+                    &:focus {
+                        @include nhs-outline-focus(-1px);
+                    }
+                }
+
                 .auth-content {
                     padding: 0;
+
+                    .auth-footer
+                    .js-help-links {
+                        display: contents !important;
+                    }
+
+                    .custom-checkbox {
+                        padding: 0 1rem;
+
+                        & :hover,
+                        & .focus {
+                            @include nhs-outline-focus(4px);
+                        }
+                    }
 
                     .o-form-head {
                         display: none;
@@ -53,54 +85,18 @@
 
                         &:hover,
                         &:focus {
-                            outline: $focus-width solid $focus-color;
-                            outline-offset: -2px;
+                            @include nhs-outline-focus(-2px);
                         }
                     }
 
                     .link, label {
                         color: $black;
-                    }
-
-                    .custom-checkbox {
-                        padding: 0 1rem;
-
-                        & :hover,
-                        & .focus {
-                            outline: $focus-width solid $focus-color;
-                            outline-offset: 4px;
-                        }
-                    }
-
-                    .auth-footer
-                    .js-help-links {
-                        display: contents !important;
-
-                        li {
-                            margin: 0;
-                        }
-                    }
-
-                    input {
-
-                        &:hover,
-                        &:focus {
-                            outline: $focus-width solid $focus-color;
-                            outline-offset: -1px
-                        }
                     }   
                 }
-            }
 
-            & .okta-form-input-field,
-            ::placeholder {
-                color: $nhs-grey;
-            }
-
-            & .input-tooltip,
-            .icon,
-            .form-help-16 {
-                display: none;
+                .okta-sign-in-header.auth-header {
+                    border: none;
+                }
             }
         }
     }
