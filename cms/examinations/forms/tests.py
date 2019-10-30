@@ -141,7 +141,7 @@ class PatientDetailsFormsTests(MedExTestCase):
     def test_nhs_number_group_does_not_validate_if_no_information_entered(self):
         form = PrimaryExaminationInformationForm({'nhs_number': ''})
         form.is_valid()
-        self.assertEqual(form.errors["nhs_number"], messages.ErrorFieldRequiredMessage('an NHS number'))
+        self.assertEqual(form.errors["nhs_number"], messages.NHS_NUMBER_ERROR)
 
     def test_time_of_death_group_does_validate_if_checkbox_ticked(self):
         form = PrimaryExaminationInformationForm({'time_of_death': '', 'time_of_death_not_known': True})
