@@ -167,7 +167,7 @@ class PatientHeader:
             self.urgency_score = obj_dict.get("urgencyScore")
             self.given_names = obj_dict.get("givenNames")
             self.surname = obj_dict.get("surname")
-            self.nhs_number = self.remove_whitespace(obj_dict.get("nhsNumber"))
+            self.nhs_number = obj_dict.get("nhsNumber")
             self.id = obj_dict.get("examinationId")
             self.time_of_death = obj_dict.get("timeOfDeath")
             self.date_of_birth = parse_datetime(obj_dict.get("dateOfBirth"))
@@ -185,10 +185,6 @@ class PatientHeader:
             self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
             self.pending_scrutiny_notes = obj_dict.get("pendingScrutinyNotes")
             self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
-
-    @staticmethod
-    def remove_whitespace(string):
-        return string.replace(' ', '')
 
     @property
     def full_name(self):
