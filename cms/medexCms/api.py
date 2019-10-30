@@ -16,6 +16,11 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIOpenOrClosed:
+    OPEN = "Open"
+    CLOSED_OR_VOID = "ClosedOrVoid"
+
+
 class APIRouteOfAdmission:
     AE = "AccidentAndEmergency"
     WARD = "DirectToWard"
@@ -211,6 +216,7 @@ class APIStrings:
     filters = APIFilters()
     case_status_bar_result = APIStatusBarResult()
     results_sorting = APIResultsSorting()
+    open_closed = APIOpenOrClosed()
 
 
 enums = APIStrings()
