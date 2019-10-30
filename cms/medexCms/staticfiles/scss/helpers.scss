@@ -22,3 +22,9 @@
     background: $bgColor;
   }
 }
+
+
+@mixin nhs-outline-focus($outline-offset) {
+    outline: $focus-width solid $focus-color;
+    outline-offset: $outline-offset;
+}
