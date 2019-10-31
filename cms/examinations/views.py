@@ -510,6 +510,29 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return form_data
 
 
+class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    template = 'examinations/case_settings.html'
+    permission_required = 'can_get_users'
+
+    def __init__(self):
+        self.status_code = status.HTTP_200_OK
+
+    @never_cache
+    def get(self, request, examination_id):
+
+        context = {
+            'session_user': self.user,
+            'page_heading': 'Case settings',
+            'sub_heading': 'Void a duplicate case'
+        }
+
+    def _load_case_settings(self, examination_id):
+        self.case_outcome, self.case_status, self.error = CaseSettings.load_by_id(examination_id,
+                                                                                     self.user.auth_token)
+
+        return render(request, self.template, context, status=self.status_code)
+
+
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_get_examination'
     template = 'examinations/case_outcome.html'

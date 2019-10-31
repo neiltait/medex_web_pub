@@ -39,6 +39,10 @@ class CaseBreakdown:
             error = handle_error(response, {'type': 'case breakdown', 'action': 'loading'})
         return case_breakdown, case_status, error
 
+class VoidCase:
+
+    def _init_(self, obj_dict):
+
 
 class CaseStatus:
     basic_details_entered = False

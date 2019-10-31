@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include, path
 
 from home.views import DashboardView, LoginView, LogoutView, SettingsIndexView, LoginCallbackView, LoginRefreshView, \
-    PrivacyPolicyView, AccessibilityPolicyView, CookiesPolicyView, CaseSettingsIndexView
+    PrivacyPolicyView, AccessibilityPolicyView, CookiesPolicyView
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='index'),
@@ -14,7 +14,6 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('privacy', PrivacyPolicyView.as_view(), name='privacy'),
     path('settings', SettingsIndexView.as_view(), name='settings_index'),
-    path('case-settings', CaseSettingsIndexView.as_view(), name='case_settings'),
     url(r'^users/', include('users.urls')),
     url(r'^cases/', include('examinations.urls')),
 ]

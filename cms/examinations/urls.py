@@ -1,8 +1,9 @@
 from django.conf.urls import url
 
+
 from examinations.views import CreateExaminationView, ClosedExaminationIndexView, EditExaminationView, \
     PatientDetailsView, MedicalTeamView, CaseBreakdownView, CaseOutcomeView, CoronerReportDownloadView, \
-    FinancialReportsView
+    FinancialReportsView, CaseSettingsIndexView
 
 urlpatterns = [
     url('create', CreateExaminationView.as_view(), name='create_examination'),
@@ -15,4 +16,5 @@ urlpatterns = [
     url(r'(?P<examination_id>[\w\-]+)/download-coroner-report', CoronerReportDownloadView.as_view(),
         name='download_coroner_report'),
     url(r'(?P<examination_id>[\w\-]+)', EditExaminationView.as_view(), name='edit_examination'),
+    url(r'(?P<examination_id>[\w\-]+)/case-settings', CaseSettingsIndexView.as_view(), name='case_settings')
 ]
