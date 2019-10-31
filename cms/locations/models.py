@@ -28,15 +28,15 @@ class Location:
     @classmethod
     def load_by_id(cls, location_id, auth_token):
         return request_handler.load_by_id(auth_token, location_id)
-      
+
     @classmethod
     def get_locations_list(cls, auth_token):
         return request_handler.get_locations_list(auth_token)
 
     @classmethod
     def get_child_locations_list(cls, parent_id, auth_token):
-          return request_handler.get_child_locations_list(auth_token, parent_id)
-      
+        return request_handler.get_child_locations_list(auth_token, parent_id)
+
     @classmethod
     def get_permitted_locations_for_user(cls, auth_token):
         locations_data = request_handler.get_permitted_locations_list(auth_token)

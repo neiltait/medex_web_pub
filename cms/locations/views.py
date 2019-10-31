@@ -11,6 +11,7 @@ from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Location
 from locations.forms import LocationEditorForm
 
+
 class ManageLocationBaseView(View):
 
     def dispatch(self, request, *args, **kwargs):
@@ -30,7 +31,7 @@ class ManageLocationBaseView(View):
 
             print('self.location??')
             print(self.location)
-            if self.location['parentId'] != None:
+            if self.location['parentId'] is not None:
                 self.parent = Location.load_by_id(self.location['parentId'], self.user.auth_token)
 
         return super().dispatch(request, *args, **kwargs)
@@ -53,7 +54,6 @@ class LocationListView(LoginRequiredMixin, PermissionRequiredMixin, ManageLocati
         }
 
         return render(request, self.template, context, status=status_code)
-
 
 
 class ManageLocationView(LoginRequiredMixin, PermissionRequiredMixin, ManageLocationBaseView):

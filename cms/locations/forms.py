@@ -1,6 +1,3 @@
-from alerts import messages
-
-
 class LocationEditorForm:
     submit_btn_text = 'Save'
 
