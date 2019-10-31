@@ -67,7 +67,7 @@ def __get_filtered_locations_list(auth_token, permitted_locations_only, limit_to
 
 def update_location_me_office(is_me_office, location_id, auth_token):
     if settings.LOCAL:
-        return PermissionMocks.get_successful_location_update_response()
+        return LocationsMocks.get_successful_location_update_response()
     else:
         return MedexRequest.put(auth_token,
                                 '%s/locations/%s/is_me_office' % (settings.API_URL, location_id),
