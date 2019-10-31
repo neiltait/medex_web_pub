@@ -512,7 +512,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template = 'examinations/case_settings.html'
-    permission_required = 'can_get_users'
+    permission_required = 'can_get_examination'
 
     def __init__(self):
         self.status_code = status.HTTP_200_OK
@@ -520,17 +520,19 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     @never_cache
     def get(self, request, examination_id):
 
+        self._load_breakdown(examination_id)
+
         context = {
             'session_user': self.user,
             'page_heading': 'Case settings',
-            'sub_heading': 'Void a duplicate case'
+            'sub_heading': 'Void a duplicate case',
+            'examination_id': examination_id
         }
 
-    def _load_case_settings(self, examination_id):
-        self.case_outcome, self.case_status, self.error = CaseSettings.load_by_id(examination_id,
-                                                                                     self.user.auth_token)
-
         return render(request, self.template, context, status=self.status_code)
+
+    def _load_breakdown(self, examination_id):
+        self.examination, self.case_status, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):

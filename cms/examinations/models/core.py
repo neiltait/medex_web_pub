@@ -218,3 +218,4 @@ class PatientHeader:
                 return "%s at %s" % (date, time)
         else:
             return None
+
