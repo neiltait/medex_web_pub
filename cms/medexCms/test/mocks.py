@@ -230,6 +230,13 @@ class UserMocks:
         return response
 
     @classmethod
+    def get_successful_user_update_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps({'userId': cls.USER_ID}).encode('utf-8')
+        return response
+
+    @classmethod
     def get_successful_single_user_load_response(cls):
         response = Response()
         response.status_code = status.HTTP_200_OK

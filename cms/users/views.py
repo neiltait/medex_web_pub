@@ -8,7 +8,7 @@ from errors.utils import log_api_error
 from home.utils import render_404
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, ManageUserForm
 from .models import User
 
 
@@ -88,9 +88,29 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
 
     def get(self, request, user_id):
         status_code = status.HTTP_200_OK
-        context = {
+
+
+        return render(request, self.template, self.get_context(), status=status_code)
+
+    def get_context(self):
+        return {
             'session_user': self.user,
             'managed_user': self.managed_user,
         }
 
-        return render(request, self.template, context, status=status_code)
+    def post(self, request, user_id):
+        form = ManageUserForm(request)
+        submission = form.response_to_dict()
+        submission["user_id"] = user_id
+
+        response = User.update(user_id, submission, self.user.auth_token)
+
+        if response.ok:
+            # 1. success
+            return redirect('/users/%s/manage' % self.managed_user.user_id)
+        else:
+            # 2. api error
+            form.register_response_errors(response)
+            status_code = response.status_code
+
+        return render(request, self.template, self.get_context(), status=status_code)

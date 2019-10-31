@@ -18,10 +18,29 @@
                 </div>
             </div>
         </div>
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full nhsuk-heading-l">
-                Current permissions and locations
+        <div class="nhsuk-grid-row margin-bottom">
+            <h2 class="nhsuk-grid-column-full nhsuk-heading-l">
+                Manage this user
+            </h2>
+            <div class="nhsuk-grid-column-full">
+                <div class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
+                    <div class="nhsuk-form-group {% if errors.relevant_occupation %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-label" for="relevant_occupation">GMC Number</label>
+
+                        <p class="nhsuk-hint">Add the GMC number for any medical practictioner</p>
+
+                        {% if errors.gmc_number %}<span class="nhsuk-error-message medex-font-default-override" automation-id="ve_gmc_number">{{ errors.gmc_number }}</span>{% endif %}
+
+                        <input id="gmc_number" type="text" name="gmc_number" value="{{form.gmc_number}}"
+                               class="nhsuk-input nhsuk-input--width-20 {% if errors.gmc_number %}nhsuk-input--error{% endif %}">
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="nhsuk-grid-row">
+            <h2 class="nhsuk-grid-column-full nhsuk-heading-l">
+                Current permissions and locations
+            </h2>
         </div>
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-full">
@@ -53,18 +72,12 @@
                 </div>
             </div>
         </div>
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <h2 class="nhsuk-heading-l">
-                    Manage this user
-                </h2>
-            </div>
-        </div>
-        <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-row  margin-bottom">
             <div class="nhsuk-grid-column-full">
                 <a class="medex-link link-margin" href='{% url 'add_permission' user_id=managed_user.user_id %}'>Add another permission</a>
             </div>
         </div>
+
     </div>
 </div>
 
