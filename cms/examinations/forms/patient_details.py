@@ -41,7 +41,7 @@ class PrimaryExaminationInformationForm:
         self.first_name = request.get("first_name")
         self.gender = request.get("gender")
         self.gender_details = request.get("gender_details")
-        self.nhs_number = request.get("nhs_number")
+        self.nhs_number = self.assert_valid_nhs_number(request.get("nhs_number"))
         self.nhs_number_not_known = True if "nhs_number_not_known" in request else False
 
         self.set_hospital_numbers(request)
@@ -64,6 +64,18 @@ class PrimaryExaminationInformationForm:
         )
         self.place_of_death = request.get("place_of_death")
         self.me_office = request.get("me_office")
+
+    @staticmethod
+    def assert_valid_nhs_number(nhs_number):
+        """
+        Return correctly formatted nhs number:
+            - no whitespace
+            - extend as needed! (length etc)
+        """
+        if not nhs_number:
+            return nhs_number
+
+        return nhs_number.replace(' ', '')
 
     def set_values_from_instance(self, examination):
         self.first_name = examination.given_names
@@ -156,14 +168,12 @@ class PrimaryExaminationInformationForm:
         if not self.text_and_checkbox_group_is_valid(
                 [self.nhs_number], self.nhs_number_not_known
         ):
-            self.errors["nhs_number"] = ErrorFieldRequiredMessage("an NHS number")
+            self.errors["nhs_number"] = NHS_NUMBER_ERROR
             self.errors["count"] += 1
 
         elif not self.nhs_number_not_known:
             # case - nhs number is entered
-            if self.nhs_number and self.NHS_MIN_LENGTH <= len(self.nhs_number) <= self.NHS_MAX_LENGTH:
-                pass
-            else:
+            if not (self.nhs_number and self.NHS_MIN_LENGTH <= len(self.nhs_number) <= self.NHS_MAX_LENGTH):
                 self.errors["nhs_number"] = NHS_NUMBER_ERROR
                 self.errors["count"] += 1
 
@@ -228,21 +238,11 @@ class PrimaryExaminationInformationForm:
         nhs_number_errors = self.__get_nhs_number_errors(api_errors)
 
         if "NhsNumber" in api_errors:
-            if enums.errors.CONTAINS_WHITESPACE in nhs_number_errors:
-                self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_WHITESPACE
-                self.errors["count"] += 1
-                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_WHITESPACE}]
-
             if enums.errors.CONTAINS_INVALID_CHARACTERS in nhs_number_errors:
                 self.errors["nhs_number"] = api_error_messages.nhs_numbers.CONTAINS_INVALID_CHARACTERS
                 self.errors["count"] += 1
                 known_errors = known_errors + [
                     {'field': 'NhsNumber', 'error_code': enums.errors.CONTAINS_INVALID_CHARACTERS}]
-
-            if enums.errors.INVALID in nhs_number_errors:
-                self.errors["nhs_number"] = api_error_messages.nhs_numbers.INVALID
-                self.errors["count"] += 1
-                known_errors = known_errors + [{'field': 'NhsNumber', 'error_code': enums.errors.INVALID}]
 
             if enums.errors.DUPLICATE in nhs_number_errors:
                 self.errors["nhs_number"] = api_error_messages.nhs_numbers.DUPLICATE
@@ -258,15 +258,14 @@ class PrimaryExaminationInformationForm:
         return known_errors
 
     def register_unknown_api_errors(self, api_errors):
-        KNOWN_API_ERROR_LIST = [enums.errors.CONTAINS_WHITESPACE, enums.errors.CONTAINS_INVALID_CHARACTERS,
-                                enums.errors.INVALID, enums.errors.DUPLICATE]
+        KNOWN_API_ERROR_LIST = [enums.errors.CONTAINS_INVALID_CHARACTERS, enums.errors.DUPLICATE]
         nhs_number_errors = self.__get_nhs_number_errors(api_errors)
         if nhs_number_errors:
             for error in nhs_number_errors:
                 if error not in KNOWN_API_ERROR_LIST:
-                    self.errors["nhs_number"] = api_error_messages.nhs_numbers.UNKNOWN
+                    self.errors["nhs_number"] = NHS_NUMBER_ERROR
                     self.errors["count"] += 1
-                    return [{'field': 'NhsNumber', 'error_code': enums.errors.UNKNOWN}]
+                    return [{'field': 'NhsNumber', 'error_code': NHS_NUMBER_ERROR}]
         return []
 
     def register_form_errors(self, api_errors):

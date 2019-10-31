@@ -93,6 +93,10 @@ class PermittedActions:
     def can_access_settings_index(self):
         return self.can_get_users
 
+    # @TODO May become an actual permission if API implements it
+    def can_access_financial_report_index(self):
+        return self.can_get_users
+
 
 class PermittedForms:
 

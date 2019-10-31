@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 
-docker exec -ti medex-cms_web_1 bash -c "coverage run manage.py test" >/dev/null
+# USE:
+# - to run with default container, simply execute script
+# - to run with a non-default container, execute the script with -c { name of container here }.
+#   The script will assume that the argument immediately after the -c directive is the name of the container you wish
+#   to run.
 
-docker exec -ti medex-cms_web_1 bash -c "coverage report"
+container='medex-cms_web_1'
 
-docker exec -ti medex-cms_web_1 bash -c "coverage html"
+case $1 in
+    '-c')
+        shift
+        container=$1
+        shift
+        ;;
+esac
 
-docker cp medex-cms_web_1:code/htmlcov .
+docker exec -ti "$container" bash -c "coverage run manage.py test" >/dev/null
+
+docker exec -ti "$container" bash -c "coverage report"
+
+docker exec -ti "$container" bash -c "coverage html"
+
+docker cp "$container":code/htmlcov .
