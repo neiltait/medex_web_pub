@@ -128,10 +128,18 @@
 }
 
 .filtered-case-list-header {
-
-    margin-bottom: 1em;
+    margin-top: 2em;
 
     select {
          width: 100%;
     }
+
+    p {
+        margin-top: 2.5rem;
+        margin-bottom: 0;
+    }
+}
+
+.filters-block {
+    margin-bottom: 1em !important;
 }

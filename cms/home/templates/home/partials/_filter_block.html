@@ -58,25 +58,22 @@
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
             </div>
         {% endif %}
+        <div class="filtered-case-list-header">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-three-quarters">
+                    <p>{% if active_filter_obj %}Cases that {{ active_filter_obj.label }}: d{% else %}D{% endif %}isplaying {{ page_examination_count }} of {{ current_examination_count }} results.</p>
+                </div>
+                <div class="nhsuk-grid-column-one-quarter">
+                    <label for="sorting_order">Sort by</label>
+                    <select class="nhsuk-select" form="index-filters-form" id="sorting_order" name="sorting_order">
+                        {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
+                            <option value={{ sorting_order.1 }} {% if sorting_order.1 == form.sorting_order %}selected{% endif %}>
+                                {{ sorting_order.0 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
-
-<div class="filtered-case-list-header">
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-three-quarters">
-            <p>{% if active_filter_obj %}Cases that {{ active_filter_obj.label }}: d{% else %}D{% endif %}isplaying {{ page_examination_count }} of {{ current_examination_count }} results.</p>
-        </div>
-    <div class="nhsuk-grid-column-one-quarter">
-        <label for="sorting_order">Sort by</label>
-        <select class="nhsuk-select" form="filters-form" id="sorting_order" name="sorting_order">
-            {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
-                <option value={{ sorting_order.1 }} {% if sorting_order.1 == form.sorting_order %}selected{% endif %}>
-                    {{ sorting_order.0 }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-</div>
-
-</div>
-
