@@ -2,12 +2,12 @@
 
 <div id="filter-block" class="filters-block">
 {% if closed_list %}
-    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
+    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-status">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
         <!-- ... -->
 {% else %}
-    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
+    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-status">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
 

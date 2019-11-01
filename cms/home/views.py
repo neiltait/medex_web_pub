@@ -64,7 +64,7 @@ class DashboardView(LoginRequiredMixin, View):
     @staticmethod
     def active_filter_obj(filter_objs: dict, active_filter: str or None) -> dict or None:
         """
-        Return filter object attribute of filter_class with 'filter' matching active_filter, or None if not
+        Return filter object from filter_objs dict with 'filter' value matching active_filter, or None if not
         found.
         """
         try:
@@ -77,7 +77,7 @@ class DashboardView(LoginRequiredMixin, View):
     @staticmethod
     def filter_count(filter_obj: dict or None, session_user_obj: User) -> int:
         """
-        Return examination count for all filter_obj based on the User.index_overview object.
+        Return examination count for filter_obj based on the User.index_overview object.
         """
         return getattr(session_user_obj.index_overview, filter_obj['index_overview_key']) if filter_obj \
             else session_user_obj.index_overview.total_cases
