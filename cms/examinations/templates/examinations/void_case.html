@@ -31,6 +31,45 @@
             system.</p>
     </div>
 
+    <div class="nhsuk-form-group">
+        <label class="nhsuk-label" for="more-detail">
+            Reason for voiding this case
+        </label>
+        <textarea class="nhsuk-textarea" id="more-detail" name="more-detail" rows="5" aria-describedby="more-detail-hint"></textarea>
+    </div>
+
+    <div class="nhsuk-form-group">
+
+        <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+            <legend class="nhsuk-fieldset__legend">
+                Final confirmation
+            </legend>
+
+            <span class="nhsuk-hint" id="example-hint">
+      Please confirm this case is a duplicate and you would like to void it.
+    </span>
+
+            <div class="nhsuk-radios">
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="example-1" name="example" type="radio" value="yes">
+                    <label class="nhsuk-label nhsuk-radios__label" for="example-1">
+                        Yes
+                    </label>
+                </div>
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="example-2" name="example" type="radio" value="no">
+                    <label class="nhsuk-label nhsuk-radios__label" for="example-2">
+                        No
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+    <div>
+        A note about this duplication will appear on the case timeline
+    </div>
+
     <a class="nhsuk-button nhsuk-button--secondary" href="/users/new">
         Void this case
     </a>
