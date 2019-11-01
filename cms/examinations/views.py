@@ -511,16 +511,12 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    template = 'examinations/case_settings.html'
-    permission_required = 'can_get_examination'
-
-    def __init__(self):
-        self.status_code = status.HTTP_200_OK
+    template = 'examinations/void_case.html'
+    permission_required = 'can_get_users'
 
     @never_cache
     def get(self, request, examination_id):
-
-        self._load_breakdown(examination_id)
+        status_code = status.HTTP_200_OK
 
         context = {
             'session_user': self.user,
@@ -529,10 +525,7 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'examination_id': examination_id
         }
 
-        return render(request, self.template, context, status=self.status_code)
-
-    def _load_breakdown(self, examination_id):
-        self.examination, self.case_status, self.error = CaseBreakdown.load_by_id(examination_id, self.user.auth_token)
+        return render(request, self.template, context, status=status_code)
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):

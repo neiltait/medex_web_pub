@@ -176,6 +176,6 @@ def load_financial_report(params, auth_token):
 
 def void_case(auth_token, examination_id):
     if settings.LOCAL:
-        return ExaminationMocks.gget_successful_case_index_response()
+        return ExaminationMocks.get_successful_case_index_response()
     else:
-        return MedexRequest.put(auth_token, '%s/examinations/%s/case_settings' % (settings.API_URL, examination_id))
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_settings' % (settings.API_URL, examination_id))

@@ -96,6 +96,9 @@ class PermittedActions:
     def can_access_financial_report_index(self):
         return self.can_get_users
 
+    def can_void_a_case(self):
+        return self.can_get_users
+
 
 class PermittedForms:
 
