@@ -23,6 +23,14 @@
       display: none;
     }
   }
+
+  &__label {
+
+      @media screen and (max-width: $medex-tablet-width) {
+          visibility: hidden;
+          display: none;
+      }
+  }
 }
 
 .filters-status-item {
@@ -110,13 +118,6 @@
 
 }
 
-.sort-row {
-
-  .nhsuk-grid-column-one-quarter {
-    float: right;
-  }
-}
-
 .filter__label {
   margin-top: 2em;
   margin-bottom: 0.5em;
@@ -126,3 +127,11 @@
   }
 }
 
+.filtered-case-list-header {
+
+    margin-bottom: 1em;
+
+    select {
+         width: 100%;
+    }
+}
