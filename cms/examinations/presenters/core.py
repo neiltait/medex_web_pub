@@ -26,7 +26,6 @@ class PatientHeader:
         self.pending_discussion_with_representative = ''
         self.pending_scrutiny_notes = ''
         self.have_final_case_outstanding_outcomes = ''
-        self.is_cremation = False
 
         if obj_dict:
             self.fill_from_api(obj_dict)
@@ -53,7 +52,6 @@ class PatientHeader:
         self.pending_discussion_with_representative = obj_dict.get("pendingDiscussionWithRepresentative")
         self.pending_scrutiny_notes = obj_dict.get("pendingScrutinyNotes")
         self.have_final_case_outstanding_outcomes = obj_dict.get("haveFinalCaseOutstandingOutcomes")
-        self.is_cremation = obj_dict.get("isCremation", False)
 
     @property
     def full_name(self):

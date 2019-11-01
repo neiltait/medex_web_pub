@@ -16,8 +16,8 @@
 
         <!-- ... -->
         {% csrf_token %}
-        <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
-
+<!--        <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>-->
+            <fieldset class="nhsuk-fieldset">
 
             <legend class="nhsuk-heading-m no-padding">
                 MCCD
@@ -42,7 +42,8 @@
         </fieldset>
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
+<!--            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>-->
+            <fieldset class="nhsuk-fieldset">
                 <legend class="nhsuk-heading-m no-padding">
                     Cremation form
                 </legend>
@@ -76,9 +77,10 @@
             </fieldset>
         </div>
 
-        {% if case_outcome.case_header.is_cremation %}
-            <div class="outstanding-item">
-                <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
+        <div id="waive-cremation-fee-decision">
+             <div class="outstanding-item">
+<!--                <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>-->
+                <fieldset class="nhsuk-fieldset">
                     <div class="nhsuk-checkboxes">
                         <legend class="nhsuk-heading-m no-padding">
                             Cremation fee
@@ -96,10 +98,11 @@
                     </div>
                 </fieldset>
             </div>
-        {% endif%}
+        </div>
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
+<!--            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>-->
+                <fieldset class="nhsuk-fieldset">
                 <legend class="nhsuk-heading-m no-padding">
                     GP notification
                 </legend>
