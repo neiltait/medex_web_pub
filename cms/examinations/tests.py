@@ -1,9 +1,10 @@
 from rest_framework import status
 
 from unittest.mock import patch
-from unittest import skip
+from unittest import skip, TestCase
 
 from alerts.messages import ApiErrorMessages
+from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.forms.timeline_events import PreScrutinyEventForm, AdmissionNotesEventForm, MeoSummaryEventForm, \
     OtherEventForm, MedicalHistoryEventForm, QapDiscussionEventForm, BereavedDiscussionEventForm
 from examinations.models.case_breakdown import CaseBreakdown
@@ -1148,3 +1149,41 @@ class CaseBreakdownTests(MedExTestCase):
                             "date_of_latest_qap_discussion", "user_for_latest_qap_discussion"]
         for field in essential_fields:
             self.assertTrue(case_breakdown.prepopulated_items.bereaved.keys().__contains__(field))
+
+
+class TestOutstandingItemsFormTests(TestCase):
+
+    def _form(self, crem_form: str, crem_fee: bool or None) -> dict:
+        return {
+            'mccd_issued': False,
+            'cremation_form': crem_form,
+            'gp_notified': None,
+            'waive_fee': crem_fee
+        }
+
+    def test_outstanding_items_for_request_sets_waive_fee_None(self):
+        """
+        Assert waive_fee is None when cremation form is no or unknown.
+        """
+        form_data = self._form(crem_form='Unknown', crem_fee=None)
+        form = OutstandingItemsForm(form_data)
+        form_request_data = form.for_request()
+        self.assertEqual(form_request_data['waiveFee'], None)
+
+    def test_outstanding_items_for_request_sets_waive_fee_True(self):
+        """
+        Assert waive_fee is True when cremation form is yes AND waive_fee is checked.
+        """
+        form_data = self._form(crem_form='Yes', crem_fee=True)
+        form = OutstandingItemsForm(form_data)
+        form_request_data = form.for_request()
+        self.assertEqual(form_request_data['waiveFee'], True)
+
+    def test_outstanding_items_for_request_sets_waive_fee_False(self):
+        """
+        Assert waive_fee is False when cremation form is yes AND waive_fee is not checked.
+        """
+        form_data = self._form(crem_form='Yes', crem_fee=None)
+        form = OutstandingItemsForm(form_data)
+        form_request_data = form.for_request()
+        self.assertEqual(form_request_data['waiveFee'], False)
