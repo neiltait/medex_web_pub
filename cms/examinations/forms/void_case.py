@@ -35,6 +35,6 @@ class VoidCaseForm:
     def to_object(self):
 
         return {
-            "void_case": self.void_case,
-            "void_case_reason": self.void_case_reason
+            "isVoid": self.void_case,
+            "voidReason": self.void_case_reason
         }
