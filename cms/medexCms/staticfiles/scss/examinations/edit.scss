@@ -54,46 +54,55 @@
 }
 
 .examination__tab-bar {
+
   .form-tabs {
     justify-content: space-evenly;
     margin-bottom: $medex-spacing-lg;
 
-    .tab-item {
-      flex-grow: 1;
-      padding: $medex-spacing-md;
-      text-align: center;
-      text-decoration: none;
+
+    ul {
+
+      li {
+        list-display: none;
+        display: inline-block;
+
+        .tab-item {
+          padding: $medex-spacing-md;
+          text-align: center;
+          text-decoration: none;
 
 
-      background-color: $nhs-dark-blue;
-      color: $white;
+          background-color: $nhs-dark-blue;
+          color: $white;
 
-      border-radius: 5px 5px 0 0;
-      border-right: 2px solid $white;
+          border-radius: 5px 5px 0 0;
+          border-right: 2px solid $white;
 
-      cursor: pointer;
+          cursor: pointer;
 
-      &:focus {
-        z-index: 1000;
-        border-color: transparent;
-      }
+          &:focus {
+            z-index: 1000;
+            border-color: transparent;
+          }
 
-      &:hover {
-        text-decoration: underline;
-        box-shadow: 0 0 0 0 $nhs-light-grey !important;
-        border-right: 2px solid $white;
-      }
+          &:hover {
+            text-decoration: underline;
+            box-shadow: 0 0 0 0 $nhs-light-grey !important;
+            border-right: 2px solid $white;
+          }
 
-      &:last-of-type {
-        border: none;
-      }
+          &:last-of-type {
+            border: none;
+          }
 
-      &.active {
-        background-color: $white;
-        color: $nhs-dark-blue;
-        border-top: $medex-spacing-xs solid $nhs-dark-blue;
-        padding-top: calc(#{$medex-spacing-md} - #{$medex-spacing-xs});
-        text-decoration: none !important;
+          &.active {
+            background-color: $white;
+            color: $nhs-dark-blue;
+            border-top: $medex-spacing-xs solid $nhs-dark-blue;
+            padding-top: calc(#{$medex-spacing-md} - #{$medex-spacing-xs});
+            text-decoration: none !important;
+          }
+        }
       }
     }
   }
