@@ -10,6 +10,35 @@
 
 {% block page %}
 
+{% if error_count > 0 %}
+    <div class="nhsuk-error-summary" id="error_alert" aria-labelledby="error-summary-title" role="alert"
+         tabindex="-1">
+        <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+            There is a problem
+        </h2>
+        <div class="nhsuk-error-summary__list">
+
+            {% include 'examinations/partials/_error_summary.html' with errors=errors %}
+
+            </div>
+    </div>
+    {% endif %}
+    {% if error_count == 0 %}
+    <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
+         role="alert"
+         tabindex="-1">
+        <ul class="nhsuk-list nhsuk-list--tick">
+            <li>
+                <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     fill="none" aria-hidden="true">
+                    <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
+                </svg>
+                Information saved successfully.
+            </li>
+        </ul>
+    </div>
+    {% endif %}
+
 <div class="nhsuk-back-link">
     <a class="nhsuk-back-link__link" href="{% url 'edit_examination' examination_id=examination_id %}">
         <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -71,7 +100,7 @@
         <p class="nhsuk-body-m">A note about this duplication will appear on the case timeline. Voided cases will still be available in Closed cases.</p>
     </div>
 
-    <button class="void-case nhsuk-button">
+    <button class="void-case nhsuk-button" type="submit">
         Void this case
     </button>
 </div>
