@@ -6,6 +6,10 @@
 <link href="{% sass_src 'scss/examinations/void-case.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'js/examinations/void-case.js' %}"></script>
+{% endblock %}
+
 {% block title %}{{ page_heading }}{% endblock %}
 
 {% block page %}
@@ -47,7 +51,7 @@
         Back to case tabs</a>
 </div>
 
-<div class="settings-index">
+<div class="settings-index" id="void-case">
     <h1 class="page-title">
         {{ page_heading }}
     </h1>
@@ -87,7 +91,7 @@
                     </label>
                 </div>
                 <div class="nhsuk-radios__item">
-                    <input class="nhsuk-radios__input" id="void_case_no" name="void_case_no" type="radio" value="no">
+                    <input class="nhsuk-radios__input" id="void_case_no" name="void_case_no" type="radio" value="no" checked>
                     <label class="nhsuk-label nhsuk-radios__label" for="void_case_no">
                         No
                     </label>

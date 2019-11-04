@@ -10,6 +10,7 @@
         setup: function () {
             this.reasonSection = this.wrapper.find('#void-case-reason');
             this.confirmYes = this.wrapper.find('#void-yes');
+            this.confirmNo = this.wrapper.find('#Void-no')
 
             this.startWatchers();
         },
@@ -18,9 +19,11 @@
             var that = this;
 
             this.confirmYes.click(function () {
+                $(that.confirmNo).prop('checked', false);
                 that.enableVoidButtonBtn()
             });
         },
+
 
         enableVoidButton: function () {
             this.disableSubmitButton()
@@ -36,6 +39,8 @@
 
         enableSubmitButton: function () {
             this.voidBtn.removeClass("submit-btn--disabled")
+        }
+  });
         }
     };
 
