@@ -2,10 +2,11 @@
 {% load sass_tags %}
 {% load staticfiles %}
 
-{% block title %}{{ page_heading }}{% endblock %}
-
 {% block extra_css %}
+<link href="{% sass_src 'scss/examinations/void-case.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
+
+{% block title %}{{ page_heading }}{% endblock %}
 
 {% block page %}
 
@@ -70,8 +71,8 @@
         <p class="nhsuk-body-m">A note about this duplication will appear on the case timeline. Voided cases will still be available in Closes cases.</p>
     </div>
 
-    <a class="nhsuk-button nhsuk-button--secondary" href="/users/new">
+    <button class="void-case nhsuk-button">
         Void this case
-    </a>
+    </button>
 </div>
 {% endblock %}
