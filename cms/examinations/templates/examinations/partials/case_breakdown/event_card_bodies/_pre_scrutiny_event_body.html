@@ -4,16 +4,16 @@
     </p>
 
     <div class="hideable-content">
-        <label>
+        <strong>
             Overall circumstances of death
-        </label>
+        </strong>
         <p>
             {{card_content.display_circumstances_of_death}}
         </p>
 
-        <label>
+        <strong>
             Possible cause of death established during review of records
-        </label>
+        </strong>
         <ul class="cause-of-death-list">
             {% if card_content.cause_of_death_1a %}
                 <li>1a - {{card_content.cause_of_death_1a}}</li>
@@ -33,16 +33,16 @@
         </ul>
 
 
-        <label>
+        <strong>
             Overall outcome after ME review of records
-        </label>
+        </strong>
         <p>
             {{ card_content.display_scrutiny_outcome }}
         </p>
 
-        <label>
+        <strong>
             Clinical governance review or learning opportunity
-        </label>
+        </strong>
         <p>
             {{ card_content.clinical_governance_review }}
         </p>
