@@ -8,7 +8,7 @@ from errors.utils import log_api_error
 from home.utils import render_404
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .forms import CreateUserForm, ManageUserForm
+from .forms import CreateUserForm, ManageUserForm, EditUserProfileForm
 from .models import User
 
 
@@ -82,6 +82,36 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
 
+class EditUserProfileView(LoginRequiredMixin, View):
+    template = 'users/profile.html'
+
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        form = EditUserProfileForm.from_user(self.user)
+
+        context = {'session_user': self.user, 'form': form}
+
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form = EditUserProfileForm(request.POST)
+        submission = form.response_to_dict()
+
+        response = User.update_profile(submission, self.user.auth_token)
+
+        if response.ok:
+            # 1. success
+            return redirect('/profile')
+        else:
+            # 2. api error
+            form.register_response_errors(response)
+            status_code = response.status_code
+
+        context = {'session_user': self.user, 'form': form}
+        return render(request, self.template, context=context, status=status_code)
+
+
+
 class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
     permission_required = 'can_get_users'
     template = 'users/manage.html'
@@ -99,7 +129,7 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
         }
 
     def post(self, request, user_id):
-        form = ManageUserForm(request)
+        form = ManageUserForm(request.POST)
         submission = form.response_to_dict()
         submission["user_id"] = user_id
 

@@ -3,6 +3,7 @@ from django.urls import include, path
 
 from home.views import DashboardView, LoginView, LogoutView, SettingsIndexView, LoginCallbackView, LoginRefreshView, \
     PrivacyPolicyView, AccessibilityPolicyView, CookiesPolicyView
+from users.views import EditUserProfileView
 
 urlpatterns = [
     path('', DashboardView.as_view(), name='index'),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('login-refresh', LoginRefreshView.as_view(), name='login_refresh'),
     path('logout', LogoutView.as_view(), name='logout'),
     path('privacy', PrivacyPolicyView.as_view(), name='privacy'),
+    path('profile', EditUserProfileView.as_view(), name='edit_user_profile'),
     path('settings', SettingsIndexView.as_view(), name='settings_index'),
     url(r'^users/', include('users.urls')),
     url(r'^cases/', include('examinations.urls')),

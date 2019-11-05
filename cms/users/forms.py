@@ -1,5 +1,6 @@
 from alerts import messages
 from medexCms.settings import EMAIL_WHITELIST
+from medexCms.utils import fallback_to
 
 
 class CreateUserForm:
@@ -67,4 +68,40 @@ class ManageUserForm:
     def response_to_dict(self):
         return {
             "gmc_number": self.gmc_number
+        }
+
+
+class EditUserProfileForm:
+    submit_btn_text = 'Update user'
+
+    def __init__(self, request=None):
+        self.gmc_error = None
+        if request:
+            self.gmc_number = fallback_to(request.get('gmc_number'), '')
+        else:
+            self.gmc_number = ''
+
+    @classmethod
+    def from_user(cls, user):
+        form = EditUserProfileForm()
+        form.gmc_number = fallback_to(user.gmc_number, '')
+        return form
+
+    def validate(self):
+        self.gmc_error = None
+        return True
+
+    def register_response_errors(self, response):
+        if response.ok is False:
+            errors = response.json()
+            if errors and 'Gmc' in errors.keys():
+                self.gmc_error = errors['Gmc'][0]
+                errors['Gmc'] = None
+
+            if len(errors) > 0:
+                self.form_error = messages.GENERAL_ERROR % ("updating", "user")
+
+    def response_to_dict(self):
+        return {
+            "gmcNumber": self.gmc_number
         }
