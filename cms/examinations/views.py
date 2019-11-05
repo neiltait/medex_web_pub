@@ -13,6 +13,7 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.forms.financial_reports import FinancialReportsForm
+from examinations.forms.void_case import VoidCaseForm
 from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
@@ -526,6 +527,16 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
         }
 
         return render(request, self.template, context, status=status_code)
+
+    @never_cache
+    def post(self, request):
+        post_body = request.POST
+        form = VoidCaseForm(post_body)
+
+
+
+        response = render(request, self.template, context, status=status_code)
+        return response
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):

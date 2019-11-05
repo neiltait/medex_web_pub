@@ -51,8 +51,8 @@
         Back to case tabs</a>
 </div>
 
-<form>
-<div class="settings-index" id="void-case">
+<form id="void-case" class="form{% if invalid %} error{% endif %}" action="{% url 'void_case' %}" method="post">
+<div class="settings-index">
     <h1 class="page-title">
         {{ page_heading }}
     </h1>
