@@ -63,7 +63,6 @@
             <li class="tab-item">
                 <a role="link" class="{% if 'patient-details' in request.path %}active{% endif %}" id="patient-details-tab"
                 aria-selected="{% if 'patient-details' in request.path %}true{% else %}false{% endif %}"
-                aria-hidden="False"
                 href="{% url 'edit_patient_details' examination_id=examination_id %}">
                 Patient details
                 </a>
@@ -71,7 +70,6 @@
             <li class="tab-item">
                 <a role="link" class="{% if 'medical-team' in request.path %}active{% endif %}" id="medical-team-tab"
                 aria-selected="{% if 'medical-team' in request.path %}true{% else %}false{% endif %}"
-                aria-hidden="False"
                 href="{% url 'edit_medical_team' examination_id=examination_id %}">
                 Medical team
                 </a>
@@ -79,7 +77,6 @@
             <li class="tab-item">
                 <a role="link" class="{% if 'case-breakdown' in request.path %}active{% endif %}" id="case-breakdown-tab"
                 aria-selected="{% if 'case-breakdown' in request.path %}true{% else %}false{% endif %}"
-                aria-hidden="False"
                 href="{% url 'edit_case_breakdown' examination_id=examination_id %}">
                 Case details
                 </a>
@@ -87,7 +84,6 @@
             <li class="tab-item">
                 <a role="link" class="{% if 'case-outcome' in request.path %}active{% endif %}" id="case-outcomes-tab"
                 aria-selected="{% if 'case-outcome' in request.path %}true{% else %}false{% endif %}"
-                aria-hidden="False"
                 href="{% url 'view_case_outcome' examination_id=examination_id %}">
                 Case outcomes
                 </a>
