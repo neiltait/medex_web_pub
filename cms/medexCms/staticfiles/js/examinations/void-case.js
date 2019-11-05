@@ -19,21 +19,12 @@
             var that = this;
 
             this.confirmYes.click(function () {
-                that.enableVoidButton()
+                that.enableSubmitButton()
             });
 
             this.confirmNo.click(function () {
-                that.disableVoidButton()
+                that.disableSubmitButton()
             });
-        },
-
-
-        enableVoidButton: function () {
-            this.enableSubmitButton()
-        },
-
-        disableVoidButton: function () {
-            this.disableSubmitButton()
         },
 
         disableSubmitButton: function () {
