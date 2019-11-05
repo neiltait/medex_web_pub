@@ -1,16 +1,16 @@
 (function ($) {
 
-    var voidCase = function (wrapper, voidBtn) {
-        this.wrapper = $(wrapper);
-        this.voidBtn = voidBtn;
+    var VoidCase = function (wrapper) {
+        this.wrapper = wrapper
         this.setup();
     }
 
-    voidCase.prototype = {
+    VoidCase.prototype = {
         setup: function () {
             this.reasonSection = this.wrapper.find('#void-case-reason');
             this.confirmYes = this.wrapper.find('#void-yes');
-            this.confirmNo = this.wrapper.find('#Void-no')
+            this.confirmNo = this.wrapper.find('#void-no');
+            this.voidBtn = this.wrapper.find('.void-case')
 
             this.startWatchers();
         },
@@ -19,33 +19,32 @@
             var that = this;
 
             this.confirmYes.click(function () {
-                $(that.confirmNo).prop('checked', false);
-                that.enableVoidButtonBtn()
+                that.enableVoidButton()
             });
         },
 
 
         enableVoidButton: function () {
-            this.disableSubmitButton()
+            this.enableSubmitButton()
         },
 
         disableVoidButton: function () {
-            this.enableSubmitButton();
+            this.disableSubmitButton()
         },
 
         disableSubmitButton: function () {
-            this.voidBtn.addClass("submit-btn--disabled")
+            this.voidBtn.prop('disabled', true)
         },
 
         enableSubmitButton: function () {
-            this.voidBtn.removeClass("submit-btn--disabled")
-        }
-  });
+            this.voidBtn.prop('disabled', false)
+            console.log(this.voidBtn)
         }
     };
 
     function init() {
-        var voidCase = $('#void-case');
+        var voidCaseWrapper = $('#void-case');
+        VoidCase(voidCaseWrapper)
     }
 
     $(document).on('page:load', init);
