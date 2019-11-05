@@ -61,13 +61,38 @@ class DashboardView(LoginRequiredMixin, View):
 
         return page_number, page_size, page_error
 
+    @staticmethod
+    def active_filter_obj(filter_objs: dict, active_filter: str or None) -> dict or None:
+        """
+        Return filter object from filter_objs dict with 'filter' value matching active_filter, or None if not
+        found.
+        """
+        try:
+            return next(
+                filter_obj for filter_obj in filter_objs.values() if filter_obj['filter'] == active_filter
+            )
+        except StopIteration:
+            return None
+
+    @staticmethod
+    def filter_count(filter_obj: dict or None, session_user_obj: User) -> int:
+        """
+        Return examination count for filter_obj based on the User.index_overview object.
+        """
+        return getattr(session_user_obj.index_overview, filter_obj['index_overview_key']) if filter_obj \
+            else session_user_obj.index_overview.total_cases
+
     def set_context(self, form):
+        active_filter_obj = self.active_filter_obj(enums.filters, form.case_status)
         return {
             'page_header': '%s Dashboard' % self.user.display_role(),
             'session_user': self.user,
             'form': form,
             'pagination_url': 'index',
             'enums': enums,
+            'active_filter_obj': active_filter_obj,
+            'current_examination_count': self.filter_count(active_filter_obj, self.user),
+            'page_examination_count': self.user.examinations_count()
         }
 
 
