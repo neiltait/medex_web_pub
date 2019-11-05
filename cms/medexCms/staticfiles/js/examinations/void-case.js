@@ -1,7 +1,7 @@
 (function ($) {
 
-    var VoidCase = function (wrapper) {
-        this.wrapper = wrapper
+    var VoidCase = function(wrapper) {
+        this.wrapper = $(wrapper);
         this.setup();
     }
 
@@ -10,7 +10,7 @@
             this.reasonSection = this.wrapper.find('#void-case-reason');
             this.confirmYes = this.wrapper.find('#void-yes');
             this.confirmNo = this.wrapper.find('#void-no');
-            this.voidBtn = this.wrapper.find('.void-case')
+            this.voidBtn = this.wrapper.find('.void-case-button');
 
             this.startWatchers();
         },
@@ -38,13 +38,12 @@
 
         enableSubmitButton: function () {
             this.voidBtn.prop('disabled', false)
-            console.log(this.voidBtn)
         }
     };
 
     function init() {
         var voidCaseWrapper = $('#void-case');
-        VoidCase(voidCaseWrapper)
+        new VoidCase(voidCaseWrapper)
     }
 
     $(document).on('page:load', init);
