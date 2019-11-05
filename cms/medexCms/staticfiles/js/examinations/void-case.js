@@ -21,6 +21,10 @@
             this.confirmYes.click(function () {
                 that.enableVoidButton()
             });
+
+            this.confirmNo.click(function () {
+                that.disableVoidButton()
+            });
         },
 
 
