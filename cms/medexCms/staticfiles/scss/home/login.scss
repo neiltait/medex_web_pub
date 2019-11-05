@@ -1,10 +1,12 @@
 @import '../partials/_buttons.scss';
 @import '../variables';
+@import '../helpers';
 
 .login-page {
     width: 60%;
 
     #sign-in-widget {
+
         #okta-sign-in.auth-container.main-container {
             margin: 0;
             margin-bottom: 140px;
@@ -12,33 +14,94 @@
             box-shadow: none;
             background-color: transparent;
 
-            .okta-sign-in-header.auth-header {
-                border: none;
+            a {
+                padding: .5em;
+                display: inline-block;
+
+                &:hover,
+                &:focus {
+                    background-color: $focus-color;
+                    box-shadow: none;
+                    text-decoration: none;
+                }
+            }
+
+            input {
+                color: $nhs-grey;
+
+                &:hover,
+                &:focus {
+                    @include nhs-outline-focus(-1px);
+                }
             }
 
             .auth-content {
                 padding: 0;
 
+                .js-help-links {
+                    display: contents !important;
+                }
+
+                .custom-checkbox {
+                    padding: 0 1rem;
+
+                    & :hover,
+                    & .focus {
+                        @include nhs-outline-focus(4px);
+                    }
+                }
+
                 .o-form-head {
                     display: none;
                 }
 
-                .link.js-help-link {
+                .link.js-help-link,
+                .js-help {
                     display: none;
                 }
 
-                .o-form-button-bar .button {
-                    width: auto;
+                .o-form-button-bar {
+
+                    .button {
+                        width: auto;
+                    }
                 }
 
                 .button-primary {
                     @extend .submit-btn;
                     background: $nhs-green;
+                    padding: 0 1rem;
+
+                    &:hover,
+                    &:focus {
+                        @include nhs-outline-focus(-2px);
+                    }
                 }
 
-                .link, label {
+                .link,
+                label {
                     color: $black;
                 }
+            }
+
+            .input-tooltip.icon.form-help-16 {
+                display: none;
+            }
+
+            .okta-form-input-field {
+
+                ::placeholder {
+                    color: $nhs-grey;
+                }
+            }
+
+            .okta-form-subtitle,
+            .infobox-error {
+                color: $nhs-grey;
+            }
+
+            .okta-sign-in-header.auth-header {
+                border: none;
             }
         }
     }

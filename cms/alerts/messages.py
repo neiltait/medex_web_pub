@@ -37,7 +37,7 @@ NO_ROLES_HEADER = 'No Roles Assigned'
 NO_ROLES = 'You do not currently have roles assigned to your account, please contact your service lead to request' \
            ' assignment'
 
-NHS_NUMBER_ERROR = 'Please enter a valid NHS number in format "123 456 7890"'
+NHS_NUMBER_ERROR = 'Please enter a valid 10 digit NHS number'
 
 DEATH_DATE_MISSING_WHEN_TIME_GIVEN = 'Date of death is required if time is given'
 
@@ -64,11 +64,7 @@ def ErrorFieldTooLong(character_max):
 
 class NhsNumberErrors:
     CONTAINS_INVALID_CHARACTERS = "This NHS number includes invalid characters"
-    CONTAINS_WHITESPACE = "This NHS number includes spaces"
     DUPLICATE = "This NHS number already exists on another case"
-    INVALID = "This NHS number is invalid"
-    UNKNOWN = "There is a problem with this NHS number"
-    NO_NUMBER_AND_NO_UNKNOWN = "an NHS number"
 
 
 class DateOfBirthErrors:
