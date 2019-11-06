@@ -4,10 +4,6 @@
 
 {% block title %}{{ user }}{% endblock %}
 
-{% block extra_css %}
-    <link href="{% sass_src 'scss/users/permissions.scss' %}" rel="stylesheet" type="text/css">
-{% endblock %}
-
 {% block page %}
     <div class="profile-page">
         <div class="nhsuk-width-container">
@@ -25,19 +21,18 @@
                 <div class="nhsuk-grid-column-full">
                     <form action="/profile" method="post">
                         {% csrf_token %}
-                        <div class="nhsuk-form-group {% if errors.relevant_occupation %}nhsuk-form-group--error{% endif %}">
+                        <div class="nhsuk-form-group {% if form.errors.gmc_number %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="relevant_occupation">GMC Number</label>
-
-                            <p class="nhsuk-hint">GMC numbers are only required for Medical Examiners</p>
 
                             {% if form.errors.gmc_number %}<span class="nhsuk-error-message medex-font-default-override"
                                                                  automation-id="ve_gmc_number">{{ form.errors.gmc_number }}</span>{% endif %}
 
                             <input id="gmc_number" type="text" autocomplete="off" name="gmc_number"
                                    value="{{ form.gmc_number }}"
-                                   class="nhsuk-input nhsuk-input--width-20 {% if form.errors.gmc_number %}nhsuk-input--error{% endif %}">
+                                   class="nhsuk-input nhsuk-input--width-20 {% if form.errors.gmc_number %}nhsuk-input--error{% endif %}"
+                                   {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>
                         </div>
-                        <button class="nhsuk-button">Update profile</button>
+                        <button class="nhsuk-button" {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>Update profile</button>
                     </form>
                 </div>
             </div>
