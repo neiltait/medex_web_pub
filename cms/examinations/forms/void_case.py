@@ -1,7 +1,13 @@
 from alerts.messages import ErrorFieldRequiredMessage
 
 
-class VoidCaseForm:
+class CaseSettingsForm:
+    VOID_CASE_FORM_TYPE = 'void-case'
+    """
+    ToDos:
+    - form types
+    - map validators to forms types (maybe WITH the above)
+    """
 
     def __init__(self, request=None):
         self.initialise_errors()
@@ -20,17 +26,21 @@ class VoidCaseForm:
         return self.errors['count']
 
     def is_valid(self):
+
         self.errors["count"] = 0
 
-        if self.void_case is None or len(self.void_case.strip()) == 0:
-            self.errors["void_case"] = ErrorFieldRequiredMessage("a reason")
-            self.errors["count"] += 1
 
-        if self.void_case_reason is None or len(self.void_case_reason.strip()) == 0:
-            self.errors["void_case_reason"] = ErrorFieldRequiredMessage("a reason")
-            self.errors["count"] += 1
+
 
         return self.errors["count"] == 0
+
+
+
+    def _is_valid_void_case(self):
+        if self.void_case_reason is None or len(self.void_case_reason.strip()) == 0:
+            self.errors["void_case_reason"] = ErrorFieldRequiredMessage("a reason why this case must be voided.")
+            self.errors["count"] += 1
+
 
     def to_object(self):
 

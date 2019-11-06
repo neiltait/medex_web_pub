@@ -13,7 +13,7 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.forms.financial_reports import FinancialReportsForm
-from examinations.forms.void_case import VoidCaseForm
+from examinations.forms.void_case import CaseSettingsForm
 from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
@@ -512,20 +512,27 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    template = 'examinations/void_case.html'
+    template = 'examinations/case_settings.html'
     permission_required = 'can_get_users'
-
+    """
+    ToDos:
+    - implement form handler and use of form in markup
+    - implement error handler
+    - implement post route
+    """
     @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
+        #form_data = self._prepare_forms(request)
 
         context = {
             'session_user': self.user,
             'page_heading': 'Case settings',
-            'sub_heading': 'Void a duplicate case',
+            'sub_heading': '',
             'examination_id': examination_id,
-            'errors': errors,
-            'error_count': form.error_count
+            #'forms': form
+            # 'errors': errors,
+            # 'error_count': form.error_count
         }
 
         return render(request, self.template, context, status=status_code)
@@ -533,11 +540,11 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
-        form = VoidCaseForm(post_body)
+        # form = VoidCaseForm(post_body)
+        # errors=None
 
-        errors =
-
-
+    def _prepare_forms(self):
+        pass
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
