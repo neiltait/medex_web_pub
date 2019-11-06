@@ -95,6 +95,7 @@ class User:
                 self.first_name = response_data.get('firstName')
                 self.last_name = response_data.get('lastName')
                 self.email_address = response_data.get('emailAddress')
+                self.gmc_number = response_data.get('gmcNumber', None)
                 self.roles = response_data.get('role')
                 self.permitted_actions = PermittedActions(response_data.get('permissions'))
 
@@ -136,7 +137,7 @@ class User:
 
     @classmethod
     def update_profile(cls, submission, auth_token):
-        return request_handler.update_user_profile(json.dumps(submission), auth_token)
+        return request_handler.update_user_profile(submission, auth_token)
 
 
     def load_permissions(self, auth_token):

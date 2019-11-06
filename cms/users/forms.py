@@ -74,8 +74,10 @@ class ManageUserForm:
 class EditUserProfileForm:
     submit_btn_text = 'Update user'
 
+
     def __init__(self, request=None):
         self.gmc_error = None
+        self.errors = {'count': 0}
         if request:
             self.gmc_number = fallback_to(request.get('gmc_number'), '')
         else:
@@ -94,12 +96,14 @@ class EditUserProfileForm:
     def register_response_errors(self, response):
         if response.ok is False:
             errors = response.json()
-            if errors and 'Gmc' in errors.keys():
-                self.gmc_error = errors['Gmc'][0]
-                errors['Gmc'] = None
+            if errors and 'GmcNumber' in errors.keys():
+                self.errors['gmc_number'] = errors['GmcNumber'][0]
+                self.errors['count'] += 1
+                errors['GmcNumber'] = None
 
             if len(errors) > 0:
-                self.form_error = messages.GENERAL_ERROR % ("updating", "user")
+                self.errors['form'] = messages.GENERAL_ERROR % ("updating", "user profile")
+                self.errors['count'] += 1
 
     def response_to_dict(self):
         return {

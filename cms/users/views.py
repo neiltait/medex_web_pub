@@ -110,15 +110,12 @@ class EditUserProfileView(LoginRequiredMixin, View):
         context = {'session_user': self.user, 'form': form}
         return render(request, self.template, context=context, status=status_code)
 
-
-
 class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
     permission_required = 'can_get_users'
     template = 'users/manage.html'
 
     def get(self, request, user_id):
         status_code = status.HTTP_200_OK
-
 
         return render(request, self.template, self.get_context(), status=status_code)
 
