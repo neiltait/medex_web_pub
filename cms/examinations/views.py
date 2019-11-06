@@ -523,10 +523,21 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'session_user': self.user,
             'page_heading': 'Case settings',
             'sub_heading': 'Void a duplicate case',
-            'examination_id': examination_id
+            'examination_id': examination_id,
+            'errors': errors,
+            'error_count': form.error_count
         }
 
         return render(request, self.template, context, status=status_code)
+
+    @never_cache
+    def post(self, request, examination_id):
+        post_body = request.POST
+        form = VoidCaseForm(post_body)
+
+        errors =
+
+
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
