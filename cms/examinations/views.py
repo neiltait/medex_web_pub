@@ -528,16 +528,6 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         return render(request, self.template, context, status=status_code)
 
-    @never_cache
-    def post(self, request):
-        post_body = request.POST
-        form = VoidCaseForm(post_body)
-
-
-
-        response = render(request, self.template, context, status=status_code)
-        return response
-
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'can_get_examination'
