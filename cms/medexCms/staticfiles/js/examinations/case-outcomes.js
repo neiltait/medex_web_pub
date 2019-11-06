@@ -138,7 +138,7 @@
             }
         },
 
-         startWatchers: function() {
+        startWatchers: function() {
             let that = this;
             $('input[type=radio][name=cremation_form]').change(function () {
                 that.showHideWaiveCremFee();
