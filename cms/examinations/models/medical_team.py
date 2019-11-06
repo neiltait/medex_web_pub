@@ -42,8 +42,16 @@ class MedicalTeam:
             self.medical_examiner_officer_lookup = []
 
     @classmethod
+    def get_display_name(cls, user):
+        if user.get('gmcNumber'):
+            return '%s: %s' % (user['fullName'], user['gmcNumber'])
+        else:
+            return user['fullName']
+
+    @classmethod
     def get_lookup(cls, user_list):
-        return [{'display_name': user['fullName'], 'user_id': user['userId']} for user in user_list]
+        return [{'display_name': cls.get_display_name(user),
+                 'user_id': user['userId']} for user in user_list]
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
