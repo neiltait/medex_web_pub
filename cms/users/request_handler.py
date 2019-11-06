@@ -27,7 +27,7 @@ def update_user(user_object, auth_token):
 
 def update_user_profile(profile_object, auth_token):
     if settings.LOCAL:
-        return UserMocks.get_successful_user_update_response()
+        return UserMocks.get_successful_user_update_profile_response()
     else:
         return MedexRequest.put(auth_token, '%s/profile' % settings.API_URL, profile_object)
 
