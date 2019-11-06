@@ -91,7 +91,7 @@ class EditUserProfileView(LoginRequiredMixin, View):
 
         context = {'session_user': self.user, 'form': form}
 
-        return render(request, self.template, context)
+        return render(request, self.template, context, status=status_code)
 
     def post(self, request):
         form = EditUserProfileForm(request.POST)

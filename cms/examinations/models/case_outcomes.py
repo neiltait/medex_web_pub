@@ -126,7 +126,7 @@ class CaseOutcome:
 
     def scrutiny_actions_complete(self):
         return not self.case_header.pending_scrutiny_notes and not self.case_header.pending_discussion_with_qap and \
-               not self.case_header.pending_discussion_with_representative and self.case_header.admission_notes_added
+            not self.case_header.pending_discussion_with_representative and self.case_header.admission_notes_added
 
     def is_coroner_investigation(self):
         return True if self.case_outcome_summary == self.CORONER_INVESTIGATION_KEY else False

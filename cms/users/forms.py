@@ -82,7 +82,6 @@ class ManageUserForm:
 class EditUserProfileForm:
     submit_btn_text = 'Update user'
 
-
     def __init__(self, request=None):
         self.gmc_error = None
         self.errors = {'count': 0}
