@@ -71,6 +71,7 @@ class CaseOutcome:
         self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
+        self.waive_fee = obj_dict.get('waiveFee')
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):

@@ -107,6 +107,10 @@
             this.initialiseInputs();
             this.checkBox = new Input(this.form.find('#coroner-referral-confirmation'), this.handleChange.bind(this));
             this.saveBar = this.form.find('.sticky-save');
+            this.waiveFeePanel = this.form.find("#waive-cremation-fee-decision");
+            this.showHideWaiveCremFee();
+
+            this.startWatchers();
         },
 
         initialiseInputs: function () {
@@ -123,7 +127,24 @@
 
         showSaveBar: function () {
             this.saveBar.show();
+        },
+
+        showHideWaiveCremFee: function() {
+            let selectedOutcome = this.form.find('input[name=cremation_form]:checked');
+            if (selectedOutcome.length > 0 && selectedOutcome.val() === 'Yes') {
+                this.waiveFeePanel.show();
+            } else {
+                this.waiveFeePanel.hide();
+            }
+        },
+
+        startWatchers: function() {
+            let that = this;
+            $('input[type=radio][name=cremation_form]').change(function () {
+                that.showHideWaiveCremFee();
+            });
         }
+
     }
 
     function init() {
