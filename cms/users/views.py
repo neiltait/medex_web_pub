@@ -110,12 +110,35 @@ class EditUserProfileView(LoginRequiredMixin, View):
         context = {'session_user': self.user, 'form': form}
         return render(request, self.template, context=context, status=status_code)
 
+
 class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
     permission_required = 'can_get_users'
     template = 'users/manage.html'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.form = ManageUserForm()
+
     def get(self, request, user_id):
+        self.form = ManageUserForm.from_user(self.managed_user)
         status_code = status.HTTP_200_OK
+
+        return render(request, self.template, self.get_context(), status=status_code)
+
+    def post(self, request, user_id):
+        self.form = ManageUserForm(request.POST)
+        submission = self.form.response_to_dict()
+        submission["user_id"] = user_id
+
+        response = User.update_profile(submission, self.user.auth_token, user_id)
+
+        if response.ok:
+            # 1. success
+            return redirect('/users/%s/manage' % self.managed_user.user_id)
+        else:
+            # 2. api error
+            self.form.register_response_errors(response)
+            status_code = response.status_code
 
         return render(request, self.template, self.get_context(), status=status_code)
 
@@ -123,21 +146,5 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
         return {
             'session_user': self.user,
             'managed_user': self.managed_user,
+            'form': self.form
         }
-
-    def post(self, request, user_id):
-        form = ManageUserForm(request.POST)
-        submission = form.response_to_dict()
-        submission["user_id"] = user_id
-
-        response = User.update(user_id, submission, self.user.auth_token)
-
-        if response.ok:
-            # 1. success
-            return redirect('/users/%s/manage' % self.managed_user.user_id)
-        else:
-            # 2. api error
-            form.register_response_errors(response)
-            status_code = response.status_code
-
-        return render(request, self.template, self.get_context(), status=status_code)

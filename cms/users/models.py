@@ -132,13 +132,15 @@ class User:
         return Permission.update(form.to_dict(self.user_id), self.user_id, permission_id, auth_token)
 
     @classmethod
-    def update(self, user_id, submission, auth_token):
+    def update(self, submission, auth_token):
         return request_handler.update_user(json.dumps(submission), auth_token)
 
     @classmethod
-    def update_profile(cls, submission, auth_token):
-        return request_handler.update_user_profile(submission, auth_token)
-
+    def update_profile(cls, submission, auth_token, user_id=None):
+        if user_id:
+            return request_handler.update_user_profile(user_id, submission, auth_token)
+        else:
+            return request_handler.update_current_user_profile(submission, auth_token)
 
     def load_permissions(self, auth_token):
         response = permissions_request_handler.load_permissions_for_user(self.user_id, auth_token)

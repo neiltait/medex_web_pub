@@ -45,11 +45,17 @@ class ManageUserForm:
     submit_btn_text = 'Update user'
 
     def __init__(self, request=None):
-        self.gmc_error = None
+        self.errors = {'count': 0}
         if request:
             self.gmc_number = request.get('gmc_number')
         else:
             self.gmc_number = ''
+
+    @classmethod
+    def from_user(cls, user):
+        form = ManageUserForm()
+        form.gmc_number = fallback_to(user.gmc_number, '')
+        return form
 
     def validate(self):
         self.gmc_error = None
@@ -58,16 +64,18 @@ class ManageUserForm:
     def register_response_errors(self, response):
         if response.ok is False:
             errors = response.json()
-            if errors and 'Gmc' in errors.keys():
-                self.gmc_error = errors['Gmc'][0]
-                errors['Gmc'] = None
+            if errors and 'GmcNumber' in errors.keys():
+                self.errors['gmc_number'] = errors['GmcNumber'][0]
+                self.errors['count'] += 1
+                errors['GmcNumber'] = None
 
             if len(errors) > 0:
                 self.form_error = messages.GENERAL_ERROR % ("updating", "user")
+                self.errors['count'] += 1
 
     def response_to_dict(self):
         return {
-            "gmc_number": self.gmc_number
+            "gmcNumber": self.gmc_number
         }
 
 
