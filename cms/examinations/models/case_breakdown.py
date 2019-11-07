@@ -169,7 +169,6 @@ class ExaminationEventList:
             elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
                 self.events.append(CaseClosedEvent(event_type, patient_name))
 
-
             elif key == enums.timeline_event_keys.VOID_EVENT_KEY and event_type:
                 self.events.append(VoidEvent(event_type, patient_name))
 
