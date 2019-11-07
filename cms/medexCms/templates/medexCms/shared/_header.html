@@ -61,6 +61,11 @@
                         </a>
 
                         <div class="nav-dropdown--content">
+                            <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/profile">
+                                <div class="nav-dropdown--item">
+                                    Profile
+                                </div>
+                            </a>
                             {% if session_user.permitted_actions.can_access_settings_index %}
                                 <a class="nav-dropdown--link nhsuk-header__navigation-link" href="/settings">
                                     <div class="nav-dropdown--item">
@@ -109,5 +114,5 @@
             </div>
         </div>
     </div>
-    
+
 {% endif %}

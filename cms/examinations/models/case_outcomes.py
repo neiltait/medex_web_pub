@@ -5,7 +5,7 @@ from examinations import request_handler
 from examinations.models.case_breakdown import CaseStatus
 from examinations.presenters.core import PatientHeader
 from medexCms.api import enums
-from medexCms.utils import parse_datetime
+from medexCms.utils import parse_datetime, fallback_to
 
 
 class CaseOutcome:
@@ -68,9 +68,16 @@ class CaseOutcome:
         self.coroner_referral = obj_dict.get("coronerReferralSent")
         self.me_full_name = obj_dict.get("caseMedicalExaminerFullName")
         self.me_id = obj_dict.get('caseMedicalExaminerId')
+        self.me_gmc_number = fallback_to(obj_dict.get('caseMedicalExaminerGmcNumber'), '')
         self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
+
+    def me_full_name_with_gmc_number(self):
+        if self.me_gmc_number:
+            return '%s: %s' % (self.me_full_name, self.me_gmc_number)
+        else:
+            return self.me_full_name
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):

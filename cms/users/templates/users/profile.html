@@ -1,0 +1,45 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block title %}{{ user }}{% endblock %}
+
+{% block page %}
+    <div class="profile-page">
+        <div class="nhsuk-width-container">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="nhsuk-heading-xl">
+                        {{ session_user }}
+                    </div>
+                </div>
+            </div>
+            <div class="nhsuk-grid-row margin-bottom">
+                <h2 class="nhsuk-grid-column-full nhsuk-heading-l">
+                    Your profile
+                </h2>
+                <div class="nhsuk-grid-column-full">
+                    <form action="/profile" method="post">
+                        {% csrf_token %}
+                        <div class="nhsuk-form-group {% if form.errors.gmc_number %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="relevant_occupation">GMC Number</label>
+
+                            {% if form.errors.gmc_number %}<span class="nhsuk-error-message medex-font-default-override"
+                                                                 automation-id="ve_gmc_number">{{ form.errors.gmc_number }}</span>{% endif %}
+
+                            <input id="gmc_number" type="text" autocomplete="off" name="gmc_number"
+                                   value="{{ form.gmc_number }}"
+                                   class="nhsuk-input nhsuk-input--width-20 {% if form.errors.gmc_number %}nhsuk-input--error{% endif %}"
+                                   {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>
+                        </div>
+                        <button class="nhsuk-button" {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>Update profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+{% endblock %}

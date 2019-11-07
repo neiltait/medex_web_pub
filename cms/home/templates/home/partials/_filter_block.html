@@ -35,7 +35,7 @@
                     <option value="all">All</option>
                     {% for person in session_user.index_overview.filter_people %}
                     <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
-                        {{ person.name }}
+                        {{ person.name_with_gmc_number }}
                     </option>
                     {% endfor %}
                 </select>

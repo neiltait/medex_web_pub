@@ -24,6 +24,14 @@ class CaseEvent:
     date_format = '%d.%m.%Y'
     time_format = "%H:%M"
 
+    def __init__(self, obj_dict={}):
+        self.event_id = fallback_to(obj_dict.get('eventId'), '')
+        self.user_id = fallback_to(obj_dict.get('userId'), '')
+        self.user_full_name = fallback_to(obj_dict.get('userFullName'), '')
+        self.gmc_number = fallback_to(obj_dict.get('gmcNumber'), '')
+        self.user_role = fallback_to(obj_dict.get('usersRole'), '')
+        self.created_date = fallback_to(obj_dict.get('created'), '')
+
     @classmethod
     def parse_event(cls, event_data, latest_id, dod):
         if event_data.get('eventType') == enums.timeline_event_types.OTHER_EVENT_TYPE:
@@ -61,6 +69,12 @@ class CaseEvent:
     def user_display_role(self):
         return get_display_short_user_role(self.user_role)
 
+    def user_display_name_with_gmc(self):
+        if self.gmc_number:
+            return '%s: %s' % (self.user_full_name, self.gmc_number)
+        else:
+            return self.user_full_name
+
 
 class CaseInitialEvent(CaseEvent):
     date_format = '%d.%m.%Y'
@@ -72,12 +86,8 @@ class CaseInitialEvent(CaseEvent):
     css_type = 'initial'
 
     def __init__(self, obj_dict, patient_name):
-        self.number = None
+        super().__init__(obj_dict)
         self.patient_name = patient_name
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
         self.dod = obj_dict.get('dateOfDeath')
         self.tod = obj_dict.get('timeOfDeath')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
@@ -114,12 +124,8 @@ class CaseClosedEvent(CaseEvent):
     css_type = 'case-closed'
 
     def __init__(self, obj_dict, patient_name):
-        self.number = None
+        super().__init__(obj_dict)
         self.patient_name = patient_name
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
         self.date_case_closed = obj_dict.get('dateCaseClosed')
         self.is_latest = False  # Used to flag whether can be amend, for the patient died event this is always true
         self.published = False
@@ -149,12 +155,7 @@ class CaseOtherEvent(CaseEvent):
     css_type = 'other'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
@@ -174,12 +175,7 @@ class CasePreScrutinyEvent(CaseEvent):
     css_type = 'pre-scrutiny'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.body = obj_dict.get('medicalExaminerThoughts')
         self.circumstances_of_death = obj_dict.get('circumstancesOfDeath')
         self.cause_of_death_1a = obj_dict.get('causeOfDeath1a')
@@ -213,12 +209,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
     css_type = 'bereaved-discussion'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.participant_full_name = fallback_to(obj_dict.get('participantFullName'), '')
         self.participant_relationship = fallback_to(obj_dict.get('participantRelationship'), '')
         self.participant_phone_number = fallback_to(obj_dict.get('participantPhoneNumber'), '')
@@ -248,12 +239,7 @@ class CaseMeoSummaryEvent(CaseEvent):
     css_type = 'meo-summary'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.body = obj_dict.get('summaryDetails')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
@@ -274,12 +260,7 @@ class CaseQapDiscussionEvent(CaseEvent):
     css_type = 'qap-discussion'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.participant_full_name = obj_dict.get('participantName')
         self.participant_role = obj_dict.get('participantRole')
         self.participant_organisation = obj_dict.get('participantOrganisation')
@@ -330,12 +311,7 @@ class CaseMedicalHistoryEvent(CaseEvent):
     css_type = 'medical-history'
 
     def __init__(self, obj_dict, latest_id):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.body = obj_dict.get('text')
         self.published = obj_dict.get('isFinal')
         self.is_latest = self.event_id == latest_id
@@ -355,12 +331,7 @@ class CaseAdmissionNotesEvent(CaseEvent):
     css_type = 'admission-notes'
 
     def __init__(self, obj_dict, latest_id, dod):
-        self.number = None
-        self.event_id = obj_dict.get('eventId')
-        self.user_id = obj_dict.get('userId')
-        self.user_full_name = obj_dict.get('userFullName')
-        self.user_role = obj_dict.get('usersRole')
-        self.created_date = obj_dict.get('created')
+        super().__init__(obj_dict)
         self.body = obj_dict.get('notes')
         self.admitted_date = parse_datetime(obj_dict.get('admittedDate'))
         self.admitted_date_unknown = obj_dict.get('admittedDateUnknown')

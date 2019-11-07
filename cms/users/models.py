@@ -34,12 +34,15 @@ class User:
         self.examinations = []
         self.permissions = []
         self.permission_objects = []
+        self.gmc_number = None
+
         if obj_dict:
             self.user_id = obj_dict.get('userId')
             self.first_name = obj_dict.get('firstName')
             self.last_name = obj_dict.get('lastName')
             self.email_address = obj_dict.get('email')
             self.roles = obj_dict.get('role')
+            self.gmc_number = obj_dict.get('gmcNumber', None)
             if type(obj_dict.get('permissions')) == list:
                 self.permissions = obj_dict.get('permissions')
                 for permission in self.permissions:
@@ -50,6 +53,12 @@ class User:
 
     def __str__(self):
         return self.full_name()
+
+    def full_name_with_gmc_number(self):
+        if self.gmc_number:
+            return '%s: %s' % (self.full_name(), self.gmc_number)
+        else:
+            return self.full_name()
 
     @classmethod
     def initialise_with_token(cls, request):
@@ -86,6 +95,7 @@ class User:
                 self.first_name = response_data.get('firstName')
                 self.last_name = response_data.get('lastName')
                 self.email_address = response_data.get('emailAddress')
+                self.gmc_number = response_data.get('gmcNumber', None)
                 self.roles = response_data.get('role')
                 self.permitted_actions = PermittedActions(response_data.get('permissions'))
 
@@ -120,6 +130,17 @@ class User:
 
     def update_permission(self, form, permission_id, auth_token):
         return Permission.update(form.to_dict(self.user_id), self.user_id, permission_id, auth_token)
+
+    @classmethod
+    def update(self, submission, auth_token):
+        return request_handler.update_user(json.dumps(submission), auth_token)
+
+    @classmethod
+    def update_profile(cls, submission, auth_token, user_id=None):
+        if user_id:
+            return request_handler.update_user_profile(user_id, submission, auth_token)
+        else:
+            return request_handler.update_current_user_profile(submission, auth_token)
 
     def load_permissions(self, auth_token):
         response = permissions_request_handler.load_permissions_for_user(self.user_id, auth_token)

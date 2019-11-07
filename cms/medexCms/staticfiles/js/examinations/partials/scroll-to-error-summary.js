@@ -1,9 +1,12 @@
 (function ($) {
 
     function scrollToErrorSummary() {
-        $('html, body').animate({
-        scrollTop: $('#error_alert').offset().top
-    }, 'slow');
+        var alert = $('#error_alert');
+        if (alert.length > 0) {
+            $('html, body').animate({
+                scrollTop: alert.offset().top
+            }, 'slow');
+        }
     }
 
     $(document).on("page:load", scrollToErrorSummary)

@@ -82,8 +82,8 @@ def parse_datetime(datetime_string):
             date_and_time, microseconds_and_zone = datetime_string.split('.')
             arr = list(filter(None, re.split(r'(\d+)', microseconds_and_zone)))
             microseconds = arr.pop(0)[:6]
-            datetime_string = '%s.%s%s' % (date_and_time, microseconds, ''.join(arr))
-            return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT)
+            new_datetime_string = '%s.%s%s' % (date_and_time, microseconds, ''.join(arr))
+            return datetime.datetime.strptime(new_datetime_string, API_DATE_FORMAT)
         except (ValueError, TypeError):
             try:
                 return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_2)
