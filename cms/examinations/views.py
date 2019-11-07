@@ -536,15 +536,15 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         else:
             result = Examination.void(examination_id, form.to_object(), self.user.auth_token)
-            if result and not result == status.HTTP_200_OK:
-                log_api_error('void case', result.get_message())
 
-                return render_error(request, self.user, result)
+            if result.status_code == status.HTTP_200_OK:
+
+                return redirect('void-case-success')
 
             else:
+                log_api_error('void case', result.__dict__)
 
-                return redirect('/')
-
+                return render_error(request, self.user, result)
 
     def _get_context(self, examination_id, form):
         return {
@@ -554,6 +554,25 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
             'examination_id': examination_id,
             'form': form,
             'errors': form.errors
+        }
+
+
+class VoidCaseSuccess(LoginRequiredMixin, PermissionRequiredMixin, View):
+    template = 'examinations/void_case_success.html'
+    permission_required = 'can_get_users'
+
+    @never_cache
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        context = self._get_context()
+
+        return render(request, self.template, context, status=status_code)
+
+    def _get_context(self):
+        return {
+            'session_user': self.user,
+            'page_heading': 'Case settings',
+            'sub_heading': '',
         }
 
 

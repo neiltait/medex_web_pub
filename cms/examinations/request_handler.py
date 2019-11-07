@@ -14,9 +14,8 @@ def post_new_examination(examination_object, auth_token):
 
 
 def put_void_examination(examination_id, reason_object, auth_token):
-    response = MedexRequest.put(auth_token, '%s/examinations/%s/void_case' % (settings.API_URL, examination_id),
+    return MedexRequest.put(auth_token, '%s/examinations/%s/void_case' % (settings.API_URL, examination_id),
                             reason_object)
-    return response
 
 
 def load_examinations_index(params, auth_token):

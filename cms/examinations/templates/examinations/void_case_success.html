@@ -1,0 +1,44 @@
+{% extends "examinations/edit_shared.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% sass_src 'scss/examinations/void-case-success.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+{% block title %}{{ page_heading }}{% endblock %}
+
+{% block page %}
+
+<div id="case-settings" class="settings-index">
+
+    <h1 class="page-title">
+        {{ page_heading }}
+    </h1>
+
+    <h2 class="page-subheading">
+        {{ sub_heading }}
+    </h2>
+
+    <h2>Void a duplicate case.</h2>
+
+    <p>Void this case if it was added in error. You should only do this if there is a genuine
+        duplicate in the system.</p>
+
+    <div class="void-case-success-container">
+        <p class="void-case-success-message">
+            <span>
+                <img class="nhsuk-icon case-status-icon case-status-icon--tick"
+                     src="{% static 'images/icon-tick.svg' %}" alt="" automation-id="{{ automation_id }}">
+            </span>
+            This case has been voided.
+        </p>
+    </div>
+
+    <a class="nhsuk-button" href="{% url 'index' %}">
+        Continue
+    </a>
+
+</div>
+{% endblock %}

@@ -57,9 +57,7 @@
                         </span>
                     {% endif %}
 
-                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">
-                        {% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}
-                    </textarea>
+                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">{% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}</textarea>
 
                     <strong class="nhsuk-heading-m">
                         Final confirmation
