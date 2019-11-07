@@ -92,6 +92,7 @@ class ExaminationOverview:
         self.case_closed_date = parse_datetime(obj_dict.get("dateCaseClosed"))
         self.case_outcome = obj_dict.get("caseOutcome")
         self.open = obj_dict.get('open')
+        self.void = obj_dict.get('isVoid')
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
