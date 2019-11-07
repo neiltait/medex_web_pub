@@ -530,6 +530,7 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         if not form.is_valid():
             status_code = status.HTTP_400_BAD_REQUEST
+            monitor.log_void_case_unsuccessful(self.user, examination_id)
             context = self._get_context(examination_id, form)
 
             return render(request, self.template, context, status=status_code)
@@ -538,11 +539,13 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
             result = Examination.void(examination_id, form.to_object(), self.user.auth_token)
 
             if result.status_code == status.HTTP_200_OK:
+                monitor.log_void_case_success(self.user, examination_id)
 
                 return redirect('void-case-success')
 
             else:
                 log_api_error('void case', result.__dict__)
+                monitor.log_void_case_unsuccessful(self.user, examination_id)
 
                 return render_error(request, self.user, result)
 
