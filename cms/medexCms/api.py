@@ -156,6 +156,7 @@ class TimelineEventKeys:
     PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
     INITIAL_EVENT_KEY = 'patientDeathEvent'
     CASE_CLOSED_EVENT_KEY = 'caseClosed'
+    VOID_EVENT_KEY = 'voidEvent'
 
     @classmethod
     def all(cls):
@@ -176,6 +177,7 @@ class TimelineEventTypes:
     ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
     CASE_CLOSED_TYPE = 'caseClosed'
+    CASE_VOIDED_TYPE = 'caseVoided'
 
 
 class SystemValidationErrors:

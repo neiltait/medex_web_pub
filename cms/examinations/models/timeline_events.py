@@ -141,6 +141,31 @@ class CaseClosedEvent(CaseEvent):
         return get_display_outcome_summary(self.case_outcome)
 
 
+class VoidEvent(CaseEvent):
+    date_format = '%d.%m.%Y'
+    time_format = "%H:%M"
+    UNKNOWN = 'Unknown'
+
+    type_template = 'examinations/partials/case_breakdown/event_card_bodies/_void_body.html'
+    event_type = enums.timeline_event_types.CASE_VOIDED_TYPE
+    css_type = 'case-voided'
+
+    def __init__(self, obj_dict, patient_name):
+        self.number = None
+        self.patient_name = patient_name
+        self.user_id = obj_dict.get('userId')
+        self.user_full_name = obj_dict.get('userFullName')
+        self.user_role = obj_dict.get('usersRole')
+        self.created_date = obj_dict.get('created')
+        self.void_reason = obj_dict.get('voidReason')
+        self.is_latest = False
+        self.published = True
+
+    @property
+    def display_type(self):
+        return 'Case voided'
+
+
 class CaseOtherEvent(CaseEvent):
     form_type = 'OtherEventForm'
     event_type = enums.timeline_event_types.OTHER_EVENT_TYPE
