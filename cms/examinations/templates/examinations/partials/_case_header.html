@@ -1,10 +1,21 @@
 {% load staticfiles %}
 
 <div class="case-header">
-    <h1 class="patient-name">
-        {{patient.full_name}}
-    </h1>
-    <h2 class="nhs-number">
-        NHS No. {{patient.nhs_number}}
-    </h2>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-one-half">
+            <h1 class="patient-name">
+                {{patient.full_name}}
+            </h1>
+            <h2 class="nhs-number">
+                NHS No. {{patient.nhs_number}}
+            </h2>
+        </div>
+        {% if session_user.permitted_actions.can_get_users %}
+            <div class="nhsuk-grid-column-one-half">
+            <p class="case-settings-link"><a href="{% url 'case_settings' examination_id=examination_id %}">
+            Case settings
+            </a></p>
+        </div>
+            {% endif %}
+    </div>
 </div>

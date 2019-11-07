@@ -13,6 +13,11 @@ def post_new_examination(examination_object, auth_token):
         return MedexRequest.post(auth_token, '%s/examinations' % settings.API_URL, json.dumps(examination_object))
 
 
+def put_void_examination(examination_id, reason_object, auth_token):
+    return MedexRequest.put(auth_token, '%s/examinations/%s/void_case' % (settings.API_URL, examination_id),
+                            reason_object)
+
+
 def load_examinations_index(params, auth_token):
     if settings.LOCAL:
         return ExaminationMocks.get_successful_case_index_response()
@@ -172,3 +177,10 @@ def load_financial_report(params, auth_token):
         return ReportMocks.get_successful_financial_report_response()
     else:
         return MedexRequest.get(auth_token, '%s/report/finance_download' % settings.API_URL, params)
+
+
+def void_case(auth_token, examination_id):
+    if settings.LOCAL:
+        return ExaminationMocks.get_successful_case_index_response()
+    else:
+        return MedexRequest.get(auth_token, '%s/examinations/%s/case_settings' % (settings.API_URL, examination_id))

@@ -1,0 +1,10 @@
+@import '../variables.scss';
+
+.void-case-button {
+    background-color: $nhs-red !important;
+
+    &:hover {
+      background-color: darken($nhs-red, 10%) !important;
+    }
+}
+

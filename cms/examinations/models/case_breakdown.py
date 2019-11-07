@@ -1,6 +1,6 @@
 from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
-from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
+from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent, VoidEvent
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
 
@@ -168,6 +168,9 @@ class ExaminationEventList:
 
             elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
                 self.events.append(CaseClosedEvent(event_type, patient_name))
+
+            elif key == enums.timeline_event_keys.VOID_EVENT_KEY and event_type:
+                self.events.append(VoidEvent(event_type, patient_name))
 
             elif key in enums.timeline_event_keys.all() and event_type:
                 for event in event_type['history']:

@@ -162,7 +162,7 @@ class User:
             "UserId": person,
             "CaseStatus": case_status,
             "OrderBy": sorting_order or enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST[0][1],
-            "OpenCases": True,
+            "OpenCases": enums.open_closed.OPEN,
             "PageSize": page_size,
             "PageNumber": page_number
         }
