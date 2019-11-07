@@ -13,7 +13,7 @@ from examinations.forms.timeline_events import PreScrutinyEventForm, OtherEventF
     MedicalHistoryEventForm
 from examinations.forms.case_outcomes import OutstandingItemsForm
 from examinations.forms.financial_reports import FinancialReportsForm
-from examinations.forms.void_case import CaseSettingsForm
+from examinations.forms.void_case import VoidCaseForm
 from examinations.models.case_breakdown import CaseBreakdown, CaseStatus
 from examinations.models.case_outcomes import CaseOutcome
 from examinations.models.core import Examination
@@ -514,37 +514,47 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template = 'examinations/case_settings.html'
     permission_required = 'can_get_users'
-    """
-    ToDos:
-    - implement form handler and use of form in markup
-    - implement error handler
-    - implement post route
-    """
+
     @never_cache
     def get(self, request, examination_id):
         status_code = status.HTTP_200_OK
-        #form_data = self._prepare_forms(request)
-
-        context = {
-            'session_user': self.user,
-            'page_heading': 'Case settings',
-            'sub_heading': '',
-            'examination_id': examination_id,
-            #'forms': form
-            # 'errors': errors,
-            # 'error_count': form.error_count
-        }
+        form = VoidCaseForm(obj_dict=request.body)
+        context = self._get_context(examination_id, form)
 
         return render(request, self.template, context, status=status_code)
 
     @never_cache
     def post(self, request, examination_id):
         post_body = request.POST
-        # form = VoidCaseForm(post_body)
-        # errors=None
+        form = VoidCaseForm(post_body)
 
-    def _prepare_forms(self):
-        pass
+        if not form.is_valid():
+            status_code = status.HTTP_400_BAD_REQUEST
+            context = self._get_context(examination_id, form)
+
+            return render(request, self.template, context, status=status_code)
+
+        else:
+            result = Examination.void(examination_id, form.to_object(), self.user.auth_token)
+            if result and not result == status.HTTP_200_OK:
+                log_api_error('void case', result.get_message())
+
+                return render_error(request, self.user, result)
+
+            else:
+
+                return redirect('/')
+
+
+    def _get_context(self, examination_id, form):
+        return {
+            'session_user': self.user,
+            'page_heading': 'Case settings',
+            'sub_heading': '',
+            'examination_id': examination_id,
+            'form': form,
+            'errors': form.errors
+        }
 
 
 class CaseOutcomeView(LoginRequiredMixin, PermissionRequiredMixin, View):

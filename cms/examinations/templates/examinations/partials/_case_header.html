@@ -12,7 +12,7 @@
         </div>
         {% if session_user.permitted_actions.can_get_users %}
             <div class="nhsuk-grid-column-one-half">
-            <p class="case-settings-link"><a href="{% url 'void_case' examination_id=examination_id %}">
+            <p class="case-settings-link"><a href="{% url 'case_settings' examination_id=examination_id %}">
             Case settings
             </a></p>
         </div>

@@ -68,6 +68,10 @@ class Examination:
     def create(cls, submission, auth_token):
         return request_handler.post_new_examination(submission, auth_token)
 
+    @classmethod
+    def void(cls, examination_id, submission, auth_token):
+        return request_handler.put_void_examination(examination_id, submission, auth_token)
+
 
 class ExaminationOverview:
     date_format = '%d.%m.%Y'

@@ -35,9 +35,11 @@
     <form id="void-case" class="form{% if invalid %} error{% endif %}"
           action="{% url 'case_settings' examination_id=examination_id %}" method="post">
 
+        {% csrf_token %}
+
         <h2>Void a duplicate case.</h2>
 
-            <div class="nhsuk-form-group">
+            <div class="nhsuk-form-group {% if 'void_case_reason' in errors %}nhsuk-form-group--error{% endif %}">
                 <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
 
                     <legend class="nhsuk-fieldset__legend nhsuk-body-m flex-row service-overview">
@@ -49,7 +51,15 @@
                         Reason for voiding this case
                     </label>
 
-                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void-case-reason" rows="5"></textarea>
+                    {% if 'void_case_reason' in errors %}
+                        <span class="nhsuk-error-message" id="void_case_reason_error">
+                            <span class="nhsuk-u-visually-hidden">Error:</span>{{ errors.void_case_reason }}
+                        </span>
+                    {% endif %}
+
+                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">
+                        {% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}
+                    </textarea>
 
                     <strong class="nhsuk-heading-m">
                         Final confirmation
@@ -61,13 +71,15 @@
 
                     <div class="nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-radios__item">
-                            <input class="nhsuk-radios__input" id="void-yes" name="void_case" type="radio" value="yes">
+                            <input class="nhsuk-radios__input" id="void-yes" name="void_case" type="radio" value="yes"
+                            {% if void_case in form and form.void_case == 'yes' %} checked {% endif %}>
                             <label class="nhsuk-label nhsuk-radios__label" for="void-yes">
                                 Yes
                             </label>
                         </div>
                         <div class="nhsuk-radios__item">
-                        <input class="nhsuk-radios__input" id="void-no" name="void_case" type="radio" value="no" checked>
+                        <input class="nhsuk-radios__input" id="void-no" name="void_case" type="radio" value="no"
+                        {% if void_case in form and form.void_case == 'no' %} checked {% endif %}>
                         <label class="nhsuk-label nhsuk-radios__label" for="void-no">
                             No
                         </label>
