@@ -191,14 +191,14 @@ class MedexMonitor:
             'location_id': location_id,
         })
 
-    def log_void_case_success(self, event, user, examination_id):
-        self.log_stream.log(event, {
+    def log_void_case_success(self, user, examination_id):
+        self.log_stream.log(MedexLoggerEvents.VOIDED_CASE, {
             'user_id': user.user_id,
             'examination_id': examination_id
         })
 
-    def log_void_case_unsuccessful(self, event, user, examination_id):
-        self.log_stream.log(event, {
+    def log_void_case_unsuccessful(self, user, examination_id):
+        self.log_stream.log(MedexLoggerEvents.VOIDED_CASE_UNSUCCESSFUL, {
             'user_id': user.user_id,
             'examination_id': examination_id
         })
