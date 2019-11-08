@@ -115,3 +115,6 @@ venv.bak/
 .vscode/
 
 *.orig
+htmlcov
+.coverage
+*.DS_Store

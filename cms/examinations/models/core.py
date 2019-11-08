@@ -147,7 +147,7 @@ class CauseOfDeath:
 class PatientHeader:
     date_format = '%d.%m.%Y'
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict=None):
         self.given_names = ''
         self.surname = ''
         self.urgency_score = 0
@@ -209,17 +209,3 @@ class PatientHeader:
     #         'section_1c': self.section_1c,
     #         'section_2': self.section_2
     #     }
-
-    def display_date(self):
-        if self.creation_date:
-            date = parse_datetime(self.creation_date)
-            if date.date() == datetime.today().date():
-                return 'Today at %s' % date.strftime(self.time_format)
-            elif date.date() == datetime.today().date() - timedelta(days=1):
-                return 'Yesterday at %s' % date.strftime(self.time_format)
-            else:
-                time = date.strftime(self.time_format)
-                date = date.strftime(self.date_format)
-                return "%s at %s" % (date, time)
-        else:
-            return None
