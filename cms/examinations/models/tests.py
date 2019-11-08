@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from freezegun import freeze_time
-
 from errors.models import NotFoundError
 from examinations.models.case_breakdown import CaseBreakdown, ExaminationEventList, CaseStatus
 from examinations.models.core import ExaminationOverview
@@ -160,6 +158,7 @@ class ExaminationsCoreModelsTests(MedExTestCase):
         case_overview_data['open'] = False
         case_overview = ExaminationOverview(case_overview_data)
         self.assertIsFalse(case_overview.urgent())
+
 
 class ExaminationsPatientDetailsModelsTests(MedExTestCase):
     # PatientDetails tests

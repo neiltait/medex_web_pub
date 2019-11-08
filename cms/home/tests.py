@@ -152,7 +152,7 @@ class HomeViewsTests(MedExTestCase):
 
     # Settings index tests
 
-    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_logged_in(self):
+    def test_landing_on_settings_page_returns_the_correct_template_and_content_if_you_are_logged_in(self):
         self.set_auth_cookies()
         response = self.client.get('/settings')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -160,8 +160,10 @@ class HomeViewsTests(MedExTestCase):
 
     @patch('users.request_handler.validate_session',
            return_value=SessionMocks.get_unsuccessful_validate_session_response())
-    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(self,
-                                                                                                       mock_auth_validation):
+    def test_landing_on_settigs_page_returns_the_correct_template_and_content_if_you_are_not_logged_in(
+            self,
+            mock_auth_validation
+    ):
         response = self.client.get('/settings')
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(response.url, '/login')
