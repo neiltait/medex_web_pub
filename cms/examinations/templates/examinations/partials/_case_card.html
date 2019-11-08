@@ -1,7 +1,7 @@
 {% load examination_filters %}
 {% with card=case|case_card_presenter %}
 <div id="case-{{ case.id }}" class="case-card">
-    <div class="case-card-header {% if case.urgent %}urgent{% endif %}">
+    <div class="case-card-header {% if case.urgent %}urgent{% elif case.void %}void{% endif %}">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-third">
                 <p class="patient-name">
@@ -19,9 +19,9 @@
             <div class="nhsuk-grid-column-one-third">
                 <div class="controls flex-row">
                     {% if card.urgent %}
-                        <p class="urgent-flag">
-                            URGENT
-                        </p>
+                        <p class="urgent-flag">URGENT</p>
+                    {% elif card.void %}
+                        <p class="void-flag">VOID</p>
                     {% endif %}
 
                     <a class="view-btn" href="{% url 'edit_examination' examination_id=card.id %}">View Case</a>

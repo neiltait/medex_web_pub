@@ -16,6 +16,11 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIOpenOrClosed:
+    OPEN = "Open"
+    CLOSED_OR_VOID = "ClosedOrVoid"
+
+
 class APIRouteOfAdmission:
     AE = "AccidentAndEmergency"
     WARD = "DirectToWard"
@@ -64,15 +69,48 @@ class APIOutcomes:
     DISCUSSION_UNABLE_TO_HAPPEN = 'DiscussionUnableToHappen'
 
 
-class APIFilters:
-    F01_HAS_UNKNOWN_BASIC_DETAILS = 'HaveUnknownBasicDetails'
-    F02_READY_FOR_SCRUTINY = 'ReadyForMEScrutiny'
-    F03_UNASSIGNED = 'Unassigned'
-    F04_HAVE_BEEN_SCRUTINISED = 'HaveBeenScrutinisedByME'
-    F05_PENDING_ADDITIONAL_DETAILS = 'PendingAdditionalDetails'
-    F06_PENDING_QAP = 'PendingDiscussionWithQAP'
-    F07_PENDING_BEREAVED = 'PendingDiscussionWithRepresentative'
-    F08_OUTSTANDING_FINAL_OUTCOMES = "HaveFinalCaseOutstandingOutcomes"
+APIFilters = {
+    'F01_HAS_UNKNOWN_BASIC_DETAILS': {
+        'label': 'have unknown basic details',
+        'filter': 'HaveUnknownBasicDetails',
+        'index_overview_key': 'count_have_unknown_basic_details'
+    },
+    'F02_READY_FOR_SCRUTINY': {
+        'label': 'are ready for ME scrutiny',
+        'filter': 'ReadyForMEScrutiny',
+        'index_overview_key': 'count_scrutiny_ready'
+    },
+    'F03_UNASSIGNED': {
+        'label': 'are unassigned',
+        'filter': 'Unassigned',
+        'index_overview_key': 'count_unassigned'
+    },
+    'F04_HAVE_BEEN_SCRUTINISED': {
+        'label': 'have been scrutinised by an ME',
+        'filter': 'HaveBeenScrutinisedByME',
+        'index_overview_key': 'count_scrutiny_complete'
+    },
+    'F05_PENDING_ADDITIONAL_DETAILS': {
+        'label': 'are pending additional details',
+        'filter': 'PendingAdditionalDetails',
+        'index_overview_key': 'count_additional_details_pending'
+    },
+    'F06_PENDING_QAP': {
+        'label': 'are pending discussion with a QAP',
+        'filter': 'PendingDiscussionWithQAP',
+        'index_overview_key': 'count_qap_discussion_pending'
+    },
+    'F07_PENDING_BEREAVED': {
+        'label': 'are pending discussion with a representative',
+        'filter': 'PendingDiscussionWithRepresentative',
+        'index_overview_key': 'count_representative_discussion_pending'
+    },
+    'F08_OUTSTANDING_FINAL_OUTCOMES': {
+        'label': 'have final case outcomes outstanding',
+        'filter': 'HaveFinalCaseOutstandingOutcomes',
+        'index_overview_key': 'count_final_outcome_outstanding'
+    },
+}
 
 
 class APICauseOfDeathStatuses:
@@ -151,6 +189,7 @@ class TimelineEventKeys:
     PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
     INITIAL_EVENT_KEY = 'patientDeathEvent'
     CASE_CLOSED_EVENT_KEY = 'caseClosed'
+    VOID_EVENT_KEY = 'voidEvent'
 
     @classmethod
     def all(cls):
@@ -171,6 +210,7 @@ class TimelineEventTypes:
     ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
     CASE_CLOSED_TYPE = 'caseClosed'
+    CASE_VOIDED_TYPE = 'caseVoided'
 
 
 class SystemValidationErrors:
@@ -208,9 +248,10 @@ class APIStrings:
     errors = SystemValidationErrors()
     prescrutiny_status = APIPrescrutinyStatus()
     qap_discussion_status = APIQapDiscussionStatus()
-    filters = APIFilters()
+    filters = APIFilters
     case_status_bar_result = APIStatusBarResult()
     results_sorting = APIResultsSorting()
+    open_closed = APIOpenOrClosed()
 
 
 enums = APIStrings()

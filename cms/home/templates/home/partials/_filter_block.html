@@ -2,12 +2,12 @@
 
 <div id="filter-block" class="filters-block">
 {% if closed_list %}
-    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-place-person">
+    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-status">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
         <!-- ... -->
 {% else %}
-    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-place-person">
+    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-status">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
 
@@ -15,7 +15,7 @@
         {% endif %}
         <input class="nhsuk-u-visually-hidden" value="{{session_user.index_overview.page_number}}" name="page_number"/>
         <div class="filter__label">
-            <p class="filter-label"><span id="filter-by-place-person">Filter cases by place and person</span></p>
+            <p><span id="filter-by-place-person">Filter cases by place and person</span></p>
         </div>
 
         <div class="nhsuk-grid-row">
@@ -35,7 +35,7 @@
                     <option value="all">All</option>
                     {% for person in session_user.index_overview.filter_people %}
                     <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
-                        {{ person.name }}
+                        {{ person.name_with_gmc_number }}
                     </option>
                     {% endfor %}
                 </select>
@@ -43,25 +43,29 @@
         </div>
 
         {% if not exclude_filter_buttons %}
-            <div class="filter__label">
+            <div class="filter__label filter-list__label">
                 <p><span id="filter-by-status">Filter cases by status</span></p>
             </div>
 
             <div class="filter-list">
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details label="have unknown basic details" icon="patient" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready label="are ready for ME scrutiny" icon="ready" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned label="are unassigned" icon="unassigned" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F03_UNASSIGNED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete label="have been scrutinised by an ME" icon="complete" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending label="are pending additional details" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending label="are pending discussion with a QAP" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F06_PENDING_QAP %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending label="are pending discussion with a representative" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F07_PENDING_BEREAVED %}</div>
-                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding label="have final case outcomes outstanding" icon="waiting" base_url=form.base_url active_filter=form.case_status filter=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details icon="patient" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready icon="ready" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_unassigned icon="unassigned" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F03_UNASSIGNED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_complete icon="complete" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F04_HAVE_BEEN_SCRUTINISED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_additional_details_pending icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F05_PENDING_ADDITIONAL_DETAILS %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_qap_discussion_pending icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F06_PENDING_QAP %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F07_PENDING_BEREAVED %}</div>
+                <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
             </div>
-
-            <div class="nhsuk-grid-row sort-row">
+        {% endif %}
+        <div class="filtered-case-list-header">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-three-quarters">
+                    <p>{% if active_filter_obj %}Cases that {{ active_filter_obj.label }}: d{% else %}D{% endif %}isplaying {{ page_examination_count }} of {{ current_examination_count }} results.</p>
+                </div>
                 <div class="nhsuk-grid-column-one-quarter">
                     <label for="sorting_order">Sort by</label>
-                    <select class="nhsuk-select" id="sorting_order" name="sorting_order">
+                    <select class="nhsuk-select" form="index-filters-form" id="sorting_order" name="sorting_order">
                         {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
                             <option value={{ sorting_order.1 }} {% if sorting_order.1 == form.sorting_order %}selected{% endif %}>
                                 {{ sorting_order.0 }}
@@ -70,6 +74,6 @@
                     </select>
                 </div>
             </div>
-        {% endif %}
+        </div>
     </form>
 </div>

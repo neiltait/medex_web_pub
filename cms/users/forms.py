@@ -1,5 +1,6 @@
 from alerts import messages
 from medexCms.settings import EMAIL_WHITELIST
+from medexCms.utils import fallback_to
 
 
 class CreateUserForm:
@@ -38,3 +39,80 @@ class CreateUserForm:
             errors = response.json()
             if errors and 'Email' in errors.keys():
                 self.email_error = errors['Email'][0]
+
+
+class ManageUserForm:
+    submit_btn_text = 'Update user'
+
+    def __init__(self, request=None):
+        self.errors = {'count': 0}
+        if request:
+            self.gmc_number = request.get('gmc_number')
+        else:
+            self.gmc_number = ''
+
+    @classmethod
+    def from_user(cls, user):
+        form = ManageUserForm()
+        form.gmc_number = fallback_to(user.gmc_number, '')
+        return form
+
+    def validate(self):
+        self.gmc_error = None
+        return True
+
+    def register_response_errors(self, response):
+        if response.ok is False:
+            errors = response.json()
+            if errors and 'GmcNumber' in errors.keys():
+                self.errors['gmc_number'] = errors['GmcNumber'][0]
+                self.errors['count'] += 1
+                errors['GmcNumber'] = None
+
+            if len(errors) > 0:
+                self.form_error = messages.GENERAL_ERROR % ("updating", "user")
+                self.errors['count'] += 1
+
+    def response_to_dict(self):
+        return {
+            "gmcNumber": self.gmc_number
+        }
+
+
+class EditUserProfileForm:
+    submit_btn_text = 'Update user'
+
+    def __init__(self, request=None):
+        self.gmc_error = None
+        self.errors = {'count': 0}
+        if request:
+            self.gmc_number = fallback_to(request.get('gmc_number'), '')
+        else:
+            self.gmc_number = ''
+
+    @classmethod
+    def from_user(cls, user):
+        form = EditUserProfileForm()
+        form.gmc_number = fallback_to(user.gmc_number, '')
+        return form
+
+    def validate(self):
+        self.gmc_error = None
+        return True
+
+    def register_response_errors(self, response):
+        if response.ok is False:
+            errors = response.json()
+            if errors and 'GmcNumber' in errors.keys():
+                self.errors['gmc_number'] = errors['GmcNumber'][0]
+                self.errors['count'] += 1
+                errors['GmcNumber'] = None
+
+            if len(errors) > 0:
+                self.errors['form'] = messages.GENERAL_ERROR % ("updating", "user profile")
+                self.errors['count'] += 1
+
+    def response_to_dict(self):
+        return {
+            "gmcNumber": self.gmc_number
+        }

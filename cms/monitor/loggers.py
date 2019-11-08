@@ -30,6 +30,8 @@ class MedexLoggerEvents:
     SAVED_PATIENT_DETAILS_UNSUCCESSFUL = 'Saved patient details failed'
     SAVED_MEDICAL_TEAM = 'Saved medical team'
     SAVED_MEDICAL_TEAM_UNSUCCESSFUL = 'Saved medical team failed'
+    VOIDED_CASE = 'Voided a case'
+    VOIDED_CASE_UNSUCCESSFUL = 'Voided a case failed'
 
 
 class MedexLogStream:
@@ -187,6 +189,18 @@ class MedexMonitor:
             'user_id': user.user_id,
             'examination_id': examination_id,
             'location_id': location_id,
+        })
+
+    def log_void_case_success(self, user, examination_id):
+        self.log_stream.log(MedexLoggerEvents.VOIDED_CASE, {
+            'user_id': user.user_id,
+            'examination_id': examination_id
+        })
+
+    def log_void_case_unsuccessful(self, user, examination_id):
+        self.log_stream.log(MedexLoggerEvents.VOIDED_CASE_UNSUCCESSFUL, {
+            'user_id': user.user_id,
+            'examination_id': examination_id
         })
 
     def log_confirm_scrutiny(self, user, examination_id, location_id, outcome):

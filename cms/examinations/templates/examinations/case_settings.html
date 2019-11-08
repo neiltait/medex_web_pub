@@ -1,0 +1,104 @@
+{% extends "examinations/edit_shared.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link href="{% sass_src 'scss/examinations/case-settings.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/examinations/case-settings.js' %}"></script>
+{% endblock %}
+
+{% block title %}{{ page_heading }}{% endblock %}
+
+{% block page %}
+
+<div class="nhsuk-back-link">
+    <a class="nhsuk-back-link__link" href="{% url 'edit_examination' examination_id=examination_id %}">
+        <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+        </svg>
+        Back to case tabs</a>
+</div>
+
+<div id="case-settings" class="settings-index">
+
+    <h1 class="page-title">
+        {{ page_heading }}
+    </h1>
+
+    <h2 class="page-subheading">
+        {{ sub_heading }}
+    </h2>
+
+    <form id="void-case" class="form{% if invalid %} error{% endif %}"
+          action="{% url 'case_settings' examination_id=examination_id %}" method="post">
+
+        {% csrf_token %}
+
+        <h2>Void a duplicate case.</h2>
+
+            <div class="nhsuk-form-group {% if 'void_case_reason' in errors %}nhsuk-form-group--error{% endif %}">
+                <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+
+                    <legend class="nhsuk-fieldset__legend nhsuk-body-m flex-row service-overview">
+                        Void this case if it was added in error. You should only do this if there is a genuine
+                        duplicate in the system.
+                    </legend>
+
+                    <label class="nhsuk-heading-m" for="void-case-reason">
+                        Reason for voiding this case
+                    </label>
+
+                    {% if 'void_case_reason' in errors %}
+                        <span class="nhsuk-error-message" id="void_case_reason_error">
+                            <span class="nhsuk-u-visually-hidden">Error:</span>{{ errors.void_case_reason }}
+                        </span>
+                    {% endif %}
+
+                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">{% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}</textarea>
+
+                    <strong class="nhsuk-heading-m">
+                        Final confirmation
+                    </strong>
+
+                    <span class="nhsuk-hint" id="example-hint">
+                        Please confirm this case is a duplicate and you would like to void it.
+                    </span>
+
+                    <div class="nhsuk-radios nhsuk-radios--inline">
+                        <div class="nhsuk-radios__item">
+                            <input class="nhsuk-radios__input" id="void-yes" name="void_case" type="radio" value="yes"
+                            {% if void_case in form and form.void_case == 'yes' %} checked {% endif %}>
+                            <label class="nhsuk-label nhsuk-radios__label" for="void-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="nhsuk-radios__item">
+                        <input class="nhsuk-radios__input" id="void-no" name="void_case" type="radio" value="no"
+                        {% if void_case in form and form.void_case == 'no' %} checked {% endif %}>
+                        <label class="nhsuk-label nhsuk-radios__label" for="void-no">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <p class="nhsuk-body-m">
+                    A note about this duplication will appear on the case timeline.
+                    Voided cases will still be available in Closed cases.
+                </p>
+
+                <button class="void-case-button nhsuk-button" type="submit" disabled>
+                    Void this case
+                </button>
+            </fieldset>
+        </div>
+    </form>
+
+    <a class="nhsuk-button nhsuk-button--secondary" href="{% url 'edit_examination' examination_id=examination_id %}">
+        Cancel
+    </a>
+
+</div>
+{% endblock %}
