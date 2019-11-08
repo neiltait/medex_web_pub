@@ -106,7 +106,7 @@ class EditUserProfileForm:
             if errors and 'GmcNumber' in errors.keys():
                 self.errors['gmc_number'] = errors['GmcNumber'][0]
                 self.errors['count'] += 1
-                errors['GmcNumber'] = None
+                del errors['GmcNumber']
 
             if len(errors) > 0:
                 self.errors['form'] = messages.GENERAL_ERROR % ("updating", "user profile")

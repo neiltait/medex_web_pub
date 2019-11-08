@@ -1,6 +1,7 @@
 from medexCms.test.utils import MedExTestCase
 
 from . import messages, utils
+from .templatetags.medex_tags import queryparams
 from .utils import generate_error_alert, generate_success_alert, generate_info_alert
 
 
@@ -20,3 +21,21 @@ class AlertsUtilsTests(MedExTestCase):
         result = generate_info_alert(messages.MISSING_CREDENTIALS)
         self.assertEqual(result['type'], utils.INFO)
         self.assertEqual(result['message'], messages.MISSING_CREDENTIALS)
+
+
+class MedexTagsTests(MedExTestCase):
+
+    def test_queryparams_w_args_and_kwargs(self):
+        expected = '?this=that&the=other'
+        returned = queryparams('x', 'y', this='that', the='other')
+        self.assertEqual(expected, returned)
+
+    def test_queryparams_w_kwargs_and_none(self):
+        expected = '?this=that&the=other'
+        returned = queryparams(this='that', the='other', other_thing=None)
+        self.assertEqual(expected, returned)
+
+    def test_queryparams_wo_kwargs(self):
+        expected = ''
+        returned = queryparams('x', 'y', other_thing=None)
+        self.assertEqual(expected, returned)
