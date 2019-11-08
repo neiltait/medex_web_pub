@@ -233,7 +233,7 @@ class MedexUtilsTests(MedExTestCase):
         self.assertEqual(expected, returned)
 
     def test_parse_date_time_format_5(self):
-        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1,  microsecond=1,
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, microsecond=1,
                                      tzinfo=datetime.timezone.utc)
         returned = parse_datetime('2001-01-01T01:01:01.000001')
         self.assertEqual(expected, returned)
@@ -255,5 +255,3 @@ class MedexUtilsTests(MedExTestCase):
 
     def test_any_not_blank_returns_true_if_all_args_are_not_blank(self):
         self.assertIsTrue(any_not_blank('x', 'y', 'z'))
-
-
