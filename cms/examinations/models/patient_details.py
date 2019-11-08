@@ -158,11 +158,7 @@ class PatientDetails:
         return self
 
     def set_urgency_info_values(self, form):
-        self.faith_priority = form.faith_death
-        self.coroner_priority = form.coroner_case
-        self.child_priority = form.child_death
-        self.cultural_priority = form.cultural_death
-        self.other_priority = form.other
+        self.other_priority = form.urgent_release
         self.priority_details = form.urgency_additional_details
         return self
 
@@ -194,3 +190,7 @@ class PatientDetails:
 
     def get_nhs_number(self):
         return self.nhs_number if self.nhs_number else 'Unknown'
+
+    def is_priority(self):
+        return self.other_priority or self.cultural_priority or self.faith_priority or \
+            self.child_priority or self.coroner_priority
