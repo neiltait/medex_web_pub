@@ -124,7 +124,8 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
         self.form = ManageUserForm.from_user(self.managed_user)
         status_code = status.HTTP_200_OK
 
-        return render(request, self.template, self.get_context(), status=status_code)
+        success = True if 'success' in request.GET else False
+        return render(request, self.template, self.get_context(success=success), status=status_code)
 
     def post(self, request, user_id):
         self.form = ManageUserForm(request.POST)
@@ -135,17 +136,18 @@ class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBase
 
         if response.ok:
             # 1. success
-            return redirect('/users/%s/manage' % self.managed_user.user_id)
+            return redirect('/users/%s/manage?success=true' % self.managed_user.user_id)
         else:
             # 2. api error
             self.form.register_response_errors(response)
             status_code = response.status_code
 
-        return render(request, self.template, self.get_context(), status=status_code)
+        return render(request, self.template, self.get_context(success=False), status=status_code)
 
-    def get_context(self):
+    def get_context(self, success):
         return {
             'session_user': self.user,
             'managed_user': self.managed_user,
-            'form': self.form
+            'form': self.form,
+            'success': success
         }
