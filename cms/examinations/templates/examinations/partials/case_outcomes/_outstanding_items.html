@@ -16,8 +16,7 @@
 
         <!-- ... -->
         {% csrf_token %}
-        <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
-
+            <fieldset class="nhsuk-fieldset">
 
             <legend class="nhsuk-heading-m no-padding">
                 MCCD
@@ -42,7 +41,7 @@
         </fieldset>
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
+            <fieldset class="nhsuk-fieldset">
                 <legend class="nhsuk-heading-m no-padding">
                     Cremation form
                 </legend>
@@ -50,7 +49,7 @@
                 <p class="nhsuk-body-m">
                     Has a cremation form been completed for this death?
                 </p>
-                <div class="nhsuk-radios nhsuk-radios--inline">
+                <div class="nhsuk-radios nhsuk-radios--inline nhsuk-form-group">
                     <div class="nhsuk-radios__item">
                         <input class="nhsuk-radios__input" id="crem-form-1" name="cremation_form" type="radio"
                                value="{{enums.yes_no.YES}}" {% if case_outcome.cremation_form_status == enums.yes_no.YES %}checked{% endif %}>
@@ -73,19 +72,11 @@
                         </label>
                     </div>
                 </div>
-            </fieldset>
-        </div>
-
-        {% if case_outcome.case_header.is_cremation %}
-            <div class="outstanding-item">
-                <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled %}disabled{% endif %}>
+                <div id="waive-cremation-fee-decision" class="inset-text-panel">
                     <div class="nhsuk-checkboxes">
-                        <legend class="nhsuk-heading-m no-padding">
-                            Cremation fee
-                        </legend>
-                        <p class="nhsuk-body-m">
+                        <legend class="medex-hint">
                             Please select if the cremation fee is to be waived.
-                        </p>
+                        </legend>
                         <div class="nhsuk-checkboxes__item">
                             <input id="waive_fee" name="waive_fee" type="checkbox" class="nhsuk-checkboxes__input" aria-labelledby="waive_fee"
                                 value="true" {% if case_outcome.waive_fee %}checked{% endif %}/>
@@ -94,12 +85,12 @@
                             </label>
                         </div>
                     </div>
-                </fieldset>
-            </div>
-        {% endif%}
+                </div>
+            </fieldset>
+        </div
 
         <div class="outstanding-item">
-            <fieldset class="nhsuk-fieldset" {% if not case_outcome.outstanding_items_enabled or disabled %}disabled{% endif %}>
+                <fieldset class="nhsuk-fieldset">
                 <legend class="nhsuk-heading-m no-padding">
                     GP notification
                 </legend>

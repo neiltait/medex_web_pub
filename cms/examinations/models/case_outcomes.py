@@ -72,6 +72,7 @@ class CaseOutcome:
         self.mccd_issued = obj_dict.get("mccdIssued")
         self.cremation_form_status = obj_dict.get("cremationFormStatus")
         self.gp_notified_status = obj_dict.get("gpNotifiedStatus")
+        self.waive_fee = obj_dict.get('waiveFee')
 
     def me_full_name_with_gmc_number(self):
         if self.me_gmc_number:
