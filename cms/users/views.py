@@ -89,7 +89,8 @@ class EditUserProfileView(LoginRequiredMixin, View):
         status_code = status.HTTP_200_OK
         form = EditUserProfileForm.from_user(self.user)
 
-        context = {'session_user': self.user, 'form': form}
+        success = True if 'success' in request.GET else False
+        context = {'session_user': self.user, 'form': form, 'success': success}
 
         return render(request, self.template, context, status=status_code)
 
@@ -101,7 +102,7 @@ class EditUserProfileView(LoginRequiredMixin, View):
 
         if response.ok:
             # 1. success
-            return redirect('/profile')
+            return redirect('/profile?success=true')
         else:
             # 2. api error
             form.register_response_errors(response)
