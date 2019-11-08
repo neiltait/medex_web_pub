@@ -89,13 +89,19 @@ def parse_datetime(datetime_string):
                 return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_2)
             except ValueError:
                 try:
-                    return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_3)
+                    return datetime.datetime.strptime(
+                        datetime_string, API_DATE_FORMAT_3
+                    ).replace(tzinfo=datetime.timezone.utc)
                 except ValueError:
                     try:
-                        return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_4)
+                        return datetime.datetime.strptime(
+                            datetime_string, API_DATE_FORMAT_4
+                        ).replace(tzinfo=datetime.timezone.utc)
                     except ValueError:
                         try:
-                            return datetime.datetime.strptime(datetime_string, API_DATE_FORMAT_5)
+                            return datetime.datetime.strptime(
+                                datetime_string, API_DATE_FORMAT_5
+                            ).replace(tzinfo=datetime.timezone.utc)
                         except ValueError:
                             print('Unknown date format received: %s' % datetime_string)
                             return None
