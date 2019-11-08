@@ -77,12 +77,10 @@ def date_is_valid_or_empty(year, month, day, hour='00', min='00'):
 
 
 def parse_datetime(datetime_string):
-
     def _replace_missing_tz_with_utc(dt_obj):
         if dt_obj.tzinfo:
             return dt_obj
         return dt_obj.replace(tzinfo=datetime.timezone.utc)
-
 
     if datetime_string and not is_empty_date(datetime_string):
         try:
