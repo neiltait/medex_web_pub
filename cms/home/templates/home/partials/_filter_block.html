@@ -13,7 +13,10 @@
 
         <!-- ... -->
         {% endif %}
+
         <input class="nhsuk-u-visually-hidden" value="{{session_user.index_overview.page_number}}" name="page_number"/>
+        <input class="nhsuk-u-visually-hidden" value="{{form.case_status}}" name="status"/>
+
         <div class="filter__label">
             <p><span id="filter-by-place-person">Filter cases by place and person</span></p>
         </div>
