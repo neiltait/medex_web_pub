@@ -4,6 +4,7 @@ from examinations.forms.patient_details import PrimaryExaminationInformationForm
     BereavedInformationForm, UrgencyInformationForm
 from examinations.forms.timeline_events import PreScrutinyEventForm, AdmissionNotesEventForm, QapDiscussionEventForm, \
     BereavedDiscussionEventForm
+from examinations.forms.void_case import VoidCaseForm
 from examinations.models.medical_team import MedicalTeam, MedicalTeamMember
 from examinations.models.patient_details import PatientDetails
 from examinations.models.timeline_events import CaseQapDiscussionEvent, CaseBereavedDiscussionEvent
@@ -960,3 +961,41 @@ class TimelineEventFormsTests(MedExTestCase):
 
         # Then the form is filled with individual date fields
         self.assertIsFalse(form.use_existing_bereaved)
+
+
+class CaseSettingsFormsTests(MedExTestCase):
+    FORM_HAPPY = {
+        'void_case': 'yes',
+        'void_case_reason': 'A very good reason'
+    }
+    FORM_UNHAPPY = {
+        'void_case': 'yes',
+        'void_case_reason': ''
+    }
+
+    def test_void_case_form_inits_blank_with_no_obj_dict(self):
+        form = VoidCaseForm()
+        self.assertEqual('', form.void_case)
+        self.assertEqual('', form.void_case_reason)
+
+    def test_void_case_form_inits_populated(self):
+        form = VoidCaseForm(self.FORM_HAPPY)
+        self.assertEqual(self.FORM_HAPPY['void_case'], form.void_case)
+        self.assertEqual(self.FORM_HAPPY['void_case_reason'], form.void_case_reason)
+
+    def test_void_case_to_object(self):
+        form = VoidCaseForm(self.FORM_HAPPY)
+        returned = form.to_object()
+        self.assertEqual(self.FORM_HAPPY['void_case_reason'], returned['voidReason'])
+
+    def test_void_case_form_is_valid_passes_with_no_errors(self):
+        form = VoidCaseForm(self.FORM_HAPPY)
+        self.assertTrue(form.is_valid())
+        self.assertNotIn('void_case_reason', form.errors)
+        self.assertEqual(0, form.error_count)
+
+    def test_void_case_form_is_valid_logs_void_case_reason_error(self):
+        form = VoidCaseForm(self.FORM_UNHAPPY)
+        self.assertFalse(form.is_valid())
+        self.assertIn('void_case_reason', form.errors)
+        self.assertEqual(1, form.error_count)

@@ -1,3 +1,5 @@
+import datetime
+
 from alerts import messages
 from .test.utils import MedExTestCase
 
@@ -111,36 +113,6 @@ class MedexUtilsTests(MedExTestCase):
     def test_validate_date_returns_false_for_a_invalid_date_with_valid_time_provided(self):
         self.assertIsFalse(validate_date('2019', '2', '31', '12', '00'))
 
-    def test_parse_datetime_returns_a_correct_date_object_when_passed_a_valid_date(self):
-        parsed_date = parse_datetime('2019-03-26T13:29:50.473Z')
-        self.assertEqual(parsed_date.day, 26)
-        self.assertEqual(parsed_date.month, 3)
-        self.assertEqual(parsed_date.year, 2019)
-        self.assertEqual(parsed_date.hour, 13)
-        self.assertEqual(parsed_date.minute, 29)
-
-    def test_parse_datetime_returns_none_if_passed_a_falsey_argument(self):
-        parsed_date = parse_datetime('')
-        self.assertEqual(parsed_date, None)
-
-    def test_all_not_blank_returns_false_if_all_args_are_blank(self):
-        self.assertIsFalse(all_not_blank('', '', ''))
-
-    def test_all_not_blank_returns_false_if_some_args_are_blank(self):
-        self.assertIsFalse(all_not_blank('x', 'y', ''))
-
-    def test_all_not_blank_returns_true_if_all_args_are_not_blank(self):
-        self.assertIsTrue(all_not_blank('x', 'y', 'z'))
-
-    def test_any_not_blank_returns_false_if_all_args_are_blank(self):
-        self.assertIsFalse(any_not_blank('', '', ''))
-
-    def test_any_not_blank_returns_true_if_some_args_are_not_blank(self):
-        self.assertIsTrue(any_not_blank('x', 'y', ''))
-
-    def test_any_not_blank_returns_true_if_all_args_are_not_blank(self):
-        self.assertIsTrue(any_not_blank('x', 'y', 'z'))
-
     def test_validate_date_time_field_returns_true_by_default_for_empty_input(self):
         # Given empty fields
         year = ''
@@ -225,3 +197,61 @@ class MedexUtilsTests(MedExTestCase):
         # Then should return valid
         self.assertEquals(errors['field_name'], messages.INVALID_DATE)
         self.assertEquals(errors['count'], 1)
+
+    def test_parse_datetime_returns_a_correct_date_object_when_passed_a_valid_date(self):
+        parsed_date = parse_datetime('2019-03-26T13:29:50.473Z')
+        self.assertEqual(parsed_date.day, 26)
+        self.assertEqual(parsed_date.month, 3)
+        self.assertEqual(parsed_date.year, 2019)
+        self.assertEqual(parsed_date.hour, 13)
+        self.assertEqual(parsed_date.minute, 29)
+
+    def test_parse_datetime_returns_none_if_passed_a_falsey_argument(self):
+        parsed_date = parse_datetime('')
+        self.assertEqual(parsed_date, None)
+
+    def test_parse_date_time_format_1(self):
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, microsecond=1,
+                                     tzinfo=datetime.timezone.utc)
+        returned = parse_datetime('2001-01-01T01:01:01.000001+0000')
+        self.assertEqual(expected, returned)
+
+    def test_parse_date_time_format_2(self):
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, microsecond=1,
+                                     tzinfo=datetime.timezone.utc)
+        returned = parse_datetime('2001-01-01T01:01:01.000001Z')
+        self.assertEqual(expected, returned)
+
+    def test_parse_date_time_format_3(self):
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, tzinfo=datetime.timezone.utc)
+        returned = parse_datetime('2001-01-01T01:01:01Z')
+        self.assertEqual(expected, returned)
+
+    def test_parse_date_time_format_4(self):
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, tzinfo=datetime.timezone.utc)
+        returned = parse_datetime('2001-01-01T01:01:01')
+        self.assertEqual(expected, returned)
+
+    def test_parse_date_time_format_5(self):
+        expected = datetime.datetime(2001, 1, 1, hour=1, minute=1, second=1, microsecond=1,
+                                     tzinfo=datetime.timezone.utc)
+        returned = parse_datetime('2001-01-01T01:01:01.000001')
+        self.assertEqual(expected, returned)
+
+    def test_all_not_blank_returns_false_if_all_args_are_blank(self):
+        self.assertIsFalse(all_not_blank('', '', ''))
+
+    def test_all_not_blank_returns_false_if_some_args_are_blank(self):
+        self.assertIsFalse(all_not_blank('x', 'y', ''))
+
+    def test_all_not_blank_returns_true_if_all_args_are_not_blank(self):
+        self.assertIsTrue(all_not_blank('x', 'y', 'z'))
+
+    def test_any_not_blank_returns_false_if_all_args_are_blank(self):
+        self.assertIsFalse(any_not_blank('', '', ''))
+
+    def test_any_not_blank_returns_true_if_some_args_are_not_blank(self):
+        self.assertIsTrue(any_not_blank('x', 'y', ''))
+
+    def test_any_not_blank_returns_true_if_all_args_are_not_blank(self):
+        self.assertIsTrue(any_not_blank('x', 'y', 'z'))

@@ -10,7 +10,7 @@ from alerts import messages
 from permissions.models import Permission, PermittedActions
 
 from .models import User
-from .forms import CreateUserForm
+from .forms import CreateUserForm, EditUserProfileForm, ManageUserForm
 
 
 class UsersViewsTest(MedExTestCase):
@@ -202,15 +202,89 @@ class UsersFormsTests(MedExTestCase):
         self.assertIsTrue(create_form.validate())
         self.assertEqual(create_form.email_error, None)
 
-    def test_check_is_nhs_email_returns_true_if_email_is_nhs_domain(self):
+    def test_CreateUserForm_check_is_nhs_email_returns_true_if_email_is_nhs_domain(self):
         email_address = 'test.user@nhs.uk'
         create_form = CreateUserForm({'email_address': email_address})
         self.assertIsTrue(create_form.check_is_nhs_email())
 
-    def test_check_is_nhs_email_returns_false_if_email_is_not_nhs_domain(self):
+    def test_CreateUserForm_check_is_nhs_email_returns_false_if_email_is_not_nhs_domain(self):
         email_address = 'test.user@email.com'
         create_form = CreateUserForm({'email_address': email_address})
         self.assertIsFalse(create_form.check_is_nhs_email())
+
+    def test_CreateUserForm_register_response_errors_registers_email_error(self):
+        email_address = 'test.user@email.com'
+        create_form = CreateUserForm({'email_address': email_address})
+        error_string = 'some_error'
+
+        class mock_non_ok_response:
+            ok = False
+
+            @staticmethod
+            def json():
+                return {'Email': [error_string]}
+
+        create_form.register_response_errors(mock_non_ok_response)
+        self.assertEqual(error_string, create_form.email_error)
+
+    class mockNonOkResponse:
+        ok = False
+
+        def __init__(self, json_response):
+            self.json_response = json_response
+
+        def json(self):
+            return self.json_response
+
+    def test_ManageUsersForm_register_reponse_errors_w_gmc_number(self):
+        form = ManageUserForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'GmcNumber': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(1, form.errors['count'])
+        self.assertEqual(error_string, form.errors['gmc_number'])
+
+    def test_ManageUsersForm_register_reponse_errors_wo_gmc_number_w_additional(self):
+        form = ManageUserForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'other_error': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(1, form.errors['count'])
+        self.assertEqual(messages.GENERAL_ERROR % ("updating", "user"), form.form_error)
+
+    def test_ManageUsersForm_register_reponse_errors_w_gmc_number_and_additional(self):
+        form = ManageUserForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'GmcNumber': [error_string], 'other_error': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(2, form.errors['count'])
+        self.assertEqual(error_string, form.errors['gmc_number'])
+        self.assertEqual(messages.GENERAL_ERROR % ("updating", "user"), form.form_error)
+
+    def test_EditUserProfileForm_register_reponse_errors_w_gmc_number(self):
+        form = EditUserProfileForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'GmcNumber': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(1, form.errors['count'])
+        self.assertEqual(error_string, form.errors['gmc_number'])
+
+    def test_EditUserProfileForm_register_reponse_errors_wo_gmc_number_w_additional(self):
+        form = EditUserProfileForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'other_error': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(1, form.errors['count'])
+        self.assertEqual(messages.GENERAL_ERROR % ("updating", "user profile"), form.errors['form'])
+
+    def test_EditUserProfileForm_register_reponse_errors_w_gmc_number_and_additional(self):
+        form = EditUserProfileForm()
+        error_string = 'some_error'
+        response = self.mockNonOkResponse({'GmcNumber': [error_string], 'other_error': [error_string]})
+        form.register_response_errors(response)
+        self.assertEqual(2, form.errors['count'])
+        self.assertEqual(error_string, form.errors['gmc_number'])
+        self.assertEqual(messages.GENERAL_ERROR % ("updating", "user profile"), form.errors['form'])
 
 
 class UsersModelsTests(MedExTestCase):

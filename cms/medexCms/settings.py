@@ -70,6 +70,7 @@ ALLOWED_HOSTS = [
     'medex-uat.methods.co.uk',
     'medex.methods.co.uk',
     'medex-web-pre-ukw.frontend.pre.medex.cloud',
+    'testserver',
 ]
 
 EMAIL_WHITELIST = [
