@@ -23,6 +23,19 @@
 </div>
 
 <div id="case-settings" class="settings-index">
+    {% if errors.count > 0 %}
+        <div class="nhsuk-error-summary " id="error_alert" automation-id="page_error" aria-labelledby="error-summary-title" role="alert"
+             tabindex="-1">
+            <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="nhsuk-error-summary__list">
+
+                {% include 'examinations/partials/_error_summary.html' with errors=errors %}
+
+            </div>
+        </div>
+    {% endif %}
 
     <h1 class="page-title">
         {{ page_heading }}
@@ -39,25 +52,27 @@
 
         <h2>Void a duplicate case.</h2>
 
-            <div class="nhsuk-form-group {% if 'void_case_reason' in errors %}nhsuk-form-group--error{% endif %}">
-                <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+                <div class="nhsuk-fieldset" aria-describedby="example-hint">
 
                     <legend class="nhsuk-fieldset__legend nhsuk-body-m flex-row service-overview">
                         Void this case if it was added in error. You should only do this if there is a genuine
                         duplicate in the system.
                     </legend>
 
-                    <label class="nhsuk-heading-m" for="void-case-reason">
-                        Reason for voiding this case
-                    </label>
+                    <div class="nhsuk-form-group {% if 'void_case_reason' in errors %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-heading-m" for="void-case-reason" id="void_case_reason_label">
+                            Reason for voiding this case
+                        </label>
 
-                    {% if 'void_case_reason' in errors %}
-                        <span class="nhsuk-error-message" id="void_case_reason_error">
-                            <span class="nhsuk-u-visually-hidden">Error:</span>{{ errors.void_case_reason }}
-                        </span>
-                    {% endif %}
+                        {% if 'void_case_reason' in errors %}
+                            <span class="nhsuk-error-message" id="void_case_reason_error">
+                                <span class="nhsuk-u-visually-hidden">Error:</span>{{ errors.void_case_reason }}
+                            </span>
+                        {% endif %}
 
-                    <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">{% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}</textarea>
+                        <textarea class="nhsuk-textarea" id="void-case-reason" name="void_case_reason" rows="5">{% if void_case_reason in form %}{{ form.void_case_reason }}{% endif %}</textarea>
+
+                    </div>
 
                     <strong class="nhsuk-heading-m">
                         Final confirmation
@@ -92,8 +107,7 @@
                 <button class="void-case-button nhsuk-button" type="submit" disabled>
                     Void this case
                 </button>
-            </fieldset>
-        </div>
+            </div>
     </form>
 
     <a class="nhsuk-button nhsuk-button--secondary" href="{% url 'edit_examination' examination_id=examination_id %}">
