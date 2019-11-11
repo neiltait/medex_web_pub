@@ -29,7 +29,7 @@ class VoidCaseForm:
         self.initialise_errors()
 
         if self.void_case_reason is None or len(self.void_case_reason.strip()) == 0:
-            self.errors["void_case_reason"] = ErrorFieldRequiredMessage("a reason why this case must be voided.")
+            self.errors["void_case_reason"] = ErrorFieldRequiredMessage("a reason why this case must be voided")
             self.errors["count"] += 1
 
         return self.errors["count"] == 0
