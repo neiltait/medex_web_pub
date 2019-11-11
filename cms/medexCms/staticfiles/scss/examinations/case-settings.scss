@@ -2,13 +2,15 @@
 
 .void-case-button {
     background-color: $nhs-red !important;
-
+    padding-left: $medex-spacing-md;
     &:hover {
       background-color: darken($nhs-red, 10%) !important;
     }
 }
 
 .cancel-void-case-button {
+  margin-left: $medex-spacing-md;
+
   &:hover {
     box-shadow: 0 4px 0 0 $black;
   }
