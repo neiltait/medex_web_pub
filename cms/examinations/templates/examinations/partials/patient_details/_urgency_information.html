@@ -25,8 +25,7 @@
 
           <textarea id="urgency_additional_details"
               class="nhsuk-textarea medex-textarea{% if errors.urgency_additional_details %} nhsuk-textarea--error{% endif %}"
-              name="urgency_additional_details">{{form.urgency_additional_details}}
-              {% if disabled %}disabled{% endif %}</textarea>
+              name="urgency_additional_details" {% if disabled %}disabled{% endif %}>{{form.urgency_additional_details}}</textarea>
         </div>
     </div>
   </div>
