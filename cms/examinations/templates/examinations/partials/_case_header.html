@@ -10,7 +10,7 @@
                 NHS No. {{patient.nhs_number}}
             </h2>
         </div>
-        {% if session_user.permitted_actions.can_get_users %}
+        {% if session_user.permitted_actions.can_void_examination %}
             <div class="nhsuk-grid-column-one-half">
             <p class="case-settings-link"><a href="{% url 'case_settings' examination_id=examination_id %}">
             Case settings

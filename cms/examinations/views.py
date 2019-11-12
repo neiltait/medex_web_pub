@@ -513,7 +513,7 @@ class CaseBreakdownView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template = 'examinations/case_settings.html'
-    permission_required = 'can_get_users'
+    permission_required = 'can_void_examination'
 
     @never_cache
     def get(self, request, examination_id):
@@ -562,7 +562,7 @@ class CaseSettingsIndexView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class VoidCaseSuccess(LoginRequiredMixin, PermissionRequiredMixin, View):
     template = 'examinations/void_case_success.html'
-    permission_required = 'can_get_users'
+    permission_required = 'can_void_examination'
 
     @never_cache
     def get(self, request):

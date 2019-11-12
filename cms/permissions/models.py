@@ -80,6 +80,7 @@ class PermittedActions:
             if obj_dict else False
         self.can_update_examination = obj_dict.get("UpdateExamination") if obj_dict else False
         self.can_update_examination_state = obj_dict.get("UpdateExaminationState") if obj_dict else False
+        self.can_void_examination = obj_dict.get("VoidExamination") if obj_dict else False
         self.can_add_event_to_examination = obj_dict.get("AddEventToExamination") if obj_dict else False
         self.can_get_examination_events = obj_dict.get("GetExaminationEvents") if obj_dict else False
         self.can_get_examination_event = obj_dict.get("GetExaminationEvent") if obj_dict else False
