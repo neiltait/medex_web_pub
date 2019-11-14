@@ -162,6 +162,7 @@ class VoidEvent(CaseEvent):
         self.user_id = obj_dict.get('userId')
         self.user_full_name = obj_dict.get('userFullName')
         self.user_role = obj_dict.get('usersRole')
+        self.gmc_number = obj_dict.get('gmcNumber')
         self.created_date = obj_dict.get('created')
         self.void_reason = obj_dict.get('voidReason')
         self.is_latest = False
