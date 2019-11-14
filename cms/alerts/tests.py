@@ -26,14 +26,16 @@ class AlertsUtilsTests(MedExTestCase):
 class MedexTagsTests(MedExTestCase):
 
     def test_queryparams_w_args_and_kwargs(self):
-        expected = '?this=that&the=other'
+        expected_v1 = '?this=that&the=other'
+        expected_v2 = '?the=other&this=that'
         returned = queryparams('x', 'y', this='that', the='other')
-        self.assertEqual(expected, returned)
+        self.assertTrue(expected_v1 == returned or expected_v2 == returned)
 
     def test_queryparams_w_kwargs_and_none(self):
-        expected = '?this=that&the=other'
+        expected_v1 = '?this=that&the=other'
+        expected_v2 = '?the=other&this=that'
         returned = queryparams(this='that', the='other', other_thing=None)
-        self.assertEqual(expected, returned)
+        self.assertTrue(expected_v1 == returned or expected_v2 == returned)
 
     def test_queryparams_wo_kwargs(self):
         expected = ''
