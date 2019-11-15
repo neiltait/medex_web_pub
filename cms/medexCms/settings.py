@@ -71,6 +71,7 @@ ALLOWED_HOSTS = [
     'medex.methods.co.uk',
     'medex-web-pre-ukw.frontend.pre.medex.cloud',
     'testserver',
+    'medex-web-pre-2.azurewebsites.net',
 ]
 
 EMAIL_WHITELIST = [
