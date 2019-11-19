@@ -107,7 +107,7 @@
         <div class="expandable-body">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    {% if case_status.pre_scrutiny_status == enums.prescrutiny_status.NOT_HAPPENED %}
+                    {% if case_status.qap_cod_entered == enums.case_status_bar_result.INCOMPLETE %}
                         <div class="expandable-body__no-cod-explanation">
                             <p class="nhsuk-body">
                                     <span>
@@ -122,13 +122,13 @@
                         </div>
                     {% else %}
                         <div class="expandable-body__context-section">
-                            <p class="nhsuk-body-m">Cause of death established during the review of records by medical
-                                examiner <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.user_for_latest_pre_scrutiny }}</span>
+                            <p class="nhsuk-body-m">Cause of death originally proposed by QAP
+                                <span
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.user_for_qap_original_cod }}</span>
                                 on <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_latest_pre_scrutiny }}</span>
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_date_of_qap_original_cod }}</span>
                                 at <span
-                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_latest_pre_scrutiny }}</span>
+                                        class="nhsuk-u-font-weight-bold">{{ case_status.display_time_of_qap_original_cod }}</span>
                             </p>
                         </div>
     
@@ -137,37 +137,37 @@
                             from
                         </p>
                         <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1a">
+                            <label class="nhsuk-label" for="qap_original_cause_of_death_1a">
                                 1a
                             </label>
-                            <p class="cod-textarea" name="qap_discussion_cause_of_death_1a"
-                               id="qap_discussion_cause_of_death_1a">{{ case_status.section_1a }}</p>
+                            <p class="cod-textarea" name="qap_original_cause_of_death_1a"
+                               id="qap_original_cause_of_death_1a">{{ case_status.qap_cod_1a }}</p>
                         </div>
     
                         <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1b">
+                            <label class="nhsuk-label" for="qap_original_cause_of_death_1b">
                                 1b
                             </label>
-                            <p class="cod-textarea" name="qap_discussion_cause_of_death_1b"
-                               id="qap_discussion_cause_of_death_1b">{{ case_status.section_1b }}</p>
+                            <p class="cod-textarea" name="qap_original_cause_of_death_1b"
+                               id="qap_original_cause_of_death_1b">{{ case_status.qap_cod_1b }}</p>
                         </div>
     
     
                         <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_1c">
+                            <label class="nhsuk-label" for="qap_original_cause_of_death_1c">
                                 1c
                             </label>
-                            <p class="cod-textarea" name="qap_discussion_cause_of_death_1c"
-                               id="qap_discussion_cause_of_death_1c">{{ case_status.section_1c }}</p>
+                            <p class="cod-textarea" name="qap_original_cause_of_death_1c"
+                               id="qap_original_cause_of_death_1c">{{ case_status.qap_cod_1c }}</p>
                         </div>
     
     
                         <div>
-                            <label class="nhsuk-label" for="qap_discussion_cause_of_death_2">
+                            <label class="nhsuk-label" for="qap_original_cause_of_death_2">
                                 2
                             </label>
-                            <p class="cod-textarea" name="qap_discussion_cause_of_death_2"
-                               id="qap_discussion_cause_of_death_2">{{ case_status.section_2 }}</p>
+                            <p class="cod-textarea" name="qap_original_cause_of_death_2"
+                               id="qap_original_cause_of_death_2">{{ case_status.qap_cod_2 }}</p>
                         </div>
                     {% endif %}
                 </div>
