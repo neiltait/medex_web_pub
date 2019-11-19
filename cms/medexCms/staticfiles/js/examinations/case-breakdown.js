@@ -279,6 +279,8 @@
         new QAPDiscussionForm($('#qap-discussion'));
         var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
         causeOfDeath.expand();
+        var qapOcdCauseOfDeath = new ChevronExpandable($('#qap-ocd-cause-of-death-panel'))
+        qapOcdCauseOfDeath.expand();
     }
 
     var BereavementDiscussionForm = function (form) {
