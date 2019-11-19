@@ -120,7 +120,19 @@ class PrePopulatedItemList:
                 "display_date_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
                                                                          self.date_format),
                 "display_time_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
-                                                                         self.time_format)}
+                                                                         self.time_format),
+                "qap_cod_entered": fallback_to(obj_dict.get("qapCodEntered"),
+                                                    enums.case_status_bar_result.INCOMPLETE),
+                "user_for_qap_original_cod": fallback_to(obj_dict.get("userForQapOriginalCauseOfDeath"), ""),
+                "display_date_of_qap_original_cod": reformat_datetime(obj_dict.get("dateOfQapOriginalCauseOfDeath"),
+                                                                         self.date_format),
+                "display_time_of_qap_original_cod": reformat_datetime(obj_dict.get("dateOfQapOriginalCauseOfDeath"),
+                                                                         self.time_format),
+                "qap_cod_1a": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1a"), ""),
+                "qap_cod_1b": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1b"), ""),
+                "qap_cod_1c": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1c"), ""),
+                "qap_cod_2": fallback_to(obj_dict.get("qapOriginalCauseOfDeath2"), "")
+        }
 
     def __get_prepopulated_values_for_bereaved_discussion(self, obj_dict):
         return {"section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
