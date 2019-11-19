@@ -4,11 +4,11 @@ from medexCms.utils import fallback_to, pop_if_falsey
 
 
 class MedicalTeamMembersForm:
-    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
-    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
-    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
-    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
-    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='')
+    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
+    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
+    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
+    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
+    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
     nursing_team_information = ''
     medical_examiner = ''
     medical_examiners_officer = ''
@@ -39,7 +39,11 @@ class MedicalTeamMembersForm:
                                      organisation=request.get('qap_organisation'),
                                      phone_number=request.get('qap_phone_number'),
                                      notes=request.get('qap_note_1'),
-                                     gmc_number=request.get('gmc_number_qap'))
+                                     gmc_number=request.get('gmc_number_qap'),
+                                     cod_1a=request.get('qap_cod_1a'),
+                                     cod_1b=request.get('qap_cod_1b'),
+                                     cod_1c=request.get('qap_cod_1c'),
+                                     cod_2=request.get('qap_cod_2'))
         self.gp = MedicalTeamMember(name=request.get('gp_name'),
                                     organisation=request.get('gp_organisation'),
                                     phone_number=request.get('gp_phone_number'),

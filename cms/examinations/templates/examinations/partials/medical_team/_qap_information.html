@@ -71,4 +71,43 @@
             </div>
         </div>
     </div>
+    <div class="nhsuk-grid-row">
+        &nbsp;
+    </div>
+    <div class="nhsuk-grid-row">
+        <div class="nhsuk-grid-column-full">
+            <div class="nhsuk-form-group {% if form.errors.1a %}nhsuk-form-group--error{% endif %}">
+                <h3 class="nhsuk-heading-m">QAP's original cause of death</h3>
+                <p class="nhsuk-body-m">Please add if the QAP has provided an original cause of death independent from the Medical Examiner</p>
+                <div>
+                    <label class="nhsuk-label" for="qap_cod_1a">
+                        1a
+                    </label>
+                    <textarea id="qap_cod_1a" class="nhsuk-textarea medex-textarea" name="qap_cod_1a"
+                                rows="2">{{ form.qap.cod_1a }}</textarea>
+                </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_cod_1b">
+                        1b
+                    </label>
+                    <textarea id="qap_cod_1b" class="nhsuk-textarea medex-textarea" name="qap_cod_1b"
+                                rows="2">{{ form.qap.cod_1b }}</textarea>
+                </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_cod_1c">
+                        1c
+                    </label>
+                    <textarea id="qap_cod_1c" class="nhsuk-textarea medex-textarea" name="qap_cod_1c"
+                                rows="2">{{ form.qap.cod_1c }}</textarea>
+                </div>
+                <div>
+                    <label class="nhsuk-label" for="qap_cod_2">
+                        2
+                    </label>
+                    <textarea id="qap_cod_2" class="nhsuk-textarea medex-textarea" name="qap_cod_2"
+                                rows="2">{{ form.qap.cod_2 }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
