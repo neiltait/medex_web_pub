@@ -50,6 +50,7 @@ class CaseStatus:
     latest_admission_details_entered = False
     doctor_in_charge_entered = False
     qap_entered = False
+    qap_cod_entered = False
     bereaved_info_entered = False
     me_assigned = False
     is_scrutiny_completed = False
@@ -78,6 +79,7 @@ class CaseStatus:
             self.latest_admission_details_entered = header.get("latestAdmissionDetailsEntered")
             self.doctor_in_charge_entered = header.get("doctorInChargeEntered")
             self.qap_entered = header.get("qapEntered")
+            self.qap_cod_entered = header.get("qapOriginalCodEntered")
             self.bereaved_info_entered = header.get("bereavedInfoEntered")
             self.me_assigned = header.get("meAssigned")
             self.is_scrutiny_completed = header.get("isScrutinyCompleted")
