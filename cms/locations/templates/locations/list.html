@@ -1,0 +1,112 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block extra_css %}
+    <link href="{% sass_src 'scss/users/user_index.scss' %}" rel="stylesheet" type="text/css" >
+{% endblock %}
+
+{% block page %}
+
+    {% if parent != None %}
+        <p>
+            <a href="{% url 'location_list' location_id=location.parentId %}">
+                Back to {{ parent.name }}
+            </a>
+        </p>
+    {% elif location != None %}
+    <p>
+            <a href="{% url 'location_list' %}">
+                Back to Locations
+            </a>
+        </p>
+    {% endif %}
+
+    <div class="user-index">
+        <h1 class="page-title">
+            {{ page_heading }}
+        </h1>
+
+        {% if location is not None %}
+
+            <h2>Location Details</h2>
+
+            <div class="nhsuk-table-responsive">
+                <table class="nhsuk-table">
+                    <tbody class="nhsuk-table__body">
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell">Name</td>
+                            <td class="nhsuk-table__cell "> {{ location.name }}</td>
+                        </tr>
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell">Code</td>
+                            <td class="nhsuk-table__cell "> {{ location.code }}</td>
+                        </tr>
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell">Type</td>
+                            <td class="nhsuk-table__cell "> {{ location.type }}</td>
+                        </tr>
+                        <tr class="nhsuk-table__row">
+                            <td class="nhsuk-table__cell">Is Medical Examiner Office</td>
+                            <td class="nhsuk-table__cell ">
+                                {{ location.isMeOffice }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {% if location.type == 'Site' %}
+            <a class="nhsuk-button add-user-btn" href='{% url 'manage_location' location_id=location.locationId %}'>Edit Location</a>
+            {% endif %}
+
+        {% endif %}
+
+        <h2>{% if location != None %}Sub{% endif %} Locations</h2>
+
+        <div class="nhsuk-table-responsive">
+            <table class="nhsuk-table">
+                <thead class="nhsuk-table__head">
+                <tr class="nhsuk-table__row">
+                    <th class="nhsuk-table__header" scope="col">Role</th>
+                    <th class="nhsuk-table__header" scope="col">Type</th>
+                    <th class="nhsuk-table__header" scope="col">Is ME Office</th>
+                    <th class="nhsuk-table__header" scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="nhsuk-table__body">
+                
+                    {% for location in locations %}
+                <tr class="nhsuk-table__row">
+                    <td class="nhsuk-table__cell">
+                        <a href="{% url 'location_list' location_id=location.locationId %}">
+                            {{ location.name }}
+                        </a>
+                    </td>
+                    <td class="nhsuk-table__cell "> {{ location.type }}</td>
+                    <td class="nhsuk-table__cell "> {{ location.isMeOffice }}</td>
+                    <td class="nhsuk-table__cell ">
+                        <div class="nhsuk-grid-column-one-half">
+
+                            {% if location.type == 'Site' %}
+                            <a href="{% url 'manage_location' location_id=location.locationId %}">
+                                Edit
+                            </a>
+                            {% endif %}
+                            {% if location.type != 'Site' %}
+                                -
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+{% endblock %}
+

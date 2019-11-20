@@ -4,12 +4,34 @@ from medexCms.models import MedexRequest
 from medexCms.test.mocks import LocationsMocks
 
 
+def load_by_id(auth_token, location_id):
+    print(location_id)
+    response = MedexRequest.get(auth_token, "%s/locations/%s" % (settings.API_URL, location_id))
+    print(response)
+    if response.status_code == 200:
+        return response.json()
+
+    return None
+
+
 def get_locations_list(auth_token, limit_to_me_offices=True):
     if settings.LOCAL:
         return LocationsMocks.get_trust_location_list()
     else:
         return __get_filtered_locations_list(auth_token, permitted_locations_only=False,
                                              limit_to_me_offices=limit_to_me_offices,
+                                             parent_id=None,
+                                             create_examination_locations=False)
+
+
+def get_child_locations_list(auth_token, parent_id):
+    if settings.LOCAL:
+        # @TODO
+        return None
+    else:
+        return __get_filtered_locations_list(auth_token, permitted_locations_only=False,
+                                             limit_to_me_offices=False,
+                                             parent_id=parent_id,
                                              create_examination_locations=False)
 
 
@@ -19,6 +41,7 @@ def get_permitted_locations_list(auth_token, limit_to_me_offices=True):
     else:
         return __get_filtered_locations_list(auth_token, permitted_locations_only=True,
                                              limit_to_me_offices=limit_to_me_offices,
+                                             parent_id=None,
                                              create_examination_locations=False)
 
 
@@ -28,14 +51,29 @@ def get_create_examination_permitted_locations_list(auth_token, limit_to_me_offi
     else:
         return __get_filtered_locations_list(auth_token, permitted_locations_only=False,
                                              limit_to_me_offices=limit_to_me_offices,
+                                             parent_id=None,
                                              create_examination_locations=True)
 
 
-def __get_filtered_locations_list(auth_token, permitted_locations_only, limit_to_me_offices,
+def __get_filtered_locations_list(auth_token, permitted_locations_only, limit_to_me_offices, parent_id,
                                   create_examination_locations):
     query_params = {
+        "ParentId": parent_id,
         "AccessOnly": permitted_locations_only,
         "OnlyMEOffices": limit_to_me_offices,
         "CreateExaminationOnly": create_examination_locations,
     }
-    return MedexRequest.get(auth_token, "%s/locations" % settings.API_URL, query_params).json()['locations']
+    print(query_params)
+    response = MedexRequest.get(auth_token, "%s/locations" % settings.API_URL, query_params).json()['locations']
+    print(response)
+
+    return response
+
+
+def update_location_me_office(is_me_office, location_id, auth_token):
+    if settings.LOCAL:
+        return LocationsMocks.get_successful_location_update_response()
+    else:
+        return MedexRequest.put(auth_token,
+                                '%s/locations/%s/is_me_office' % (settings.API_URL, location_id),
+                                is_me_office)

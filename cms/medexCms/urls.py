@@ -15,5 +15,6 @@ urlpatterns = [
     path('privacy', PrivacyPolicyView.as_view(), name='privacy'),
     path('settings', SettingsIndexView.as_view(), name='settings_index'),
     url(r'^users/', include('users.urls')),
+    url(r'^locations/', include('locations.urls')),
     url(r'^cases/', include('examinations.urls')),
 ]
