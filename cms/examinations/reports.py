@@ -1,6 +1,7 @@
 from examinations import request_handler
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
+from locations.models import Location
 
 
 class CoronerDownloadReport:
@@ -141,6 +142,14 @@ class FinancialReport:
 
     def __init__(self):
         self.data = None
+
+    @classmethod
+    def get_locations(cls, auth_token):
+        locations_data = request_handler.load_financial_report_locations(auth_token).json()["locations"]
+        locations = []
+        for location in locations_data:
+            locations.append(Location().set_values(location))
+        return locations
 
     @classmethod
     def load_by_query(cls, params, auth_token):

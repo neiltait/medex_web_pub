@@ -2325,3 +2325,23 @@ class ReportMocks:
             "date_from": "01/01/2017",
             "date_to": "01/01/2020"
         }
+
+    @classmethod
+    def get_successful_financial_report_locations_response(cls):
+        response = Response()
+        response.status_code = status.HTTP_200_OK
+        response._content = json.dumps(cls.get_financial_report_locations_data()).encode('utf-8')
+        return response
+
+    @classmethod
+    def get_financial_report_locations_data(cls):
+        return [
+            {
+                "locationId": "location1",
+                "name": "name1",
+            },
+            {
+                "locationId": "location2",
+                "name": "name2",
+            }
+        ]
