@@ -16,6 +16,11 @@ class APIYesNoStrings:
     UNKNOWN = "Unknown"
 
 
+class APIOpenOrClosed:
+    OPEN = "Open"
+    CLOSED_OR_VOID = "ClosedOrVoid"
+
+
 class APIRouteOfAdmission:
     AE = "AccidentAndEmergency"
     WARD = "DirectToWard"
@@ -184,6 +189,7 @@ class TimelineEventKeys:
     PRE_SCRUTINY_EVENT_KEY = 'preScrutiny'
     INITIAL_EVENT_KEY = 'patientDeathEvent'
     CASE_CLOSED_EVENT_KEY = 'caseClosed'
+    VOID_EVENT_KEY = 'voidEvent'
 
     @classmethod
     def all(cls):
@@ -204,6 +210,7 @@ class TimelineEventTypes:
     ADMISSION_NOTES_EVENT_TYPE = 'Admission'
     INITIAL_EVENT_TYPE = 'patientDeathEvent'
     CASE_CLOSED_TYPE = 'caseClosed'
+    CASE_VOIDED_TYPE = 'caseVoided'
 
 
 class SystemValidationErrors:
@@ -244,6 +251,7 @@ class APIStrings:
     filters = APIFilters
     case_status_bar_result = APIStatusBarResult()
     results_sorting = APIResultsSorting()
+    open_closed = APIOpenOrClosed()
 
 
 enums = APIStrings()

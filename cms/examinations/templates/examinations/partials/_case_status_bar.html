@@ -113,9 +113,11 @@
                 </div>
 
                 <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
+
                     {% include 'examinations/partials/_status_item.html' with label="Latest admission details" status=case_status.latest_admission_details_entered automation_id="status-bar__latest-admission" aria_desc="Additional details" %}
                     {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered automation_id="status-bar__doctor-in-charge" aria_desc="Additional details" %}
-                    {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered automation_id="status-bar__qap" aria_desc="Additional details" %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP information" status=case_status.qap_entered automation_id="status-bar__qap" aria_desc="Additional details" %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP's original COD" status=case_status.qap_cod_entered automation_id="status-bar__qap__cod" aria_desc="Original Cause of Death" %}
                     {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered automation_id="status-bar__bereaved" aria_desc="Additional details" %}
                     {% include 'examinations/partials/_status_item.html' with label="ME assigned" status=case_status.me_assigned automation_id="status-bar__me-assigned" aria_desc="Additional details" %}
                 </div>

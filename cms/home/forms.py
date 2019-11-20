@@ -37,4 +37,8 @@ class IndexFilterForm:
         if person_parameter:
             base_url = "%sperson=%s&" % (base_url, person_parameter)
 
+        sorting_parameter = query_params.get('sorting_order')
+        if sorting_parameter:
+            base_url = "%ssorting_order=%s&" % (base_url, sorting_parameter)
+
         return base_url

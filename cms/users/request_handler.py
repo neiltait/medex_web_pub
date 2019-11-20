@@ -18,6 +18,27 @@ def create_user(user_object, auth_token):
         return MedexRequest.post(auth_token, '%s/users' % settings.API_URL, user_object)
 
 
+def update_user(user_object, auth_token):
+    if settings.LOCAL:
+        return UserMocks.get_successful_user_update_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/users' % settings.API_URL, user_object)
+
+
+def update_current_user_profile(profile_object, auth_token):
+    if settings.LOCAL:
+        return UserMocks.get_successful_user_update_profile_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/profile' % settings.API_URL, profile_object)
+
+
+def update_user_profile(user_id, profile_object, auth_token):
+    if settings.LOCAL:
+        return UserMocks.get_successful_user_update_profile_response()
+    else:
+        return MedexRequest.put(auth_token, '%s/users/%s/profile' % (settings.API_URL, user_id), profile_object)
+
+
 def load_by_id(user_id, auth_token):
     if settings.LOCAL:
         return UserMocks.get_successful_single_user_load_response()

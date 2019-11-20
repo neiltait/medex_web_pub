@@ -8,7 +8,7 @@ from errors.utils import log_api_error
 from home.utils import render_404
 from medexCms.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, ManageUserForm, EditUserProfileForm
 from .models import User
 
 
@@ -82,15 +82,72 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return render(request, self.template, context, status=status_code)
 
 
+class EditUserProfileView(LoginRequiredMixin, View):
+    template = 'users/profile.html'
+
+    def get(self, request):
+        status_code = status.HTTP_200_OK
+        form = EditUserProfileForm.from_user(self.user)
+
+        success = True if 'success' in request.GET else False
+        context = {'session_user': self.user, 'form': form, 'success': success}
+
+        return render(request, self.template, context, status=status_code)
+
+    def post(self, request):
+        form = EditUserProfileForm(request.POST)
+        submission = form.response_to_dict()
+
+        response = User.update_profile(submission, self.user.auth_token)
+
+        if response.ok:
+            # 1. success
+            return redirect('/profile?success=true')
+        else:
+            # 2. api error
+            form.register_response_errors(response)
+            status_code = response.status_code
+
+        context = {'session_user': self.user, 'form': form}
+        return render(request, self.template, context=context, status=status_code)
+
+
 class ManageUserView(LoginRequiredMixin, PermissionRequiredMixin, ManageUserBaseView, View):
     permission_required = 'can_get_users'
     template = 'users/manage.html'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.form = ManageUserForm()
+
     def get(self, request, user_id):
+        self.form = ManageUserForm.from_user(self.managed_user)
         status_code = status.HTTP_200_OK
-        context = {
+
+        success = True if 'success' in request.GET else False
+        return render(request, self.template, self.get_context(success=success), status=status_code)
+
+    def post(self, request, user_id):
+        self.form = ManageUserForm(request.POST)
+        submission = self.form.response_to_dict()
+        submission["user_id"] = user_id
+
+        response = User.update_profile(submission, self.user.auth_token, user_id)
+
+        if response.ok:
+            # 1. success
+            return redirect('/users/%s/manage?success=true' % self.managed_user.user_id)
+        else:
+            # 2. api error
+            self.form.register_response_errors(response)
+            status_code = response.status_code
+
+        return render(request, self.template, self.get_context(success=False), status=status_code)
+
+    def get_context(self, success):
+        return {
             'session_user': self.user,
             'managed_user': self.managed_user,
+            'form': self.form,
+            'success': success
         }
-
-        return render(request, self.template, context, status=status_code)

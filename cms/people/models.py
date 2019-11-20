@@ -43,10 +43,17 @@ class DropdownPerson:
 
     def __init__(self, obj_dict):
         self.person_id = obj_dict.get('userId')
+        self.gmc_number = obj_dict.get('gmcNumber')
         if 'fullName' in obj_dict:
             self.name = obj_dict.get('fullName')
         else:
             self.name = obj_dict.get('firstName') + ' ' + obj_dict.get('lastName')
+
+    def name_with_gmc_number(self):
+        if self.gmc_number:
+            return '%s: %s' % (self.name, self.gmc_number)
+        else:
+            return self.name
 
     @classmethod
     def get_medical_examiners(cls, auth_token, examination_id):

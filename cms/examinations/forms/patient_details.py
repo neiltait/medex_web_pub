@@ -545,27 +545,15 @@ class UrgencyInformationForm:
     def __init__(self, request=None):
         self.errors = {'count': 0}
         if request:
-            self.faith_death = request.get('faith_death')
-            self.coroner_case = request.get('coroner_case')
-            self.child_death = request.get('child_death')
-            self.cultural_death = request.get('cultural_death')
-            self.other = request.get('other')
+            self.urgent_release = request.get('urgent_release')
             self.urgency_additional_details = request.get('urgency_additional_details')
         else:
-            self.faith_death = ''
-            self.coroner_case = ''
-            self.child_death = ''
-            self.cultural_death = ''
-            self.other = ''
+            self.urgent_release = ''
             self.urgency_additional_details = ''
 
     def set_values_from_instance(self, examination):
-        self.faith_death = examination.faith_priority
-        self.coroner_case = examination.coroner_priority
-        self.child_death = examination.child_priority
-        self.cultural_death = examination.cultural_priority
-        self.other = examination.other_priority
         self.urgency_additional_details = examination.priority_details
+        self.urgent_release = examination.is_priority()
         return self
 
     def is_valid(self):
@@ -577,10 +565,6 @@ class UrgencyInformationForm:
 
     def for_request(self):
         return {
-            'faithPriority': 'true' if self.faith_death else 'false',
-            'coronerPriority': 'true' if self.coroner_case else 'false',
-            'childPriority': 'true' if self.child_death else 'false',
-            'culturalPriority': 'true' if self.cultural_death else 'false',
-            'otherPriority': 'true' if self.other else 'false',
+            'otherPriority': 'true' if self.urgent_release else 'false',
             'priorityDetails': self.urgency_additional_details,
         }

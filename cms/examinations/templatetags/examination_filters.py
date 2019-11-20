@@ -45,5 +45,6 @@ def case_card_presenter(case):
         'case_closed_date': display_date(case.case_closed_date, fallback='-'),
         'case_outcome': constants.get_display_outcome_summary(case.case_outcome),
         'appointment_time': case.appointment_time if
-        case.appointment_time and case.appointment_time != '00:00:00' else '-'
+        case.appointment_time and case.appointment_time != '00:00:00' else '-',
+        'void': case.void
     }

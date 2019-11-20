@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 from medexCms.utils import parse_datetime
 
@@ -68,6 +68,10 @@ class Examination:
     def create(cls, submission, auth_token):
         return request_handler.post_new_examination(submission, auth_token)
 
+    @classmethod
+    def void(cls, examination_id, submission, auth_token):
+        return request_handler.put_void_examination(examination_id, submission, auth_token)
+
 
 class ExaminationOverview:
     date_format = '%d.%m.%Y'
@@ -88,6 +92,7 @@ class ExaminationOverview:
         self.case_closed_date = parse_datetime(obj_dict.get("dateCaseClosed"))
         self.case_outcome = obj_dict.get("caseOutcome")
         self.open = obj_dict.get('open')
+        self.void = obj_dict.get('isVoid')
 
     def calc_last_admission_days_ago(self):
         if self.last_admission:
@@ -142,7 +147,7 @@ class CauseOfDeath:
 class PatientHeader:
     date_format = '%d.%m.%Y'
 
-    def __init__(self, obj_dict):
+    def __init__(self, obj_dict=None):
         self.given_names = ''
         self.surname = ''
         self.urgency_score = 0
@@ -204,17 +209,3 @@ class PatientHeader:
     #         'section_1c': self.section_1c,
     #         'section_2': self.section_2
     #     }
-
-    def display_date(self):
-        if self.creation_date:
-            date = parse_datetime(self.creation_date)
-            if date.date() == datetime.today().date():
-                return 'Today at %s' % date.strftime(self.time_format)
-            elif date.date() == datetime.today().date() - timedelta(days=1):
-                return 'Yesterday at %s' % date.strftime(self.time_format)
-            else:
-                time = date.strftime(self.time_format)
-                date = date.strftime(self.date_format)
-                return "%s at %s" % (date, time)
-        else:
-            return None

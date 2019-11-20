@@ -1,0 +1,14 @@
+@import '../variables.scss';
+
+.void-case-success-container {
+  border: $focus-width solid $nhs-green;
+  padding: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  margin-left: 1rem;
+
+  .void-case-success-message {
+    margin-left: 1rem;
+    font-size: 1.5rem;
+  }
+}

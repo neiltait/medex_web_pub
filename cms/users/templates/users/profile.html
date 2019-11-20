@@ -1,0 +1,75 @@
+{% extends "medexCms/shared/base.html" %}
+{% load sass_tags %}
+{% load staticfiles %}
+
+{% block title %}{{ session_user }}{% endblock %}
+
+{% block page %}
+    <div class="profile-page">
+        <div class="nhsuk-width-container">
+            {% if form.errors.count > 0 %}
+                <div class="nhsuk-error-summary " id="error_alert" automation-id="page_error" aria-labelledby="error-summary-title" role="alert"
+                     tabindex="-1">
+                    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="nhsuk-error-summary__list">
+
+                        {% include 'examinations/partials/_error_summary.html' with errors=form.errors %}
+
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if form.errors.count == 0 and success %}
+                <div class="nhsuk-error-summary success-message" id="success_alert" aria-labelledby="success-summary-title"
+                     role="alert"
+                     tabindex="-1">
+                    <ul class="nhsuk-list nhsuk-list--tick">
+                        <li>
+                            <svg class="nhsuk-icon nhsuk-icon__tick" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 fill="none" aria-hidden="true">
+                                <path stroke-width="4" stroke-linecap="round" d="M18.4 7.8l-8.5 8.4L5.6 12"></path>
+                            </svg>
+                            Your profile has been updated
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <div class="nhsuk-heading-xl">
+                        {{ session_user }}
+                    </div>
+                </div>
+            </div>
+            <div class="nhsuk-grid-row margin-bottom">
+                <h2 class="nhsuk-grid-column-full nhsuk-heading-l">
+                    Your profile
+                </h2>
+                <div class="nhsuk-grid-column-full">
+                    <form action="/profile" method="post">
+                        {% csrf_token %}
+                        <div class="nhsuk-form-group {% if form.errors.gmc_number %}nhsuk-form-group--error{% endif %}">
+                            <label class="nhsuk-label" for="relevant_occupation">GMC Number</label>
+
+                            {% if form.errors.gmc_number %}<span class="nhsuk-error-message medex-font-default-override"
+                                                                 automation-id="ve_gmc_number">{{ form.errors.gmc_number }}</span>{% endif %}
+
+                            <input id="gmc_number" type="text" autocomplete="off" name="gmc_number"
+                                   value="{{ form.gmc_number }}"
+                                   class="nhsuk-input nhsuk-input--width-20 {% if form.errors.gmc_number %}nhsuk-input--error{% endif %}"
+                                   {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>
+                        </div>
+                        <button class="nhsuk-button" {% if not session_user.permitted_actions.can_update_profile %}disabled{% endif %}>Update profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+{% endblock %}

@@ -42,8 +42,16 @@ class MedicalTeam:
             self.medical_examiner_officer_lookup = []
 
     @classmethod
+    def get_display_name(cls, user):
+        if user.get('gmcNumber'):
+            return '%s: %s' % (user['fullName'], user['gmcNumber'])
+        else:
+            return user['fullName']
+
+    @classmethod
     def get_lookup(cls, user_list):
-        return [{'display_name': user['fullName'], 'user_id': user['userId']} for user in user_list]
+        return [{'display_name': cls.get_display_name(user),
+                 'user_id': user['userId']} for user in user_list]
 
     @classmethod
     def load_by_id(cls, examination_id, auth_token):
@@ -68,13 +76,18 @@ class MedicalTeam:
 
 class MedicalTeamMember:
 
-    def __init__(self, name='', role='', organisation='', phone_number='', notes='', gmc_number=''):
+    def __init__(self, name='', role='', organisation='', phone_number='', notes='', gmc_number='', cod_1a='',
+                 cod_1b='', cod_1c='', cod_2=''):
         self.name = name.strip() if name else ''
         self.role = role
         self.organisation = organisation
         self.phone_number = phone_number
         self.notes = notes
         self.gmc_number = gmc_number
+        self.cod_1a = cod_1a
+        self.cod_1b = cod_1b
+        self.cod_1c = cod_1c
+        self.cod_2 = cod_2
 
     @staticmethod
     def from_dict(obj_dict):
@@ -87,8 +100,14 @@ class MedicalTeamMember:
         phone_number = fallback_to(obj_dict.get('phone'), '')
         notes = fallback_to(obj_dict.get('notes'), '')
         gmc_number = fallback_to(obj_dict.get('gmcNumber'), '')
+        cod_1a = fallback_to(obj_dict.get('causeOfDeath1a'), '')
+        cod_1b = fallback_to(obj_dict.get('causeOfDeath1b'), '')
+        cod_1c = fallback_to(obj_dict.get('causeOfDeath1c'), '')
+        cod_2 = fallback_to(obj_dict.get('causeOfDeath2'), '')
+
         return MedicalTeamMember(name=name, role=role, organisation=organisation, phone_number=phone_number,
-                                 notes=notes, gmc_number=gmc_number)
+                                 notes=notes, gmc_number=gmc_number, cod_1a=cod_1a, cod_1b=cod_1b, cod_1c=cod_1c,
+                                 cod_2=cod_2)
 
     def has_name(self):
         return True if self.name and len(self.name.strip()) > 0 else False
@@ -100,7 +119,8 @@ class MedicalTeamMember:
         from examinations.utils import text_field_is_not_null
 
         if text_field_is_not_null(self.role) or text_field_is_not_null(self.organisation) or text_field_is_not_null(
-                self.phone_number):
+                self.phone_number) or text_field_is_not_null(self.cod_1a) or text_field_is_not_null(
+                self.cod_1b) or text_field_is_not_null(self.cod_1c) or text_field_is_not_null(self.cod_2):
             return text_field_is_not_null(self.name)
         else:
             return True
@@ -112,5 +132,9 @@ class MedicalTeamMember:
             "organisation": self.organisation,
             "phone": self.phone_number,
             "notes": self.notes,
-            "gmcNumber": self.gmc_number
+            "gmcNumber": self.gmc_number,
+            "causeOfDeath1a": self.cod_1a,
+            "causeOfDeath1b": self.cod_1b,
+            "causeOfDeath1c": self.cod_1c,
+            "causeOfDeath2": self.cod_2
         }

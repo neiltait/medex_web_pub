@@ -1,6 +1,6 @@
 from errors.utils import handle_error, log_unexpected_api_response
 from examinations import request_handler
-from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent
+from examinations.models.timeline_events import CaseEvent, CaseInitialEvent, CaseClosedEvent, VoidEvent
 from medexCms.api import enums
 from medexCms.utils import fallback_to, reformat_datetime
 
@@ -50,6 +50,7 @@ class CaseStatus:
     latest_admission_details_entered = False
     doctor_in_charge_entered = False
     qap_entered = False
+    qap_cod_entered = False
     bereaved_info_entered = False
     me_assigned = False
     is_scrutiny_completed = False
@@ -78,6 +79,7 @@ class CaseStatus:
             self.latest_admission_details_entered = header.get("latestAdmissionDetailsEntered")
             self.doctor_in_charge_entered = header.get("doctorInChargeEntered")
             self.qap_entered = header.get("qapEntered")
+            self.qap_cod_entered = header.get("qapOriginalCodEntered")
             self.bereaved_info_entered = header.get("bereavedInfoEntered")
             self.me_assigned = header.get("meAssigned")
             self.is_scrutiny_completed = header.get("isScrutinyCompleted")
@@ -118,7 +120,18 @@ class PrePopulatedItemList:
                 "display_date_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
                                                                          self.date_format),
                 "display_time_of_latest_pre_scrutiny": reformat_datetime(obj_dict.get("dateOfLatestPreScrutiny"),
-                                                                         self.time_format)}
+                                                                         self.time_format),
+                "qap_cod_entered": fallback_to(obj_dict.get("qapCodEntered"),
+                                               enums.case_status_bar_result.INCOMPLETE),
+                "user_for_qap_original_cod": fallback_to(obj_dict.get("userForQapOriginalCauseOfDeath"), ""),
+                "display_date_of_qap_original_cod": reformat_datetime(obj_dict.get("dateOfQapOriginalCauseOfDeath"),
+                                                                      self.date_format),
+                "display_time_of_qap_original_cod": reformat_datetime(obj_dict.get("dateOfQapOriginalCauseOfDeath"),
+                                                                      self.time_format),
+                "qap_cod_1a": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1a"), ""),
+                "qap_cod_1b": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1b"), ""),
+                "qap_cod_1c": fallback_to(obj_dict.get("qapOriginalCauseOfDeath1c"), ""),
+                "qap_cod_2": fallback_to(obj_dict.get("qapOriginalCauseOfDeath2"), "")}
 
     def __get_prepopulated_values_for_bereaved_discussion(self, obj_dict):
         return {"section_1a": fallback_to(obj_dict.get("causeOfDeath1a"), ""),
@@ -168,6 +181,9 @@ class ExaminationEventList:
 
             elif key == enums.timeline_event_keys.CASE_CLOSED_EVENT_KEY and event_type:
                 self.events.append(CaseClosedEvent(event_type, patient_name))
+
+            elif key == enums.timeline_event_keys.VOID_EVENT_KEY and event_type:
+                self.events.append(VoidEvent(event_type, patient_name))
 
             elif key in enums.timeline_event_keys.all() and event_type:
                 for event in event_type['history']:
