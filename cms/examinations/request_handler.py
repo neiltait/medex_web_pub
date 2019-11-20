@@ -184,3 +184,10 @@ def void_case(auth_token, examination_id):
         return ExaminationMocks.get_successful_case_index_response()
     else:
         return MedexRequest.get(auth_token, '%s/examinations/%s/case_settings' % (settings.API_URL, examination_id))
+
+        
+def load_financial_report_locations(auth_token):
+    if settings.LOCAL:
+        return ReportMocks.get_successful_financial_report_locations_response()
+    else:
+        return MedexRequest.get(auth_token, '%s/report/finance_download_locations' % settings.API_URL)

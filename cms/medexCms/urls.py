@@ -17,5 +17,6 @@ urlpatterns = [
     path('profile', EditUserProfileView.as_view(), name='edit_user_profile'),
     path('settings', SettingsIndexView.as_view(), name='settings_index'),
     url(r'^users/', include('users.urls')),
+    url(r'^locations/', include('locations.urls')),
     url(r'^cases/', include('examinations.urls')),
 ]
