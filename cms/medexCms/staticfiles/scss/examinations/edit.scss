@@ -58,26 +58,35 @@
 }
 
 .examination__tab-bar {
-  .form-tabs {
+
+  ul.form-tabs {
     justify-content: space-evenly;
     margin-bottom: $medex-spacing-lg;
+    list-style: none;
 
     .tab-item {
-      flex-grow: 1;
-      padding: $medex-spacing-md;
+      width: 100%;
       text-align: center;
       text-decoration: none;
 
+      &:not(:last-child) {
+        margin-right: 2px;
+      }
 
-      background-color: $nhs-dark-blue;
-      color: $white;
+      a {
+        display: block;
+        text-decoration: none;
+        width: 100%;
+        padding: $medex-spacing-md;
+        background-color: $nhs-dark-blue;
+        color: $white;
 
-      border-radius: 5px 5px 0 0;
-      border-right: 2px solid $white;
+        border-radius: 5px 5px 0 0;
+        border-right: 2px solid $white;
 
       cursor: pointer;
 
-      &:focus {
+        &:focus {
         z-index: 1000;
         border-color: transparent;
       }
@@ -98,6 +107,7 @@
         border-top: $medex-spacing-xs solid $nhs-dark-blue;
         padding-top: calc(#{$medex-spacing-md} - #{$medex-spacing-xs});
         text-decoration: none !important;
+      }
       }
     }
   }
@@ -181,4 +191,3 @@
 .success-message {
   border: 4px solid $nhs-green !important;
 }
-
