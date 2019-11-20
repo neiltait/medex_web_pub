@@ -156,7 +156,8 @@
 
                     {% include 'examinations/partials/_status_item.html' with label="Latest admission details" status=case_status.latest_admission_details_entered automation_id="status-bar__latest-admission" %}
                     {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered automation_id="status-bar__doctor-in-charge" %}
-                    {% include 'examinations/partials/_status_item.html' with label="QAP" status=case_status.qap_entered automation_id="status-bar__qap" %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP information" status=case_status.qap_entered automation_id="status-bar__qap" %}
+                    {% include 'examinations/partials/_status_item.html' with label="QAP's original COD" status=case_status.qap_cod_entered automation_id="status-bar__qap__cod" %}
                     {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered automation_id="status-bar__bereaved" %}
                     {% include 'examinations/partials/_status_item.html' with label="ME assigned" status=case_status.me_assigned automation_id="status-bar__me-assigned" %}
 
