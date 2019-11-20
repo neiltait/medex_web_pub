@@ -76,7 +76,8 @@ class MedicalTeam:
 
 class MedicalTeamMember:
 
-    def __init__(self, name='', role='', organisation='', phone_number='', notes='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2=''):
+    def __init__(self, name='', role='', organisation='', phone_number='', notes='', gmc_number='', cod_1a='',
+                 cod_1b='', cod_1c='', cod_2=''):
         self.name = name.strip() if name else ''
         self.role = role
         self.organisation = organisation
