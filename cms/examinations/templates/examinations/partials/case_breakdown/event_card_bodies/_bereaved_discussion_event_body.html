@@ -1,9 +1,9 @@
 <div class="content">
     <div {% if card_content.discussion_unable_happen == enums.true_false.FALSE %} class="nhsuk-u-visually-hidden" {% endif %}>
         <div class="bereaved-discussion">
-            <label>
+            <strong>
                 Outcomes of discussion
-            </label>
+            </strong>
             <p>
                 Discussion with representative unable to happen
 
@@ -14,9 +14,9 @@
     <div {% if card_content.discussion_unable_happen == enums.true_false.TRUE %} class="nhsuk-u-visually-hidden" {% endif %}>
         <div class="hideable-content">
             <div class="bereaved-discussion">
-                <label>
+                <strong>
                     Information relating to discussion with representative
-                </label>
+                </strong>
                 <p>
                     Name - {{ card_content.participant_full_name }}
                 </p>
@@ -27,18 +27,18 @@
                     Date and time of conversation - {{ card_content.date_of_conversation }}
                 </p>
             </div>
-            <label>
+            <strong>
                 Details of discussion with representative
-            </label>
+            </strong>
             <p>
                 {{ card_content.discussion_details }}
             </p>
 
         </div>
 
-        <label>
+        <strong>
             Outcome of discussion
-        </label>
+        </strong>
         <p>
             {{ card_content.display_bereaved_discussion_outcome }}
         </p>

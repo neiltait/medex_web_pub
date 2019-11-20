@@ -1,20 +1,17 @@
 <div id="bereaved-discussion" class="event-form{% if form.active %} active{% endif %}">
     {% if form.event_id %}<input type="hidden" name="bereaved_event_id" value="{{ form.event_id }}"/>{% endif %}
     <div class="nhs-form-group">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <label class="nhsuk-heading-s medex-heading-s">
-                    Who is the discussion with?
-                </label>
-            </div>
-        </div>
-
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-form-group">
-                <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
-                    <legend class="nhsuk-u-visually-hidden" id="bereaved-representative">
-                        Existing representative
+        <fieldset class="nhsuk-fieldset" aria-describedby="bereaved-representative">
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-grid-column-full">
+                    <legend class="nhsuk-heading-s medex-heading-s" id="bereaved-representative">
+                        Who is the discussion with?
                     </legend>
+                </div>
+            </div>
+
+            <div class="nhsuk-grid-row">
+                <div class="nhsuk-form-group">
                     <div class="class=nhsuk-radios nhsuk-radios--inline">
                         <div class="nhsuk-grid-column-one-half nhsuk-radios {% if form.existing_representative == None %}nhsuk-u-visually-hidden{% endif %}">
                             <div class="nhsuk-radios__item">
@@ -52,97 +49,92 @@
                             </div>
                         </div>
                     </div>
-                </fieldset>
-            </div>
-        </div>
-
-        <div id="bereaved-rep-details">
-            {% if form.existing_representative %}
-            <input type="hidden" name="bereaved_existing_rep_name"
-                   value="{{ form.existing_representative.full_name }}"/>
-            <input type="hidden" name="bereaved_existing_rep_relationship"
-                   value="{{ form.existing_representative.relationship }}"/>
-            <input type="hidden" name="bereaved_existing_rep_phone_number"
-                   value="{{ form.existing_representative.phone_number }}"/>
-            {% endif %}
-            <div id="bereavement-discussion-with-panel"
-                 class="inset-text-panel case-breakdown-form-group  {% if form.use_existing_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
-                <div class="nhsuk-grid-row">
-                    <div class="nhsuk-grid-column-one-half nhsuk-radios">
-                        <fieldset class="nhsuk-fieldset">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold"
-                                   for="rep-relationship" id="rep-relationship">
-                                Relationship
-                            </label>
-                            <p class="nhsuk-body-m">{{ form.existing_representative.relationship }}</p>
-
-                        </fieldset>
-                    </div>
-                    <div class="nhsuk-grid-column-one-half nhsuk-radios">
-                    </div>
-                </div>
-                <div class="nhsuk-grid-row">
-                    <div class="nhsuk-grid-column-one-half">
-                        <fieldset class="nhsuk-fieldset">
-                            <div class="nhsuk-form-group">
-                                <label class="nhsuk-label nhsuk-u-font-weight-bold"
-                                       for="rep-phone-number" id="rep-phone-number">
-                                    Phone number
-                                </label>
-                                <p class="nhsuk-body-m">{{ form.existing_representative.phone_number }}</p>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="nhsuk-grid-column-one-half">
-                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="bereaved-rep-form"
-             class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_participant_name %}nhsuk-form-group--error{% endif %}">
-            <div class="nhsuk-grid-row">
-                {% if form.errors.bereaved_participant_name %}
-                <div class="nhsuk-grid-column-full">
-                    <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_details">{{ form.errors.bereaved_participant_name }}</span>
-                </div>
+            <div id="bereaved-rep-details">
+                {% if form.existing_representative %}
+                <input type="hidden" name="bereaved_existing_rep_name"
+                       value="{{ form.existing_representative.full_name }}"/>
+                <input type="hidden" name="bereaved_existing_rep_relationship"
+                       value="{{ form.existing_representative.relationship }}"/>
+                <input type="hidden" name="bereaved_existing_rep_phone_number"
+                       value="{{ form.existing_representative.phone_number }}"/>
                 {% endif %}
-                <div class="nhsuk-grid-column-one-half">
-                    <label class="nhsuk-label" for="bereavement-full-name" id="bereaved_participant_name_label">
-                        Full name
-                    </label>
+                <div id="bereavement-discussion-with-panel"
+                     class="inset-text-panel case-breakdown-form-group  {% if form.use_existing_bereaved == False %}nhsuk-u-visually-hidden{% endif %}">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold"
+                                       for="rep-relationship" id="rep-relationship">
+                                    Relationship
+                                </label>
+                                <p class="nhsuk-body-m">{{ form.existing_representative.relationship }}</p>
+                        </div>
+                        <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                        </div>
+                    </div>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half">
+                                <div class="nhsuk-form-group">
+                                    <label class="nhsuk-label nhsuk-u-font-weight-bold"
+                                           for="rep-phone-number" id="rep-phone-number">
+                                        Phone number
+                                    </label>
+                                    <p class="nhsuk-body-m">{{ form.existing_representative.phone_number }}</p>
+                                </div>
+                        </div>
+                        <div class="nhsuk-grid-column-one-half">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <span class="nhsuk-error-message medex-font-default-override"></span>
+            <div id="bereaved-rep-form"
+                 class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_participant_name %}nhsuk-form-group--error{% endif %}">
+                <div class="nhsuk-grid-row">
+                    {% if form.errors.bereaved_participant_name %}
+                    <div class="nhsuk-grid-column-full">
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_details">{{ form.errors.bereaved_participant_name }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="nhsuk-grid-column-one-half">
+                        <label class="nhsuk-label" for="bereavement-full-name" id="bereaved_participant_name_label">
+                            Full name
+                        </label>
 
-                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="bereavement-full-name"
-                           name="bereaved_alternate_rep_name"
-                           type="text" value="{{ form.alternate_representative.full_name }}">
+                        <span class="nhsuk-error-message medex-font-default-override"></span>
+
+                        <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="bereavement-full-name"
+                               name="bereaved_alternate_rep_name"
+                               type="text" value="{{ form.alternate_representative.full_name }}">
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <label class="nhsuk-label" for="full-name">
+                            Relationship
+                        </label>
+                        <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="full-name"
+                               name="bereaved_alternate_rep_relationship"
+                               type="text" value="{{ form.alternate_representative.relationship }}">
+                    </div>
+                    <div class="nhsuk-grid-column-one-half nhsuk-radios">
+                    </div>
+                </div>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
+                        <label class="nhsuk-label" for="phone-number">
+                            Phone number
+                        </label>
+                        <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="phone-number"
+                               name="bereaved_alternate_rep_phone_number"
+                               type="text"
+                               value="{{ form.alternate_representative.phone_number }}">
+                    </div>
                 </div>
             </div>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <label class="nhsuk-label" for="full-name">
-                        Relationship
-                    </label>
-                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="full-name"
-                           name="bereaved_alternate_rep_relationship"
-                           type="text" value="{{ form.alternate_representative.relationship }}">
-                </div>
-                <div class="nhsuk-grid-column-one-half nhsuk-radios">
-                </div>
-            </div>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <label class="nhsuk-label" for="phone-number">
-                        Phone number
-                    </label>
-                    <input class="nhsuk-input nhsuk-input--width-10 margin-bottom medex-input" id="phone-number"
-                           name="bereaved_alternate_rep_phone_number"
-                           type="text"
-                           value="{{ form.alternate_representative.phone_number }}">
-                </div>
-            </div>
-        </div>
+        </fieldset>
 
         <div class="nhsuk-form-group case-breakdown-form-group {% if form.errors.bereaved_time_of_conversation %}nhsuk-form-group--error{% endif %}">
             <fieldset class="nhsuk-fieldset" aria-describedby="date-of-conversation" role="group">
@@ -221,159 +213,158 @@
                             </div>
                     </div>
                 </div>
-                        <div class="nhsuk-grid-row">
-                            <div class="nhsuk-grid-column-full">
-                                <div id="beravement-discussion-time">
-                                        <label class="nhsuk-label margin-top" for="doc-time">
-                                            Time
-                                        </label>
-                                        <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="doc-time"
-                                               name="bereaved_time_of_conversation"
-                                               type="time"
-                                               value="{{ form.time_of_conversation }}">
-                                    </div>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-full">
+                            <div id="beravement-discussion-time">
+                                <label class="nhsuk-label margin-top" for="doc-time">
+                                    Time
+                                </label>
+                                <input class="nhsuk-input nhsuk-input--width-4 medex-input" id="doc-time"
+                                       name="bereaved_time_of_conversation"
+                                       type="time"
+                                       value="{{ form.time_of_conversation }}">
                             </div>
                         </div>
+                    </div>
             </fieldset>
         </div>
 
 
-<div class="margin-save-button">
-    {% include "examinations/partials/case_breakdown/_bereaved_cause_of_death.html" %}
-</div>
-
-<div id="bereavement-discussion__details">
-    <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <div class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_discussion_details %}nhsuk-form-group--error{% endif %}">
-                <label class="nhsuk-heading-s medex-heading-s" for="bereavement-discussion-details" id="bereaved_discussion_details_label">
-                    Details of the discussion?
-                </label>
-                {% if form.errors.bereaved_discussion_details %}
-                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_details">{{ form.errors.bereaved_discussion_details }}</span>
-                {% endif %}
-                <textarea class="nhsuk-textarea medex-textarea medex-input" id="bereavement-discussion-details"
-                          name="bereaved_discussion_details"
-                          rows="6">{{ form.discussion_details }}</textarea>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="margin-save-button">
-
-    <div id="bereavement-discussion-outcome">
-        <div class="nhsuk-grid-row">
-            <div class="nhsuk-grid-column-full">
-                <div class="nhsuk-form-group  {% if form.errors.bereaved_discussion_outcome %}nhsuk-form-group--error{% endif %}">
-
-                    <fieldset class="nhsuk-fieldset">
-                        <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" id="bereaved_discussion_outcome_label">
-                            Outcome
-                        </legend>
-                        {% if form.errors.bereaved_discussion_outcome %}
-                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_outcome">{{ form.errors.bereaved_discussion_outcome }}</span>
-                        {% endif %}
-                        <span class="nhsuk-hint">
-                                What was the ultimate outcome of the conversation with the family member or representative?
-                            </span>
-                        <div class="nhsuk-radios nhsuk-radios--inline">
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
-                                       id="bereavement-discussion-outcome-no-concerns"
-                                       name="bereaved_discussion_outcome"
-                                       type="radio" value="{{ form.BEREAVED_OUTCOME_NO_CONCERNS }}"
-                                       {% if form.discussion_outcome == form.BEREAVED_OUTCOME_NO_CONCERNS %}
-                                       checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label"
-                                       for="bereavement-discussion-outcome-no-concerns">
-                                    Cause of death accepted without concerns
-                                </label>
-                            </div>
-                            <div class="nhsuk-radios__item">
-                                <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
-                                       id="bereavment-discussion-outcome-concerns"
-                                       name="bereaved_discussion_outcome" type="radio"
-                                       value="{{ form.BEREAVED_OUTCOME_CONCERNS }}"
-                                       {% if form.discussion_outcome == form.BEREAVED_OUTCOME_CONCERNS %}
-                                       checked{% endif %}>
-                                <label class="nhsuk-label nhsuk-radios__label"
-                                       for="bereavment-discussion-outcome-concerns">
-                                    Concerns raised
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </fieldset>
+        <div class="margin-save-button">
+            {% include "examinations/partials/case_breakdown/_bereaved_cause_of_death.html" %}
         </div>
 
-        <div id="bereavement-discussion-concerned-outcomes">
+        <div id="bereavement-discussion__details">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-full">
-                    <div class="nhsuk-form-group {% if form.errors.bereaved_outcome_concerned_outcome %}nhsuk-form-group--error{% else %}inset-text-panel {% endif %}">
-                        {% if form.errors.bereaved_outcome_concerned_outcome %}
-                        <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_outcome_concerned_outcome }}</span>
+                    <div class="nhsuk-form-group case-breakdown-form-group  {% if form.errors.bereaved_discussion_details %}nhsuk-form-group--error{% endif %}">
+                        <label class="nhsuk-heading-s medex-heading-s" for="bereavement-discussion-details" id="bereaved_discussion_details_label">
+                            Details of the discussion?
+                        </label>
+                        {% if form.errors.bereaved_discussion_details %}
+                        <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_details">{{ form.errors.bereaved_discussion_details }}</span>
                         {% endif %}
-                        <fieldset class="nhsuk-fieldset" id="bereaved_outcome_concerned_outcome_label">
-                            <div class="nhsuk-radios">
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
-                                           id="bereaved_outcome_concerned_outcome-1"
-                                           name="bereaved_outcome_concerned_outcome"
-                                           type="radio" value="{{ form.BEREAVED_CONCERNED_OUTCOME_CORONER }}"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-1">
-                                        That indicate a coronial investigation
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                           id="bereaved_outcome_concerned_outcome-2"
-                                           name="bereaved_outcome_concerned_outcome" type="radio"
-                                           value="{{ form.BEREAVED_CONCERNED_OUTCOME_100A }}"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-2">
-                                        That indicate a requirement for a 100a
-                                    </label>
-                                </div>
-                                <div class="nhsuk-radios__item">
-                                    <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
-                                           id="bereaved_outcome_concerned_outcome-3"
-                                           name="bereaved_outcome_concerned_outcome" type="radio"
-                                           value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
-                                           {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
-                                    <label class="nhsuk-label nhsuk-radios__label"
-                                           for="bereaved_outcome_concerned_outcome-3">
-                                        But were addressed by the Medical Examiner with no coroner involvement
-                                        required
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
+                        <textarea class="nhsuk-textarea medex-textarea medex-input" id="bereavement-discussion-details"
+                                  name="bereaved_discussion_details"
+                                  rows="6">{{ form.discussion_details }}</textarea>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-full margin-top-lg">
-                    <button class="nhsuk-button add-event-btn" type="submit" value="bereaved-discussion"
-                            name="add-event-to-timeline">Add event to timeline
-                    </button>
-                    <button class="nhsuk-button nhsuk-button--secondary add-another-btn" type="submit"
-                            value="bereaved-discussion"
-                            name="save-as-draft">Save as draft
-                    </button>
+        <div class="margin-save-button">
+
+            <div id="bereavement-discussion-outcome">
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-full">
+                        <div class="nhsuk-form-group  {% if form.errors.bereaved_discussion_outcome %}nhsuk-form-group--error{% endif %}">
+
+                            <fieldset class="nhsuk-fieldset">
+                                <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" id="bereaved_discussion_outcome_label">
+                                    Outcome
+                                </legend>
+                                {% if form.errors.bereaved_discussion_outcome %}
+                                <span class="nhsuk-error-message medex-font-default-override" automation-id="ve_bereaved_discussion_outcome">{{ form.errors.bereaved_discussion_outcome }}</span>
+                                {% endif %}
+                                <span class="nhsuk-hint">
+                                        What was the ultimate outcome of the conversation with the family member or representative?
+                                    </span>
+                                <div class="nhsuk-radios nhsuk-radios--inline">
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                               id="bereavement-discussion-outcome-no-concerns"
+                                               name="bereaved_discussion_outcome"
+                                               type="radio" value="{{ form.BEREAVED_OUTCOME_NO_CONCERNS }}"
+                                               {% if form.discussion_outcome == form.BEREAVED_OUTCOME_NO_CONCERNS %}
+                                               checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="bereavement-discussion-outcome-no-concerns">
+                                            Cause of death accepted without concerns
+                                        </label>
+                                    </div>
+                                    <div class="nhsuk-radios__item">
+                                        <input class="nhsuk-radios__input bereavement-discussion-outcome-radio"
+                                               id="bereavment-discussion-outcome-concerns"
+                                               name="bereaved_discussion_outcome" type="radio"
+                                               value="{{ form.BEREAVED_OUTCOME_CONCERNS }}"
+                                               {% if form.discussion_outcome == form.BEREAVED_OUTCOME_CONCERNS %}
+                                               checked{% endif %}>
+                                        <label class="nhsuk-label nhsuk-radios__label"
+                                               for="bereavment-discussion-outcome-concerns">
+                                            Concerns raised
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div id="bereavement-discussion-concerned-outcomes">
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full">
+                                <div class="nhsuk-form-group {% if form.errors.bereaved_outcome_concerned_outcome %}nhsuk-form-group--error{% else %}inset-text-panel {% endif %}">
+                                    {% if form.errors.bereaved_outcome_concerned_outcome %}
+                                    <span class="nhsuk-error-message medex-font-default-override">{{ form.errors.bereaved_outcome_concerned_outcome }}</span>
+                                    {% endif %}
+                                    <fieldset class="nhsuk-fieldset" id="bereaved_outcome_concerned_outcome_label">
+                                        <div class="nhsuk-radios">
+                                            <div class="nhsuk-radios__item">
+                                                <input class="nhsuk-radios__input qap-discussion-outcome-decision-radio"
+                                                       id="bereaved_outcome_concerned_outcome-1"
+                                                       name="bereaved_outcome_concerned_outcome"
+                                                       type="radio" value="{{ form.BEREAVED_CONCERNED_OUTCOME_CORONER }}"
+                                                       {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_CORONER %}checked{% endif %}>
+                                                <label class="nhsuk-label nhsuk-radios__label"
+                                                       for="bereaved_outcome_concerned_outcome-1">
+                                                    That indicate a coronial investigation
+                                                </label>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                                       id="bereaved_outcome_concerned_outcome-2"
+                                                       name="bereaved_outcome_concerned_outcome" type="radio"
+                                                       value="{{ form.BEREAVED_CONCERNED_OUTCOME_100A }}"
+                                                       {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_100A %}checked{% endif %}>
+                                                <label class="nhsuk-label nhsuk-radios__label"
+                                                       for="bereaved_outcome_concerned_outcome-2">
+                                                    That indicate a requirement for a 100a
+                                                </label>
+                                            </div>
+                                            <div class="nhsuk-radios__item">
+                                                <input class="nhsuk-radios__input bereaved_outcome_concerned_outcome-radio"
+                                                       id="bereaved_outcome_concerned_outcome-3"
+                                                       name="bereaved_outcome_concerned_outcome" type="radio"
+                                                       value="{{ form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED }}"
+                                                       {% if form.discussion_concerned_outcome == form.BEREAVED_CONCERNED_OUTCOME_ADDRESSED %}checked{% endif %}>
+                                                <label class="nhsuk-label nhsuk-radios__label"
+                                                       for="bereaved_outcome_concerned_outcome-3">
+                                                    But were addressed by the Medical Examiner with no coroner involvement
+                                                    required
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bereavement-discussion__save-buttons" class="nhsuk-form-group">
+                        <div class="nhsuk-grid-row">
+                            <div class="nhsuk-grid-column-full margin-top-lg">
+                                <button class="nhsuk-button add-event-btn" type="submit" value="bereaved-discussion"
+                                        name="add-event-to-timeline">Add event to timeline
+                                </button>
+                                <button class="nhsuk-button nhsuk-button--secondary add-another-btn" type="submit"
+                                        value="bereaved-discussion"
+                                        name="save-as-draft">Save as draft
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
 </div>
 
