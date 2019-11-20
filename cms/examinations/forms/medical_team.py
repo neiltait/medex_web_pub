@@ -4,11 +4,16 @@ from medexCms.utils import fallback_to, pop_if_falsey
 
 
 class MedicalTeamMembersForm:
-    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
-    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
-    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
-    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
-    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='', cod_1c='', cod_2='')
+    consultant_1 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='',
+                                     cod_1b='', cod_1c='', cod_2='')
+    consultant_2 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='',
+                                     cod_1b='', cod_1c='', cod_2='')
+    consultant_3 = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='',
+                                     cod_1b='', cod_1c='', cod_2='')
+    qap = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='',
+                            cod_1c='', cod_2='')
+    gp = MedicalTeamMember(name='', role='', organisation='', phone_number='', gmc_number='', cod_1a='', cod_1b='',
+                           cod_1c='', cod_2='')
     nursing_team_information = ''
     medical_examiner = ''
     medical_examiners_officer = ''
