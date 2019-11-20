@@ -122,6 +122,8 @@
             this.outcomeDecisionPanel = this.form.find("#qap-discussion__outcome-decision");
             this.coronerDecisionPanel = this.form.find("#qap-discussion__coroner-decision");
             this.revisedCauseOfDeathPanel = this.form.find("#qap-discussion__outcome-revised");
+            this.revisedCauseOfDeathLabelAgreed = this.form.find("#1a_label_agreed");
+            this.revisedCauseOfDeathLabelMissing = this.form.find("#1a_label_qap_missing");
             this.showHideOutcome();
             this.showHideOutcomeDecision();
 
@@ -155,6 +157,14 @@
             else {
                 this.revisedCauseOfDeathPanel.hide();
             }
+
+            if( selectedOutcomeDecision.length > 0 && selectedOutcomeDecision.val() === 'MccdCauseOfDeathProvidedByQAP'){
+                this.revisedCauseOfDeathLabelMissing.show();
+                this.revisedCauseOfDeathLabelAgreed.hide();
+            } else {
+                this.revisedCauseOfDeathLabelMissing.hide();
+                this.revisedCauseOfDeathLabelAgreed.show();
+            }
         },
 
         startWatchers: function() {
@@ -176,6 +186,14 @@
                     that.revisedCauseOfDeathPanel.hide();
                 } else {
                     that.revisedCauseOfDeathPanel.show();
+                }
+
+                if( this.value === 'MccdCauseOfDeathProvidedByQAP'){
+                    that.revisedCauseOfDeathLabelMissing.show();
+                    that.revisedCauseOfDeathLabelAgreed.hide();
+                } else {
+                    that.revisedCauseOfDeathLabelMissing.hide();
+                    that.revisedCauseOfDeathLabelAgreed.show();
                 }
             });
         }
@@ -279,6 +297,8 @@
         new QAPDiscussionForm($('#qap-discussion'));
         var causeOfDeath = new ChevronExpandable($('#qap-cause-of-death-panel'))
         causeOfDeath.expand();
+        var qapOcdCauseOfDeath = new ChevronExpandable($('#qap-ocd-cause-of-death-panel'))
+        qapOcdCauseOfDeath.expand();
     }
 
     var BereavementDiscussionForm = function (form) {

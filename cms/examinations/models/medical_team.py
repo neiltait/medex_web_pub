@@ -119,7 +119,8 @@ class MedicalTeamMember:
         from examinations.utils import text_field_is_not_null
 
         if text_field_is_not_null(self.role) or text_field_is_not_null(self.organisation) or text_field_is_not_null(
-                self.phone_number):
+                self.phone_number) or text_field_is_not_null(self.cod_1a) or text_field_is_not_null(
+                self.cod_1b) or text_field_is_not_null(self.cod_1c) or text_field_is_not_null(self.cod_2):
             return text_field_is_not_null(self.name)
         else:
             return True
