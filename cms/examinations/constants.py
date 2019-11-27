@@ -33,9 +33,9 @@ def get_display_bereaved_outcome(outcome):
 
 def get_display_qap_outcome(outcome):
     outcomes = {
-        'MccdCauseOfDeathProvidedByQAP': 'Issue MCCD. New cause of death from QAP',
-        'MccdCauseOfDeathProvidedByME': 'Issue MCCD. Original cause of death from ME',
-        'MccdCauseOfDeathAgreedByQAPandME': 'Issue MCCD. New cause of death agreed between QAP and ME',
+        'MccdCauseOfDeathProvidedByQAP': 'Issue Medical Certificate of Cause of Death. New cause of death from QAP',
+        'MccdCauseOfDeathProvidedByME': 'Issue Medical Certificate of Cause of Death. Original cause of death from ME',
+        'MccdCauseOfDeathAgreedByQAPandME': 'Issue Medical Certificate of Cause of Death. New cause of death agreed between QAP and ME',
         'DiscussionUnableToHappen': 'Discussion could not happen',
         'ReferToCoronerFor100a': '',
         'ReferToCoronerInvestigation': ''
@@ -45,10 +45,10 @@ def get_display_qap_outcome(outcome):
 
 def get_display_qap_high_outcome(outcome):
     outcomes = {
-        'MccdCauseOfDeathProvidedByQAP': 'Issue MCCD',
-        'MccdCauseOfDeathProvidedByME': 'Issue MCCD',
-        'MccdCauseOfDeathAgreedByQAPandME': 'Issue MCCD',
-        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an MCCD with 100a',
+        'MccdCauseOfDeathProvidedByQAP': 'Issue Medical Certificate of Cause of Death',
+        'MccdCauseOfDeathProvidedByME': 'Issue Medical Certificate of Cause of Death',
+        'MccdCauseOfDeathAgreedByQAPandME': 'Issue Medical Certificate of Cause of Death',
+        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an Medical Certificate of Cause of Death with 100a',
         'ReferToCoronerInvestigation': 'Refer case for coroner investigation',
         'DiscussionUnableToHappen': 'Discussion could not happen'
     }
@@ -67,8 +67,8 @@ def get_display_circumstances_of_death(circumstance):
 
 def get_display_scrutiny_outcome(outcome):
     outcomes = {
-        'IssueAnMccd': 'Issue an MCCD',
-        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an MCCD with 100a',
+        'IssueAnMccd': 'Issue an Medical Certificate of Cause of Death',
+        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an Medical Certificate of Cause of Death with 100a',
         'ReferToCoronerInvestigation': 'Refer case to coroner for an investigation'
     }
     return __get_dictionary_value(outcome, outcomes)
@@ -76,8 +76,8 @@ def get_display_scrutiny_outcome(outcome):
 
 def get_display_outcome_summary(outcome):
     outcomes = {
-        'IssueMCCD': 'Issue an MCCD',
-        'IssueMCCDWith100a': 'Issue an MCCD with 100a',
+        'IssueMCCD': 'Issue an Medical Certificate of Cause of Death',
+        'IssueMCCDWith100a': 'Issue an Medical Certificate of Cause of Death with 100a',
         'ReferToCoroner': 'Refer case to coroner'
     }
     return __get_dictionary_value(outcome, outcomes)
