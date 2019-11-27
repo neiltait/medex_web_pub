@@ -231,7 +231,7 @@ class CaseBereavedDiscussionEvent(CaseEvent):
     form_type = 'BereavedDiscussionEventForm'
     event_type = enums.timeline_event_types.BEREAVED_DISCUSSION_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_bereaved_discussion_event_body.html'
-    display_type = 'Bereaved/representative discussion'
+    display_type = 'Representative discussion'
     css_type = 'bereaved-discussion'
 
     def __init__(self, obj_dict, latest_id):
