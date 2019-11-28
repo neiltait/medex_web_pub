@@ -118,14 +118,14 @@
                     {% include 'examinations/partials/_status_item.html' with label="Doctor in charge of care" status=case_status.doctor_in_charge_entered automation_id="status-bar__doctor-in-charge" aria_desc="Additional details" %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP information" status=case_status.qap_entered automation_id="status-bar__qap" aria_desc="Additional details" %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP's original COD" status=case_status.qap_cod_entered automation_id="status-bar__qap__cod" aria_desc="Original Cause of Death" %}
-                    {% include 'examinations/partials/_status_item.html' with label="Bereaved information" status=case_status.bereaved_info_entered automation_id="status-bar__bereaved" aria_desc="Additional details" %}
+                    {% include 'examinations/partials/_status_item.html' with label="Representative information" status=case_status.bereaved_info_entered automation_id="status-bar__bereaved" aria_desc="Additional details" %}
                     {% include 'examinations/partials/_status_item.html' with label="ME assigned" status=case_status.me_assigned automation_id="status-bar__me-assigned" aria_desc="Additional details" %}
                 </div>
 
                 <div class="nhsuk-grid-column-one-quarter margin-bottom small-font">
                     {% include 'examinations/partials/_status_item.html' with label="ME review of records" status=case_status.pre_scrutiny_event_entered automation_id="status-bar__me-ror-complete" aria_desc="Scrutiny" %}
                     {% include 'examinations/partials/_status_item.html' with label="QAP discussion" status=case_status.qap_discussion_event_entered automation_id="status-bar__qap-discussion-complete" aria_desc="Scrutiny" %}
-                    {% include 'examinations/partials/_status_item.html' with label="Bereaved discussion" status=case_status.bereaved_discussion_event_entered automation_id="status-bar__bereaved-discussion-complete" aria_desc="Scrutiny" %}
+                    {% include 'examinations/partials/_status_item.html' with label="Representative discussion" status=case_status.bereaved_discussion_event_entered automation_id="status-bar__bereaved-discussion-complete" aria_desc="Scrutiny" %}
                     {% include 'examinations/partials/_status_item.html' with label="Scrutiny confirmed" status=case_status.me_scrutiny_confirmed automation_id="status-bar__scrutiny-confirmed-complete" aria_desc="Scrutiny" %}
                 </div>
 
