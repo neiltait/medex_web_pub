@@ -26,7 +26,8 @@ class CaseOutcome:
         enums.outcomes.MCCD_FROM_ME: 'Medical Certificate of Cause of Death to be issued, COD provided by ME',
         enums.outcomes.MCCD_FROM_QAP_AND_ME: 'Medical Certificate of Cause of Death to be issued, new COD reached',
         enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
-        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue Medical Certificate of Cause of Death with 100a',
+        enums.outcomes.CORONER_100A: ('Refer to coroner for permission to issue Medical Certificate of Cause of Death'
+                                      ' with 100a'),
         enums.outcomes.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen'
     }
 
@@ -34,26 +35,30 @@ class CaseOutcome:
         enums.discussion.COD_ACCEPTED: 'Medical Certificate of Cause of Death to be issued, no concerns',
         enums.discussion.CONCERNS_CORONER: 'Refer to coroner for investigation, concerns raised',
         enums.discussion.CONCERNS_100A: 'Refer to coroner for 100a, concerns raised',
-        enums.discussion.CONCERNS_ADDRESSED: 'Medical Certificate of Cause of Death to be issued, concerns addressed without coroner',
+        enums.discussion.CONCERNS_ADDRESSED: ('Medical Certificate of Cause of Death to be issued, concerns addressed'
+                                              ' without coroner'),
         enums.discussion.DISCUSSION_UNABLE_TO_HAPPEN: 'Discussion was unable to happen',
     }
 
     PRE_SCRUTINY_OUTCOMES = {
         enums.outcomes.MCCD: 'Medical Certificate of Cause of Death to be issued',
         enums.outcomes.CORONER_INVESTIGATION: 'Refer to coroner for investigation',
-        enums.outcomes.CORONER_100A: 'Refer to coroner for permission to issue Medical Certificate of Cause of Death with 100a'
+        enums.outcomes.CORONER_100A: ('Refer to coroner for permission to issue Medical Certificate of Cause of Death'
+                                      ' with 100a')
     }
 
     OUTCOME_SUMMARIES = {
         CORONER_INVESTIGATION_KEY: {'heading': 'Refer to coroner', 'details': 'For investigation'},
-        MCCD_100A_KEY: {'heading': 'Refer to coroner', 'details': 'For permission to issue Medical Certificate of Cause of Death with 100A'},
+        MCCD_100A_KEY: {'heading': 'Refer to coroner',
+                        'details': 'For permission to issue Medical Certificate of Cause of Death with 100A'},
         MCCD_KEY: {'heading': 'Medical Certificate of Cause of Death to be issued'},
         PENDING: {'heading': 'OUTCOME PENDING'}
     }
 
     CORONER_DISCLAIMERS = {
         CORONER_INVESTIGATION_KEY: 'This case has been submitted to the coroner for an investigation.',
-        MCCD_100A_KEY: 'This case has been submitted to the coroner for permission to issue an Medical Certificate of Cause of Death with 100a.',
+        MCCD_100A_KEY: ('This case has been submitted to the coroner for permission to issue an Medical Certificate'
+                        ' of Cause of Death with 100a.'),
     }
 
     def __init__(self, obj_dict, examination_id):

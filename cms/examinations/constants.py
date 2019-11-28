@@ -35,7 +35,8 @@ def get_display_qap_outcome(outcome):
     outcomes = {
         'MccdCauseOfDeathProvidedByQAP': 'Issue Medical Certificate of Cause of Death. New cause of death from QAP',
         'MccdCauseOfDeathProvidedByME': 'Issue Medical Certificate of Cause of Death. Original cause of death from ME',
-        'MccdCauseOfDeathAgreedByQAPandME': 'Issue Medical Certificate of Cause of Death. New cause of death agreed between QAP and ME',
+        'MccdCauseOfDeathAgreedByQAPandME': ('Issue Medical Certificate of Cause of Death. '
+                                             'New cause of death agreed between QAP and ME'),
         'DiscussionUnableToHappen': 'Discussion could not happen',
         'ReferToCoronerFor100a': '',
         'ReferToCoronerInvestigation': ''
@@ -48,7 +49,8 @@ def get_display_qap_high_outcome(outcome):
         'MccdCauseOfDeathProvidedByQAP': 'Issue Medical Certificate of Cause of Death',
         'MccdCauseOfDeathProvidedByME': 'Issue Medical Certificate of Cause of Death',
         'MccdCauseOfDeathAgreedByQAPandME': 'Issue Medical Certificate of Cause of Death',
-        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an Medical Certificate of Cause of Death with 100a',
+        'ReferToCoronerFor100a': ('Refer case to coroner for permission to issue an Medical Certificate of '
+                                  'Cause of Death with 100a'),
         'ReferToCoronerInvestigation': 'Refer case for coroner investigation',
         'DiscussionUnableToHappen': 'Discussion could not happen'
     }
@@ -68,7 +70,8 @@ def get_display_circumstances_of_death(circumstance):
 def get_display_scrutiny_outcome(outcome):
     outcomes = {
         'IssueAnMccd': 'Issue an Medical Certificate of Cause of Death',
-        'ReferToCoronerFor100a': 'Refer case to coroner for permission to issue an Medical Certificate of Cause of Death with 100a',
+        'ReferToCoronerFor100a': ('Refer case to coroner for permission to issue an Medical Certificate of '
+                                  'Cause of Death with 100a'),
         'ReferToCoronerInvestigation': 'Refer case to coroner for an investigation'
     }
     return __get_dictionary_value(outcome, outcomes)
