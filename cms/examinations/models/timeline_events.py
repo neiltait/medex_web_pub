@@ -177,7 +177,7 @@ class CaseOtherEvent(CaseEvent):
     form_type = 'OtherEventForm'
     event_type = enums.timeline_event_types.OTHER_EVENT_TYPE
     type_template = 'examinations/partials/case_breakdown/event_card_bodies/_other_event_body.html'
-    display_type = 'Other case info'
+    display_type = 'Other case information'
     css_type = 'other'
 
     def __init__(self, obj_dict, latest_id):
