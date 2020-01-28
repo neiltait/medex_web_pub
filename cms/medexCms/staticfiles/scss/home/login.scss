@@ -31,7 +31,8 @@
 
                 &:hover,
                 &:focus {
-                    @include nhs-outline-focus(-1px);
+                    @include nhs-outline-focus(-2px);
+                    border: black thick solid;
                 }
             }
 
@@ -40,15 +41,6 @@
 
                 .js-help-links {
                     display: contents !important;
-                }
-
-                .custom-checkbox {
-                    padding: 0 1rem;
-
-                    & :hover,
-                    & .focus {
-                        @include nhs-outline-focus(4px);
-                    }
                 }
 
                 .o-form-head {
