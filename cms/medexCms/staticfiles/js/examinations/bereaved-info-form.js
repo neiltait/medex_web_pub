@@ -42,7 +42,7 @@
                 that.removeBtn.show();
                 $(that.addBtn).text("Add another");
                 that.additionalShowing++;
-                if( that.additionalShowing == 1){
+                if(that.additionalShowing === 1){
                     that.firstFocus.focus();
                 } else {
                     that.secondFocus.focus();
