@@ -2,6 +2,9 @@ var AddRemovePanelList = function (section, visibleCount) {
     this.visibleCount = visibleCount;
     this.panels = section.find('.add-remove-panel');
     this.addButton = section.find('.add-panel-button');
+    this.focus = [];
+    this.focus[0] = section.find('.add-panel-focus-1');
+    this.focus[1] = section.find('.add-panel-focus-2');
     this.removeButton = section.find('.remove-panel-button');
     this.setup();
 };
@@ -11,20 +14,20 @@ AddRemovePanelList.prototype = {
         let that = this;
         this.addButton.on('click', function (event) {
             event.preventDefault();
-            that.addButton.blur();
             if (that.visibleCount < that.panels.length) {
                 that.visibleCount += 1;
                 that.refreshVisible();
             }
+            $(that.focus[that.visibleCount-1]).focus();
         });
 
         this.removeButton.on('click', function (event) {
             event.preventDefault();
-            that.removeButton.blur();
             if (that.visibleCount > 0) {
                 that.visibleCount -= 1;
                 that.refreshVisible();
             }
+            $(that.addButton).focus();
         });
         this.refreshVisible();
     },
