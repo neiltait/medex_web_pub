@@ -4,9 +4,13 @@
 .case-card-header {
   border: 1px solid $nhs-light-grey;
   border-left: 4px solid $nhs-blue;
-  padding: medex-spacing(4) $medex-spacing-lg;
+  padding: medex-spacing(3) $medex-spacing-lg;
   box-shadow: 0 5px $nhs-very-light-grey;
   margin-bottom: $medex-spacing-md;
+
+  p, h3 {
+    padding: medex-spacing(2) 0;
+  }
 
   &.urgent,
   &.void {
@@ -16,7 +20,7 @@
 
       .chevron-down {
         &:hover {
-          background: url("/static/images/chevron-down-red.svg") no-repeat;
+          background: url("/static/images/chevron-down-red.svg") center center no-repeat;
         }
       }
       .view-btn {
@@ -42,6 +46,7 @@
   .patient-name {
     margin: 0;
     font-weight: bold;
+    font-size: 100%;
   }
 
   .dates {
@@ -58,21 +63,28 @@
     justify-content: flex-end;
 
     .chevron-down {
-      background: url("/static/images/down_chevron.png") no-repeat;
+      background: url("/static/images/down_chevron.png") center center no-repeat;
       height: 1rem;
       width: 2rem;
-      margin-top: $medex-spacing-sm;
+      border: 2px solid transparent;
+      min-width: 44px;
+      min-height: 44px;
+
+      margin-top: 0;
 
       &:hover {
-        background: url("/static/images/chevron-down-blue.svg") no-repeat;
+        background: url("/static/images/chevron-down-blue.svg") center center no-repeat;
       }
     }
 
     .chevron-up {
-      background: url("/static/images/up_chevron.png") no-repeat;
+      background: url("/static/images/up_chevron.png") center center no-repeat;
       height: 1rem;
       width: 2rem;
-      margin-top: $medex-spacing-sm;
+      border: 2px solid transparent;
+      min-width: 44px;
+      min-height: 44px;
+      margin-top: 0;
       display: none;
     }
 
@@ -80,10 +92,10 @@
       border: 1px solid $black;
       color: $black;
       text-decoration: none;
-      padding: $medex-spacing-xs $medex-spacing-sm;
+      padding: $medex-spacing-sm $medex-spacing-sm;
       margin-right: $medex-spacing-md;
       margin-left: $medex-spacing-md;
-
+      min-height: 44px;
 
       &:visited {
         color: $black;
@@ -95,7 +107,6 @@
         box-shadow: none;
         background-color: $white;
       }
-
     }
 
     .urgent-flag,
@@ -117,9 +128,9 @@
     .controls {
 
       .chevron-up {
-        background: url("/static/images/hollow_red_chevron.svg") no-repeat;
+        background: url("/static/images/hollow_red_chevron.svg") center center no-repeat;
         &:hover {
-          background: url("/static/images/chevron_up.svg") no-repeat;
+          background: url("/static/images/chevron_up.svg") center center no-repeat;
         }
       }
       .view-btn {
@@ -160,9 +171,9 @@
 
     .chevron-up {
       display: block;
-      background: url("/static/images/hollow_blue_chevron.svg") no-repeat;
+      background: url("/static/images/hollow_blue_chevron.svg") center center no-repeat;
         &:hover {
-          background: url("/static/images/chevron_up.svg") no-repeat;
+          background: url("/static/images/chevron_up.svg") center center no-repeat;
         }
     }
 

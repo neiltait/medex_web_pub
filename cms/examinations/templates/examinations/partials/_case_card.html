@@ -4,9 +4,9 @@
     <div class="case-card-header {% if case.urgent %}urgent{% elif case.void %}void{% endif %}">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-third">
-                <p class="patient-name">
+                <h3 class="patient-name">
                     {{ card.full_name }}
-                </p>
+                </h3>
             </div>
 
             <div class="nhsuk-grid-column-one-third">
@@ -26,11 +26,11 @@
 
                     <a class="view-btn" href="{% url 'edit_examination' examination_id=card.id %}">View Case</a>
 
-                    <div class="chevron-down">
-                    </div>
+                    <button class="chevron-down">
+                    </button>
 
-                    <div class="chevron-up">
-                    </div>
+                    <button class="chevron-up">
+                    </button>
                 </div>
             </div>
         </div>

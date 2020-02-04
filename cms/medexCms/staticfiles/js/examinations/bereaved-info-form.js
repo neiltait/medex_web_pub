@@ -9,6 +9,8 @@
         setup: function() {
             this.addBtn = this.wrapper.find('#add-another-btn');
             this.removeBtn = this.wrapper.find('#remove-btn');
+            this.firstFocus = this.wrapper.find('#bereaved_name_1');
+            this.secondFocus = this.wrapper.find('#bereaved_name_2');
             this.additionalShowing = 0;
             this.additionalBereaved = this.wrapper.find('.bereaved');
             this.representatives = [];
@@ -40,21 +42,31 @@
                 that.removeBtn.show();
                 $(that.addBtn).text("Add another");
                 that.additionalShowing++;
+                if(that.additionalShowing === 1){
+                    that.firstFocus.focus();
+                } else {
+                    that.secondFocus.focus();
+                }
 
                 if (that.additionalShowing === that.representatives.length) {
                   that.addBtn.hide();
                 }
+
+                return false;
             });
 
             this.removeBtn.click(function() {
                 that.additionalShowing--;
                 that.addBtn.show();
+                $(that.addBtn).focus();
                 $(that.addBtn).text("Add a person");
                 that.representatives[that.additionalShowing].hide();
                 that.representatives[that.additionalShowing].clearContent();
                 if (that.additionalShowing === 0) {
                     that.removeBtn.hide();
                 }
+
+                return false;
             });
         }
     }

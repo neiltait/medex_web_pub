@@ -8,7 +8,6 @@
                 </legend>
             </div>
         </div>
-
         <div class="radio-toggle-group">
             <div class="nhsuk-grid-row {% if not qap %}nhsuk-u-visually-hidden{% endif %}">
                 <div class="nhsuk-grid-column-full">
@@ -45,51 +44,49 @@
                     </div>
                 </div>
             </div>
-        </div>
+            <div id="qap-discussion-with-qap__panel"
+                class="radio-toggle-group__panel inset-text-panel {% if form.discussion_participant_type != form.QAP_PARTICIPANT %}nhsuk-u-visually-hidden{% endif %}">
+                <div class="case-breakdown-form-group">
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap">
+                                    Role
+                                </label>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap">{{ qap.role }}</p>
+                            </div>
+                        </div>
 
-        <div id="qap-discussion-with-qap__panel"
-             class="radio-toggle-group__panel inset-text-panel {% if form.discussion_participant_type != form.QAP_PARTICIPANT %}nhsuk-u-visually-hidden{% endif %}">
-            <div class="case-breakdown-form-group">
-                <div class="nhsuk-grid-row">
-                    <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap">
-                                Role
-                            </label>
-                            <p class="nhsuk-body-m" id="qap_discussion_with_qap">{{ qap.role }}</p>
+                        <div class="nhsuk-grid-column-one-half">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_organisation">
+                                    Organisation
+                                </label>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_organisation">{{ qap.organisation }}</p>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_organisation">
-                                Organisation
-                            </label>
-                            <p class="nhsuk-body-m" id="qap_discussion_with_qap_organisation">{{ qap.organisation }}</p>
+                    <div class="nhsuk-grid-row">
+                        <div class="nhsuk-grid-column-one-half">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_gmc_number">
+                                    GMC Number
+                                </label>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_gmc_number">{{ qap.gmc_number }}</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="nhsuk-grid-row">
-                    <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_gmc_number">
-                                GMC Number
-                            </label>
-                            <p class="nhsuk-body-m" id="qap_discussion_with_qap_gmc_number">{{ qap.gmc_number }}</p>
-                        </div>
-                    </div>
-                    <div class="nhsuk-grid-column-one-half">
-                        <div class="nhsuk-form-group">
-                            <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_phone_number">
-                                Personal phone/ bleep number
-                            </label>
-                            <p class="nhsuk-body-m" id="qap_discussion_with_qap_phone_number">{{ qap.phone_number }}</p>
+                        <div class="nhsuk-grid-column-one-half">
+                            <div class="nhsuk-form-group">
+                                <label class="nhsuk-label nhsuk-u-font-weight-bold" for="qap_discussion_with_qap_phone_number">
+                                    Personal phone/ bleep number
+                                </label>
+                                <p class="nhsuk-body-m" id="qap_discussion_with_qap_phone_number">{{ qap.phone_number }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="qap-discussion-with-other__panel"
+            <div id="qap-discussion-with-other__panel"
                  class="radio-toggle-group__panel {% if form.discussion_participant_type != form.OTHER_PARTICIPANT %}nhsuk-u-visually-hidden{% endif %}">
                 {% if form.errors.participant %}
                 <div class="nhsuk-grid-row">
@@ -141,6 +138,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </fieldset>
 
     <div id="qap-discussion__date-time">
@@ -275,7 +273,7 @@
                                        type="radio" value="{{ enums.outcomes.MCCD }}"
                                        {% if form.outcome == enums.outcomes.MCCD %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label" for="qap-discussion-outcome-mccd">
-                                    MCCD to be issued
+                                    Medical Certificate of Cause of Death to be issued
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">
@@ -366,7 +364,7 @@
                                        {% if form.coroner_decision == enums.outcomes.CORONER_100A %}checked{% endif %}>
                                 <label class="nhsuk-label nhsuk-radios__label"
                                        for="qap-coroner-outcome-decision-1">
-                                    For permission to issue an MCCD with 100a
+                                    For permission to issue an Medical Certificate of Cause of Death with 100a
                                 </label>
                             </div>
                             <div class="nhsuk-radios__item">

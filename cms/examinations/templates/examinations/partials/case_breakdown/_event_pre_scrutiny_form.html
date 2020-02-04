@@ -113,7 +113,7 @@
         <fieldset class="nhsuk-fieldset">
             <legend class="nhsuk-heading-s medex-heading-s no-padding-inline" for="overall_outcome_label"
                     id="overall_outcome_label">
-                Overall outcome of review
+                Overall recommendation of review
             </legend>
             {% if form.errors.overall_outcome %}
                 <span class="nhsuk-error-message medex-font-default-override"
@@ -126,7 +126,7 @@
                            value="{{ enums.outcomes.MCCD }}"
                            {% if form.overall_outcome == enums.outcomes.MCCD %}checked{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="outcome-of-pre-scrutiny-1">
-                        Issue an MCCD
+                        Issue an Medical Certificate of Cause of Death
                     </label>
                 </div>
                 <div class="nhsuk-radios__item">
@@ -157,7 +157,7 @@
                                            {% if form.coroner_outcome == enums.outcomes.CORONER_100A %}checked{% endif %}>
                                     <label class="nhsuk-label nhsuk-radios__label"
                                            for="pre-scrutiny-coroner-outcome-decision-1">
-                                        For permission to issue an MCCD with 100a
+                                        For permission to issue an Medical Certificate of Cause of Death with 100a
                                     </label>
                                 </div>
                                 <div class="nhsuk-radios__item">

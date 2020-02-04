@@ -1,5 +1,6 @@
 @import '../variables';
 @import '../spacing';
+@import '../helpers';
 
 .form {
   margin-top: medex-spacing(9);
@@ -158,16 +159,27 @@
 }
 
 .medex-hyperlink-button {
-  background:none!important;
+  background-color:transparent;
    color:$nhs-blue;
    border:none;
    padding:0!important;
    font: inherit;
-    font-size: $link-size;
-   /*border is optional*/
-   border-bottom:1px solid #444;
+   font-size: $link-size;
+   text-decoration-line: underline;
    cursor: pointer;
    margin-bottom: $medex-spacing-md;
+   
+   &:focus {
+    @include nhs-outline-focus(0px);
+    background-color: $focus-color;
+    color: #330072;
+   }
+   &:hover{
+    @include nhs-outline-focus(0px);
+    background-color: $focus-color;
+    color: #330072;
+    text-decoration-line: none;
+   }   
 }
 
 .hospital-number {

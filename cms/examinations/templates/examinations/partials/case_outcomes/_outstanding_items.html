@@ -1,8 +1,8 @@
 {% if case_outcome.show_outstanding_items %}
 <div class="outstanding-items">
-    <h2 class="page-subheading">
+    <h3 class="page-subheading">
         Outstanding case items
-    </h2>
+    </h3>
 
     <p class="nhsuk-body-m">
         Following completion of scrutiny, the below should be actioned before a case can be closed.
@@ -19,11 +19,11 @@
             <fieldset class="nhsuk-fieldset">
 
             <legend class="nhsuk-heading-m no-padding">
-                MCCD
+                Medical Certificate of Cause of Death
             </legend>
 
             <p class="nhsuk-body-m">
-                Please select if an MCCD has been written and issued to the patient's representative.
+                Please select if an Medical Certificate of Cause of Death has been written and issued to the patient's representative.
             </p>
 
             <div class="outstanding-item">
@@ -33,7 +33,7 @@
                                {% if case_outcome.mccd_issued %}checked{% endif %}/>
 
                         <label class="nhsuk-label nhsuk-checkboxes__label" for="mccd-issued">
-                            MCCD issued
+                            Medical Certificate of Cause of Death issued
                         </label>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
 
         <div class="sticky-save">
             <div class="container">
-                <input class="submit-btn" type="submit" name="{{case_outcome.OUTSTANDING_ITEMS_FORM_TYPE}}" value="Save changes"/>
+                <input class="nhsuk-button submit-btn" type="submit" name="{{case_outcome.OUTSTANDING_ITEMS_FORM_TYPE}}" value="Save changes"/>
             </div>
         </div>
     </form>

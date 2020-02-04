@@ -302,7 +302,7 @@ class User:
         if self.permitted_actions.permitted_forms.bereavedDiscussionEvent:
             forms_list.append({
                 'id': 'bereaved-discussion',
-                'name': 'Bereaved/representative discussion',
+                'name': 'Representative discussion',
                 'enabled': self.check_form_type_accessible(enums.timeline_event_types.BEREAVED_DISCUSSION_EVENT_TYPE,
                                                            existing_events,
                                                            case_breakdown.event_list.get_bereaved_discussion_draft())

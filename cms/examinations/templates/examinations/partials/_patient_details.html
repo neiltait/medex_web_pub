@@ -1,36 +1,36 @@
 <div class="form-section">
-  <h1 class="nhsuk-heading-xl medium-margin">
+  <h2 class="nhsuk-heading-xl medium-margin">
     Patient details
-  </h1>
-
-  <h2 class="nhsuk-heading-l">
-    Primary information
   </h2>
+
+  <h3 class="nhsuk-heading-l">
+    Primary information
+  </h3>
 
   {% include 'examinations/partials/patient_details/_primary_information.html' with form=primary_info_form errors=primary_info_form.errors %}
 </div>
 
 
 <div class="form-section background-grey">
-  <h2 class="nhsuk-heading-l">
+  <h3 class="nhsuk-heading-l">
     Secondary information
-  </h2>
+  </h3>
 
   {% include 'examinations/partials/patient_details/_secondary_information.html' with form=secondary_info_form errors=secondary_info_form.errors %}
 </div>
 
 <div class="form-section">
-  <h2 class="nhsuk-heading-l">
-    Bereaved or representative information
-  </h2>
+  <h3 class="nhsuk-heading-l">
+    Representative information
+  </h3>
 
   {% include 'examinations/partials/patient_details/_bereaved_information.html' with form=bereaved_info_form errors=bereaved_info_form.errors %}
 </div>
 
 <div class="form-section background-grey">
-  <h2 class="nhsuk-heading-l">
+  <h3 class="nhsuk-heading-l">
     Request for rapid release
-  </h2>
+  </h3>
 
   {% include 'examinations/partials/patient_details/_urgency_information.html' with form=urgency_info_form errors=urgency_info_form.errors %}
 </div>
