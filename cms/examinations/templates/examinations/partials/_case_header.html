@@ -6,9 +6,9 @@
             <h1 class="patient-name">
                 {{patient.full_name}}
             </h1>
-            <h2 class="nhs-number">
+            <p class="nhs-number">
                 NHS No. {{patient.nhs_number}}
-            </h2>
+            </p>
         </div>
         {% if session_user.permitted_actions.can_void_examination %}
             <div class="nhsuk-grid-column-one-half">
