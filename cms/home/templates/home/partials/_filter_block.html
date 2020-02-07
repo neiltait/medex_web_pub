@@ -46,10 +46,9 @@
         </div>
 
         {% if not exclude_filter_buttons %}
-            <div class="filter__label filter-list__label">
-                <p><span id="filter-by-status">Filter cases by status</span></p>
-            </div>
-
+        <fieldset class="nhsuk-fieldset filter__label filter-list__label" role="group">
+            <legend id="filter-by-status">Filter cases by status</legend>
+            
             <div class="filter-list">
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_have_unknown_basic_details icon="patient" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F01_HAS_UNKNOWN_BASIC_DETAILS %}</div>
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_scrutiny_ready icon="ready" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F02_READY_FOR_SCRUTINY %}</div>
@@ -60,6 +59,7 @@
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_representative_discussion_pending icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F07_PENDING_BEREAVED %}</div>
                 <div class="filter-list__item">{% include 'home/partials/_filter_status_item.html' with count=session_user.index_overview.count_final_outcome_outstanding icon="waiting" base_url=form.base_url active_filter=form.case_status filter_obj=enums.filters.F08_OUTSTANDING_FINAL_OUTCOMES %}</div>
             </div>
+        </fieldset>
         {% endif %}
         <div class="filtered-case-list-header">
             <div class="nhsuk-grid-row">
