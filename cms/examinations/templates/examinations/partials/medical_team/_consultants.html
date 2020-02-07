@@ -2,9 +2,12 @@
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full"><h2 class="nhsuk-heading-xl medex-tab-header">Medical team</h2></div>
     </div>
+
+    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+
     <div class="nhsuk-grid-row">
         <div class="nhsuk-grid-column-full">
-            <h3 class="nhsuk-heading-l">Doctors information</h3>
+            <legend class="nhsuk-heading-l">Doctors information</legend>
         </div>
     </div>
 
@@ -12,7 +15,7 @@
     <div class="medex-form-section medex-form-section--first">
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+                
                     <div class="nhsuk-form-group--field-indicator {% if errors.consultant_1 %}nhsuk-form-group--error{% endif %}">
                         <label class="nhsuk-label" for="consultant_name_1" id="consultant_1_label">
                             Consultant / Doctor responsible for care
@@ -24,11 +27,9 @@
                             Required field
                         </div>
                     </div>
-                </fieldset>
 
             </div>
             <div class="nhsuk-grid-column-one-half">
-                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="consultant_organisation_1">
                             Organisation
@@ -36,12 +37,10 @@
                         <input class="nhsuk-input nhsuk-input--width-10" id="consultant_organisation_1" name="consultant_organisation_1"
                                value="{{ form.consultant_1.organisation }}" type="text">
                     </div>
-                </fieldset>
             </div>
         </div>
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
-                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="gmc_number_consultant_1">
                             GMC number
@@ -49,11 +48,9 @@
                         <input tabindex="-1" class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_1" name="gmc_number_consultant_1"
                                value="{{form.consultant_1.gmc_number}}" type="text">
                     </div>
-                </fieldset>
             </div>
             <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-1">
                 <button class="medex-hyperlink-button additional-notes-button" id="consultant-note-1__btn" {% if disabled %}disabled{% endif %}>Add a note</button>
-                <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                     <div class="nhsuk-form-group medex-hidden additional-notes-panel" id="consultant-note-1__panel">
                         <label class="nhsuk-label" for="consultant-note-1">
                             Additional notes
@@ -62,7 +59,6 @@
                                   id="consultant-note-1" name="consultant_note_1"
                                   rows="3">{{ form.consultant_1.notes }}</textarea>
                     </div>
-                </fieldset>
             </div>
         </div>
     </div>
@@ -73,7 +69,6 @@
         <div class="medex-form-section add-remove-panel">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group {% if errors.consultant_2 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_name_2">
                                 Second doctor responsible for care
@@ -86,10 +81,8 @@
                                     id="consultant_name_2" name="consultant_name_2"
                                     value="{{ form.consultant_2.name }}" type="text">
                         </div>
-                    </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="consultant_organisation_2">
                                 Organisation
@@ -98,12 +91,10 @@
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_organisation_2" name="consultant_organisation_2"
                                    value="{{ form.consultant_2.organisation}}" type="text">
                         </div>
-                    </fieldset>
                 </div>
             </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_consultant_2">
                                 GMC number
@@ -111,18 +102,15 @@
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_2" name="gmc_number_consultant_2"
                                    value="{{form.consultant_2.gmc_number}}" type="text">
                         </div>
-                    </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-2">
                     <button class="medex-hyperlink-button additional-notes-button" {% if disabled %}disabled{% endif %}>Add a note</button>
                     <div class="nhsuk-form-group medex-hidden additional-notes-panel">
-                        <fieldset class="nhsuk-fieldset"  {% if disabled %}disabled{% endif %}>
                             <label class="nhsuk-label" for="consultant_note_2">
                                 Additional notes
                             </label>
                             <textarea class="nhsuk-textarea medex-textarea"
                                       id="consultant_note_2" name="consultant_note_2" rows="3">{{ form.consultant_2.notes }}</textarea>
-                        </fieldset>
                     </div>
                 </div>
             </div>
@@ -131,7 +119,6 @@
         <div class="medex-form-section add-remove-panel">
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.consultant_3 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_name_3">
                                 Third doctor responsible for care
@@ -139,10 +126,8 @@
                             <input class="nhsuk-input add-panel-focus-2 nhsuk-input--width-10" id="consultant_name_3" name="consultant_name_3"
                                    value="{{ form.consultant_3.name }}" type="text">
                         </div>
-                    </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group {% if errors.consultant_organisation_3 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_organisation_3">
                                 Organisation
@@ -150,12 +135,10 @@
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_organisation_3" name="consultant_organisation_3"
                                    value="{{ form.consultant_3.organisation }}" type="text">
                         </div>
-                    </fieldset>
                 </div>
             </div>
             <div class="nhsuk-grid-row">
                 <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
-                    <fieldset class="nhsuk-fieldset">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_consultant_3">
                                 GMC number
@@ -163,7 +146,6 @@
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_3" name="gmc_number_consultant_3"
                                    value="{{form.consultant_3.gmc_number}}" type="text">
                         </div>
-                    </fieldset>
                 </div>
                 <div class="nhsuk-grid-column-full additional-notes" id="additional-notes__consultant-3">
                     <button class="medex-hyperlink-button additional-notes-button"  {% if disabled %}disabled{% endif %}>Add a note</button>
@@ -189,6 +171,8 @@
             </div>
         </div>
     </div>
+
+    </fieldset>
 </div>
 
 
