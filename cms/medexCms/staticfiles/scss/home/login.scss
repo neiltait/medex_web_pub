@@ -42,6 +42,14 @@
                     display: contents !important;
                 }
 
+                .custom-checkbox {
+                    padding: 0 1rem;
+
+                    & .focus {
+                        @include nhs-outline-focus(4px);
+                    }
+                }
+
                 .o-form-head {
                     display: none;
                 }
