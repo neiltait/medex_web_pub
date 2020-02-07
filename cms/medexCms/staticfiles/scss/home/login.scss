@@ -29,7 +29,6 @@
             input {
                 color: $nhs-grey;
 
-                &:hover,
                 &:focus {
                     @include nhs-outline-focus(-2px);
                     border: black thick solid;
