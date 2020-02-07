@@ -1,11 +1,11 @@
 <div class="form-section">
     <div class="nhsuk-grid-row">
-        <div class="nhsuk-grid-column-full">
-            <h3 class="nhsuk-heading-l">QAP information</h3>
-            <p class="nhsuk-body-m">Enter the details of the Qualified Attending Practitioner (attending doctor) writing the Medical Certificate of Cause of Death</p>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+        <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+            <div class="nhsuk-grid-column-full">
+                <legend class="nhsuk-heading-l">QAP information</legend>
+                <p class="nhsuk-body-m">Enter the details of the Qualified Attending Practitioner (attending doctor) writing the Medical Certificate of Cause of Death</p>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group {% if errors.qap %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="qap_name">
                                 Full name
@@ -18,58 +18,50 @@
                                     id="qap_name" name="qap_name"
                                     value="{{ form.qap.name }}" type="text">
                         </div>
-                    </fieldset>
-                </div>
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="qap_role">
                                 Role
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="qap_role" name="qap_role"
-                                   value="{{ form.qap.role }}" type="text">
+                                value="{{ form.qap.role }}" type="text">
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
-            </div>
-            <div class="nhsuk-grid-row">
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+                <div class="nhsuk-grid-row">
+                    <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group {% if errors.qap_organisation %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="qap_organisation">
                                 Organisation
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="qap_organisation"
-                                   name="qap_organisation"
-                                   value="{{ form.qap.organisation }}" type="text">
+                                name="qap_organisation"
+                                value="{{ form.qap.organisation }}" type="text">
                         </div>
-                    </fieldset>
-                </div>
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="qap_phone_number">
                                 Personal phone / bleep number
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="qap_phone_number"
-                                   name="qap_phone_number" value="{{ form.qap.phone_number }}" type="text">
+                                name="qap_phone_number" value="{{ form.qap.phone_number }}" type="text">
                         </div>
-                    </fieldset>
-                </div>
-                <div class="nhsuk-grid-column-one-half">
-                    <fieldset class="nhsuk-fieldset" {% if disabled %}disabled{% endif %}>
+                    </div>
+                    <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_qap">
                                 GMC number
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_qap"
-                                   name="gmc_number_qap"
-                                   value="{{form.qap.gmc_number}}" type="text">
+                                name="gmc_number_qap"
+                                value="{{form.qap.gmc_number}}" type="text">
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
             </div>
-        </div>
+        </fieldset>
     </div>
     <div class="nhsuk-grid-row">
         &nbsp;
