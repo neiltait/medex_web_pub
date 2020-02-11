@@ -32,7 +32,7 @@
 
     {% csrf_token %}
 
-    <div class="form-tab" id="patient-details-section">
+    <div class="form-tab" id="patient-details-section" aria-labelledby="patient-details-tab" role="tabpanel">
         {% include "examinations/partials/_patient_details.html" %}
     </div>
 

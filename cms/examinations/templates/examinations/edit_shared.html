@@ -60,30 +60,30 @@
     <div class="examination__tab-bar">
         <ul role="tablist" class="form-tabs flex-row baseline">
             <li class="tab-item">
-                <a role="link" class="{% if 'patient-details' in request.path %}active{% endif %}" id="patient-details-tab"
+                <a role="tab" class="{% if 'patient-details' in request.path %}active{% endif %}" id="patient-details-tab"
                 aria-selected="{% if 'patient-details' in request.path %}true{% else %}false{% endif %}"
-                href="{% url 'edit_patient_details' examination_id=examination_id %}">
+                href="{% url 'edit_patient_details' examination_id=examination_id %}" aria-controls="patient-details-section">
                 Patient details
                 </a>
             </li>
             <li class="tab-item">
-                <a role="link" class="{% if 'medical-team' in request.path %}active{% endif %}" id="medical-team-tab"
+                <a role="tab" class="{% if 'medical-team' in request.path %}active{% endif %}" id="medical-team-tab"
                 aria-selected="{% if 'medical-team' in request.path %}true{% else %}false{% endif %}"
-                href="{% url 'edit_medical_team' examination_id=examination_id %}">
+                href="{% url 'edit_medical_team' examination_id=examination_id %}" aria-controls="medical-team-section">
                 Medical team
                 </a>
             </li>
             <li class="tab-item">
-                <a role="link" class="{% if 'case-breakdown' in request.path %}active{% endif %}" id="case-breakdown-tab"
+                <a role="tab" class="{% if 'case-breakdown' in request.path %}active{% endif %}" id="case-breakdown-tab"
                 aria-selected="{% if 'case-breakdown' in request.path %}true{% else %}false{% endif %}"
-                href="{% url 'edit_case_breakdown' examination_id=examination_id %}">
+                href="{% url 'edit_case_breakdown' examination_id=examination_id %}" aria-controls="case-breakdown-section">
                 Case details
                 </a>
             </li>
             <li class="tab-item">
-                <a role="link" class="{% if 'case-outcome' in request.path %}active{% endif %}" id="case-outcomes-tab"
+                <a role="tab" class="{% if 'case-outcome' in request.path %}active{% endif %}" id="case-outcomes-tab"
                 aria-selected="{% if 'case-outcome' in request.path %}true{% else %}false{% endif %}"
-                href="{% url 'view_case_outcome' examination_id=examination_id %}">
+                href="{% url 'view_case_outcome' examination_id=examination_id %}" aria-controls="case-outcome-section">
                 Case outcomes
                 </a>
             </li>
