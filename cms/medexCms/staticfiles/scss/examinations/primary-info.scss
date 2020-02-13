@@ -8,8 +8,13 @@
     margin-bottom: 0;
 
     &--unknown {
-      color: $nhs-grey-2;
+      color: $nhs-grey;
       font-weight: $nhs-font-weight-regular;
     }
   }
+}
+
+// Accessibility update to increase opacity
+.nhsuk-checkboxes__input:disabled+.nhsuk-checkboxes__label {
+	opacity: .7
 }

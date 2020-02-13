@@ -185,3 +185,8 @@
         }
     }
 }
+
+// Accessibility update to increase opacity
+.nhsuk-checkboxes__input:disabled+.nhsuk-checkboxes__label {
+	opacity: .7
+}
