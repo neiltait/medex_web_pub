@@ -1,6 +1,7 @@
 {% load staticfiles %}
 
 <div id="filter-block" class="filters-block">
+    <h2 class="sr-only">Filter options</h2>
 {% if closed_list %}
     <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-status">
         <!-- Prevent implicit submission of the form -->
@@ -80,3 +81,5 @@
         </div>
     </form>
 </div>
+
+<h2 class="sr-only">{% if active_filter_obj %}Cases that {{ active_filter_obj.label }}: d{% else %}D{% endif %}isplaying {{ page_examination_count }} of {{ current_examination_count }} results.</h2>
