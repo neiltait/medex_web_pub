@@ -3,19 +3,19 @@
 <div aria-describedby="{{ aria_desc }}">
    {% if status == enums.case_status_bar_result.COMPLETE or status == True %}
       <img class="nhsuk-icon case-status-icon case-status-icon--tick" src="{% static 'images/icon-tick.svg' %}" role=”presentation” alt="" automation-id="{{ automation_id }}">
-      <span>{{ label }} <span hidden>Completed</span></span>
+      <span>{{ label }} <span class="screen-reader-hidden-text">Completed</span></span>
 
    {% elif status == enums.case_status_bar_result.INCOMPLETE or status == False %}
       <img class="nhsuk-icon case-status-icon case-status-icon--cross" src="{% static 'images/icon-cross.svg' %}" role=”presentation” alt="" automation-id="{{ automation_id }}">
-      <span>{{ label }} <span hidden>Not Yet Supplied</span></span>
+      <span>{{ label }} <span class="screen-reader-hidden-text">Not Yet Supplied</span></span>
 
    {% elif status == enums.case_status_bar_result.NOT_APPLICABLE  %}
       <img class="nhsuk-icon case-status-icon case-status-icon--dash" src="{% static 'images/minus.svg' %}" role=”presentation” alt="" automation-id="{{ automation_id }}">
-      <span>{{ label }} <span hidden>Not Applicable</span></span>
+      <span>{{ label }} <span class="screen-reader-hidden-text">Not Applicable</span></span>
 
    {% elif status == enums.case_status_bar_result.UNKNOWN  %}
       <img class="nhsuk-icon case-status-icon case-status-icon--unknown question-align" src="{% static 'images/Unknown.svg' %}" role=”presentation” alt="" automation-id="{{ automation_id }}">
-      <span>{{ label }} <span hidden>Not Known</span></span>
+      <span>{{ label }} <span class="screen-reader-hidden-text">Not Known</span></span>
 
    {% endif %}
 </div>
