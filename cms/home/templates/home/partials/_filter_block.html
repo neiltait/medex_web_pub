@@ -3,12 +3,12 @@
 <div id="filter-block" class="filters-block">
     <h2 class="sr-only">Filter options</h2>
 {% if closed_list %}
-    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get" aria-labelledby="filter-by-status">
+    <form id="index-filters-form" action="{% url 'closed_examination_index' %}" method="get">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
         <!-- ... -->
 {% else %}
-    <form id="index-filters-form" action="{% url 'index' %}" method="get" aria-labelledby="filter-by-status">
+    <form id="index-filters-form" action="{% url 'index' %}" method="get">
         <!-- Prevent implicit submission of the form -->
         <button class="nhsuk-u-visually-hidden" type="submit" disabled aria-hidden="true"></button>
 
