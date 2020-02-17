@@ -199,7 +199,7 @@
         <div class="nhsuk-grid-column-one-half">
             <div class="nhsuk-form-group {% if errors.date_of_death %}nhsuk-form-group--error{% endif %}">
                 <div class="medex-text-checkbox-group__textbox">
-                    <fieldset class="nhsuk-fieldset" aria-describedby="date_of_death" role="group" {% if disabled %}disabled{% endif %}>
+                    <fieldset class="nhsuk-fieldset" role="group" {% if disabled %}disabled{% endif %}>
                         <legend class="nhsuk-fieldset__legend" id="date_of_death_label">
                             Date of death
                         </legend>
@@ -282,7 +282,7 @@
                            value="{{ form.time_of_death }}">
                 </div>
 
-                <div class="nhsuk-checkboxes" aria-describedby="time_of_death_not_known">
+                <div class="nhsuk-checkboxes">
                     <div class="nhsuk-checkboxes__item">
                         <input class="nhsuk-checkboxes__input" id="time_of_death_not_known"
                                 name="time_of_death_not_known" type="checkbox"
