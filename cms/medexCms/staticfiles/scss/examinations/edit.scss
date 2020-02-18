@@ -191,12 +191,3 @@
 .success-message {
   border: 4px solid $nhs-green !important;
 }
-
-.screen-reader-hidden-text{
-  position:absolute;
-  left:-10000px;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-}
