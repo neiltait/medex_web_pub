@@ -21,6 +21,10 @@
 
             this.continueBtn = this.wrapper.find('#assign-team-btn');
             this.startWatchers();
+
+            this.confirmSection.find(':input').each(function(){
+                $(this).attr('tabindex', '-1');
+            });
         },
 
         startWatchers: function () {
@@ -54,7 +58,10 @@
         },
 
         openExaminationTeamEdit: function () {
-            this.confirmSection.removeClass("nhsuk-u-visually-hidden")
+            this.confirmSection.removeClass("nhsuk-u-visually-hidden");
+            this.confirmSection.find(':input').each(function(){
+                $(this).removeAttr('tabindex');
+            });
             this.confirmMessage.html(this.getConfirmationMessage());
             this.clearConfirmation();
             this.disableSubmitButtons()
@@ -64,6 +71,9 @@
             this.savedMe = this.meSelect.val();
             this.savedMeo = this.meoSelect.val();
             this.confirmSection.addClass("nhsuk-u-visually-hidden");
+            this.confirmSection.find(':input').each(function(){
+                $(this).attr('tabindex', '-1');
+            });
             this.enableSubmitButtons();
         },
 
