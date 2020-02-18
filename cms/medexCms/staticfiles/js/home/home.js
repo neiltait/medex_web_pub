@@ -12,6 +12,8 @@
             this.caseHeader = this.wrapper.find('.case-card-header');
             this.caseBody = this.wrapper.find('.case-card-body');
             this.startWatchers();
+
+            this.wrapper.attr('aria-expanded', 'false');
         },
 
         startWatchers: function() {
@@ -19,11 +21,15 @@
             this.upChevron.click(function() {
                 that.caseHeader.removeClass('case-card-header--expanded');
                 that.caseBody.removeClass('case-card-body--expanded');
+
+                that.wrapper.attr('aria-expanded', 'false');
             });
 
             this.downChevron.click(function() {
                 that.caseHeader.addClass('case-card-header--expanded');
                 that.caseBody.addClass('case-card-body--expanded');
+
+                that.wrapper.attr('aria-expanded', 'true');
             });
         }
     }
