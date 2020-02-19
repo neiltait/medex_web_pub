@@ -81,7 +81,7 @@
                     <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="consultant_organisation_2">
-                                Organisation
+                                Second Organisation
                             </label>
 
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_organisation_2" name="consultant_organisation_2"
@@ -93,7 +93,7 @@
                     <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_consultant_2">
-                                GMC number
+                                Second GMC number
                             </label>
                             <input tabindex="-1" class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_2" name="gmc_number_consultant_2"
                                     value="{{form.consultant_2.gmc_number}}" type="text">
@@ -103,7 +103,7 @@
                         <button class="medex-hyperlink-button additional-notes-button" {% if disabled %}disabled{% endif %}>Add a note</button>
                         <div class="nhsuk-form-group medex-hidden additional-notes-panel">
                                 <label class="nhsuk-label" for="consultant_note_2">
-                                    Additional notes
+                                    Second Additional notes
                                 </label>
                                 <textarea tabindex="-1" class="nhsuk-textarea medex-textarea"
                                         id="consultant_note_2" name="consultant_note_2" rows="3">{{ form.consultant_2.notes }}</textarea>
@@ -126,7 +126,7 @@
                     <div class="nhsuk-grid-column-one-half">
                         <div class="nhsuk-form-group {% if errors.consultant_organisation_3 %}nhsuk-form-group--error{% endif %}">
                             <label class="nhsuk-label" for="consultant_organisation_3">
-                                Organisation
+                                Third Organisation
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="consultant_organisation_3" name="consultant_organisation_3"
                                     value="{{ form.consultant_3.organisation }}" type="text">
@@ -137,7 +137,7 @@
                     <div class="nhsuk-grid-column-one-half nhsuk-u-visually-hidden">
                         <div class="nhsuk-form-group">
                             <label class="nhsuk-label" for="gmc_number_consultant_3">
-                                GMC number
+                                Third GMC number
                             </label>
                             <input class="nhsuk-input nhsuk-input--width-10" id="gmc_number_consultant_3" name="gmc_number_consultant_3"
                                     value="{{form.consultant_3.gmc_number}}" type="text">
@@ -147,7 +147,7 @@
                         <button class="medex-hyperlink-button additional-notes-button"  {% if disabled %}disabled{% endif %}>Add a note</button>
                         <div class="nhsuk-form-group medex-hidden additional-notes-panel">
                             <label class="nhsuk-label" for="consultant-note-3">
-                                Additional notes
+                                Third Additional notes
                             </label>
                             <textarea class="nhsuk-textarea medex-textarea" id="consultant-note-3" name="consultant_note_3"
                                     rows="3">{{form.consultant_3.notes}}</textarea>
