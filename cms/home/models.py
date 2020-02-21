@@ -36,7 +36,7 @@ class IndexOverview:
                 if location.location_id == self.location_id:
                     self.location_name = location.name
         else:
-            self.location_name = 'All permitted'
+            self.location_name = 'All permitted locations'
         return self
 
     def process_filter_locations(self, locations_data):
