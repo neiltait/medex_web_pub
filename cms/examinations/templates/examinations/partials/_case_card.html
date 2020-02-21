@@ -11,7 +11,7 @@
 
             <div class="nhsuk-grid-column-one-third">
                 <p class="dates">
-                    {{ card.banner_dob }} - {{ card.banner_dod }}
+                    {{ card.banner_dob }} - <span class="hidden-content-for-screen-reader">To</span> {{ card.banner_dod }}
                 </p>
                 <p class="no-dates">&nbsp;</p>
             </div>
@@ -19,9 +19,9 @@
             <div class="nhsuk-grid-column-one-third">
                 <div class="controls flex-row">
                     {% if card.urgent %}
-                        <p class="urgent-flag">URGENT</p>
+                        <p class="urgent-flag"><span class="hidden-content-for-screen-reader">This case is marked as</span> URGENT</p>
                     {% elif card.void %}
-                        <p class="void-flag">VOID</p>
+                        <p class="void-flag"><span class="hidden-content-for-screen-reader">This case is marked as</span> VOID</p>
                     {% endif %}
 
                     <a class="view-btn" href="{% url 'edit_examination' examination_id=card.id %}">View Case</a>
