@@ -38,19 +38,22 @@
 
                 .event-toggle {
                     height: $medex-spacing-md;
+                    min-height: 44px;
+                    min-width: 44px;
                     flex-basis: $medex-spacing-lg;
                     flex-shrink: 0;
                     display: none;
+                    border: none;
 
                     &.down {
-                        background: url("/static/images/chevron_down.svg") no-repeat;
-                        margin-top: $medex-spacing-sm;
+                        background: url("/static/images/chevron_down.svg") no-repeat center center;
+                        margin-top: -$medex-spacing-md;
                         display: initial;
                     }
 
                     &.up {
-                        background: url("/static/images/chevron-up-grey.svg") no-repeat;
-                        margin-top: $medex-spacing-sm;
+                        background: url("/static/images/chevron-up-grey.svg") no-repeat center center;
+                        margin-top: -$medex-spacing-md;
                         display: initial;
                     }
                 }

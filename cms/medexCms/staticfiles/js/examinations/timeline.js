@@ -101,12 +101,16 @@
                 this.details.addClass('collapsed');
                 this.toggleBtn.addClass('down');
                 this.hideableSection.hide();
+                this.contentSpace.attr('aria-expanded', 'false');
+            } else {
+                this.contentSpace.attr('aria-expanded', 'true');
             }
         },
 
         startWatcher: function() {
             var that = this;
-            this.toggleBtn.click(function() {
+            this.toggleBtn.click(function(event) {
+                event.preventDefault();
                 that.toggleContentShow();
             });
         },
@@ -116,6 +120,9 @@
             this.toggleBtn.toggleClass('up');
             this.details.toggleClass('collapsed');
             this.hideableSection.toggle();
+            this.contentSpace.attr('aria-expanded', function (i, attr) {
+                return attr == 'true' ? 'false' : 'true'
+            });
         }
     }
 
@@ -140,12 +147,16 @@
                 this.details.addClass('collapsed');
                 this.toggleBtn.addClass('down');
                 this.hideableSection.hide();
+                this.contentSpace.attr('aria-expanded', 'false');
+            } else {
+                this.contentSpace.attr('aria-expanded', 'true');
             }
         },
 
         startWatcher: function() {
             var that = this;
-            this.toggleBtn.click(function() {
+            this.toggleBtn.click(function(event) {
+                event.preventDefault();
                 that.toggleContentShow();
             });
         },
@@ -155,6 +166,9 @@
             this.toggleBtn.toggleClass('up');
             this.details.toggleClass('collapsed');
             this.hideableSection.toggle();
+            this.contentSpace.attr('aria-expanded', function (i, attr) {
+                return attr == 'true' ? 'false' : 'true'
+            });
         }
     }
 
@@ -173,13 +187,15 @@
         },
 
         setInitialView: function() {
+            this.hideableSection.attr('aria-expanded', 'false');
             this.toggleBtn.addClass('down');
             this.hideableSection.hide();
         },
 
         startWatcher: function() {
             var that = this;
-            this.toggleBtn.click(function() {
+            this.toggleBtn.click(function(event) {
+                event.preventDefault();
                 that.toggleContentShow();
             });
         },
@@ -188,6 +204,9 @@
             this.toggleBtn.toggleClass('down');
             this.toggleBtn.toggleClass('up');
             this.hideableSection.toggle();
+            this.hideableSection.attr('aria-expanded', function (i, attr) {
+                return attr == 'true' ? 'false' : 'true'
+            });
         }
     }
 
@@ -206,13 +225,15 @@
         },
 
         setInitialView: function() {
+            this.hideableSection.attr('aria-expanded', 'false');
             this.toggleBtn.addClass('down');
             this.hideableSection.hide();
         },
 
         startWatcher: function() {
             var that = this;
-            this.toggleBtn.click(function() {
+            this.toggleBtn.click(function(event) {
+                event.preventDefault();
                 that.toggleContentShow();
             });
         },
@@ -221,6 +242,9 @@
             this.toggleBtn.toggleClass('down');
             this.toggleBtn.toggleClass('up');
             this.hideableSection.toggle();
+            this.hideableSection.attr('aria-expanded', function (i, attr) {
+                return attr == 'true' ? 'false' : 'true'
+            });
         }
     }
 
@@ -242,12 +266,16 @@
             if (this.contentSpace.height() > 56) {
                 this.contentSpace.addClass('collapsed');
                 this.toggleBtn.addClass('down');
+                this.contentSpace.attr('aria-expanded', 'false');
+            } else {
+                this.contentSpace.attr('aria-expanded', 'true');
             }
         },
 
         startWatcher: function() {
             var that = this;
-            this.toggleBtn.click(function() {
+            this.toggleBtn.click(function(event) {
+                event.preventDefault();
                 that.toggleContentShow();
             });
         },
@@ -255,7 +283,10 @@
         toggleContentShow: function() {
             this.toggleBtn.toggleClass('down');
             this.toggleBtn.toggleClass('up');
-            this.contentSpace.toggleClass('collapsed')
+            this.contentSpace.toggleClass('collapsed');
+            this.contentSpace.attr('aria-expanded', function (i, attr) {
+                return attr == 'true' ? 'false' : 'true'
+            });
         }
     }
 
