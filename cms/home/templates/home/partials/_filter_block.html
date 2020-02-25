@@ -25,7 +25,7 @@
         <div class="nhsuk-grid-row">
             <div class="nhsuk-grid-column-one-half">
                 <select class="nhsuk-select" id="filter-location" name="location" value="{{ form.location }}" aria-label="filter-location">
-                    <option value="all">All</option>
+                    <option value="all">View cases for all locations</option>
                     {% for location in session_user.index_overview.filter_locations %}
                     <option value={{ location.location_id }} {% if location.location_id == form.location %}selected{% endif %}>
                         {{ location.name }}
@@ -36,7 +36,7 @@
 
             <div class="nhsuk-grid-column-one-half">
                 <select class="nhsuk-select" id="filter-person" name="person" value="{{ form.person }}" aria-label="filter-person">
-                    <option value="all">All</option>
+                    <option value="all">View cases for all people</option>
                     {% for person in session_user.index_overview.filter_people %}
                     <option value={{ person.person_id }} {% if person.person_id == form.person %}selected{% endif %}>
                         {{ person.name_with_gmc_number }}
