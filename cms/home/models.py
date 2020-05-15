@@ -41,7 +41,11 @@ class IndexOverview:
                     self.location_name = location.name
         else:
             self.location_name = 'All permitted locations'
-        self.single_location = any(word in self.location_name.lower() for word in self.wordsToCheck)
+            
+        if self.location_name:
+            self.single_location = any(word in self.location_name.lower() for word in self.wordsToCheck)
+        else:
+            self.single_location = False
         return self
 
     def process_filter_locations(self, locations_data):
