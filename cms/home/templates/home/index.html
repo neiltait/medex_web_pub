@@ -25,7 +25,7 @@
     <div class="flex-row index-overview">
       <div class="overview-block nhsuk-grid-column-one-third">
         <p class="overview-heading">
-          Displaying cases in the
+          Displaying cases in {%if session_user.index_overview.single_location %}the{% endif %}
         </p>
 
         <p class="overview-body location" automation-id="count-of-location-cases">

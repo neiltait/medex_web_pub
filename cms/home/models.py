@@ -6,8 +6,11 @@ from people.models import DropdownPerson
 
 class IndexOverview:
 
+    wordsToCheck = ['trust', 'hospital', 'station']
+
     def __init__(self, location, response, page_size, page_number):
         self.location_name = None
+        self.single_location = False
         self.location_id = location
         self.total_cases = response.get('countOfTotalCases')
         self.filtered_cases = response.get('countOfFilteredCases')
@@ -34,9 +37,15 @@ class IndexOverview:
         if self.location_id:
             for location in self.filter_locations:
                 if location.location_id == self.location_id:
+                    print(vars(location))
                     self.location_name = location.name
         else:
             self.location_name = 'All permitted locations'
+            
+        if self.location_name:
+            self.single_location = any(word in self.location_name.lower() for word in self.wordsToCheck)
+        else:
+            self.single_location = False        
         return self
 
     def process_filter_locations(self, locations_data):
