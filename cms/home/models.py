@@ -41,6 +41,7 @@ class IndexOverview:
                     self.location_name = location.name
         else:
             self.location_name = 'All permitted locations'
+            
         if self.location_name:
             self.single_location = any(word in self.location_name.lower() for word in self.wordsToCheck)
         else:
