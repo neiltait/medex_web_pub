@@ -695,7 +695,7 @@ class ClosedExaminationIndexView(LoginRequiredMixin, View):
             'closed_list': True,
             'pagination_url': 'closed_examination_index',
             'exclude_filter_buttons': True,
-            'exclude_sortby' : True
+            'exclude_sortby': True
         }
 
 
