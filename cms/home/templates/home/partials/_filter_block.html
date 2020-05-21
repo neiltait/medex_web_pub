@@ -68,6 +68,7 @@
                     <p>{% if active_filter_obj %}Cases that {{ active_filter_obj.label }}: d{% else %}D{% endif %}isplaying {{ page_examination_count }} of {{ current_examination_count }} results.</p>
                 </div>
                 <div class="nhsuk-grid-column-one-quarter">
+                    {% if not exclude_sortby %}
                     <label for="sorting_order">Sort by</label>
                     <select class="nhsuk-select" form="index-filters-form" id="sorting_order" name="sorting_order">
                         {% for sorting_order in enums.results_sorting.SORTING_ORDERS_DEFAULT_FIRST %}
@@ -76,6 +77,7 @@
                             </option>
                         {% endfor %}
                     </select>
+                    {% endif %}
                 </div>
             </div>
         </div>
