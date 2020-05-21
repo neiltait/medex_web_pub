@@ -40,7 +40,9 @@
             this.addBtn.click(function() {
                 that.representatives[that.additionalShowing].show();
                 that.removeBtn.show();
-                $(that.addBtn).text("Add another");
+                $(that.addBtn)
+                    .text("Add another")
+                    .attr('aria-label', 'Add another representative');
                 that.additionalShowing++;
                 if(that.additionalShowing === 1){
                     that.firstFocus.focus();
