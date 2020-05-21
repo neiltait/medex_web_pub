@@ -12,6 +12,10 @@
     padding: medex-spacing(2) 0;
   }
 
+  &.void {
+    border-left: 4px solid $nhs-grey !important;
+  }
+
   &.urgent,
   &.void {
     border-left: 4px solid $nhs-red;
@@ -111,9 +115,14 @@
 
     .urgent-flag,
     .void-flag {
-      color: $nhs-red;
       font-weight: bold;
       margin-bottom: 0;
+    }
+    .urgent-flag {
+      color: $nhs-red;
+    }
+    .void-flag {
+      color: $nhs-grey;
     }
   }
 }
@@ -121,6 +130,10 @@
 .case-card-header--expanded {
   background: $nhs-blue;
   margin-bottom: 0;
+
+  &.void {
+    background: $nhs-grey !important;
+  }
 
   &.urgent,
   &.void {
