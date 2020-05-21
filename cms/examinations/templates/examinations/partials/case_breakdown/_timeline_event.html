@@ -25,6 +25,7 @@
 
             {% if event.is_latest and event.css_type in session_user.editable_event_types %}
                 <a class="amend-link"
+                   aria-label="Amend {{event.display_type}} event"
                    href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType={{event.event_type}}">
                     Amend event
                 </a>
