@@ -13,29 +13,30 @@
                 Pending
             </p>
             {% else %}
-            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin"">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin">
                 {{case_outcome.display_pre_scrutiny_outcome}}
             </p>
             {% endif %}
 
             {% if session_user.permitted_actions.permitted_forms.preScrutinyEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=PreScrutiny">Not
+                <a aria-label="Recommendation of ME review of records not correct?"
+                    href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=PreScrutiny">Not
                     correct?</a>
             </p>
             {% endif %}
         </div>
 
         <div class="outcome">
-            <p class="nhsuk-body-m no-margin"">
+            <p class="nhsuk-body-m no-margin">
                 Outcome of QAP/ME discussion
             </p>
             {% if case_outcome.display_qap_outcome == None %}
-            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin"">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin">
                 Pending
             </p>
             {% else %}
-            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin"">
+            <p class="nhsuk-heading-m nhsuk-font-weight-bold no-margin">
                 {{case_outcome.display_qap_outcome}}
             </p>
             {% endif %}
@@ -43,7 +44,8 @@
 
             {% if session_user.permitted_actions.permitted_forms.qapDiscussionEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=QapDiscussion">Not
+                <a aria-label="Outcome of QAP/ME discussion not correct?"
+                    href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=QapDiscussion">Not
                     correct?</a>
             </p>
             {% endif %}
@@ -65,7 +67,8 @@
 
             {% if session_user.permitted_actions.permitted_forms.bereavedDiscussionEvent %}
             <p>
-                <a href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=BereavedDiscussion">Not
+                <a aria-label="Outcome of representative discussion not correct?"
+                    href="{% url 'edit_case_breakdown' examination_id=examination_id %}?amendType=BereavedDiscussion">Not
                     correct?</a>
             </p>
             {% endif %}
