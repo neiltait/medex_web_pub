@@ -11,7 +11,7 @@ pool:
 variables:
   imageName: 'medex-cms:$(Build.BuildId)'
   latestName: 'medex-cms:$(Build.SourceBranchName)-latest'
-  dockerId: medexFrontendStaging
+  dockerId: medicalexaminerstagingcr
 
 steps:
 - task: UsePythonVersion@0
